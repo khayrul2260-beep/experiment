@@ -1,0 +1,432 @@
+/* ==========================================
+   DASHBOARD CONTAINER
+========================================== */
+
+.dashboard-container {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 30px;
+}
+
+/* ==========================================
+   SECTION HEADER
+========================================== */
+
+.section-header {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  margin-bottom: 20px;
+}
+
+.section-header h3 {
+  font-size: 20px;
+
+  font-weight: 600;
+
+  color: var(--text-color);
+}
+
+.section-header a {
+  color: var(--primary-color);
+
+  font-size: 14px;
+
+  font-weight: 500;
+}
+
+.section-header a:hover {
+  text-decoration: underline;
+}
+
+/* ==========================================
+   STATISTICS SECTION
+========================================== */
+
+.statistics-section {
+  display: grid;
+
+  grid-template-columns: repeat(4, 1fr);
+
+  gap: 20px;
+}
+
+/* ==========================================
+   STAT CARD
+========================================== */
+
+.stat-card {
+  display: flex;
+
+  align-items: center;
+
+  gap: 20px;
+
+  padding: 25px;
+
+  background: var(--card-color);
+
+  border: 1px solid var(--border-color);
+
+  border-radius: var(--border-radius);
+
+  transition: var(--transition);
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+}
+
+.stat-icon {
+  width: 60px;
+
+  height: 60px;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  border-radius: 50%;
+
+  background: rgba(59, 130, 246, 0.15);
+
+  color: var(--primary-color);
+
+  font-size: 28px;
+}
+
+.stat-content {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 5px;
+}
+
+.stat-content h5 {
+  font-size: 14px;
+
+  color: var(--text-light);
+
+  font-weight: 500;
+}
+
+.stat-content h2 {
+  font-size: 28px;
+
+  font-weight: 700;
+
+  color: var(--text-color);
+}
+
+.stat-content span {
+  font-size: 13px;
+
+  color: var(--success);
+}
+
+/* ==========================================
+   ANALYTICS SECTION
+========================================== */
+
+.analytics-section {
+  display: grid;
+
+  grid-template-columns: 2fr 1fr;
+
+  gap: 20px;
+}
+
+.sales-chart,
+.visitor-chart {
+  background: var(--card-color);
+
+  border: 1px solid var(--border-color);
+
+  border-radius: var(--border-radius);
+
+  padding: 25px;
+}
+
+/* ==========================================
+   SALES CHART
+========================================== */
+
+.chart-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:flex-start;
+
+    margin-bottom:20px;
+
+}
+
+.chart-title h4{
+
+    font-size:14px;
+
+    color:var(--text-light);
+
+    margin-bottom:8px;
+
+}
+
+.chart-income{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+}
+
+.chart-income h2{
+
+    font-size:30px;
+
+    font-weight:700;
+
+    color:#fff;
+
+}
+
+.chart-income span{
+
+    color:#22C55E;
+
+    font-weight:600;
+
+}
+
+.chart-filter select{
+
+    background:#252B42;
+
+    color:#fff;
+
+    border:1px solid var(--border-color);
+
+    padding:8px 15px;
+
+    border-radius:10px;
+
+    outline:none;
+
+}
+
+
+/* ============================================
+   
+   ============================================ */
+.chart-body {
+  position: relative;
+
+  height: 320px;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  color: var(--text-light);
+
+  border: 2px dashed var(--border-color);
+
+  border-radius: 10px;
+}
+
+
+.chart-body canvas{
+
+    width:100% !important;
+
+    height:100% !important;
+
+}
+
+
+/* ==========================================
+   RECENT ORDERS
+========================================== */
+
+.recent-orders {
+  background: var(--card-color);
+
+  border: 1px solid var(--border-color);
+
+  border-radius: var(--border-radius);
+
+  padding: 25px;
+
+  overflow-x: auto;
+}
+
+.recent-orders table {
+  width: 100%;
+
+  border-collapse: collapse;
+}
+
+.recent-orders th {
+  text-align: left;
+
+  padding: 15px;
+
+  color: var(--text-light);
+
+  border-bottom: 1px solid var(--border-color);
+}
+
+.recent-orders td {
+  padding: 16px 15px;
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.recent-orders tbody tr {
+  transition: var(--transition);
+}
+
+.recent-orders tbody tr:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* ==========================================
+   BOTTOM WIDGETS
+========================================== */
+
+.bottom-widgets {
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 20px;
+}
+
+.top-products,
+.recent-activity {
+  background: var(--card-color);
+
+  border: 1px solid var(--border-color);
+
+  border-radius: var(--border-radius);
+
+  padding: 25px;
+}
+
+.widget-body {
+  height: 280px;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  color: var(--text-light);
+
+  border: 2px dashed var(--border-color);
+
+  border-radius: 10px;
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width: 1200px) {
+  .statistics-section {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 992px) {
+  .analytics-section {
+    grid-template-columns: 1fr;
+  }
+
+  .bottom-widgets {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .statistics-section {
+    grid-template-columns: 1fr;
+  }
+
+  .stat-card {
+    padding: 20px;
+  }
+
+  .sales-chart,
+  .visitor-chart,
+  .recent-orders,
+  .top-products,
+  .recent-activity {
+    padding: 20px;
+  }
+
+  .chart-body,
+  .widget-body {
+    height: 220px;
+  }
+}
+
+
+
+/* ==========================================
+   CHART CARD
+========================================== */
+
+.sales-chart,
+.visitor-chart{
+    transition:.35s ease;
+
+}
+
+.sales-chart:hover,
+.visitor-chart:hover{
+
+    transform:translateY(-4px);
+
+    box-shadow:0 20px 45px rgba(0,0,0,.28);
+
+}
+
+
+/* ==========================================
+   CHART CANVAS
+========================================== */
+
+.chart-body{
+
+    position:relative;
+
+    overflow:hidden;
+    border: none;
+
+
+}
+
+.chart-body canvas{
+
+    width:100% !important;
+
+    height:100% !important;
+
+}

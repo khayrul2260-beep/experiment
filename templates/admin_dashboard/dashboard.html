@@ -1,0 +1,201 @@
+{% extends 'admin_dashboard/master/base.html' %}
+{% load static %} 
+{% block title %} 
+Dashboard 
+{% endblock %} 
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}" />
+{% endblock %} {% block page_title %} Dashboard {% endblock %} {% block content %}
+
+<!-- ==========================
+    Dashboard Container
+========================== -->
+
+<div class="dashboard-container">
+  <!-- ==========================
+        Statistics Cards
+    ========================== -->
+
+  <section class="statistics-section">
+    <div class="stat-card">
+      <div class="stat-icon">
+        <i class="bi bi-currency-dollar"></i>
+      </div>
+
+      <div class="stat-content">
+        <h5>Total Revenue</h5>
+
+        <h2>$25,450</h2>
+
+        <span>+12% This Month</span>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon">
+        <i class="bi bi-bag-check"></i>
+      </div>
+
+      <div class="stat-content">
+        <h5>Total Orders</h5>
+
+        <h2>1,256</h2>
+
+        <span>+18 Today</span>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon">
+        <i class="bi bi-box-seam"></i>
+      </div>
+
+      <div class="stat-content">
+        <h5>Total Products</h5>
+
+        <h2>580</h2>
+
+        <span>Active Products</span>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon">
+        <i class="bi bi-people"></i>
+      </div>
+
+      <div class="stat-content">
+        <h5>Customers</h5>
+
+        <h2>4,850</h2>
+
+        <span>+54 New Users</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================
+        Analytics
+    ========================== -->
+
+  <section class="analytics-section">
+<div class="sales-chart">
+
+    <div class="chart-header">
+
+        <div class="chart-title">
+
+            <h4>Sales Statistics</h4>
+
+            <div class="chart-income">
+
+                <h2>$110,854.21</h2>
+
+                <span>+10%</span>
+
+            </div>
+
+        </div>
+
+        <div class="chart-filter">
+
+            <select>
+
+                <option>This Year</option>
+                <option>Last Year</option>
+
+            </select>
+
+        </div>
+
+    </div>
+
+    <div class="chart-body">
+
+        <canvas id="salesChart"></canvas>
+
+    </div>
+
+</div>
+
+    <div class="visitor-chart">
+      <div class="section-header" style="display: flex; flex-direction: column; gap: 0px; align-items: start;">
+        <h4>Recent Month</h3>
+        <p style="font-size: 12px;">Visitors</p>
+      </div>
+      <div class="chart-body">
+        <canvas id="visitorChart"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================
+        Recent Orders
+    ========================== -->
+
+  <section class="recent-orders">
+    <div class="section-header">
+      <h3>Recent Orders</h3>
+
+      <a href="#">View All</a>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+
+          <th>Customer</th>
+
+          <th>Product</th>
+
+          <th>Amount</th>
+
+          <th>Status</th>
+
+          <th>Date</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td>#1001</td>
+
+          <td>John Doe</td>
+
+          <td>Premium Shirt</td>
+
+          <td>$45</td>
+
+          <td>Delivered</td>
+
+          <td>31 Jul 2026</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ==========================
+        Bottom Widgets
+    ========================== -->
+
+  <section class="bottom-widgets">
+    <div class="top-products">
+      <div class="section-header">
+        <h3>Top Selling Products</h3>
+      </div>
+
+      <div class="widget-body">Product List</div>
+    </div>
+
+    <div class="recent-activity">
+      <div class="section-header">
+        <h3>Recent Activity</h3>
+      </div>
+
+      <div class="widget-body">Activity Timeline</div>
+    </div>
+  </section>
+</div>
+
+{% endblock %}

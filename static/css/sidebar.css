@@ -1,0 +1,282 @@
+/* ===============================
+   SIDEBAR
+=================================*/
+
+.sidebar{
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: space-between;
+
+    background: var(--sidebar-color);
+
+    border-right: 1px solid var(--border-color);
+
+    transition: var(--transition);
+
+}
+
+
+/* ===============================
+   SIDEBAR HEADER
+=================================*/
+
+.sidebar-header{
+
+    padding: 25px;
+
+    border-bottom: 1px solid var(--border-color);
+
+}
+
+
+.logo{
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    color: var(--text-color);
+
+}
+
+
+.logo img{
+
+    width: 60px;
+
+    height: 60px;
+
+    border-radius: 60px;
+
+    background: var(--primary-color);
+    border: 2px solid blue;
+    transform: all 0.2s ease;
+}
+
+.logo img:hover {
+    border: 2px solid green;
+}
+
+.logo img:active{
+    transform: scale(0.96);
+}
+
+.logo-text{
+
+    font-size: 24px;
+
+    font-weight: 700;
+
+    letter-spacing: 1px;
+
+}
+
+
+/* ===============================
+   MENU
+=================================*/
+
+.sidebar-menu{
+
+    flex: 1;
+
+    padding: 20px 15px;
+
+}
+
+
+.menu-title{
+
+    color: var(--text-light);
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    letter-spacing: 1px;
+
+    text-transform: uppercase;
+
+    margin: 25px 15px 10px;
+
+}
+
+
+/* ===============================
+   MENU ITEM
+=================================*/
+
+.sidebar-menu ul li{
+
+    margin-bottom: 6px;
+
+}
+
+
+.sidebar-menu ul li a{
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    padding: 14px 18px;
+
+    border-radius: 12px;
+
+    color: var(--text-light);
+
+    transition: var(--transition);
+
+    font-size: 15px;
+
+    font-weight: 500;
+
+}
+
+
+/* ===============================
+   ICON
+=================================*/
+
+.sidebar-menu ul li a i{
+
+    font-size: 20px;
+
+    min-width: 25px;
+
+    text-align: center;
+
+}
+
+
+/* ===============================
+   HOVER
+=================================*/
+
+.sidebar-menu ul li a:hover{
+
+    background: rgba(59,130,246,.12);
+
+    color: var(--text-color);
+
+    transform: translateX(5px);
+
+}
+
+
+/* ===============================
+   ACTIVE
+=================================*/
+
+.sidebar-menu ul li.active a{
+
+    background: var(--primary-color);
+
+    color: #fff;
+
+    box-shadow: 0 8px 20px rgba(59,130,246,.35);
+
+}
+
+
+/* ===============================
+   FOOTER
+=================================*/
+
+.sidebar-footer{
+
+    padding: 20px;
+
+    border-top: 1px solid var(--border-color);
+
+}
+
+
+.sidebar-footer a{
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    padding: 14px 18px;
+
+    border-radius: 12px;
+
+    color: var(--danger);
+
+    transition: var(--transition);
+
+    font-weight: 600;
+
+}
+
+
+.sidebar-footer a i{
+
+    font-size: 20px;
+
+}
+
+
+.sidebar-footer a:hover{
+
+    background: rgba(239,68,68,.15);
+
+}
+
+
+/* ===============================
+   SCROLLBAR
+=================================*/
+
+.sidebar::-webkit-scrollbar{
+
+    width: 6px;
+
+}
+
+.sidebar::-webkit-scrollbar-thumb{
+
+    background: #475569;
+
+    border-radius: 20px;
+
+}
+
+
+/* ===============================
+   RESPONSIVE
+=================================*/
+
+@media(max-width:992px){
+
+    .sidebar{
+
+        position: fixed;
+
+        left: -100%;
+
+        top: 0;
+
+        z-index: 1000;
+
+        width: 270px;
+
+    }
+
+    .sidebar.active{
+
+        left: 0;
+
+    }
+
+}

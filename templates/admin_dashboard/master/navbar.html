@@ -1,0 +1,107 @@
+{% load static %}
+<header class="top-navbar">
+
+    <!-- Left Section -->
+
+    <div class="navbar-left">
+
+        <!-- Sidebar Toggle -->
+
+        <button class="nav-btn sidebar-toggle">
+
+            <i class="bi bi-list"></i>
+
+        </button>
+
+        <!-- Page Title -->
+
+        <div class="page-title">
+
+            <h3>{% block page_title %}Dashboard{% endblock %}</h3>
+
+            <p>Welcome to NAFI Admin Dashboard</p>
+
+        </div>
+
+    </div>
+
+
+    <!-- Right Section -->
+
+    <div class="navbar-right">
+
+        <!-- Search Box -->
+
+        <div class="search-box">
+
+            <i class="bi bi-search"></i>
+
+            <input
+                type="text"
+                placeholder="Search...">
+
+        </div>
+
+        <!-- Dark Mode -->
+
+        <button class="nav-btn">
+
+            <i class="bi bi-moon"></i>
+
+        </button>
+
+        <!-- Fullscreen -->
+
+        <button class="nav-btn">
+
+            <i class="bi bi-fullscreen"></i>
+
+        </button>
+
+        <!-- Notification -->
+
+        <button class="nav-btn notification-btn">
+
+            <i class="bi bi-bell"></i>
+
+            <span class="badge">5</span>
+
+        </button>
+
+        <!-- Messages -->
+
+        <button class="nav-btn message-btn">
+
+            <i class="bi bi-chat-dots"></i>
+
+            <span class="badge">2</span>
+
+        </button>
+
+        <!-- Profile -->
+
+        <div class="profile-menu">
+
+            <div class="profile-image">
+
+                <img
+                    src="https://placehold.co/40x40"
+                    alt="Admin">
+
+            </div>
+
+            <div class="profile-info">
+
+                <h5>Admin</h5>
+
+                <span>Super Admin</span>
+
+            </div>
+
+            <i class="bi bi-chevron-down"></i>
+
+        </div>
+
+    </div>
+
+</header>
