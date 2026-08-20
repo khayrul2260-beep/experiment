@@ -24,12 +24,7 @@ SECRET_KEY = 'django-insecure-a))(&56-#%7qa$v0x=1qtv&y5evr#b6rq1x475*&q21%^!8@a=
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
-
-ALLOWED_HOSTS = [
-    "localhost",
-    "127.0.0.1",
-    "experiment-h6vg.vercel.app",
-]
+ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
@@ -136,5 +131,5 @@ AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
 ]
 CSRF_TRUSTED_ORIGINS = [
-    "https://experiment-h6vg.vercel.app",
+    "https://nafi-libas.vercel.app",
 ]
