@@ -28,7 +28,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
-    "experiment-h6vg-qc0d542y3-nafi16.vercel.app",
+    "experiment-h6vg.vercel.app",
 ]
 
 # Application definition
@@ -136,6 +136,5 @@ AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
 ]
 CSRF_TRUSTED_ORIGINS = [
-    "https://experiment-h6vg-qc0d542y3-nafi16.vercel.app",
+    "https://experiment-h6vg.vercel.app",
 ]
-
