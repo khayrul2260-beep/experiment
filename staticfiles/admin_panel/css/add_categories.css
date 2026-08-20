@@ -1,0 +1,586 @@
+/* ========================================
+   Add Category Page
+======================================== */
+
+.add-category-page {
+    width: 100%;
+    color: var(--text-color);
+}
+
+
+/* ========================================
+   Header
+======================================== */
+
+.add-category-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 25px;
+}
+
+.add-category-header h1 {
+    margin: 0 0 5px;
+
+    font-size: 28px;
+    font-weight: 600;
+
+    color: var(--text-color);
+}
+
+.add-category-header p {
+    margin: 0;
+
+    font-size: 14px;
+    color: var(--text-light);
+}
+
+
+/* Back Button */
+
+.back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    padding: 10px 16px;
+
+    border: 1px solid var(--border-color-special);
+    border-radius: var(--border-radius);
+
+    color: var(--text-light);
+    text-decoration: none;
+
+    font-size: 13px;
+
+    transition: var(--transition);
+}
+
+.back-btn:hover {
+    border-color: var(--primary-hover);
+    color: var(--text-color);
+}
+
+
+/* ========================================
+   Form Card
+======================================== */
+
+.category-form-card {
+    width: 100%;
+
+    padding: 30px;
+
+    background: var(--card-color);
+
+    border: 1px solid var(--border-color-special);
+    border-radius: var(--border-radius);
+}
+
+
+/* ========================================
+   Form Group
+======================================== */
+
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-group label {
+    display: block;
+
+    margin-bottom: 9px;
+
+    font-size: 13px;
+    font-weight: 500;
+
+    color: var(--text-color);
+}
+
+.form-group label span {
+    color: var(--danger);
+}
+
+
+/* Inputs */
+
+.form-group input[type="text"],
+.form-group textarea {
+    width: 100%;
+
+    padding: 12px 14px;
+
+    background: var(--primary-color);
+
+    border: 1px solid var(--border-color-special);
+    border-radius: var(--border-radius);
+
+    outline: none;
+
+    color: var(--text-color);
+
+    font-family: inherit;
+    font-size: 13px;
+
+    transition: var(--transition);
+}
+
+.form-group input[type="text"] {
+    height: 45px;
+}
+
+.form-group textarea {
+    min-height: 110px;
+
+    resize: vertical;
+}
+
+.form-group input[type="text"]:focus,
+.form-group textarea:focus {
+    border-color: var(--primary-hover);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: var(--text-light);
+}
+
+
+/* ========================================
+   Image Upload
+======================================== */
+/* ========================================
+   Image Upload
+======================================== */
+
+.image-upload-box {
+    position: relative;
+
+    width: 100%;
+    min-height: 180px;
+
+    padding: 20px;
+
+    display: flex;
+    align-items: center;
+
+    margin-bottom: 25px;
+
+    border: 1px dashed #3a3a3a;
+    border-radius: 12px;
+
+    background: var(--primary-color);
+
+    cursor: pointer;
+
+    transition: 0.3s ease;
+
+    overflow: hidden;
+}
+
+.image-upload-box:hover {
+    border-color: #4f8cff;
+    background: rgba(79, 140, 255, 0.05);
+}
+
+
+/* ========================================
+   Upload Content
+======================================== */
+
+.upload-content {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    text-align: center;
+
+    pointer-events: none;
+}
+
+.upload-icon {
+    font-size: 42px;
+    color: #4f8cff;
+}
+
+.upload-text {
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.upload-content small {
+    color: #888;
+}
+
+
+/* ========================================
+   File Input
+======================================== */
+
+.image-upload-box input[type="file"] {
+    position: absolute;
+
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    opacity: 0;
+
+    cursor: pointer;
+
+    z-index: 20;
+}
+
+
+/* ========================================
+   Image Preview
+======================================== */
+
+.image-preview {
+    display: none;
+
+    width: 100%;
+    height: 100%;
+
+    align-items: center;
+
+    gap: 20px;
+
+    position: relative;
+
+    z-index: 5;
+
+    pointer-events: none;
+}
+
+
+/* ========================================
+   Preview Image Box
+======================================== */
+
+.preview-image-box {
+    width: 200px;
+    height: 140px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(0, 0, 0, 0.20);
+
+    border-radius: 10px;
+
+    overflow: hidden;
+}
+
+.preview-image-box img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+
+    display: block;
+}
+
+
+/* ========================================
+   Preview Details
+======================================== */
+
+.preview-details {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+}
+
+
+.preview-details h3 {
+    margin: 0 0 5px;
+
+    color: var(--text-color);
+
+    font-size: 18px;
+    font-weight: 600;
+}
+
+
+.preview-details p {
+    margin: 0 0 10px;
+
+    color: var(--text-light);
+
+    font-size: 12px;
+}
+
+
+.file-name {
+    display: flex;
+    align-items: center;
+
+    gap: 7px;
+
+    min-width: 0;
+
+    color: #6fa8ff;
+
+    font-size: 14px;
+}
+
+
+.file-name i {
+    flex-shrink: 0;
+
+    font-size: 18px;
+
+    color: #4f8cff;
+}
+
+
+.file-name span {
+    max-width: 300px;
+
+    overflow: hidden;
+
+    white-space: nowrap;
+
+    text-overflow: ellipsis;
+}
+
+/* ========================================
+   Status Section
+======================================== */
+
+.status-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    padding: 18px;
+
+    margin-bottom: 30px;
+
+    background: var(--primary-color);
+
+    border: 1px solid var(--border-color-special);
+    border-radius: var(--border-radius);
+}
+
+
+/* Status Content */
+
+.status-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.status-icon {
+    width: 40px;
+    height: 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: var(--border-radius);
+
+    background: rgba(34, 197, 94, 0.10);
+
+    color: var(--success);
+
+    font-size: 18px;
+}
+
+.status-content strong {
+    display: block;
+
+    margin-bottom: 3px;
+
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.status-content p {
+    margin: 0;
+
+    font-size: 11px;
+    color: var(--text-light);
+}
+
+
+/* ========================================
+   Status Checkbox
+======================================== */
+
+.status-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.status-toggle input {
+    width: 17px;
+    height: 17px;
+
+    accent-color: var(--success);
+
+    cursor: pointer;
+}
+
+.status-toggle label {
+    font-size: 13px;
+
+    color: var(--text-color);
+
+    cursor: pointer;
+}
+
+
+/* ========================================
+   Form Actions
+======================================== */
+
+.form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    gap: 10px;
+
+    padding-top: 5px;
+}
+
+
+/* Cancel */
+
+.cancel-btn {
+    padding: 11px 20px;
+
+    border: 1px solid var(--border-color-special);
+    border-radius: var(--border-radius);
+
+    color: var(--text-light);
+
+    text-decoration: none;
+
+    font-size: 13px;
+
+    transition: var(--transition);
+}
+
+.cancel-btn:hover {
+    color: var(--text-color);
+    border-color: var(--text-light);
+}
+
+
+/* Save */
+
+.save-category-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    padding: 11px 20px;
+
+    background: var(--primary-hover);
+
+    border: none;
+    border-radius: var(--border-radius);
+
+    color: #ffffff;
+
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+
+    cursor: pointer;
+
+    transition: var(--transition);
+}
+
+.save-category-btn:hover {
+    background: #1d4ed8;
+}
+
+
+/* ========================================
+   Error
+======================================== */
+
+.form-error {
+    margin-top: 6px;
+
+    font-size: 11px;
+
+    color: var(--danger);
+}
+
+
+/* ========================================
+   Responsive
+======================================== */
+
+@media (max-width: 768px) {
+
+    .add-category-header {
+        align-items: flex-start;
+        flex-direction: column;
+
+        gap: 15px;
+    }
+
+    .back-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .category-form-card {
+        padding: 20px;
+    }
+
+    .status-section {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .status-toggle {
+        margin-left: 52px;
+    }
+
+}
+
+
+@media (max-width: 576px) {
+
+    .add-category-header h1 {
+        font-size: 24px;
+    }
+
+    .form-actions {
+        flex-direction: column-reverse;
+    }
+
+    .cancel-btn,
+    .save-category-btn {
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+    }
+
+}

@@ -1,0 +1,155 @@
+.register-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+.register-card {
+    width: 100%;
+    max-width: 450px;
+    padding: 35px;
+    border-radius: 16px;
+    background: #ffffff;
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
+}
+
+.register-title {
+    margin-bottom: 8px;
+    text-align: center;
+    font-size: 30px;
+    font-weight: 700;
+}
+
+.register-subtitle {
+    margin-bottom: 30px;
+    text-align: center;
+    color: #777;
+    font-size: 14px;
+}
+
+.register-form .form-group {
+    margin-bottom: 20px;
+}
+
+.register-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.register-form input {
+    width: 100%;
+    padding: 13px 14px;
+    border: 1px solid #dcdcdc;
+    border-radius: 8px;
+    outline: none;
+    font-size: 15px;
+    box-sizing: border-box;
+}
+
+.register-form input:focus {
+    border-color: #111827;
+    box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.08);
+}
+
+.register-error {
+    margin-top: 6px;
+    color: #dc2626;
+    font-size: 13px;
+}
+
+.register-button {
+    width: 100%;
+    padding: 13px;
+    border: none;
+    border-radius: 8px;
+    background: #111827;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.register-button:hover {
+    background: #000000;
+}
+
+.register-login {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.register-login a {
+    color: #111827;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.register-login a:hover {
+    text-decoration: underline;
+}
+
+
+.password-input-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.password-input-wrapper input {
+    width: 100%;
+    padding-right: 48px;
+}
+
+.toggle-password {
+    position: absolute;
+
+    top: 50%;
+    right: 12px;
+
+    transform: translateY(-50%);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 32px;
+    height: 32px;
+
+    padding: 0;
+
+    background: transparent;
+    border: none;
+
+    cursor: pointer;
+
+    font-size: 17px;
+
+    opacity: 0.65;
+
+    transition: opacity 0.2s ease;
+}
+
+.toggle-password:hover {
+    opacity: 1;
+}
+
+
+@media (max-width: 576px) {
+
+    .register-page {
+        padding: 25px 15px;
+    }
+
+    .register-card {
+        padding: 25px 20px;
+    }
+
+    .register-title {
+        font-size: 25px;
+    }
+
+}

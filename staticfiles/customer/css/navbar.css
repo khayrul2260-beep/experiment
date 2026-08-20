@@ -1,0 +1,1703 @@
+/* =====================================================
+   NAFI NAVIGATION
+   CUSTOM CSS — NO BOOTSTRAP NAVBAR DEPENDENCY
+===================================================== */
+
+
+/* =====================================================
+   ROOT VARIABLES
+===================================================== */
+
+:root {
+
+    --nafi-black: #000000;
+    --nafi-dark: #050608;
+    --nafi-dark-blue: #010025;
+
+    --nafi-white: #ffffff;
+    --nafi-text: #eeeeee;
+    --nafi-muted: #aaaaaa;
+
+    --nafi-blue: #1e9bff;
+    --nafi-red: #0dd2ec;
+
+    --nafi-border: rgba(255, 255, 255, 0.08);
+    /* --max-width: 2000px; */
+
+
+}
+
+
+/* =====================================================
+   TOP ANNOUNCEMENT BAR
+===================================================== */
+
+.nafi-topbar {
+
+    width: 100%;
+
+    background: var(--nafi-dark-blue);
+
+    color: var(--nafi-white);
+
+    font-size: 13px;
+
+    border-bottom: 1px solid var(--nafi-border);
+
+}
+
+
+.nafi-topbar-container {
+
+    width: 100%;
+
+    max-width: var(--max-width);
+
+    min-height: 38px;
+
+    margin: 0 auto;
+
+    padding: 0 3%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    box-sizing: border-box;
+
+}
+
+
+/* =====================================================
+   TOPBAR LEFT
+===================================================== */
+
+.topbar-left {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    color: #eeeeee;
+
+}
+
+
+.topbar-left i {
+
+    color: var(--nafi-blue);
+
+    font-size: 14px;
+
+}
+
+
+/* =====================================================
+   TOPBAR RIGHT
+===================================================== */
+
+.topbar-right {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+
+}
+
+
+.topbar-right a {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 4px;
+
+    color: #dddddd;
+
+    text-decoration: none;
+
+    transition: color 0.25s ease;
+
+}
+
+
+.topbar-right a:hover {
+
+    color: var(--nafi-blue);
+
+}
+
+
+.topbar-right i {
+
+    font-size: 13px;
+
+}
+
+
+.topbar-right .bi-chevron-down {
+
+    font-size: 9px;
+
+    margin-left: 2px;
+
+}
+
+
+/* =====================================================
+   TOPBAR DIVIDER
+===================================================== */
+
+.topbar-divider {
+
+    width: 1px;
+
+    height: 14px;
+
+    background: rgba(255, 255, 255, 0.20);
+
+}
+
+
+/* =====================================================
+   MAIN NAVBAR
+===================================================== */
+
+.nafi-navbar {
+
+    position: sticky;
+
+    top: 0;
+
+    z-index: 1000;
+
+    width: 100%;
+
+    height: 78px;
+
+    background: var(--nafi-black);
+
+    border-bottom: 1px solid var(--nafi-border);
+
+    transition:
+        height 0.3s ease,
+        background 0.3s ease,
+        box-shadow 0.3s ease;
+
+}
+
+
+/* =====================================================
+   NAVBAR CONTAINER
+===================================================== */
+
+.nafi-navbar-container {
+
+    width: 100%;
+
+    max-width: var(--max-width);
+
+    height: 100%;
+
+    margin: 0 auto;
+
+    padding: 0 3%;
+
+    display: flex;
+
+    align-items: center;
+
+    box-sizing: border-box;
+
+}
+
+
+/* =====================================================
+   LOGO
+===================================================== */
+
+.nafi-logo {
+
+    width: 60px;
+
+    height: 60px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+}
+
+
+.logo_ {
+
+    width: 100%;
+
+    height: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-decoration: none;
+
+}
+
+
+.brand_logo_ {
+
+    width: auto;
+
+    height: 80%;
+
+    max-width: 60px;
+
+    object-fit: contain;
+
+    display: block;
+
+    transition: transform 0.25s ease;
+
+}
+
+
+.brand_logo_:hover {
+
+    transform: translateY(-2px);
+
+}
+
+
+.brand_logo_:active {
+
+    transform: scale(0.96);
+
+}
+
+
+/* =====================================================
+   DESKTOP NAVIGATION
+===================================================== */
+
+.nafi-navigation {
+
+    height: 100%;
+
+    flex: 1;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+}
+
+
+.nafi-menu {
+
+    height: 100%;
+
+    margin: 0;
+
+    padding: 0;
+
+    list-style: none;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 8px;
+
+}
+
+
+/* =====================================================
+   NAV ITEM
+===================================================== */
+
+.nafi-menu .nav-item {
+
+    position: relative;
+
+    height: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+}
+
+
+/* =====================================================
+   NAV LINKS
+===================================================== */
+
+.nav-link_ {
+
+    position: relative;
+
+    height: 100%;
+
+    padding: 0 18px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 7px;
+
+    border: none;
+
+    outline: none;
+
+    background: transparent;
+
+    color: var(--nafi-text);
+
+    text-decoration: none;
+
+    font-family: inherit;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    letter-spacing: 0.7px;
+
+    cursor: pointer;
+
+    white-space: nowrap;
+
+    transition:
+
+        color 0.25s ease,
+
+        transform 0.25s ease;
+
+}
+
+
+/* =====================================================
+   NAV LINK HOVER
+===================================================== */
+
+.nav-link_:hover {
+
+    color: var(--nafi-white);
+
+}
+
+
+/* =====================================================
+   NAV UNDERLINE
+===================================================== */
+
+.nav-link_::after {
+
+    content: "";
+
+    position: absolute;
+
+    left: 18px;
+
+    right: 18px;
+
+    bottom: 20px;
+
+    height: 2px;
+
+    background: var(--nafi-red);
+
+    transform: scaleX(0);
+
+    transform-origin: center;
+
+    transition: transform 0.3s ease;
+
+}
+
+
+/* =====================================================
+   ACTIVE / HOVER UNDERLINE
+===================================================== */
+
+.nav-link_:hover::after,
+.nav-link_.active::after {
+
+    transform: scaleX(1);
+
+}
+
+
+/* =====================================================
+   DROPDOWN TRIGGER
+===================================================== */
+
+.dropdown-trigger {
+
+    appearance: none;
+
+}
+
+
+/* =====================================================
+   DROPDOWN ARROW
+===================================================== */
+
+.dropdown-trigger i {
+
+    font-size: 9px;
+
+    transition: transform 0.3s ease;
+
+}
+
+
+/* Arrow rotation when open */
+
+.nav-dropdown.dropdown-open
+.dropdown-trigger i {
+
+    transform: rotate(180deg);
+
+}
+
+
+/* =====================================================
+   DROPDOWN CONTAINER
+===================================================== */
+
+.nafi-dropdown {
+
+    position: absolute;
+
+    top: calc(100% + 1px);
+
+    left: 50%;
+
+    transform: translate(-50%, 10px);
+
+    width: 210px;
+
+    padding: 10px 0;
+
+    background: #000000;
+
+    border: 1px solid var(--nafi-border);
+
+    border-radius: 0;
+
+    box-shadow:
+        0 15px 40px rgba(0, 0, 0, 0.45);
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    pointer-events: none;
+
+    transition:
+
+        opacity 0.25s ease,
+
+        visibility 0.25s ease,
+
+        transform 0.25s ease;
+
+}
+
+
+/* =====================================================
+   DROPDOWN OPEN
+===================================================== */
+
+.nav-dropdown.dropdown-open .nafi-dropdown {
+
+    opacity: 1;
+
+    visibility: visible;
+
+    pointer-events: auto;
+
+    transform: translate(-50%, 0);
+
+}
+
+
+/* =====================================================
+   DROPDOWN ITEM
+===================================================== */
+
+.dropdown-item {
+
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+
+    width: 100%;
+
+    min-height: 44px;
+
+    padding: 0 20px;
+
+    box-sizing: border-box;
+
+    color: #dddddd;
+
+    background: transparent;
+
+    text-decoration: none;
+
+    font-size: 12px;
+
+    font-weight: 500;
+
+    transition:
+
+        color 0.25s ease,
+
+        background 0.25s ease,
+
+        padding-left 0.25s ease;
+
+}
+
+
+/* =====================================================
+   DROPDOWN HOVER
+===================================================== */
+
+.dropdown-item:hover {
+
+    color: #ffffff;
+
+    background: #101820;
+
+    padding-left: 26px;
+
+}
+
+
+/* =====================================================
+   RIGHT ACTIONS
+===================================================== */
+
+.nafi-actions {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: flex-end;
+
+    gap: 20px;
+
+    flex-shrink: 0;
+
+}
+
+
+/* =====================================================
+   ACTION ICON
+===================================================== */
+
+.nafi-action {
+
+    position: relative;
+
+    width: 28px;
+
+    height: 40px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    color: var(--nafi-white);
+
+    text-decoration: none;
+
+    font-size: 20px;
+
+    transition:
+
+        color 0.25s ease,
+
+        transform 0.25s ease;
+
+}
+
+
+.nafi-action:hover {
+
+    color: var(--nafi-blue);
+
+    transform: translateY(-1px);
+
+}
+
+
+/* =====================================================
+   CART
+===================================================== */
+
+.cart-action {
+
+    position: relative;
+
+}
+
+
+/* =====================================================
+   CART COUNT
+===================================================== */
+
+.cart-count {
+
+    position: absolute;
+
+    top: 0;
+
+    right: -7px;
+
+    width: 17px;
+
+    height: 17px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #168cff;
+
+    color: #ffffff;
+
+    font-size: 9px;
+
+    font-weight: 700;
+
+    line-height: 1;
+
+}
+
+
+/* =====================================================
+   ACCOUNT
+===================================================== */
+
+.navbar-account {
+
+    display: flex;
+
+    align-items: center;
+
+}
+
+
+/* =====================================================
+   ACCOUNT BUTTON
+===================================================== */
+
+.account-btn {
+
+    min-height: 42px;
+
+    padding: 5px 13px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 9px;
+
+    border: 1px solid rgba(255, 255, 255, 0.18);
+
+    border-radius: 9px;
+
+    background: transparent;
+
+    color: #ffffff;
+
+    text-decoration: none;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    transition:
+
+        background 0.25s ease,
+
+        border-color 0.25s ease,
+
+        transform 0.25s ease;
+
+}
+
+
+.account-btn:hover {
+
+    background: rgba(255, 255, 255, 0.08);
+
+    border-color: rgba(255, 255, 255, 0.35);
+
+    color: #ffffff;
+
+    transform: translateY(-1px);
+
+}
+
+
+/* =====================================================
+   ACCOUNT AVATAR
+===================================================== */
+
+.account-avatar,
+.account-avatar-placeholder {
+
+    width: 30px;
+
+    height: 30px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 50%;
+
+}
+
+
+.account-avatar {
+
+    object-fit: cover;
+
+}
+
+
+.account-avatar-placeholder {
+
+    background: #ffffff;
+
+    color: #111111;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+}
+
+
+/* =====================================================
+   ACCOUNT ICON
+===================================================== */
+
+.account-icon {
+
+    width: 30px;
+
+    height: 30px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 18px;
+
+}
+
+
+/* =====================================================
+   SCROLL EFFECT
+===================================================== */
+
+.nafi-navbar.navbar-scrolled {
+
+    height: 66px;
+
+    background: rgba(5, 6, 8, 0.96);
+
+    backdrop-filter: blur(12px);
+
+    -webkit-backdrop-filter: blur(12px);
+
+    box-shadow:
+        0 8px 30px rgba(0, 0, 0, 0.30);
+
+}
+
+
+/* =====================================================
+   MOBILE TOGGLE
+===================================================== */
+
+.nafi-mobile-toggle {
+
+    display: none;
+
+    width: 40px;
+
+    height: 40px;
+
+    padding: 0;
+
+    margin: 0;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border: none;
+
+    outline: none;
+
+    background: transparent;
+
+    color: #ffffff;
+
+    font-size: 27px;
+
+    cursor: pointer;
+
+}
+
+
+.nafi-mobile-toggle:focus {
+
+    outline: none;
+
+}
+
+
+/* =====================================================
+   MOBILE OVERLAY
+===================================================== */
+
+.nafi-mobile-overlay {
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 1090;
+
+    background: rgba(0, 0, 0, 0.60);
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    pointer-events: none;
+
+    transition:
+
+        opacity 0.3s ease,
+
+        visibility 0.3s ease;
+
+}
+
+
+.nafi-mobile-overlay.mobile-open {
+
+    opacity: 1;
+
+    visibility: visible;
+
+    pointer-events: auto;
+
+}
+
+
+/* =====================================================
+   MOBILE SIDE MENU
+===================================================== */
+
+.nafi-mobile-menu {
+
+    position: fixed;
+
+    top: 0;
+
+    left: 0;
+
+    z-index: 1100;
+
+    width: 310px;
+
+    max-width: 85vw;
+
+    height: 100vh;
+
+    background: #080a0e;
+
+    color: #ffffff;
+
+    box-shadow:
+        10px 0 40px rgba(0, 0, 0, 0.45);
+
+    transform: translateX(-100%);
+
+    transition: transform 0.35s ease;
+
+    overflow-y: auto;
+
+    overflow-x: hidden;
+
+}
+
+
+.nafi-mobile-menu.mobile-open {
+
+    transform: translateX(0);
+
+}
+
+
+/* =====================================================
+   MOBILE MENU HEADER
+===================================================== */
+
+.mobile-menu-header {
+
+    min-height: 78px;
+
+    padding: 0 22px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    border-bottom: 1px solid var(--nafi-border);
+
+}
+
+
+/* =====================================================
+   MOBILE LOGO
+===================================================== */
+
+.mobile-logo {
+
+    height: 45px;
+
+    display: flex;
+
+    align-items: center;
+
+}
+
+
+.mobile-logo img {
+
+    width: auto;
+
+    height: 38px;
+
+    max-width: 100px;
+
+    object-fit: contain;
+
+}
+
+
+/* =====================================================
+   MOBILE CLOSE BUTTON
+===================================================== */
+
+.mobile-menu-close {
+
+    width: 40px;
+
+    height: 40px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 0;
+
+    border: none;
+
+    outline: none;
+
+    background: transparent;
+
+    color: #ffffff;
+
+    font-size: 18px;
+
+    cursor: pointer;
+
+    transition:
+
+        color 0.25s ease,
+
+        transform 0.25s ease;
+
+}
+
+
+.mobile-menu-close:hover {
+
+    color: var(--nafi-blue);
+
+    transform: rotate(90deg);
+
+}
+
+
+/* =====================================================
+   MOBILE MENU BODY
+===================================================== */
+
+.mobile-menu-body {
+
+    padding: 0 22px 30px;
+
+}
+
+
+/* =====================================================
+   MOBILE NAV LIST
+===================================================== */
+
+.mobile-nav-list {
+
+    list-style: none;
+
+    padding: 0;
+
+    margin: 0;
+
+}
+
+
+/* =====================================================
+   MOBILE NAV ITEM
+===================================================== */
+
+.mobile-nav-list > li {
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+
+}
+
+
+/* =====================================================
+   MOBILE NORMAL LINK
+===================================================== */
+
+.mobile-nav-list > li > a {
+
+    min-height: 58px;
+
+    padding: 0 5px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    color: #ffffff;
+
+    text-decoration: none;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    letter-spacing: 0.5px;
+
+    transition:
+
+        color 0.25s ease,
+
+        padding-left 0.25s ease;
+
+}
+
+
+.mobile-nav-list > li > a:hover {
+
+    color: var(--nafi-blue);
+
+    padding-left: 12px;
+
+}
+
+
+.mobile-nav-list > li > a i {
+
+    color: #777777;
+
+    font-size: 12px;
+
+}
+
+
+/* =====================================================
+   MOBILE DROPDOWN TRIGGER
+===================================================== */
+
+.mobile-dropdown-trigger {
+
+    width: 100%;
+
+    min-height: 58px;
+
+    padding: 0 5px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    border: none;
+
+    outline: none;
+
+    background: transparent;
+
+    color: #ffffff;
+
+    font-family: inherit;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    letter-spacing: 0.5px;
+
+    cursor: pointer;
+
+}
+
+
+/* =====================================================
+   MOBILE DROPDOWN ARROW
+===================================================== */
+
+.mobile-dropdown-trigger i {
+
+    color: #777777;
+
+    font-size: 11px;
+
+    transition: transform 0.3s ease;
+
+}
+
+
+.mobile-nav-dropdown.dropdown-open
+.mobile-dropdown-trigger i {
+
+    transform: rotate(180deg);
+
+}
+
+
+/* =====================================================
+   MOBILE DROPDOWN
+===================================================== */
+
+.mobile-dropdown {
+
+    max-height: 0;
+
+    overflow: hidden;
+
+    opacity: 0;
+
+    transition:
+
+        max-height 0.35s ease,
+
+        opacity 0.25s ease;
+
+}
+
+
+/* =====================================================
+   MOBILE DROPDOWN OPEN
+===================================================== */
+
+.mobile-nav-dropdown.dropdown-open
+.mobile-dropdown {
+
+    max-height: 300px;
+
+    opacity: 1;
+
+}
+
+
+/* =====================================================
+   MOBILE DROPDOWN ITEM
+===================================================== */
+
+.mobile-dropdown a {
+
+    min-height: 45px;
+
+    padding: 0 10px 0 18px;
+
+    display: flex;
+
+    align-items: center;
+
+    color: #999999;
+
+    text-decoration: none;
+
+    font-size: 13px;
+
+    transition:
+
+        color 0.25s ease,
+
+        padding-left 0.25s ease;
+
+}
+
+
+.mobile-dropdown a:hover {
+
+    color: #ffffff;
+
+    padding-left: 25px;
+
+}
+
+
+/* =====================================================
+   MOBILE ACTIONS
+===================================================== */
+
+.mobile-actions {
+
+    margin-top: 35px;
+
+    padding-top: 20px;
+
+    border-top: 1px solid var(--nafi-border);
+
+}
+
+
+/* =====================================================
+   MOBILE ACTION LINK
+===================================================== */
+
+.mobile-actions a {
+
+    position: relative;
+
+    min-height: 48px;
+
+    padding: 0 5px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+
+    color: #cccccc;
+
+    text-decoration: none;
+
+    font-size: 14px;
+
+    transition:
+
+        color 0.25s ease,
+
+        padding-left 0.25s ease;
+
+}
+
+
+.mobile-actions a:hover {
+
+    color: #ffffff;
+
+    padding-left: 10px;
+
+}
+
+
+.mobile-actions a i {
+
+    width: 22px;
+
+    color: var(--nafi-blue);
+
+    font-size: 18px;
+
+}
+
+
+/* =====================================================
+   MOBILE CART COUNT
+===================================================== */
+
+.mobile-cart-count {
+
+    margin-left: auto;
+
+    min-width: 20px;
+
+    height: 20px;
+
+    padding: 0 5px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background: #168cff;
+
+    color: #ffffff;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+}
+
+
+/* =====================================================
+   PREVENT BODY SCROLL WHEN MOBILE MENU OPEN
+===================================================== */
+
+body.nafi-menu-open {
+
+    overflow: hidden;
+
+}
+
+
+/* =====================================================
+   RESPONSIVE — LARGE TABLET
+===================================================== */
+
+@media (max-width: 1199px) {
+
+    .nafi-menu {
+
+        gap: 2px;
+
+    }
+
+
+    .nav-link_ {
+
+        padding-left: 12px;
+
+        padding-right: 12px;
+
+        font-size: 11px;
+
+    }
+
+
+    .nav-link_::after {
+
+        left: 12px;
+
+        right: 12px;
+
+    }
+
+
+    .nafi-actions {
+
+        gap: 15px;
+
+    }
+
+
+    .account-btn {
+
+        padding-left: 9px;
+
+        padding-right: 9px;
+
+    }
+
+}
+
+
+/* =====================================================
+   RESPONSIVE — TABLET / MOBILE
+===================================================== */
+
+@media (max-width: 991px) {
+
+    /* TOPBAR */
+
+    .nafi-topbar {
+
+        display: none;
+
+    }
+
+
+    /* NAVBAR */
+
+    .nafi-navbar {
+
+        height: 68px;
+
+    }
+
+
+    .nafi-navbar-container {
+
+        padding: 0 20px;
+
+        justify-content: space-between;
+
+    }
+
+
+    /* MOBILE TOGGLE */
+
+    .nafi-mobile-toggle {
+
+        display: flex;
+
+        order: 1;
+
+    }
+
+
+    /* LOGO */
+
+    .nafi-logo {
+
+        position: absolute;
+
+        left: 50%;
+
+        width: 60px;
+
+        height: 60px;
+
+        transform: translateX(-50%);
+
+    }
+
+
+    /* DESKTOP NAVIGATION HIDE */
+
+    .nafi-navigation {
+
+        display: none;
+
+    }
+
+
+    /* RIGHT ACTIONS */
+
+    .nafi-actions {
+
+        margin-left: auto;
+
+        gap: 15px;
+
+    }
+
+
+    /* HIDE WISHLIST */
+
+    .wishlist-action {
+
+        display: none;
+
+    }
+
+
+    /* HIDE ACCOUNT */
+
+    .navbar-account {
+
+        display: none;
+
+    }
+
+
+    /* ICON SIZE */
+
+    .nafi-action {
+
+        font-size: 20px;
+
+    }
+
+}
+
+
+/* =====================================================
+   RESPONSIVE — SMALL MOBILE
+===================================================== */
+
+@media (max-width: 575px) {
+
+    .nafi-navbar-container {
+
+        padding: 0 15px;
+
+    }
+
+
+    .nafi-actions {
+
+        gap: 11px;
+
+    }
+
+
+    .nafi-action {
+
+        width: 26px;
+
+        font-size: 19px;
+
+    }
+
+
+    .nafi-mobile-toggle {
+
+        width: 38px;
+
+        font-size: 25px;
+
+    }
+
+
+    .nafi-mobile-menu {
+
+        width: 85vw;
+
+    }
+
+
+    .mobile-menu-header {
+
+        padding-left: 18px;
+
+        padding-right: 18px;
+
+    }
+
+
+    .mobile-menu-body {
+
+        padding-left: 18px;
+
+        padding-right: 18px;
+
+    }
+
+}
+
+
+/* =====================================================
+   VERY SMALL MOBILE
+===================================================== */
+
+@media (max-width: 380px) {
+
+    .nafi-navbar {
+
+        height: 64px;
+
+    }
+
+
+    .nafi-logo {
+
+        width: 52px;
+
+        height: 52px;
+
+    }
+
+
+    .brand_logo_ {
+
+        max-width: 52px;
+
+    }
+
+
+    .nafi-actions {
+
+        gap: 7px;
+
+    }
+
+
+    .nafi-action {
+
+        width: 24px;
+
+        font-size: 18px;
+
+    }
+
+
+    .nafi-mobile-toggle {
+
+        width: 34px;
+
+        font-size: 23px;
+
+    }
+
+}

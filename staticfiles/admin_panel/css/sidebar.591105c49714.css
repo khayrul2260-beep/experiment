@@ -1,0 +1,314 @@
+/* ===============================
+   SIDEBAR
+=================================*/
+.sidebar {
+
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+
+    padding-top: 50px;
+
+    left: 0;
+
+    width: 200px;
+
+    height: calc(100vh - 60px);
+
+    background: var(--background-color);
+
+    overflow-y: auto;
+
+    overflow-x: hidden;
+
+    /* Firefox */
+    scrollbar-width: none;
+
+    /* IE/Old Edge */
+    -ms-overflow-style: none;
+
+    border-right: 1px solid var(--border-color-special);
+
+}
+
+/* Chrome, Edge, Safari */
+.sidebar::-webkit-scrollbar {
+
+    width: 0px;
+
+    display: none;
+
+}
+
+/* ===============================
+   SIDEBAR HEADER
+=================================*/
+
+.sidebar-header{
+
+    padding: 5px 0px 5px 20px;
+    width: var(--sidebar-header-width);
+    position: fixed;
+    border-bottom: 1px solid var(--border-color-special);
+    border-right: 1px solid var(--border-color-special);
+    background: var(--sidebar-color);
+    z-index: 1000;
+}
+
+
+.logo{
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    color: var(--text-color);
+
+}
+
+
+.logo .brand_logo{
+
+    width: 60px;
+
+    height: 60px;
+
+    border-radius: 60px;
+
+    background: var(--primary-color);
+    border: 3px solid blue;
+    transform: all 0.2s ease;
+}
+
+.logo .brand_logo:hover {
+    border: 3px solid green;
+}
+
+.logo .brand_logo:active{
+    transform: scale(0.96);
+}
+
+.brand_title{
+    width: 170px;
+    height: 64px;
+    transform: all 0.5s ease;
+}
+
+.brand_title:active{
+    transform: scale(0.96);
+}
+
+/* ===============================
+   MENU
+=================================*/
+
+.sidemenu{
+
+    display: flex;
+
+    flex-direction: column;
+
+    height: 100%;
+
+}
+
+
+
+.sidebar-menu{
+
+    flex: 1;
+    width: 100%;
+    padding: 20px 15px;
+    overflow: auto;
+    scrollbar-width: none;
+
+}
+
+
+.menu-title{
+
+    color: var(--text-light);
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    letter-spacing: 1px;
+
+    text-transform: uppercase;
+
+    margin: 25px 15px 10px;
+
+}
+
+
+/* ===============================
+   MENU ITEM
+=================================*/
+
+.sidebar-menu ul li{
+
+    margin-bottom: 6px;
+
+}
+
+
+.sidebar-menu ul li a{
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    padding: 14px 18px;
+
+    border-radius: 12px;
+
+    color: var(--text-light);
+
+    transition: var(--transition);
+
+    font-size: 13px;
+
+    font-weight: 500;
+
+}
+
+
+/* ===============================
+   ICON
+=================================*/
+
+.sidebar-menu ul li a i{
+
+    font-size: 16px;
+
+    min-width: 25px;
+
+    text-align: center;
+
+}
+
+
+/* ===============================
+   HOVER
+=================================*/
+
+
+
+.sidebar-menu ul li a:hover{
+
+    background: rgba(59,130,246,.12);
+
+    color: var(--text-color);
+
+    transform: translateX(5px);
+
+}
+
+
+/* ===============================
+   ACTIVE
+=================================*/
+
+
+
+.sidebar-menu ul li.active a{
+
+    background: rgb(34, 34, 34);
+
+    color: white;
+
+    box-shadow: 0 8px 20px rgba(59,130,246,.35);
+
+}
+
+
+/* ===============================
+   FOOTER
+=================================*/
+
+.sidebar-footer{
+
+    padding: 20px;
+
+    margin-bottom: 20px;
+    border-top: 1px solid var(--border-color);
+
+}
+
+
+.sidebar-footer a{
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    padding: 14px 18px;
+
+    border-radius: 12px;
+
+    color: var(--danger);
+
+    transition: var(--transition);
+
+    font-weight: 600;
+
+}
+
+
+.sidebar-footer a i{
+
+    font-size: 20px;
+
+}
+
+
+.sidebar-footer a:hover{
+
+    background: rgba(239,68,68,.15);
+
+}
+
+
+/* ===============================
+   SCROLLBAR
+=================================*/
+
+
+.sidebar::-webkit-scrollbar-thumb{
+
+    background: #475569;
+
+    border-radius: 20px;
+
+}
+
+
+
+
+/* ===============================
+   RESPONSIVE
+=================================*/
+
+@media(max-width:992px){
+
+    .sidebar-header{
+        display: none;
+    }
+
+    .sidebar-header{
+        position:absolute;
+        left: 100px;
+        width: 50px;
+        height: 50px;
+        background: transparent;
+        border-bottom: none;
+    }
+
+}

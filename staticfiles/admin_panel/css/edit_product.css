@@ -1,0 +1,498 @@
+/* ========================================
+   Current Product Image
+======================================== */
+
+.current-image-container {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+
+    padding: 16px;
+
+    margin-bottom: 15px;
+
+    background: var(--primary-color);
+
+    border: 1px solid var(--border-color-special);
+    border-radius: var(--border-radius);
+}
+
+
+.current-image {
+    width: 110px;
+    height: 110px;
+
+    flex-shrink: 0;
+
+    overflow: hidden;
+
+    background: var(--background-color);
+
+    border-radius: var(--border-radius);
+}
+
+
+.current-image img {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    object-fit: cover;
+}
+
+
+.current-image-info {
+    display: flex;
+    flex-direction: column;
+
+    gap: 5px;
+}
+
+
+.current-image-info strong {
+    font-size: 18px;
+    font-weight: 600;
+
+    color: rgb(173, 173, 173);
+}
+
+
+.current-image-info span {
+    font-size: 11px;
+
+    color: var(--text-light);
+}
+
+
+/* ========================================
+   No Image
+======================================== */
+
+.no-image {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 16px;
+
+    color: var(--text-light);
+}
+
+
+.no-image > i {
+    font-size: 30px;
+}
+
+
+.no-image div {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+
+.no-image strong {
+    font-size: 13px;
+
+    color: var(--text-color);
+}
+
+
+.no-image span {
+    font-size: 11px;
+}
+
+
+/* ========================================
+   New Image Upload
+======================================== */
+
+.product-image-upload {
+    position: relative;
+
+    width: 100%;
+    height: 180px;
+
+    padding: 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 25px;
+
+    background: var(--primary-color);
+
+    border: 1px dashed var(--border-color-special);
+    border-radius: 14px;
+
+    cursor: pointer;
+
+    overflow: hidden;
+
+    transition: var(--transition);
+}
+
+.product-image-upload:hover {
+    border-color: var(--primary-hover);
+}
+
+
+/* Upload Content */
+
+.upload-content {
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    text-align: center;
+
+    pointer-events: none;
+}
+
+.upload-content i {
+    font-size: 40px;
+    color: #4f8cff;
+}
+
+.upload-content strong {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.upload-content span {
+    font-size: 11px;
+    color: var(--text-light);
+}
+
+
+/* Preview Area */
+
+.product-preview-area {
+    display: none;
+    gap: 10px;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    flex-shrink: 0;
+    padding: 0px;
+
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+
+/* Preview Image */
+
+.product-preview {
+    display: block;
+    position: absolute;
+    left: 0px;
+    max-width: 200px;
+    height: 100%;
+    object-fit: contain;
+
+    border-radius: 7px;
+
+    background: rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+}
+
+
+/* File Name */
+
+.product-file-info {
+
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    left: 220px;
+    top: 50%;
+
+    transform: translate(0%, -50%);
+
+    gap: 7px;
+
+    margin-top: 9px;
+    color: var(--text-light);
+}
+
+.product-file-info p {
+    font-size: 12px;
+}
+.product-file-info h3 {
+    color: rgb(173, 173, 173);
+}
+
+
+
+.product-file-info i {
+    flex-shrink: 0;
+
+    font-size: 20px;
+
+    color: var(--primary-hover);
+}
+
+.product-file-info span {
+    min-width: 0;
+
+    overflow: hidden;
+
+    white-space: nowrap;
+
+    text-overflow: ellipsis;
+}
+
+
+/* File input */
+
+.product-image-upload input[type="file"] {
+    position: absolute;
+
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    opacity: 0;
+
+    cursor: pointer;
+
+    z-index: 10;
+}
+
+
+
+
+/* ========================================
+   Delete Button
+======================================== */
+
+.delete-product-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+
+    padding: 11px 16px;
+
+    background: transparent;
+
+    border: 1px solid rgba(239, 68, 68, 0.45);
+    border-radius: var(--border-radius);
+
+    color: var(--danger);
+
+    font-family: inherit;
+    font-size: 12px;
+
+    cursor: pointer;
+
+    transition: var(--transition);
+}
+
+
+.delete-product-btn:hover {
+    background: rgba(239, 68, 68, 0.10);
+
+    border-color: var(--danger);
+}
+
+
+/* ========================================
+   Delete Overlay
+======================================== */
+
+.delete-overlay {
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 9999;
+
+    display: none;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    background: rgba(0, 0, 0, 0.70);
+
+    backdrop-filter: blur(5px);
+}
+
+
+.delete-overlay.active {
+    display: flex;
+}
+
+
+/* ========================================
+   Delete Modal
+======================================== */
+
+.delete-modal {
+    width: 100%;
+    max-width: 430px;
+
+    padding: 30px;
+
+    background: var(--card-color);
+
+    border: 1px solid var(--border-color-special);
+    border-radius: var(--border-radius);
+
+    text-align: center;
+
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+}
+
+
+.delete-icon {
+    width: 52px;
+    height: 52px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin: 0 auto 15px;
+
+    background: rgba(239, 68, 68, 0.10);
+
+    border-radius: 50%;
+
+    color: var(--danger);
+
+    font-size: 21px;
+}
+
+
+.delete-modal h3 {
+    margin: 0 0 10px;
+
+    font-size: 18px;
+    font-weight: 600;
+
+    color: var(--text-color);
+}
+
+
+.delete-modal p {
+    margin: 0;
+
+    font-size: 13px;
+    line-height: 1.6;
+
+    color: var(--text-light);
+}
+
+
+.delete-modal p strong {
+    color: var(--text-color);
+}
+
+
+/* ========================================
+   Modal Buttons
+======================================== */
+
+.modal-buttons {
+    display: flex;
+    justify-content: center;
+
+    gap: 10px;
+
+    margin-top: 25px;
+}
+
+
+.modal-cancel-btn,
+.modal-delete-btn {
+    min-width: 100px;
+
+    padding: 10px 16px;
+
+    border-radius: var(--border-radius);
+
+    font-family: inherit;
+    font-size: 12px;
+
+    cursor: pointer;
+
+    text-decoration: none;
+
+    transition: var(--transition);
+}
+
+
+.modal-cancel-btn {
+    background: transparent;
+
+    border: 1px solid var(--border-color-special);
+
+    color: var(--text-light);
+}
+
+
+.modal-cancel-btn:hover {
+    border-color: var(--text-light);
+    color: var(--text-color);
+}
+
+
+.modal-delete-btn {
+    background: var(--danger);
+
+    border: 1px solid var(--danger);
+
+    color: #ffffff;
+}
+
+
+.modal-delete-btn:hover {
+    background: #dc2626;
+
+    color: #ffffff;
+}
+
+
+/* ========================================
+   Responsive
+======================================== */
+
+@media (max-width: 576px) {
+
+    .current-image-container {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+
+    .current-image {
+        width: 100%;
+        height: 180px;
+    }
+
+
+    .modal-buttons {
+        flex-direction: column;
+    }
+
+
+    .modal-cancel-btn,
+    .modal-delete-btn {
+        width: 100%;
+    }
+
+}
