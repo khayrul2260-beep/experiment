@@ -1,107 +1,85 @@
 {% load static %}
+
 <header class="top-navbar">
 
-    <!-- Left Section -->
+    {% comment %}
+    <!-- Sidebar Toggle -->
 
-    <div class="navbar-left">
+    <button class="nav-btn sidebar-toggle">
+      <i class="bi bi-list"></i>
+    </button>
+    {% endcomment %}
+  <!-- Left Section -->
+  <div class="navbar-left">
 
-        <!-- Sidebar Toggle -->
+    <img
+      src="{% static 'images/nafi_brand.png' %}"
+      alt="brand-logo"
+      class="nafi_logo"
+    />
 
-        <button class="nav-btn sidebar-toggle">
+    <!-- Page Title -->
 
-            <i class="bi bi-list"></i>
+    <div class="page-title">
+      <h3>{{page_title}}</h3>
 
-        </button>
+      <p>Welcome to NAFI</p>
+    </div>
+  </div>
 
-        <!-- Page Title -->
+  <!-- Right Section -->
 
-        <div class="page-title">
+  <div class="navbar-right">
+    <!-- Search Box -->
 
-            <h3>{% block page_title %}Dashboard{% endblock %}</h3>
+    <div class="search-box">
+      <i class="bi bi-search"></i>
 
-            <p>Welcome to NAFI Admin Dashboard</p>
-
-        </div>
-
+      <input type="text" placeholder="Search..." />
     </div>
 
+    <!-- Dark Mode -->
 
-    <!-- Right Section -->
+    <button class="nav-btn">
+      <i class="bi bi-moon"></i>
+    </button>
 
-    <div class="navbar-right">
+    <!-- Fullscreen -->
 
-        <!-- Search Box -->
+    <button class="nav-btn">
+      <i class="bi bi-fullscreen"></i>
+    </button>
 
-        <div class="search-box">
+    <!-- Notification -->
 
-            <i class="bi bi-search"></i>
+    <button class="nav-btn notification-btn">
+      <i class="bi bi-bell"></i>
 
-            <input
-                type="text"
-                placeholder="Search...">
+      <span class="badge">5</span>
+    </button>
 
-        </div>
+    <!-- Messages -->
 
-        <!-- Dark Mode -->
+    <button class="nav-btn message-btn">
+      <i class="bi bi-chat-dots"></i>
 
-        <button class="nav-btn">
+      <span class="badge">2</span>
+    </button>
 
-            <i class="bi bi-moon"></i>
+    <!-- Profile -->
 
-        </button>
+    <div class="profile-menu">
+      <div class="profile-image">
+        <img src="{% static 'admin_panel/images/khayrul.png' %}" alt="Admin" />
+      </div>
 
-        <!-- Fullscreen -->
+      <div class="profile-info">
+        <h5>Admin</h5>
 
-        <button class="nav-btn">
+        <span>Super Admin</span>
+      </div>
 
-            <i class="bi bi-fullscreen"></i>
-
-        </button>
-
-        <!-- Notification -->
-
-        <button class="nav-btn notification-btn">
-
-            <i class="bi bi-bell"></i>
-
-            <span class="badge">5</span>
-
-        </button>
-
-        <!-- Messages -->
-
-        <button class="nav-btn message-btn">
-
-            <i class="bi bi-chat-dots"></i>
-
-            <span class="badge">2</span>
-
-        </button>
-
-        <!-- Profile -->
-
-        <div class="profile-menu">
-
-            <div class="profile-image">
-
-                <img
-                    src="https://placehold.co/40x40"
-                    alt="Admin">
-
-            </div>
-
-            <div class="profile-info">
-
-                <h5>Admin</h5>
-
-                <span>Super Admin</span>
-
-            </div>
-
-            <i class="bi bi-chevron-down"></i>
-
-        </div>
-
+      <i class="bi bi-chevron-down"></i>
     </div>
-
+  </div>
 </header>

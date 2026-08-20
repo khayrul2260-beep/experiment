@@ -1,0 +1,378 @@
+
+{% extends 'admin_dashboard/master/base.html' %}
+
+{% load static %}
+
+{% block title %}
+    Categories | NAFI Admin Dashboard
+{% endblock %}
+
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'admin_panel/css/categories.css' %}">
+{% endblock %}
+
+
+{% block content %}
+
+<div class="categories-page">
+
+
+    <!-- Summary Cards -->
+    <div class="category-summary">
+
+        <!-- Total Categories -->
+        <div class="category-card">
+            <div class="category-card-icon">
+                <i class="bi bi-grid"></i>
+            </div>
+
+            <div class="category-card-content">
+                <span>Total Categories</span>
+                <h2>{{ total_categories }}</h2>
+                <small>All categories</small>
+            </div>
+        </div>
+
+
+        <!-- Active Categories -->
+        <div class="category-card">
+            <div class="category-card-icon">
+                ✓
+            </div>
+
+            <div class="category-card-content">
+                <span>Active</span>
+                <h2>{{ active_categories }}</h2>
+                <small>Currently active</small>
+            </div>
+        </div>
+
+
+        <!-- Inactive Categories -->
+        <div class="category-card">
+            <div class="category-card-icon">
+                <i class="fa-solid fa-xmark"></i>
+            </div>
+
+            <div class="category-card-content">
+                <span>Inactive</span>
+                <h2>{{ inactive_categories }}</h2>
+                <small>Currently inactive</small>
+            </div>
+        </div>
+
+
+        <!-- Products -->
+        <div class="category-card">
+            <div class="category-card-icon">
+                <i class="bi bi-bag"></i>
+            </div>
+
+            <div class="category-card-content">
+                <span>Products</span>
+                <h2>{{ total_products }}</h2>
+                <small>Total products</small>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- Page Header -->
+    <div class="categories-header">
+
+
+        <!-- Search & Filter -->
+        <div class="category-toolbar">
+        
+            <form method="GET" class="category-filter-search">
+            
+                <!-- Filter -->
+                <div class="category-filter">
+                
+                    <select
+                        name="status"
+                        onchange="this.form.submit()"
+                    >
+                
+                        <option
+                            value=""
+                            {% if status_filter == '' %}
+                                selected
+                            {% endif %}
+                        >
+                            All
+                        </option>
+                    
+                        <option
+                            value="active"
+                            {% if status_filter == 'active' %}
+                                selected
+                            {% endif %}
+                        >
+                            Active
+                        </option>
+                    
+                        <option
+                            value="inactive"
+                            {% if status_filter == 'inactive' %}
+                                selected
+                            {% endif %}
+                        >
+                            Inactive
+                        </option>
+                    
+                    </select>
+                
+                </div>
+                <!-- Search -->
+                <div class="category-search">
+                
+                    <i class="bi bi-search"></i>
+                
+                    <input
+                        type="text"
+                        name="search"
+                        id="search_categories"
+                        placeholder="Search categories..."
+                        value="{{ search_query }}"
+                    >
+                
+                </div>
+            
+            
+            
+            
+                <!-- Search Submit -->
+                <button type="submit" class="category-search-btn">
+                    <i class="bi bi-search"></i>
+                </button>
+            
+            </form>
+        
+        </div>
+
+        <div class="add_view">
+            <a href="{% url 'categories_page' %}" class="view_all">View All</a>
+
+            <a href="{% url 'add_category' %}" class="add-category-btn">
+                <i class="bi bi-plus-lg"></i>
+                Add Category
+            </a>
+        </div>
+
+    </div>
+
+
+
+    <!-- Categories Table -->
+    <div class="category-table-wrapper">
+        <table class="category-table">
+        
+            <thead>
+            
+                <tr>
+                    <th>Category</th>
+                    <th>Products</th>
+                    <th>Status</th>
+                    <th>Created</th>
+                    <th>Action</th>
+                </tr>
+            
+            </thead>
+        
+        
+            <tbody>
+            
+                {% for category in category_data %}
+            
+                <tr>
+                
+                    <!-- Category -->
+                    <td>
+                    
+                        <div class="category-image">
+                        
+                            {% if category.image %}
+                        
+                                <img
+                                    src="{{ category.image.url }}"
+                                    alt="{{ category.name }}"
+                                >
+                        
+                            {% else %}
+                        
+                                <div class="category-placeholder">
+                                    <i class="bi bi-grid"></i>
+                                </div>
+                            
+                            {% endif %}
+                            
+                            
+                            <div>
+                            
+                                <strong>
+                                    {{ category.name }}
+                                </strong>
+                            
+                                {% if category.description %}
+                            
+                                    <span>
+                                        {{ category.description|truncatechars:40 }}
+                                    </span>
+                                
+                                {% endif %}
+                                
+                            </div>
+                        
+                        </div>
+                    
+                    </td>
+                
+                
+                    <!-- Products -->
+                    <td>
+                        {{ category.products.count }}
+                    </td>
+                
+                
+                    <!-- Status -->
+                    <td>
+                    
+                        {% if category.is_active %}
+                    
+                            <span class="category-status active">
+                                <i class="bi bi-circle-fill"></i>
+                                Active
+                            </span>
+                        
+                        {% else %}
+                        
+                            <span class="category-status inactive">
+                                <i class="bi bi-circle-fill"></i>
+                                Inactive
+                            </span>
+                        
+                        {% endif %}
+                        
+                    </td>
+                
+                
+                    <!-- Created -->
+                    <td>
+                        {{ category.created_at|date:"d M Y" }}
+                    </td>
+                
+                
+                    <!-- Action -->
+                    <td>
+                    
+                        <div class="category-actions">
+                        
+                            <a
+                                href="{% url 'edit_category' category.id %}"
+                                class="category-edit"
+                                title="Edit"
+                            >
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                        
+                            <button
+                                type="button"
+                                class="category-delete delete"
+                                title="delete"
+                                onclick="openCategoryDeleteModal(
+                                    {{ category.id }},
+                                    '{{ category.name|escapejs }}'
+                                );"
+                            >
+                                <i class="bi bi-trash3" ></i>
+                            </button>
+                        
+                        </div>
+                    
+                    </td>
+                
+                </tr>
+            
+                {% empty %}
+            
+                <tr>
+                
+                    <td
+                        colspan="5"
+                        class="empty-category"
+                    >
+                
+                        <i class="bi bi-grid"></i>
+                
+                        <strong>
+                            No categories found
+                        </strong>
+                    
+                        <span>
+                            Create your first category to get started.
+                        </span>
+                    
+                    </td>
+                
+                </tr>
+            
+                {% endfor %}
+            
+            </tbody>
+        
+        </table>
+
+
+        <div class="delete-overlay" id="categoryDeleteOverlay">
+        
+            <div class="delete-modal">
+            
+                <div class="delete-icon">
+                    <i class="bi bi-trash3"></i>
+                </div>
+            
+                <h3>Delete Category</h3>
+            
+                <p>
+                    Are you sure you want to delete
+                    <strong id="categoryName"></strong>?
+                    This action cannot be undone.
+                </p>
+            
+                <div class="modal-buttons">
+                
+                    <button
+                        type="button"
+                        class="modal-cancel-btn"
+                        onclick="closeCategoryDeleteModal()"
+                    >
+                        Cancel
+                    </button>
+                
+                    <a
+                        id="categoryDeleteLink"
+                        class="modal-delete-btn"
+                    >
+                        Delete Category
+                    </a>
+                
+                </div>
+            
+            </div>
+        
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+
+{% block js %}
+    <script src="{% static 'admin_panel/js/categories.js' %}"></script>
+{% endblock  %}
+    

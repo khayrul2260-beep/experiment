@@ -1,0 +1,123 @@
+{% extends "customer/master/base.html" %}
+{% load static %}
+
+
+{% block title %}
+    Login | NAFI
+{% endblock %}
+
+
+{% block extra_css %}
+
+<link rel="stylesheet"
+      href="{% static 'account/css/login.css' %}">
+
+{% endblock %}
+
+
+
+{% block content %}
+
+<div class="login-page">
+
+    <div class="login-card">
+
+        <h1 class="login-title">
+            Welcome Back
+        </h1>
+
+        <p class="login-subtitle">
+            Login to your NAFI account
+        </p>
+
+
+        <form method="POST"
+              class="login-form">
+
+            {% csrf_token %}
+
+
+            {% if form.non_field_errors %}
+
+                {% for error in form.non_field_errors %}
+
+                    <p class="login-error">
+                        {{ error }}
+                    </p>
+
+                {% endfor %}
+
+            {% endif %}
+
+
+
+            <!-- Phone Number -->
+
+            <div class="form-group">
+
+                <label for="{{ form.username.id_for_label }}">
+                    Phone Number
+                </label>
+
+                {{ form.username }}
+
+                {% for error in form.username.errors %}
+
+                    <p class="login-error">
+                        {{ error }}
+                    </p>
+
+                {% endfor %}
+
+            </div>
+
+
+
+            <!-- Password -->
+
+            <div class="form-group">
+
+                <label for="{{ form.password.id_for_label }}">
+                    Password
+                </label>
+
+                {{ form.password }}
+
+                {% for error in form.password.errors %}
+
+                    <p class="login-error">
+                        {{ error }}
+                    </p>
+
+                {% endfor %}
+
+            </div>
+
+
+
+            <button type="submit"
+                    class="login-button">
+
+                Login
+
+            </button>
+
+        </form>
+
+
+
+        <div class="login-register">
+
+            Don't have an account?
+
+            <a href="{% url 'customer_register' %}">
+                Create Account
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -2,51 +2,177 @@ from django.shortcuts import render, redirect
 # from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
+from .forms import *
+from django.contrib import messages
+from django.contrib.auth import get_user_model
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import update_session_auth_hash
 
 
-def register_page(request):
+User = get_user_model()
 
-    if request.method == 'POST':
+def customer_register(request):
+    if request.method == "POST":
 
-        username = request.POST.get('username')
-        email = request.POST.get('email')
-        password = request.POST.get('password')
-        conf_password = request.POST.get('conf_password')
+        form = CustomerRegistrationForm(request.POST)
 
-        if password == conf_password:
+        if form.is_valid():
 
-            User.objects.create_user(
-                username = username,
-                email = email,
-                password = password
+            user = form.save(commit=False)
+
+            # Full name
+            user.first_name = form.cleaned_data["full_name"]
+
+            # Secure password hashing
+            user.set_password(
+                form.cleaned_data["password"]
             )
-            return redirect('login_page')
 
+            user.save()
+
+            messages.success(
+                request,
+                "Account created successfully."
+            )
+
+            return redirect("customer_login")
 
     else:
-        print("Password not match.")
-    return render(request, 'register.html')
 
-def login_page(request):
+        form = CustomerRegistrationForm()
 
-    if request.method == 'POST':
+    return render(
+        request,
+        "account/register.html",
+        {
+            "form": form
+        }
+    )
 
-        username = request.POST.get('username')
-        password = request.POST.get('password')
+def customer_login(request):
 
-        user = authenticate(request, username = username, password = password)
+    if request.method == "POST":
 
-        if user is not None:
-            login(request, user)
+        form = CustomerLoginForm(request.POST)
 
-            if user.is_staff:
-                return redirect("dashboard_page")
-            
-            else:
-                return redirect("home_page")
-    
-        else:
-            print("Invalid password.")
+        if form.is_valid():
+
+            username = form.cleaned_data["username"]
+            password = form.cleaned_data["password"]
+
+            user = authenticate(
+                request,
+                username=username,
+                password=password
+            )
+
+            if user is not None:
+
+                login(request, user)
+
+                return redirect("customer_profile")
+
+            messages.error(
+                request,
+                "Invalid phone number or password."
+            )
+
+    else:
+
+        form = CustomerLoginForm()
+
+    return render(
+        request,
+        "account/login.html",
+        {
+            "form": form
+        }
+    )
+
+@login_required(login_url="login")
+def customer_logout(request):
+
+    logout(request)
+
+    return redirect("home_page")
 
 
-    return render(request, 'login.html')
+
+@login_required(login_url="login")
+def customer_profile(request):
+
+    return render(
+        request,
+        "account/customer_profile.html"
+    )
+
+
+@login_required
+def customer_edit_profile(request):
+
+    if request.method == "POST":
+
+        form = CustomerProfileForm(
+            request.POST,
+            request.FILES,
+            instance=request.user
+        )
+
+        if form.is_valid():
+
+            form.save()
+
+            return redirect("customer_profile")
+
+    else:
+
+        form = CustomerProfileForm(
+            instance=request.user
+        )
+
+    return render(
+        request,
+        "account/customer_edit_profile.html",
+        {
+            "form": form
+        }
+    )
+
+
+
+      
+@login_required(login_url="login")
+def customer_change_password(request):
+
+    if request.method == "POST":
+
+        form = CustomerPasswordChangeForm(
+            request.user,
+            request.POST
+        )
+
+        if form.is_valid():
+
+            user = form.save()
+
+            update_session_auth_hash(
+                request,
+                user
+            )
+
+            return redirect("customer_profile")
+
+    else:
+
+        form = CustomerPasswordChangeForm(
+            request.user
+        )
+
+    return render(
+        request,
+        "account/change_password.html",
+        {
+            "form": form
+        }
+    )

@@ -1,0 +1,388 @@
+{% extends "customer/master/base.html" %}
+{% load static %}
+
+
+{% block title %}
+    My Profile | NAFI
+{% endblock %}
+
+
+{% block extra_css %}
+
+<link rel="stylesheet"
+      href="{% static 'account/css/customer_profile.css' %}">
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="profile-page">
+
+    <div class="profile-container">
+
+
+        <!-- =========================================
+             PROFILE HEADER
+        ========================================== -->
+
+        <section class="profile-header">
+
+            <div class="profile-avatar">
+
+                {% if user.profile_image %}
+
+                    <img src="{{ user.profile_image.url }}"
+                         alt="{{ user.get_full_name }}">
+
+                {% else %}
+
+                    <div class="profile-avatar-placeholder">
+
+                        {{ user.first_name|first|upper }}
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+            <div class="profile-header-info">
+
+                <h1>
+                    {{ user.get_full_name }}
+                </h1>
+
+                <p>
+                    NAFI Customer
+                </p>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =========================================
+             CUSTOMER ACCOUNT MENU
+        ========================================== -->
+
+        <section class="account-menu">
+
+            <div class="section-heading">
+
+                <h2>
+                    My Account
+                </h2>
+
+                <p>
+                    Manage your NAFI account
+                </p>
+
+            </div>
+
+
+            <div class="account-menu-list">
+
+
+                <!-- My Profile -->
+
+                <a href="{% url 'customer_profile' %}"
+                   class="account-menu-item active">
+
+                    <div class="account-menu-icon">
+                        👤
+                    </div>
+
+                    <div class="account-menu-content">
+
+                        <h3>
+                            My Profile
+                        </h3>
+
+                        <p>
+                            View and manage your personal information
+                        </p>
+
+                    </div>
+
+                    <div class="account-menu-arrow">
+                        →
+                    </div>
+
+                </a>
+
+
+                <!-- My Orders -->
+
+                <div class="account-menu-item disabled">
+
+                    <div class="account-menu-icon">
+                        📦
+                    </div>
+
+                    <div class="account-menu-content">
+
+                        <h3>
+                            My Orders
+                        </h3>
+
+                        <p>
+                            View and track your orders
+                        </p>
+
+                    </div>
+
+                    <span class="coming-soon">
+                        Coming Soon
+                    </span>
+
+                </div>
+
+
+                <!-- Wishlist -->
+
+                <div class="account-menu-item disabled">
+
+                    <div class="account-menu-icon">
+                        ❤️
+                    </div>
+
+                    <div class="account-menu-content">
+
+                        <h3>
+                            Wishlist
+                        </h3>
+
+                        <p>
+                            View products you have saved
+                        </p>
+
+                    </div>
+
+                    <span class="coming-soon">
+                        Coming Soon
+                    </span>
+
+                </div>
+
+
+                <!-- My Reviews -->
+
+                <div class="account-menu-item disabled">
+
+                    <div class="account-menu-icon">
+                        ⭐
+                    </div>
+
+                    <div class="account-menu-content">
+
+                        <h3>
+                            My Reviews
+                        </h3>
+
+                        <p>
+                            Manage your product reviews
+                        </p>
+
+                    </div>
+
+                    <span class="coming-soon">
+                        Coming Soon
+                    </span>
+
+                </div>
+
+
+                <!-- Saved Addresses -->
+
+                <div class="account-menu-item disabled">
+
+                    <div class="account-menu-icon">
+                        📍
+                    </div>
+
+                    <div class="account-menu-content">
+
+                        <h3>
+                            Saved Addresses
+                        </h3>
+
+                        <p>
+                            Manage your delivery addresses
+                        </p>
+
+                    </div>
+
+                    <span class="coming-soon">
+                        Coming Soon
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =========================================
+             PERSONAL INFORMATION
+        ========================================== -->
+
+        <section class="profile-section">
+
+            <div class="section-heading">
+
+                <h2>
+                    Personal Information
+                </h2>
+
+                <p>
+                    Your basic account information
+                </p>
+
+            </div>
+
+
+            <div class="profile-info-grid">
+
+
+                <!-- Full Name -->
+
+                <div class="profile-info-item">
+
+                    <span class="info-label">
+                        Full Name
+                    </span>
+
+                    <span class="info-value">
+
+                        {{ user.get_full_name|default:"Not provided" }}
+
+                    </span>
+
+                </div>
+
+
+                <!-- Phone -->
+
+<div class="profile-info-item">
+
+    <span class="info-label">
+        Phone Number
+    </span>
+
+    <span class="info-value">
+
+        {{ user.username|default:"Not provided" }}
+
+    </span>
+
+</div>
+
+                <!-- Email -->
+
+                <div class="profile-info-item">
+
+                    <span class="info-label">
+                        Email Address
+                    </span>
+
+                    <span class="info-value">
+
+                        {{ user.email|default:"Not provided" }}
+
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- Edit Profile -->
+
+            <div class="profile-section-action">
+
+                <a href="{% url 'customer_edit_profile' %}"
+                   class="edit-profile-btn">
+
+                    Edit Profile
+
+                </a>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =========================================
+             ACCOUNT SECURITY
+        ========================================== -->
+
+        <section class="profile-section">
+
+            <div class="section-heading">
+
+                <h2>
+                    Account Security
+                </h2>
+
+                <p>
+                    Keep your account secure
+                </p>
+
+            </div>
+
+
+            <div class="security-item">
+
+                <div class="security-info">
+
+                    <h3>
+                        Password
+                    </h3>
+
+                    <p>
+                        Update your password regularly to keep your account secure.
+                    </p>
+
+                </div>
+
+
+                <a href="{% url 'customer_change_password' %}"
+                   class="security-action">
+
+                    Change Password
+
+                </a>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =========================================
+             LOGOUT
+        ========================================== -->
+
+        <div class="profile-logout">
+
+            <a href="{% url 'customer_logout' %}"
+               class="logout-btn">
+
+                Logout
+
+            </a>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+{% endblock %}

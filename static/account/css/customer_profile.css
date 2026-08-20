@@ -1,0 +1,687 @@
+/* =========================================
+   NAFI - CUSTOMER PROFILE
+========================================= */
+
+.profile-page {
+    min-height: calc(100vh - 70px);
+
+    padding: 50px 20px 70px;
+
+    background: #f8f9fa;
+
+    box-sizing: border-box;
+}
+
+
+/* =========================================
+   CONTAINER
+========================================= */
+
+.profile-container {
+    width: 100%;
+    max-width: 900px;
+
+    margin: 0 auto;
+}
+
+
+/* =========================================
+   PROFILE HEADER
+========================================= */
+
+.profile-header {
+    display: flex;
+    align-items: center;
+
+    gap: 24px;
+
+    padding: 32px;
+
+    margin-bottom: 24px;
+
+    background: #ffffff;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 18px;
+
+    box-shadow:
+        0 8px 25px rgba(0, 0, 0, 0.05);
+
+    box-sizing: border-box;
+}
+
+
+.profile-avatar {
+    flex-shrink: 0;
+}
+
+
+.profile-avatar img,
+.profile-avatar-placeholder {
+    width: 105px;
+    height: 105px;
+
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 50%;
+
+    object-fit: cover;
+}
+
+
+.profile-avatar-placeholder {
+    background: #111827;
+
+    color: #ffffff;
+
+    font-size: 36px;
+    font-weight: 700;
+}
+
+
+.profile-header-info h1 {
+    margin: 0;
+
+    color: #111827;
+
+    font-size: 30px;
+    font-weight: 700;
+
+    line-height: 1.3;
+}
+
+
+.profile-header-info p {
+    margin: 7px 0 0;
+
+    color: #6b7280;
+
+    font-size: 14px;
+}
+
+
+/* =========================================
+   SECTIONS
+========================================= */
+
+.account-menu,
+.profile-section {
+    margin-bottom: 24px;
+
+    padding: 30px;
+
+    background: #ffffff;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 18px;
+
+    box-shadow:
+        0 8px 25px rgba(0, 0, 0, 0.04);
+
+    box-sizing: border-box;
+}
+
+
+/* =========================================
+   SECTION HEADING
+========================================= */
+
+.section-heading {
+    margin-bottom: 22px;
+}
+
+
+.section-heading h2 {
+    margin: 0;
+
+    color: #111827;
+
+    font-size: 21px;
+    font-weight: 700;
+}
+
+
+.section-heading p {
+    margin: 6px 0 0;
+
+    color: #6b7280;
+
+    font-size: 13px;
+}
+
+
+/* =========================================
+   ACCOUNT MENU
+========================================= */
+
+.account-menu-list {
+    display: flex;
+
+    flex-direction: column;
+
+    border-top: 1px solid #e5e7eb;
+}
+
+
+.account-menu-item {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+
+    gap: 16px;
+
+    padding: 18px 5px;
+
+    border-bottom: 1px solid #e5e7eb;
+
+    text-decoration: none;
+
+    box-sizing: border-box;
+
+    transition:
+        background 0.2s ease,
+        padding 0.2s ease;
+}
+
+
+.account-menu-item:last-child {
+    border-bottom: none;
+}
+
+
+/* =========================================
+   MENU ICON
+========================================= */
+
+.account-menu-icon {
+    width: 44px;
+    height: 44px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    background: #f3f4f6;
+
+    border-radius: 10px;
+
+    font-size: 20px;
+}
+
+
+/* =========================================
+   MENU CONTENT
+========================================= */
+
+.account-menu-content {
+    flex: 1;
+
+    min-width: 0;
+}
+
+
+.account-menu-content h3 {
+    margin: 0;
+
+    color: #111827;
+
+    font-size: 15px;
+    font-weight: 600;
+}
+
+
+.account-menu-content p {
+    margin: 4px 0 0;
+
+    color: #6b7280;
+
+    font-size: 13px;
+
+    line-height: 1.5;
+}
+
+
+/* =========================================
+   ACTIVE MENU
+========================================= */
+
+.account-menu-item.active {
+    cursor: pointer;
+}
+
+
+.account-menu-item.active:hover {
+    background: #f9fafb;
+
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+
+/* =========================================
+   ARROW
+========================================= */
+
+.account-menu-arrow {
+    flex-shrink: 0;
+
+    color: #9ca3af;
+
+    font-size: 22px;
+
+    transition:
+        transform 0.2s ease,
+        color 0.2s ease;
+}
+
+
+.account-menu-item.active:hover .account-menu-arrow {
+    color: #111827;
+
+    transform: translateX(4px);
+}
+
+
+/* =========================================
+   DISABLED MENU
+========================================= */
+
+.account-menu-item.disabled {
+    cursor: default;
+
+    opacity: 0.75;
+}
+
+
+.account-menu-item.disabled .account-menu-icon {
+    background: #f9fafb;
+
+    filter: grayscale(100%);
+}
+
+
+/* =========================================
+   COMING SOON
+========================================= */
+
+.coming-soon {
+    flex-shrink: 0;
+
+    padding: 5px 9px;
+
+    background: #f3f4f6;
+
+    border-radius: 20px;
+
+    color: #6b7280;
+
+    font-size: 10px;
+    font-weight: 600;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.4px;
+}
+
+
+/* =========================================
+   PERSONAL INFORMATION
+========================================= */
+
+.profile-info-grid {
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 18px;
+}
+
+
+.profile-info-item {
+    padding: 17px;
+
+    background: #f9fafb;
+
+    border: 1px solid #eef0f2;
+
+    border-radius: 10px;
+
+    box-sizing: border-box;
+}
+
+
+.info-label {
+    display: block;
+
+    margin-bottom: 7px;
+
+    color: #6b7280;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.4px;
+}
+
+
+.info-value {
+    display: block;
+
+    color: #111827;
+
+    font-size: 14px;
+    font-weight: 500;
+
+    word-break: break-word;
+}
+
+
+/* =========================================
+   SECTION ACTION
+========================================= */
+
+.profile-section-action {
+    margin-top: 22px;
+}
+
+
+.edit-profile-btn {
+    display: inline-flex;
+
+    justify-content: center;
+    align-items: center;
+
+    min-width: 135px;
+
+    padding: 11px 20px;
+
+    background: #111827;
+
+    border-radius: 8px;
+
+    color: #ffffff;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    text-decoration: none;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+.edit-profile-btn:hover {
+    background: #000000;
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================
+   SECURITY
+========================================= */
+
+.security-item {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    padding: 18px;
+
+    background: #f9fafb;
+
+    border: 1px solid #eef0f2;
+
+    border-radius: 10px;
+
+    box-sizing: border-box;
+}
+
+
+.security-info {
+    flex: 1;
+}
+
+
+.security-info h3 {
+    margin: 0;
+
+    color: #111827;
+
+    font-size: 15px;
+    font-weight: 600;
+}
+
+
+.security-info p {
+    margin: 5px 0 0;
+
+    color: #6b7280;
+
+    font-size: 13px;
+
+    line-height: 1.5;
+}
+
+
+.security-action {
+    flex-shrink: 0;
+
+    padding: 10px 16px;
+
+    background: #ffffff;
+
+    border: 1px solid #d1d5db;
+
+    border-radius: 8px;
+
+    color: #111827;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    text-decoration: none;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease;
+}
+
+
+.security-action:hover {
+    background: #f3f4f6;
+
+    border-color: #9ca3af;
+}
+
+
+/* =========================================
+   LOGOUT
+========================================= */
+
+.profile-logout {
+    padding-top: 6px;
+
+    text-align: center;
+}
+
+
+.logout-btn {
+    display: inline-flex;
+
+    justify-content: center;
+    align-items: center;
+
+    min-width: 120px;
+
+    padding: 11px 22px;
+
+    background: #ffffff;
+
+    border: 1px solid #dc2626;
+
+    border-radius: 8px;
+
+    color: #dc2626;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    text-decoration: none;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+.logout-btn:hover {
+    background: #dc2626;
+
+    color: #ffffff;
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 700px) {
+
+    .profile-page {
+        padding: 35px 15px 50px;
+    }
+
+
+    .profile-header,
+    .account-menu,
+    .profile-section {
+        padding: 25px;
+    }
+
+
+    .profile-info-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 576px) {
+
+    .profile-page {
+        padding: 25px 12px 40px;
+    }
+
+
+    .profile-header {
+        flex-direction: column;
+
+        text-align: center;
+
+        padding: 28px 20px;
+
+        border-radius: 14px;
+    }
+
+
+    .profile-avatar img,
+    .profile-avatar-placeholder {
+        width: 90px;
+        height: 90px;
+    }
+
+
+    .profile-header-info h1 {
+        font-size: 24px;
+    }
+
+
+    .account-menu,
+    .profile-section {
+        padding: 22px 18px;
+
+        border-radius: 14px;
+    }
+
+
+    .section-heading h2 {
+        font-size: 19px;
+    }
+
+
+    .account-menu-item {
+        gap: 12px;
+
+        padding: 15px 2px;
+    }
+
+
+    .account-menu-icon {
+        width: 40px;
+        height: 40px;
+
+        font-size: 18px;
+    }
+
+
+    .account-menu-content h3 {
+        font-size: 14px;
+    }
+
+
+    .account-menu-content p {
+        font-size: 12px;
+    }
+
+
+    .coming-soon {
+        display: none;
+    }
+
+
+    .security-item {
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+
+    .security-action {
+        width: 100%;
+
+        text-align: center;
+
+        box-sizing: border-box;
+    }
+
+
+    .edit-profile-btn {
+        width: 100%;
+
+        box-sizing: border-box;
+    }
+
+}

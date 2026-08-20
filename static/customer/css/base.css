@@ -1,0 +1,42 @@
+:root {
+    --footer-color: rgb(1, 0, 26);
+    --background-color: rgb(50, 49, 49);
+    --navbar-color: rgb(1, 0, 37);
+
+
+    --max-width: 2000px;
+}
+
+
+/* ==============================
+   GLOBAL
+================================ */
+
+html {
+    width: 100%;
+    min-height: 100%;
+}
+
+
+body {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+
+    background-color: var(--background-color);
+}
+
+
+/* ==============================
+   MAIN CONTENT
+================================ */
+
+.main {
+    width: 100%;
+    max-width: var(--max-width);
+    height: auto;
+
+    margin: 0 auto;
+
+    background-color: transparent;
+}

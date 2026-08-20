@@ -1,0 +1,604 @@
+{% load static %}
+
+<!-- =====================================================
+     NAFI TOP ANNOUNCEMENT BAR
+===================================================== -->
+
+<div class="nafi-topbar">
+
+    <div class="nafi-topbar-container">
+
+        <div class="topbar-left">
+            <i class="bi bi-truck"></i>
+            <span>Free Shipping on orders over ৳2000</span>
+        </div>
+
+        <div class="topbar-right">
+
+            <a href="#">
+                <i class="bi bi-box-seam"></i>
+                <span>Track Order</span>
+            </a>
+
+            <span class="topbar-divider"></span>
+
+            <a href="#">
+                <i class="bi bi-headset"></i>
+                <span>Help Center</span>
+            </a>
+
+            <span class="topbar-divider"></span>
+
+            <a href="#">
+                ENG
+                <i class="bi bi-chevron-down"></i>
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     MAIN NAVBAR
+===================================================== -->
+
+<nav class="nafi-navbar" id="nafiNavbar">
+
+    <div class="nafi-navbar-container">
+
+
+        <!-- =================================================
+             MOBILE MENU BUTTON
+        ================================================== -->
+
+        <button
+            type="button"
+            class="nafi-mobile-toggle"
+            id="nafiMobileToggle"
+            aria-label="Open menu"
+            aria-expanded="false"
+        >
+            <i class="bi bi-list"></i>
+        </button>
+
+
+        <!-- =================================================
+             LOGO
+        ================================================== -->
+
+        <div class="nafi-logo">
+
+            <a href="/" class="logo_">
+
+                <img
+                    src="{% static 'customer/images/nafi.png' %}"
+                    alt="NAFI"
+                    class="brand_logo_"
+                >
+
+            </a>
+
+        </div>
+
+
+        <!-- =================================================
+             DESKTOP NAVIGATION
+        ================================================== -->
+
+        <div class="nafi-navigation">
+
+            <ul class="nafi-menu">
+
+
+                <!-- HOME -->
+
+                <li class="nav-item">
+
+                    <a
+                        href="/"
+                        class="nav-link_ active"
+                    >
+                        HOME
+                    </a>
+
+                </li>
+
+
+                <!-- SHOP -->
+
+                <li class="nav-item nav-dropdown">
+
+                    <button
+                        type="button"
+                        class="nav-link_ dropdown-trigger"
+                        aria-expanded="false"
+                    >
+                        <span>SHOP</span>
+                        <i class="bi bi-chevron-down"></i>
+                    </button>
+
+
+                    <div class="nafi-dropdown">
+
+                        <a href="#" class="dropdown-item">
+                            All Products
+                        </a>
+
+                        <a href="#" class="dropdown-item">
+                            T-Shirts
+                        </a>
+
+                        <a href="#" class="dropdown-item">
+                            Shirts
+                        </a>
+
+                        <a href="#" class="dropdown-item">
+                            Panjabi
+                        </a>
+
+                    </div>
+
+                </li>
+
+
+                <!-- CATEGORIES -->
+
+                <li class="nav-item nav-dropdown">
+
+                    <button
+                        type="button"
+                        class="nav-link_ dropdown-trigger"
+                        aria-expanded="false"
+                    >
+                        <span>CATEGORIES</span>
+                        <i class="bi bi-chevron-down"></i>
+                    </button>
+
+
+                    <div class="nafi-dropdown">
+
+                        <a href="#" class="dropdown-item">
+                            T-Shirts
+                        </a>
+
+                        <a href="#" class="dropdown-item">
+                            Shirts
+                        </a>
+
+                        <a href="#" class="dropdown-item">
+                            Panjabi
+                        </a>
+
+                        <a href="#" class="dropdown-item">
+                            New Collection
+                        </a>
+
+                    </div>
+
+                </li>
+
+
+                <!-- NEW ARRIVALS -->
+
+                <li class="nav-item">
+
+                    <a
+                        href="#"
+                        class="nav-link_ new-arrivals"
+                    >
+                        NEW ARRIVALS
+                    </a>
+
+                </li>
+
+
+                <!-- ABOUT -->
+
+                <li class="nav-item">
+
+                    <a
+                        href="#"
+                        class="nav-link_"
+                    >
+                        ABOUT
+                    </a>
+
+                </li>
+
+
+                <!-- CONTACT -->
+
+                <li class="nav-item">
+
+                    <a
+                        href="#"
+                        class="nav-link_"
+                    >
+                        CONTACT
+                    </a>
+
+                </li>
+
+            </ul>
+
+        </div>
+
+
+        <!-- =================================================
+             RIGHT ACTIONS
+        ================================================== -->
+
+        <div class="nafi-actions">
+
+
+            <!-- SEARCH -->
+
+            <a
+                href="#"
+                class="nafi-action"
+                title="Search"
+                aria-label="Search"
+            >
+                <i class="bi bi-search"></i>
+            </a>
+
+
+            <!-- WISHLIST -->
+
+            <a
+                href="#"
+                class="nafi-action wishlist-action"
+                title="Wishlist"
+                aria-label="Wishlist"
+            >
+                <i class="bi bi-heart"></i>
+            </a>
+
+
+            <!-- CART -->
+
+            <a
+                href="#"
+                class="nafi-action cart-action"
+                title="Shopping Bag"
+                aria-label="Shopping Bag"
+            >
+
+                <i class="bi bi-bag"></i>
+
+                <span class="cart-count">
+                    0
+                </span>
+
+            </a>
+
+
+            <!-- =================================================
+                 ACCOUNT
+            ================================================== -->
+
+            <div class="navbar-account">
+
+                {% if user.is_authenticated %}
+
+                    <a
+                        href="{% url 'customer_profile' %}"
+                        class="account-btn"
+                    >
+
+                        {% if user.profile_image %}
+
+                            <img
+                                src="{{ user.profile_image.url }}"
+                                alt="Account"
+                                class="account-avatar"
+                            >
+
+                        {% else %}
+
+                            <span class="account-avatar-placeholder">
+                                {{ user.first_name|first|upper }}
+                            </span>
+
+                        {% endif %}
+
+                        <span class="account-text">
+                            Account
+                        </span>
+
+                    </a>
+
+                {% else %}
+
+                    <a
+                        href="{% url 'customer_login' %}"
+                        class="account-btn"
+                    >
+
+                        <span class="account-icon">
+                            <i class="bi bi-person"></i>
+                        </span>
+
+                        <span class="account-text">
+                            Account
+                        </span>
+
+                    </a>
+
+                {% endif %}
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</nav>
+
+
+<!-- =====================================================
+     MOBILE MENU OVERLAY
+===================================================== -->
+
+<div
+    class="nafi-mobile-overlay"
+    id="nafiMobileOverlay"
+></div>
+
+
+<!-- =====================================================
+     MOBILE SIDE MENU
+===================================================== -->
+
+<aside
+    class="nafi-mobile-menu"
+    id="nafiMobileMenu"
+    aria-hidden="true"
+>
+
+
+    <!-- =================================================
+         MOBILE HEADER
+    ================================================== -->
+
+    <div class="mobile-menu-header">
+
+        <a href="/" class="mobile-logo">
+
+            <img
+                src="{% static 'customer/images/nafi.png' %}"
+                alt="NAFI"
+            >
+
+        </a>
+
+
+        <button
+            type="button"
+            class="mobile-menu-close"
+            id="nafiMobileClose"
+            aria-label="Close menu"
+        >
+            <i class="bi bi-x-lg"></i>
+        </button>
+
+    </div>
+
+
+    <!-- =================================================
+         MOBILE NAVIGATION
+    ================================================== -->
+
+    <div class="mobile-menu-body">
+
+        <ul class="mobile-nav-list">
+
+
+            <!-- HOME -->
+
+            <li>
+
+                <a href="/">
+
+                    <span>HOME</span>
+
+                    <i class="bi bi-chevron-right"></i>
+
+                </a>
+
+            </li>
+
+
+            <!-- SHOP -->
+
+            <li class="mobile-nav-dropdown">
+
+                <button
+                    type="button"
+                    class="mobile-dropdown-trigger"
+                    aria-expanded="false"
+                >
+
+                    <span>SHOP</span>
+
+                    <i class="bi bi-chevron-down"></i>
+
+                </button>
+
+
+                <div class="mobile-dropdown">
+
+                    <a href="#">
+                        All Products
+                    </a>
+
+                    <a href="#">
+                        T-Shirts
+                    </a>
+
+                    <a href="#">
+                        Shirts
+                    </a>
+
+                    <a href="#">
+                        Panjabi
+                    </a>
+
+                </div>
+
+            </li>
+
+
+            <!-- CATEGORIES -->
+
+            <li class="mobile-nav-dropdown">
+
+                <button
+                    type="button"
+                    class="mobile-dropdown-trigger"
+                    aria-expanded="false"
+                >
+
+                    <span>CATEGORIES</span>
+
+                    <i class="bi bi-chevron-down"></i>
+
+                </button>
+
+
+                <div class="mobile-dropdown">
+
+                    <a href="#">
+                        T-Shirts
+                    </a>
+
+                    <a href="#">
+                        Shirts
+                    </a>
+
+                    <a href="#">
+                        Panjabi
+                    </a>
+
+                    <a href="#">
+                        New Collection
+                    </a>
+
+                </div>
+
+            </li>
+
+
+            <!-- NEW ARRIVALS -->
+
+            <li>
+
+                <a href="#">
+
+                    <span>NEW ARRIVALS</span>
+
+                    <i class="bi bi-chevron-right"></i>
+
+                </a>
+
+            </li>
+
+
+            <!-- ABOUT -->
+
+            <li>
+
+                <a href="#">
+
+                    <span>ABOUT</span>
+
+                    <i class="bi bi-chevron-right"></i>
+
+                </a>
+
+            </li>
+
+
+            <!-- CONTACT -->
+
+            <li>
+
+                <a href="#">
+
+                    <span>CONTACT</span>
+
+                    <i class="bi bi-chevron-right"></i>
+
+                </a>
+
+            </li>
+
+        </ul>
+
+
+        <!-- =================================================
+             MOBILE ACTIONS
+        ================================================== -->
+
+        <div class="mobile-actions">
+
+
+            <!-- ACCOUNT -->
+
+            {% if user.is_authenticated %}
+
+                <a href="{% url 'customer_profile' %}">
+
+                    <i class="bi bi-person"></i>
+
+                    <span>My Account</span>
+
+                </a>
+
+            {% else %}
+
+                <a href="{% url 'customer_login' %}">
+
+                    <i class="bi bi-person"></i>
+
+                    <span>Login / Account</span>
+
+                </a>
+
+            {% endif %}
+
+
+            <!-- WISHLIST -->
+
+            <a href="#">
+
+                <i class="bi bi-heart"></i>
+
+                <span>Wishlist</span>
+
+            </a>
+
+
+            <!-- SHOPPING BAG -->
+
+            <a href="#">
+
+                <i class="bi bi-bag"></i>
+
+                <span>Shopping Bag</span>
+
+                <span class="mobile-cart-count">
+                    0
+                </span>
+
+            </a>
+
+        </div>
+
+    </div>
+
+</aside>

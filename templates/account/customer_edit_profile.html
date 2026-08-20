@@ -1,0 +1,289 @@
+{% extends "customer/master/base.html" %}
+{% load static %}
+
+
+{% block title %}
+    Edit Profile | NAFI
+{% endblock %}
+
+
+{% block extra_css %}
+
+<link rel="stylesheet"
+      href="{% static 'account/css/customer_edit_profile.css' %}">
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="edit-profile-page">
+
+    <div class="edit-profile-container">
+
+
+        <!-- =========================================
+             PAGE HEADER
+        ========================================== -->
+
+        <div class="edit-profile-header">
+
+            <span class="page-eyebrow">
+                MY ACCOUNT
+            </span>
+
+            <h1>
+                Edit Profile
+            </h1>
+
+            <p>
+                Update your personal information and profile photo.
+            </p>
+
+        </div>
+
+
+
+        <!-- =========================================
+             MAIN CARD
+        ========================================== -->
+
+        <section class="edit-profile-card">
+
+
+            <!-- =========================================
+                 PROFILE IMAGE
+            ========================================== -->
+
+            <div class="profile-image-section">
+
+                <div class="current-profile-image">
+
+                    {% if user.profile_image %}
+
+                        <img
+                            src="{{ user.profile_image.url }}"
+                            alt="{{ user.get_full_name }}"
+                        >
+
+                    {% else %}
+
+                        <div class="profile-placeholder">
+
+                            {{ user.first_name|first|upper }}
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="profile-image-info">
+
+                    <h2>
+                        Profile Photo
+                    </h2>
+
+                    <p>
+                        Choose a clear photo for your NAFI account.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =========================================
+                 FORM
+            ========================================== -->
+
+            <form
+                method="POST"
+                enctype="multipart/form-data"
+                class="edit-profile-form"
+            >
+
+                {% csrf_token %}
+
+
+                <!-- General Errors -->
+
+                {% if form.non_field_errors %}
+
+                    <div class="form-error-box">
+
+                        {% for error in form.non_field_errors %}
+
+                            <p>
+                                {{ error }}
+                            </p>
+
+                        {% endfor %}
+
+                    </div>
+
+                {% endif %}
+
+
+
+                <!-- =================================
+                     FULL NAME
+                ================================== -->
+
+                <div class="form-group">
+
+                    <label for="{{ form.full_name.id_for_label }}">
+                        Full Name
+                    </label>
+
+                    {{ form.full_name }}
+
+                    {% for error in form.full_name.errors %}
+
+                        <p class="field-error">
+                            {{ error }}
+                        </p>
+
+                    {% endfor %}
+
+                </div>
+
+
+
+                <!-- =================================
+                     PHONE
+                ================================== -->
+<div class="form-group">
+
+    <label for="{{ form.username.id_for_label }}">
+        Phone Number
+    </label>
+
+    {{ form.username }}
+
+    {% for error in form.username.errors %}
+
+        <p class="field-error">
+            {{ error }}
+        </p>
+
+    {% endfor %}
+
+</div>
+
+
+                <!-- =================================
+                     EMAIL
+                ================================== -->
+
+                <div class="form-group">
+
+                    <label for="{{ form.email.id_for_label }}">
+                        Email Address
+                    </label>
+
+                    {{ form.email }}
+
+                    {% for error in form.email.errors %}
+
+                        <p class="field-error">
+                            {{ error }}
+                        </p>
+
+                    {% endfor %}
+
+                </div>
+
+
+
+                <!-- =================================
+                     PROFILE IMAGE
+                ================================== -->
+
+                <div class="form-group">
+
+                    <label for="{{ form.profile_image.id_for_label }}">
+                        Change Profile Photo
+                    </label>
+
+                    {{ form.profile_image }}
+
+                    {% for error in form.profile_image.errors %}
+
+                        <p class="field-error">
+                            {{ error }}
+                        </p>
+
+                    {% endfor %}
+
+                    <p class="input-help">
+                        JPG, JPEG or PNG. Choose a clear profile photo.
+                    </p>
+
+                </div>
+
+
+
+                <!-- =================================
+                     ACTIONS
+                ================================== -->
+
+                <div class="edit-profile-actions">
+
+                    <a
+                        href="{% url 'customer_profile' %}"
+                        class="cancel-profile-btn"
+                    >
+                        Cancel
+                    </a>
+
+
+                    <button
+                        type="submit"
+                        class="save-profile-btn"
+                    >
+                        Save Changes
+                    </button>
+
+                </div>
+
+            </form>
+
+        </section>
+
+
+
+        <!-- =========================================
+             SECURITY NOTE
+        ========================================== -->
+
+        <div class="profile-security-note">
+
+            <span class="security-note-icon">
+                🔒
+            </span>
+
+            <p>
+
+                Your password cannot be changed here.
+
+                Use
+
+                <a href="{% url 'customer_change_password' %}">
+                    Change Password
+                </a>
+
+                to update your account password.
+
+            </p>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+{% endblock %}

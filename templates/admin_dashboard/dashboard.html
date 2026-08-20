@@ -4,7 +4,7 @@
 Dashboard 
 {% endblock %} 
 {% block css %}
-<link rel="stylesheet" href="{% static 'css/dashboard.css' %}" />
+<link rel="stylesheet" href="{% static 'admin_panel/css/dashboard.css' %}" />
 {% endblock %} {% block page_title %} Dashboard {% endblock %} {% block content %}
 
 <!-- ==========================
@@ -47,18 +47,18 @@ Dashboard
 
     <div class="stat-card">
       <div class="stat-icon">
-        <i class="bi bi-box-seam"></i>
+        <i class="fa-solid fa-shirt"></i>
       </div>
 
       <div class="stat-content">
         <h5>Total Products</h5>
 
-        <h2>580</h2>
+        <h2>{{ total_products }}</h2>
 
         <span>Active Products</span>
       </div>
-    </div>
-
+    </div>    
+    
     <div class="stat-card">
       <div class="stat-icon">
         <i class="bi bi-people"></i>
@@ -78,8 +78,8 @@ Dashboard
         Analytics
     ========================== -->
 
-  <section class="analytics-section">
-<div class="sales-chart">
+<section class="analytics-section">
+  <div class="sales-chart">
 
     <div class="chart-header">
 
@@ -116,18 +116,18 @@ Dashboard
 
     </div>
 
-</div>
+  </div>
 
-    <div class="visitor-chart">
+  <div class="visitor-chart">
       <div class="section-header" style="display: flex; flex-direction: column; gap: 0px; align-items: start;">
-        <h4>Recent Month</h3>
+        <h3>Recent Month</h3>
         <p style="font-size: 12px;">Visitors</p>
       </div>
       <div class="chart-body">
         <canvas id="visitorChart"></canvas>
       </div>
-    </div>
-  </section>
+  </div>
+</section>
 
   <!-- ==========================
         Recent Orders
@@ -199,3 +199,11 @@ Dashboard
 </div>
 
 {% endblock %}
+
+
+
+{% block js %}
+  <script src="{% static 'admin_panel/js/dashboard.js' %}"></script>
+  <script src="{% static 'admin_panel/js/chart.js' %}"></script>  
+{% endblock  %}
+  

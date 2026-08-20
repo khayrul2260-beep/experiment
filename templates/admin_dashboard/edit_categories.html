@@ -1,0 +1,420 @@
+{% extends 'admin_dashboard/master/base.html' %}
+{% load static %}
+
+{% block title %}
+    Edit Category | NAFI Admin Dashboard
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'admin_panel/css/edit_categories.css' %}">
+{% endblock %}
+
+
+{% block content %}
+
+<div class="edit-category-page">
+
+    <!-- ==========================================
+         PAGE HEADER
+    =========================================== -->
+
+    <div class="edit-category-header">
+
+        <div class="header-content">
+
+            <div class="header-icon">
+                <i class="bi bi-pencil-square"></i>
+            </div>
+
+            <div>
+                <h2>Edit Category</h2>
+
+                <p>
+                    Update your category information and settings.
+                </p>
+            </div>
+
+        </div>
+
+
+        <a
+            href="{% url 'categories_page' %}"
+            class="back-category-btn"
+        >
+            <i class="bi bi-arrow-left"></i>
+            Back to Categories
+        </a>
+
+    </div>
+
+
+
+    <!-- ==========================================
+         FORM CARD
+    =========================================== -->
+
+    <div class="edit-category-card">
+
+        <form
+            method="POST"
+            enctype="multipart/form-data"
+            class="edit-category-form"
+        >
+
+            {% csrf_token %}
+
+
+            <!-- ======================================
+                 BASIC INFORMATION
+            ======================================= -->
+
+            <div class="form-section">
+
+                <div class="section-header">
+
+                    <div class="section-icon">
+                        <i class="bi bi-grid"></i>
+                    </div>
+
+                    <div>
+                        <h3>Category Information</h3>
+
+                        <p>
+                            Update the basic information of this category.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <!-- Category Name -->
+
+                <div class="form-group">
+
+                    <label for="{{ form.name.id_for_label }}">
+                        Category Name
+
+                        <span class="required">*</span>
+                    </label>
+
+
+                    {{ form.name }}
+
+
+                    {% if form.name.errors %}
+
+                        <div class="form-error">
+                            {{ form.name.errors }}
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+
+                <!-- Description -->
+
+                <div class="form-group">
+
+                    <label for="{{ form.description.id_for_label }}">
+                        Description
+                    </label>
+
+
+                    {{ form.description }}
+
+
+                    {% if form.description.errors %}
+
+                        <div class="form-error">
+                            {{ form.description.errors }}
+                        </div>
+
+                    {% endif %}
+
+
+                    <div class="field-help">
+                        Add a short description to help identify this category.
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ======================================
+                 IMAGE SECTION
+            ======================================= -->
+
+<!-- Category Image -->
+<div class="form-group">
+
+    <label>
+        Category Image
+    </label>
+
+
+    <!-- Current Image -->
+    {% if category.image %}
+
+        <div class="current-image-box">
+
+            <div class="current-image">
+
+                <img
+                    src="{{ category.image.url }}"
+                    alt="{{ category.name }}"
+                >
+
+            </div>
+
+
+            <div class="image-details">
+
+                <h3>Current Image</h3>
+
+                <p>
+                    This image is currently used for this category.
+                </p>
+
+            </div>
+
+        </div>
+
+    {% endif %}
+
+
+
+    <!-- New Image Upload -->
+    <div
+        class="new-image-upload"
+        id="imageUploadBox"
+    >
+
+        <!-- Upload Content -->
+        <div
+            class="upload-content"
+            id="uploadContent"
+        >
+
+            <i class="bi bi-cloud-arrow-up upload-icon"></i>
+
+            <strong>
+                Upload New Category Image
+            </strong>
+
+            <span>
+                PNG, JPG or WEBP
+            </span>
+
+        </div>
+
+
+        <!-- New Image Preview -->
+        <div
+            class="new-image-preview"
+            id="imagePreview"
+        >
+
+            <div class="preview-image">
+
+                <img
+                    id="previewImage"
+                    src=""
+                    alt="New Category Image"
+                >
+
+            </div>
+
+
+            <div class="preview-details">
+
+                <h3>
+                    New Category Image
+                </h3>
+
+                <p>
+                    Recently uploaded image.
+                </p>
+
+                <div class="file-name">
+
+                    <i class="bi bi-image"></i>
+
+                    <span id="fileName"></span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <input
+            type="file"
+            name="image"
+            id="categoryImage"
+            accept="image/png,image/jpeg,image/webp"
+        >
+
+    </div>
+
+
+    {% if form.image.errors %}
+
+        <div class="form-error">
+            {{ form.image.errors }}
+        </div>
+
+    {% endif %}
+
+</div>
+
+
+
+            <!-- ======================================
+                 STATUS SECTION
+            ======================================= -->
+
+            <div class="form-section">
+
+                <div class="section-header">
+
+                    <div class="section-icon">
+                        <i class="bi bi-activity"></i>
+                    </div>
+
+                    <div>
+
+                        <h3>Category Status</h3>
+
+                        <p>
+                            Control whether this category is currently active.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <label class="status-toggle">
+
+                    {{ form.is_active }}
+
+                    <div class="toggle-content">
+
+                        <strong>
+                            Active Category
+                        </strong>
+
+                        <span>
+                            This category will be available for products.
+                        </span>
+
+                    </div>
+
+                </label>
+
+
+                {% if form.is_active.errors %}
+
+                    <div class="form-error">
+                        {{ form.is_active.errors }}
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+
+            <!-- ======================================
+                 FORM ACTIONS
+            ======================================= -->
+
+            <div class="form-actions">
+                        
+                <button
+                    type="button"
+                    class="category-delete"
+                    onclick="openCategoryDeleteModal(
+                        {{ category.id }},
+                        '{{ category.name|escapejs }}'
+                    );"
+                >
+                    <i class="bi bi-trash3"></i>
+                    Delete
+                </button>
+
+
+                <a
+                    href="{% url 'categories_page' %}"
+                    class="cancel-btn"
+                >
+                    Cancel
+                </a>
+
+
+                <button
+                    type="submit"
+                    class="save-category-btn"
+                >
+                    <i class="bi bi-check-lg"></i>
+                    Save Changes
+                </button>
+
+            </div>
+
+
+        </form>
+        <div class="delete-overlay" id="categoryDeleteOverlay">
+        
+            <div class="delete-modal">
+            
+                <div class="delete-icon">
+                    <i class="bi bi-trash3"></i>
+                </div>
+            
+                <h3>Delete Category</h3>
+            
+                <p>
+                    Are you sure you want to delete
+                    <strong id="categoryName"></strong>?
+                    This action cannot be undone.
+                </p>
+            
+                <div class="modal-buttons">
+                
+                    <button
+                        type="button"
+                        class="modal-cancel-btn"
+                        onclick="closeCategoryDeleteModal()"
+                    >
+                        Cancel
+                    </button>
+                
+                    <a
+                        id="categoryDeleteLink"
+                        class="modal-delete-btn"
+                    >
+                        Delete Category
+                    </a>
+                
+                </div>
+            
+            </div>
+        
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block js %}
+    <script src="{% static 'admin_panel/js/categories.js' %}"></script>
+    <script src="{% static 'admin_panel/js/edit_categories.js' %}"></script>
+{% endblock  %}

@@ -1,0 +1,160 @@
+/* ================================
+   LOGIN PAGE
+================================ */
+
+.login-page {
+    max-height: 700px;
+    height: 80%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    background: transparent;
+
+    padding: 0px;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 430px;
+
+    padding: 35px;
+
+    border-radius: 16px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 10px 35px rgba(0, 0, 0, 0.08);
+}
+
+.login-title {
+    margin-bottom: 8px;
+
+    text-align: center;
+
+    font-size: 30px;
+    font-weight: 700;
+}
+
+.login-subtitle {
+    margin-bottom: 30px;
+
+    text-align: center;
+
+    color: #777;
+
+    font-size: 14px;
+}
+
+.login-form .form-group {
+    margin-bottom: 20px;
+}
+
+.login-form label {
+    display: block;
+
+    margin-bottom: 8px;
+
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.login-form input {
+    width: 100%;
+
+    padding: 13px 14px;
+
+    border: 1px solid #dcdcdc;
+    border-radius: 8px;
+
+    outline: none;
+
+    font-size: 15px;
+
+    box-sizing: border-box;
+
+    transition: 0.2s ease;
+}
+
+.login-form input:focus {
+    border-color: #111827;
+
+    box-shadow:
+        0 0 0 3px rgba(17, 24, 39, 0.08);
+}
+
+.login-error {
+    margin-top: 6px;
+
+    color: #dc2626;
+
+    font-size: 13px;
+}
+
+.login-button {
+    width: 100%;
+
+    padding: 13px;
+
+    border: none;
+    border-radius: 8px;
+
+    background: #111827;
+
+    color: #ffffff;
+
+    font-size: 15px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+.login-button:hover {
+    background: #000000;
+}
+
+.login-register {
+    margin-top: 20px;
+
+    text-align: center;
+
+    font-size: 14px;
+}
+
+.login-register a {
+    color: #111827;
+
+    font-weight: 600;
+
+    text-decoration: none;
+}
+
+.login-register a:hover {
+    text-decoration: underline;
+}
+
+
+/* ================================
+   RESPONSIVE
+================================ */
+
+@media (max-width: 576px) {
+
+    .login-page {
+        padding: 25px 15px;
+    }
+
+    .login-card {
+        padding: 25px 20px;
+    }
+
+    .login-title {
+        font-size: 25px;
+    }
+
+}

@@ -1,0 +1,568 @@
+{% extends 'admin_dashboard/master/base.html' %}
+
+{% load static %}
+
+{% block title %}
+    Edit Product | NAFI Admin Dashboard
+{% endblock %}
+
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'admin_panel/css/add_product.css' %}">
+    <link rel="stylesheet" href="{% static 'admin_panel/css/edit_product.css' %}">
+{% endblock %}
+
+
+{% block content %}
+
+<div class="add-product-page">
+
+    <!-- Page Header -->
+    <div class="add-product-header">
+
+        <div>
+            <h1>Edit Product</h1>
+            <p>Update and manage your product information</p>
+        </div>
+
+        <a href="{% url 'products_page' %}" class="back-btn">
+            <i class="bi bi-arrow-left"></i>
+            Back to Products
+        </a>
+
+    </div>
+
+
+    <!-- Product Form Card -->
+    <div class="product-form-card">
+
+        <form method="POST" enctype="multipart/form-data">
+
+            {% csrf_token %}
+
+
+            <!-- Basic Information -->
+            <div class="form-section">
+
+                <div class="section-heading">
+
+                    <div class="section-icon">
+                        <i class="bi bi-box"></i>
+                    </div>
+
+                    <div>
+                        <h3>Basic Information</h3>
+                        <p>Update the basic details of your product</p>
+                    </div>
+
+                </div>
+
+
+                <!-- Product Name -->
+                <div class="form-group">
+
+                    <label for="ProductName">
+                        Product Name
+                        <span>*</span>
+                    </label>
+
+                    <input
+                        name="product_name"
+                        type="text"
+                        value="{{ product.name }}"
+                        class="form-control"
+                        id="ProductName"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+                
+                    <label for="category">
+                        Category
+                        <span>*</span>
+                    </label>
+                  
+                    <select
+                        name="category"
+                        id="category"
+                        class="form-control"
+                        required
+                    >
+                  
+                        <option value="">
+                            Select Category
+                        </option>
+                      
+                        {% for category in categories %}
+                      
+                            <option value="{{ category.id }}" 
+                            {% if product.category_id == category.id %} 
+                                selected 
+                            {% endif %}>
+                            {{ category.name }}
+                            </option>
+                          
+                        {% endfor %}
+                          
+                    </select>
+                  
+                </div>
+
+
+
+                <!-- Description -->
+                <div class="form-group">
+
+                    <label for="description">
+                        Description
+                        <span>*</span>
+                    </label>
+
+                    <textarea
+                        name="description"
+                        class="form-control"
+                        id="description"
+                        rows="5"
+                        required
+                    >{{ product.description }}</textarea>
+
+                </div>
+
+            </div>
+
+
+            <!-- Pricing & Inventory -->
+            <div class="form-section">
+
+                <div class="section-heading">
+
+                    <div class="section-icon">
+                        <i class="bi bi-currency-dollar"></i>
+                    </div>
+
+                    <div>
+                        <h3>Pricing & Inventory</h3>
+                        <p>Update product pricing and stock information</p>
+                    </div>
+
+                </div>
+
+
+                <div class="form-grid">
+
+                    <!-- Price -->
+                    <div class="form-group">
+
+                        <label for="ProductPrice">
+                            Price
+                            <span>*</span>
+                        </label>
+
+                        <div class="input-with-icon">
+
+                            <span>৳</span>
+
+                            <input
+                                name="price"
+                                type="number"
+                                value="{{ product.price }}"
+                                min="0"
+                                step="0.01"
+                                class="form-control"
+                                id="ProductPrice"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Discount Price -->
+                    <div class="form-group">
+
+                        <label for="DiscountPrice">
+                            Discount Price
+                        </label>
+
+                        <div class="input-with-icon">
+
+                            <span>৳</span>
+
+                            <input
+                                name="discount_price"
+                                type="number"
+                                value="{{ product.discount_price }}"
+                                min="0"
+                                step="0.01"
+                                placeholder="Optional"
+                                class="form-control"
+                                id="DiscountPrice"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Stock -->
+                    <div class="form-group">
+
+                        <label for="ProductStock">
+                            Stock
+                            <span>*</span>
+                        </label>
+
+                        <input
+                            name="stock"
+                            type="number"
+                            value="{{ product.stock }}"
+                            min="0"
+                            class="form-control"
+                            id="ProductStock"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Product Image -->
+            <div class="form-section">
+
+                <div class="section-heading">
+
+                    <div class="section-icon">
+                        <i class="bi bi-image"></i>
+                    </div>
+
+                    <div>
+                        <h3>Product Image</h3>
+                        <p>View the current image or upload a new one</p>
+                    </div>
+
+                </div>
+
+
+                <!-- Current Image -->
+
+                <div class="current-image-container">
+
+                    {% if product.image %}
+
+                        <div class="current-image">
+
+                            <img
+                                src="{{ product.image.url }}"
+                                alt="{{ product.name }}"
+                            >
+
+                        </div>
+
+                        <div class="current-image-info">
+
+                            <strong>Current Image</strong>
+
+                            <span>
+                                This image is currently used for this product.
+                            </span>
+
+                        </div>
+
+                    {% else %}
+
+                        <div class="no-image">
+
+                            <i class="bi bi-image"></i>
+
+                            <div>
+                                <strong>No Image Available</strong>
+                                <span>Upload a new product image below.</span>
+                            </div>
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- New Image -->
+
+                <!-- Product Image -->
+                <div class="form-section">
+                
+                    <div
+                        class="product-image-upload"
+                        id="productImageUpload"
+                        tabindex="0"
+                    >
+                
+                        <!-- Upload Content -->
+                        <div
+                            class="upload-content"
+                            id="productUploadContent"
+                        >
+                            <i class="bi bi-cloud-arrow-up"></i>
+                
+                            <strong>
+                                Upload New Product Image
+                            </strong>
+                        
+                            <span>
+                                PNG, JPG or WEBP
+                            </span>
+                        </div>
+                    
+                    
+                        <!-- Preview -->
+                        <!-- Preview -->
+                        <div class="product-preview-area" id="productPreviewArea">
+                        
+                            <img
+                                id="productPreview"
+                                class="product-preview"
+                                src=""
+                                alt="Product Preview"
+                            >
+                        
+                            <div class="product-file-info">
+                                <h3>New Product Image</h3>
+                                <p>Recently uploaded image.</p>
+                                <div>
+                                    <i class="bi bi-image"></i>
+                                    <span id="productFileName"></span>
+                                </div>
+                            </div>
+                        
+                        </div>
+                    
+                    
+                        <!-- File Input -->
+                        <input
+                            name="image"
+                            type="file"
+                            accept="image/*"
+                            id="ProductImage"
+                        >
+                    
+                    </div>
+                
+                </div>
+
+
+
+
+            </div>
+
+
+            <!-- Product Settings -->
+            <div class="form-section">
+
+                <div class="section-heading">
+
+                    <div class="section-icon">
+                        <i class="bi bi-sliders"></i>
+                    </div>
+
+                    <div>
+                        <h3>Product Settings</h3>
+                        <p>Control product visibility and features</p>
+                    </div>
+
+                </div>
+
+
+                <div class="settings-container">
+
+                    <!-- Available -->
+
+                    <label class="setting-item">
+
+                        <div class="setting-left">
+
+                            <div class="setting-icon available">
+                                <i class="bi bi-check-circle"></i>
+                            </div>
+
+                            <div>
+
+                                <strong>Available</strong>
+
+                                <p>
+                                    Make this product available for purchase
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                        <input
+                            type="checkbox"
+                            name="is_available"
+                            id="is_available"
+                            {% if product.is_available %}checked{% endif %}
+                        >
+
+                    </label>
+
+
+                    <!-- Featured -->
+
+                    <label class="setting-item">
+
+                        <div class="setting-left">
+
+                            <div class="setting-icon featured">
+                                <i class="bi bi-star"></i>
+                            </div>
+
+                            <div>
+
+                                <strong>Featured Product</strong>
+
+                                <p>
+                                    Display this product as a featured item
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                        <input
+                            type="checkbox"
+                            name="is_featured"
+                            id="is_featured"
+                            {% if product.is_featured %}checked{% endif %}
+                        >
+
+                    </label>
+
+                </div>
+
+            </div>
+
+
+            <!-- Form Actions -->
+            <div class="product-form-actions">
+
+                <a
+                    href="{% url 'products_page' %}"
+                    class="cancel-btn"
+                >
+                    Cancel
+                </a>
+
+
+                <button
+                    name="save_action"
+                    type="submit"
+                    value="save_add"
+                    class="secondary-action-btn"
+                >
+                    <i class="bi bi-plus-circle"></i>
+                    Save & Add Another
+                </button>
+
+
+                <button
+                    name="save_action"
+                    type="submit"
+                    value="save_edit"
+                    class="secondary-action-btn"
+                >
+                    <i class="bi bi-pencil"></i>
+                    Save & Continue Editing
+                </button>
+
+
+                <button
+                    name="save_action"
+                    type="submit"
+                    value="save"
+                    class="save-product-btn"
+                >
+                    <i class="bi bi-check-lg"></i>
+                    Save Product
+                </button>
+
+
+                <!-- Delete -->
+
+                <button
+                    type="button"
+                    class="delete-product-btn"
+                    onclick="openDeleteModal(
+                        {{ product.id }},
+                        '{{ product.name|escapejs }}'
+                    );"
+                >
+                    <i class="bi bi-trash3"></i>
+                    Delete
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+
+    <!-- Delete Modal -->
+
+    <div class="delete-overlay" id="deleteOverlay">
+
+        <div class="delete-modal">
+
+            <div class="delete-icon">
+                <i class="bi bi-trash3"></i>
+            </div>
+
+            <h3>Delete Product</h3>
+
+            <p>
+                Are you sure you want to delete
+                <strong id="productName"></strong>?
+                This action cannot be undone.
+            </p>
+
+            <div class="modal-buttons">
+
+                <button
+                    type="button"
+                    class="modal-cancel-btn"
+                    onclick="closeDeleteModal()"
+                >
+                    Cancel
+                </button>
+
+                <a
+                    id="deleteLink"
+                    class="modal-delete-btn"
+                >
+                    Delete Product
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+
+{% block js %}
+
+<script src="{% static 'admin_panel/js/product.js' %}"></script>
+<script src="{% static 'admin_panel/js/add_product.js' %}"></script>
+
+{% endblock %}

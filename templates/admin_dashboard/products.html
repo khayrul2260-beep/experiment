@@ -1,0 +1,252 @@
+{% extends 'admin_dashboard/master/base.html' %}
+{% load static %} 
+{% block title %} 
+Dashboard 
+{% endblock %} 
+{% block css %}
+<link rel="stylesheet" href="{% static 'admin_panel/css/product.css' %}">
+<link rel="stylesheet" href="{% static 'admin_panel/css/dashboard.css' %}" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.0/css/all.min.css">
+{% endblock %} {% block page_title %} Dashboard {% endblock %} 
+
+      <br>
+      {% if messages %}
+          {% for message in messages %}
+              <div class="alert alert-danger">
+                  {{ message }}
+              </div>
+          {% endfor %}
+      {% endif %}
+
+{% block content %}
+
+  <section class="statistics-section">
+    <div class="stat-card">
+      <div class="stat-icon">
+        <i class="fa-solid fa-shirt"></i>
+      </div>
+
+      <div class="stat-content">
+        <h5>Total Products</h5>
+
+        <h2>{{ total_products }}</h2>
+
+        <span>Active Products</span>
+      </div>
+    </div>      
+    <div class="stat-card">
+      <div class="stat-icon" style="color: goldenrod;">
+        <i class="fa-solid fa-star"></i>
+      </div>
+
+      <div class="stat-content">
+        <h5>Featured</h5>
+
+        <h2>{{ featured_products }}</h2>
+
+        <span>Special Products</span>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon" style="color: rgb(250, 1, 1);">
+        <i class="fa-solid fa-xmark"></i>
+      </div>
+
+      <div class="stat-content">
+        <h5>Out of Stock</h5>
+
+        <h2>{{ out_of_stock }}</h2>
+
+        <span>Needs restocking</span>
+      </div>
+    </div>
+
+
+
+    <div class="stat-card">
+      <div class="stat-icon" style="color: rgb(0, 255, 42); font-weight: 600;">
+      ✓
+      </div>
+
+      <div class="stat-content">
+        <h5>Available</h5>
+
+        <h2>{{ available_products }}</h2>
+
+        <span>Ready for sale</span>
+      </div>
+    </div>
+  </section>
+
+
+
+  <section class="recent-orders">
+    <div class="section-header">
+
+        <div class="search_h3">
+
+            <h3>Products List</h3>
+                <form method="GET" class="product_filter" action="{% url 'products_page' %}">
+                
+                    <!-- Stock Filter -->
+                    <select name="stock_status" class="stock-filter" onchange="this.form.submit()">
+                    
+                        <option value="">All Stock</option>
+                    
+                        <option value="in_stock"
+                            {% if stock_status == 'in_stock' %}selected{% endif %}>
+                            In Stock
+                        </option>
+                    
+                        <option value="out_of_stock"
+                            {% if stock_status == 'out_of_stock' %}selected{% endif %}>
+                            Out of Stock
+                        </option>
+                    
+                    </select>
+                
+                    <!-- Search -->
+                    <div class="search-wrapper">
+                    
+                        <i class="bi bi-search"></i>
+                    
+                        <input
+                            type="text"
+                            name="search"
+                            id="search-input"
+                            placeholder="Search products..."
+                            value="{{ search_query }}"
+                        >
+                    
+                    </div>
+
+
+                
+                </form>
+
+        </div>
+        <div class="add_view">
+        <a href="{% url 'add_product_page' %}" class="add-product-btn">
+            <i class="fa-solid fa-plus"></i>
+            Add Product
+        </a>
+        <a href="{% url 'products_page' %}" >View All</a>
+        </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Product Code</th>
+
+          <th>Image</th>
+
+          <th>Name</th>
+
+          <th>Price</th>
+
+          <th>Discount Price</th>
+
+          <th>Stock</th>
+
+          <th>Status</th>
+
+          <th>Date</th>
+
+          <th style="border-right: none;">Edit or Delete</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        
+        {% for data in product_data %}
+            <tr>
+                <td>{{data.product_code}}</td>
+                <td>{% if data.image %} <img style="width: 30px; height: 30px;" src="{{ data.image.url }}" alt="{{ data.name }}"> {% else %} <span>No Image</span> {% endif %}</td>
+                <td>{{data.name}}</td>
+                <td>৳ {{data.price}}</td>
+                <td> {% if data.discount_price %} ৳ {{ data.discount_price }} {% else %} - {% endif %} </td>
+                <td>{{data.stock}}</td>
+                <td>
+                    {% if data.status == "Stock" %}
+                        <span class="stock">In Stock</span>
+                    {% else %}
+                        <span class="out-stock">Out of Stock</span>
+                    {% endif %}
+                </td>                
+                <td>{{ data.created_at|date:"d M Y, h:i A" }}</td>
+                <td style="border-right: none;">
+                    <a class="edit" href="{% url 'edit_product_page' data.id %}">Edit</a>
+                    <button
+                        type="button"
+                        class="delete"
+                        onclick="openDeleteModal(
+                            {{ data.id }},
+                            '{{ data.name|escapejs }}'
+                        );"
+                    >
+                        <i class="bi bi-trash3"></i>
+                        Delete
+                    </button>
+                </td>
+            </tr>
+        {% endfor %}    
+      </tbody>
+
+    </table>
+
+
+      <div class="delete-overlay" id="deleteOverlay">
+
+        <div class="delete-modal">
+
+            <div class="delete-icon">
+                <i class="bi bi-trash3"></i>
+            </div>
+
+            <h3>Delete Product</h3>
+
+            <p>
+                Are you sure you want to delete
+                <strong id="productName"></strong>?
+                This action cannot be undone.
+            </p>
+
+            <div class="modal-buttons">
+
+                <button
+                    type="button"
+                    class="modal-cancel-btn"
+                    onclick="closeDeleteModal()"
+                >
+                    Cancel
+                </button>
+
+                <a
+                    id="deleteLink"
+                    class="modal-delete-btn"
+                >
+                    Delete Product
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+  </section>
+
+
+{% endblock %}
+
+
+
+{% block js %}
+    <script src="{% static 'admin_panel/js/product.js' %}"></script>
+    <script src="{% static 'admin_panel/js/dashboard.js' %}"></script>
+{% endblock  %}
+    
+
+    

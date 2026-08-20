@@ -1,0 +1,203 @@
+{% extends 'admin_dashboard/master/base.html' %}
+
+{% load static %}
+
+{% block title %}
+    Add Category | NAFI Admin Dashboard
+{% endblock %}
+
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'admin_panel/css/add_categories.css' %}">
+{% endblock %}
+
+
+{% block content %}
+
+<div class="add-category-page">
+
+    <!-- Page Header -->
+    <div class="add-category-header">
+
+        <div>
+            <h1>Add Category</h1>
+            <p>Create a new product category</p>
+        </div>
+
+        <a href="{% url 'categories_page' %}" class="back-btn">
+            <i class="bi bi-arrow-left"></i>
+            Back to Categories
+        </a>
+
+    </div>
+
+
+    <!-- Form Card -->
+    <div class="category-form-card">
+
+        <form method="POST" enctype="multipart/form-data">
+
+            {% csrf_token %}
+
+            <!-- Category Name -->
+            <div class="form-group">
+
+                <label for="{{ form.name.id_for_label }}">
+                    Category Name
+                    <span>*</span>
+                </label>
+
+                {{ form.name }}
+
+                {% if form.name.errors %}
+                    <div class="form-error">
+                        {{ form.name.errors }}
+                    </div>
+                {% endif %}
+
+            </div>
+
+
+            <!-- Description -->
+            <div class="form-group">
+
+                <label for="{{ form.description.id_for_label }}">
+                    Description
+                </label>
+
+                {{ form.description }}
+
+                {% if form.description.errors %}
+                    <div class="form-error">
+                        {{ form.description.errors }}
+                    </div>
+                {% endif %}
+
+            </div>
+
+
+            <!-- Image -->
+<!-- Image -->
+<div class="image-upload-box" id="imageUploadBox">
+
+    <!-- Upload Content -->
+    <div class="upload-content" id="uploadContent">
+
+        <i class="bi bi-cloud-arrow-up upload-icon"></i>
+
+        <span class="upload-text">
+            Click to upload category image
+        </span>
+
+        <small>
+            PNG, JPG or WEBP
+        </small>
+
+    </div>
+
+
+    <!-- Preview -->
+    <div class="image-preview" id="imagePreview">
+
+        <div class="preview-image-box">
+            <img
+                id="previewImage"
+                src=""
+                alt="Category Preview"
+            >
+        </div>
+
+        <div class="preview-details">
+
+            <h3>Category Image</h3>
+
+            <p>
+                Recently uploaded image.
+            </p>
+
+            <div class="file-name">
+                <i class="bi bi-image"></i>
+
+                <span id="fileName"></span>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <input
+        type="file"
+        name="image"
+        id="categoryImage"
+        accept="image/png,image/jpeg,image/webp"
+    >
+
+</div>
+
+
+            <!-- Status -->
+            <div class="status-section">
+
+                <div class="status-content">
+
+                    <div class="status-icon">
+                        <i class="bi bi-check-circle"></i>
+                    </div>
+
+                    <div>
+                        <strong>Category Status</strong>
+                        <p>
+                            Active categories are available
+                            for products.
+                        </p>
+                    </div>
+
+                </div>
+
+                <div class="status-toggle">
+
+                    {{ form.is_active }}
+
+                    <label for="{{ form.is_active.id_for_label }}">
+                        Active
+                    </label>
+
+                </div>
+
+            </div>
+
+
+            <!-- Form Actions -->
+            <div class="form-actions">
+
+                <a
+                    href="{% url 'categories_page' %}"
+                    class="cancel-btn"
+                >
+                    Cancel
+                </a>
+
+                <button
+                    type="submit"
+                    class="save-category-btn"
+                >
+                    <i class="bi bi-check-lg"></i>
+                    Save Category
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+
+{% block js %}
+<script src="{% static 'admin_panel/js/add_categories.js' %}"></script>    
+{% endblock  %}
+    

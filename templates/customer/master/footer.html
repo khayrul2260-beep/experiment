@@ -1,0 +1,287 @@
+{% load static %}
+
+<footer class="nafi-footer">
+
+    <!-- ================================
+         FOOTER MAIN
+    ================================= -->
+
+    <div class="footer-container">
+
+        <!-- Brand -->
+        <div class="footer-brand">
+            
+            
+            <a href="#" class="logo">
+              <img
+                src="{% static 'customer/images/nafi.png' %}"
+                alt="brand-logo"
+                class="brand_logo"
+              />
+            
+              <img
+                src="{% static 'customer/images/nafi_title.png' %}"
+                alt="brand-title"
+                class="brand_title"
+              /> 
+            </a>
+
+{% comment %} 
+            <p class="footer-tagline">
+                Modesty. Style. Purpose.
+            </p> {% endcomment %}
+
+            {% comment %} <p class="footer-description">
+                Premium men's fashion inspired by timeless elegance,
+                modesty and modern Islamic lifestyle.
+            </p> {% endcomment %}
+
+            <!-- Social Media -->
+            <div class="footer-social">
+
+                <a href="#" aria-label="Facebook" class="facebook">
+                    <i class="fa-brands fa-facebook-f"></i>
+                </a>
+
+                <a href="#" aria-label="Instagram" class="instagram">
+                    <i class="fa-brands fa-instagram"></i>
+                </a>
+
+                <a href="#" aria-label="WhatsApp" class="whatsapp">
+                    <i class="fa-brands fa-whatsapp"></i>
+                </a>
+
+                <a href="#" aria-label="YouTube" class="youtube">
+                    <i class="fa-brands fa-youtube"></i>
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- Shop -->
+        <div class="footer-column">
+
+            <h3>Shop</h3>
+
+            <ul>
+                <li>
+                    <a href="#">All Products</a>
+                </li>
+
+                <li>
+                    <a href="#">New Arrivals</a>
+                </li>
+
+                <li>
+                    <a href="#">T-Shirts</a>
+                </li>
+
+                <li>
+                    <a href="#">Shirts</a>
+                </li>
+
+                <li>
+                    <a href="#">Panjabi</a>
+                </li>
+
+                <li>
+                    <a href="#">Featured Collection</a>
+                </li>
+            </ul>
+
+        </div>
+
+
+        <!-- Customer Care -->
+        <div class="footer-column">
+
+            <h3>Customer Care</h3>
+
+            <ul>
+                <li>
+                    <a href="#">Contact Us</a>
+                </li>
+
+                <li>
+                    <a href="#">Shipping & Delivery</a>
+                </li>
+
+                <li>
+                    <a href="#">Return & Exchange</a>
+                </li>
+
+                <li>
+                    <a href="#">Size Guide</a>
+                </li>
+
+                <li>
+                    <a href="#">FAQ</a>
+                </li>
+
+            </ul>
+
+        </div>
+
+
+        <!-- Company -->
+        <div class="footer-column">
+
+            <h3>About NAFI</h3>
+
+            <ul>
+                <li>
+                    <a href="#">Our Story</a>
+                </li>
+
+                <li>
+                    <a href="#">Our Values</a>
+                </li>
+
+                <li>
+                    <a href="#">Privacy Policy</a>
+                </li>
+
+                <li>
+                    <a href="#">Terms & Conditions</a>
+                </li>
+
+            </ul>
+
+        </div>
+
+
+        <!-- Newsletter -->
+        <div class="footer-newsletter">
+
+            <span class="newsletter-label">
+                STAY CONNECTED
+            </span>
+
+            <h3>
+                Join the NAFI community.
+            </h3>
+
+            <p>
+                Be the first to discover new collections,
+                exclusive offers and style updates.
+            </p>
+
+            <form class="newsletter-form" method="POST" action="#">
+
+                {% csrf_token %}
+
+                <div class="newsletter-input-wrapper">
+
+                    <input
+                        type="email"
+                        name="email"
+                        placeholder="Your email address"
+                        autocomplete="email"
+                        required
+                    >
+
+                    <button type="submit" aria-label="Subscribe">
+                        <i class="bi bi-arrow-right"></i>
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================================
+         TRUST FEATURES
+    ================================= -->
+
+    <div class="footer-trust">
+
+        <div class="trust-item">
+
+            <i class="bi bi-shield-check"></i>
+
+            <div>
+                <strong>Secure Payment</strong>
+                <span>Safe & trusted checkout</span>
+            </div>
+
+        </div>
+
+
+        <div class="trust-item">
+
+            <i class="bi bi-truck"></i>
+
+            <div>
+                <strong>Fast Delivery</strong>
+                <span>Reliable delivery service</span>
+            </div>
+
+        </div>
+
+
+        <div class="trust-item">
+
+            <i class="bi bi-arrow-repeat"></i>
+
+            <div>
+                <strong>Easy Exchange</strong>
+                <span>Simple exchange policy</span>
+            </div>
+
+        </div>
+
+
+        <div class="trust-item">
+
+            <i class="bi bi-patch-check"></i>
+
+            <div>
+                <strong>Authentic Products</strong>
+                <span>Quality you can trust</span>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================================
+         FOOTER BOTTOM
+    ================================= -->
+
+    <div class="footer-bottom">
+
+        <div class="footer-bottom-container">
+
+            <p>
+                © {% now "Y" %} <strong>NAFI</strong>.
+                All Rights Reserved.
+            </p>
+
+           <a href="https://github.com/khayrul2260-beep" target="_blank" style="text-decoration: none;">
+                <p class="footer-motto">
+                    Developer: <b>Md. Khayrul Islam</b>
+                </p>
+           </a>
+
+            <div class="footer-legal">
+
+                <a href="#">Privacy</a>
+
+                <span>|</span>
+
+                <a href="#">Terms</a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</footer>

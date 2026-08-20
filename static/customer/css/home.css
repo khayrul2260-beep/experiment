@@ -1,0 +1,341 @@
+/* =========================================================
+   NAFI HOME PAGE
+   home.css
+========================================================= */
+
+
+/* =========================================================
+   HOME SECTION
+========================================================= */
+
+.home {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    position: relative;
+}
+
+
+/* =========================================================
+   HOME IMAGE
+========================================================= */
+
+.home img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+
+/* =========================================================
+   MAIN SECTION
+========================================================= */
+
+.main_section {
+    width: 100%;
+    position: relative;
+    z-index: 0;
+}
+
+
+/* =========================================================
+   SLIDESHOW WRAPPER
+========================================================= */
+
+.slide_show {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    z-index: 0;
+}
+
+
+/* =========================================================
+   BOOTSTRAP CAROUSEL
+========================================================= */
+
+.carousel {
+    width: 100%;
+    position: relative;
+}
+
+
+.carousel-inner {
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   CAROUSEL ITEM
+========================================================= */
+
+.carousel-item {
+    position: relative;
+    width: 100%;
+}
+
+
+/* =========================================================
+   SLIDE IMAGE
+========================================================= */
+
+.carousel-item img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+}
+
+
+/* =========================================================
+   DARK OVERLAY
+========================================================= */
+
+.slide_show .carousel-item::after {
+
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(0, 0, 0, 0.40),
+            rgba(0, 0, 0, 0.05),
+            rgba(0, 0, 0, 0.30)
+        );
+
+    pointer-events: none;
+
+    z-index: 5;
+}
+
+
+/* =========================================================
+   CAROUSEL CONTROLS
+========================================================= */
+
+.carousel-control-prev,
+.carousel-control-next {
+
+    z-index: 30;
+
+    width: 60px;
+    height: 60px;
+
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    opacity: 1;
+
+    transition:
+        background-color 0.3s ease,
+        transform 0.3s ease,
+        border-color 0.3s ease;
+}
+
+
+/* =========================================================
+   PREVIOUS BUTTON
+========================================================= */
+
+.carousel-control-prev {
+    left: 5%;
+}
+
+
+/* =========================================================
+   NEXT BUTTON
+========================================================= */
+
+.carousel-control-next {
+    right: 5%;
+}
+
+
+/* =========================================================
+   CONTROL HOVER
+========================================================= */
+
+.carousel-control-prev:hover {
+    transform:
+        translateY(-50%)
+        scale(1.08);
+}
+
+
+.carousel-control-next:hover {
+
+    transform:
+        translateY(-50%)
+        scale(1.08);
+}
+
+
+/* =========================================================
+   CAROUSEL ICON
+========================================================= */
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+
+    width: 22px;
+    height: 22px;
+
+    background-size: 100% 100%;
+}
+
+
+/* =========================================================
+   DESKTOP LARGE SCREEN
+========================================================= */
+
+@media (min-width: 1400px) {
+
+    .carousel-control-prev {
+        left: 3%;
+    }
+
+    .carousel-control-next {
+        right: 3%;
+    }
+
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 991px) {
+
+    .carousel-control-prev,
+    .carousel-control-next {
+
+        width: 50px;
+        height: 50px;
+    }
+
+
+    .carousel-control-prev {
+        left: 4%;
+    }
+
+
+    .carousel-control-next {
+        right: 4%;
+    }
+
+
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+
+        width: 19px;
+        height: 19px;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 768px) {
+
+    .home {
+        width: 100%;
+    }
+
+
+    .slide_show {
+        width: 100%;
+    }
+
+
+    .carousel-item img {
+
+        width: 100%;
+
+        height: 55vh;
+
+        min-height: 350px;
+
+        object-fit: cover;
+    }
+
+
+    .carousel-control-prev,
+    .carousel-control-next {
+
+        width: 45px;
+        height: 45px;
+    }
+
+
+    .carousel-control-prev {
+        left: 3%;
+    }
+
+
+    .carousel-control-next {
+        right: 3%;
+    }
+
+
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+
+        width: 17px;
+        height: 17px;
+    }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+
+    .carousel-item img {
+
+        height: 52vh;
+
+        min-height: 300px;
+    }
+
+
+    .carousel-control-prev,
+    .carousel-control-next {
+
+        width: 38px;
+        height: 38px;
+    }
+
+
+    .carousel-control-prev {
+        left: 4%;
+    }
+
+
+    .carousel-control-next {
+        right: 4%;
+    }
+
+
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+
+        width: 14px;
+        height: 14px;
+    }
+
+}
