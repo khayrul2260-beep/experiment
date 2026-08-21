@@ -163,7 +163,12 @@ Dashboard
         {% for data in product_data %}
             <tr>
                 <td>{{data.product_code}}</td>
-                <td>{% if data.image %} <img style="width: 30px; height: 30px;" src="{{ data.image.url }}" alt="{{ data.name }}"> {% else %} <span>No Image</span> {% endif %}</td>
+                <td>{% if data.image %} 
+                    <img style="width: 30px; height: 30px;" src="{{ data.image.url }}" alt="{{ data.name }}"> 
+                    {% else %} 
+                    <span>No Image</span> 
+                    {% endif %}
+                </td>
                 <td>{{data.name}}</td>
                 <td>৳ {{data.price}}</td>
                 <td> {% if data.discount_price %} ৳ {{ data.discount_price }} {% else %} - {% endif %} </td>

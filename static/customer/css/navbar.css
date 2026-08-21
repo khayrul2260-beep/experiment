@@ -225,7 +225,7 @@
 
 .nafi-logo {
 
-    width: 60px;
+    width: auto;
 
     height: 60px;
 
@@ -240,7 +240,7 @@
 
 .logo_ {
 
-    width: 100%;
+    width: auto;
 
     height: 100%;
 
@@ -259,9 +259,7 @@
 
     width: auto;
 
-    height: 80%;
-
-    max-width: 60px;
+    height: 70%;
 
     object-fit: contain;
 
@@ -284,6 +282,35 @@
     transform: scale(0.96);
 
 }
+
+.brand_title_ {
+
+    width: auto;
+
+    height: 100%;
+
+    object-fit: contain;
+
+    display: block;
+
+    transition: transform 0.25s ease;
+
+}
+
+
+.brand_title_:hover {
+
+    transform: translateY(-2px);
+
+}
+
+
+.brand_title_:active {
+
+    transform: scale(0.96);
+
+}
+
 
 
 /* =====================================================
@@ -1522,7 +1549,7 @@ body.nafi-menu-open {
 
         position: absolute;
 
-        left: 50%;
+        left: 50px;
 
         width: 60px;
 
