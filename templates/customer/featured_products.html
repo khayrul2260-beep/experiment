@@ -1,0 +1,137 @@
+{% load static %}
+
+<section class="nafi-featured">
+
+    <!-- =====================================================
+         SECTION HEADER
+    ====================================================== -->
+
+    <div class="featured-header">
+
+        <div class="featured">
+            <h2>Special Product</h2>
+
+            <p>
+                Selected styles from NAFI.
+            </p>
+        </div>
+
+        <a
+            href="#"
+            class="featured-view-all"
+        >
+            View All
+            <i class="bi bi-arrow-right"></i>
+        </a>
+
+    </div>
+
+
+    <!-- =====================================================
+         PRODUCT GRID
+    ====================================================== -->
+
+    <div class="featured-grid">
+
+        {% for product in featured_products %}
+
+            <article class="featured-product">
+
+
+                <!-- =================================================
+                     PRODUCT IMAGE
+                ================================================== -->
+
+                <a
+                    href="{% url 'product_detail_page' product.slug %}"
+                    class="featured-image-link"
+                >
+
+                    {% if product.image %}
+
+                        <img
+                            src="{{ product.image.url }}"
+                            alt="{{ product.name }}"
+                            class="featured-image"
+                            loading="lazy"
+                        >
+
+                    {% else %}
+
+                        <div class="featured-no-image">
+
+                            <i class="bi bi-image"></i>
+
+                        </div>
+
+                    {% endif %}
+
+                </a>
+
+
+                <!-- =================================================
+                     PRODUCT INFORMATION
+                ================================================== -->
+
+                <div class="featured-info">
+
+                    <a
+                        href="{% url 'product_detail_page' product.slug %}"
+                        class="featured-name"
+                    >
+                        {{ product.name }}
+                    </a>
+
+
+                    <!-- Price -->
+
+                    <div class="featured-price">
+
+                        {% if product.discount_price %}
+
+                            <span class="featured-old-price">
+                                ৳{{ product.price }}
+                            </span>
+
+                            <span class="featured-discount-price">
+                                ৳{{ product.discount_price }}
+                            </span>
+
+                        {% else %}
+
+                            <span class="featured-normal-price">
+                                ৳{{ product.price }}
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </article>
+
+
+        {% empty %}
+
+
+            <!-- =================================================
+                 EMPTY STATE
+            ================================================== -->
+
+            <div class="featured-empty">
+
+                <i class="bi bi-star"></i>
+
+                <p>
+                    No featured products available right now.
+                </p>
+
+            </div>
+
+
+        {% endfor %}
+
+    </div>
+
+</section>

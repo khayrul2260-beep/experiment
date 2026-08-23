@@ -161,4 +161,75 @@ class ProductsModel(models.Model):
         return f'{self.name} - {self.price}'
 
 
+class ProductImage(models.Model):
 
+    product = models.ForeignKey(
+        ProductsModel,
+        on_delete=models.CASCADE,
+        related_name='images'
+    )
+
+    image = models.ImageField(
+        upload_to='products/'
+    )
+
+    is_primary = models.BooleanField(
+        default=False
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    def __str__(self):
+        return f"{self.product.name} Image"
+
+
+
+class ProductSize(models.Model):
+
+    SIZE_CHOICES = [
+        ('M', 'M'),
+        ('L', 'L'),
+        ('XL', 'XL'),
+        ('XXL', 'XXL'),
+    ]
+
+    product = models.ForeignKey(
+        ProductsModel,
+        on_delete=models.CASCADE,
+        related_name='sizes'
+    )
+
+    size = models.CharField(
+        max_length=10,
+        choices=SIZE_CHOICES
+    )
+
+    stock = models.PositiveIntegerField(
+        default=0
+    )
+
+    is_available = models.BooleanField(
+        default=True
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True
+    )
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['product', 'size'],
+                name='unique_product_size'
+            )
+        ]
+        ordering = ['size']
+
+    def __str__(self):
+        return f'{self.product.name} - {self.size}'

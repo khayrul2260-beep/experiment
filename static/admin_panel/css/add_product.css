@@ -1,3 +1,26 @@
+:root {
+
+    --background-color: #050505;
+
+    --surface-color: #0d0d0d;
+    --surface-hover-color: #121212;
+
+    --border-color: #242424;
+
+    --text-primary-color: #ffffff;
+    --text-secondary-color: #999999;
+
+    --accent-color: #8ab4f8;
+    --accent-text-color: #050505;
+
+    --danger-color: #b91c1c;
+    --danger-hover-color: #dc2626;
+    --danger-text-color: #ffffff;
+
+}
+
+
+
 /* ========================================
    Add Product Page
 ======================================== */
@@ -177,6 +200,7 @@
 }
 
 
+
 /* Inputs */
 
 .form-control {
@@ -217,6 +241,36 @@ textarea.form-control {
 .form-control:focus {
     border-color: var(--primary-hover);
 }
+
+
+/* ==========================================================
+   PRODUCT DESCRIPTION EDITOR
+========================================================== */
+
+#descriptionEditor {
+    min-height: 220px;
+    background: #252525;
+    color: #cfcece;
+    border-radius: 0 0 8px 8px;
+    border: none;
+}
+
+#descriptionEditor .ql-editor {
+    min-height: 220px;
+    font-size: 15px;
+    line-height: 1.7;
+}
+
+#descriptionEditor .ql-editor::before{
+    color: rgba(249, 249, 249, 0.383);
+}
+
+.ql-toolbar.ql-snow {
+    border-radius: 8px 8px 0 0;
+    border-color: rgba(255, 252, 252, 0.222);
+}
+
+
 
 
 /* ========================================
@@ -453,6 +507,254 @@ textarea.form-control {
 /* ============================================
    image upload and preview
    ============================================ */
+
+/* =========================================================
+   MULTIPLE PRODUCT IMAGES
+========================================================= */
+
+.product-images-upload {
+    width: 100%;
+}
+
+#ProductImages {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+}
+/* Upload Area */
+
+.multiple-image-upload {
+    width: 100%;
+    min-height: 220px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 30px;
+
+    border: 1px dashed var(--border-color);
+    background: var(--surface-color);
+
+    cursor: pointer;
+
+    transition: all 0.25s ease;
+}
+
+
+.multiple-image-upload:hover {
+    border-color: var(--accent-color);
+    background: var(--surface-hover-color);
+}
+
+
+/* Upload Content */
+
+.multiple-upload-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    text-align: center;
+
+    color: var(--text-secondary-color);
+}
+
+
+.multiple-upload-content i {
+    font-size: 42px;
+
+    color: var(--accent-color);
+
+    margin-bottom: 5px;
+}
+
+
+.multiple-upload-content strong {
+    font-size: 15px;
+    font-weight: 600;
+
+    color: var(--text-primary-color);
+}
+
+
+.multiple-upload-content span {
+    font-size: 12px;
+
+    color: var(--text-secondary-color);
+}
+
+
+/* =========================================================
+   IMAGE PREVIEW GRID
+========================================================= */
+
+.product-images-preview {
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns: repeat(
+        auto-fill,
+        minmax(150px, 1fr)
+    );
+
+    gap: 15px;
+
+    margin-top: 20px;
+}
+
+
+/* Individual Image */
+
+.product-image-preview-item {
+    position: relative;
+
+    width: 100%;
+    aspect-ratio: 1 / 1;
+
+    overflow: hidden;
+
+    background: var(--surface-color);
+
+    border: 1px solid var(--border-color);
+}
+
+
+.product-image-preview-item img {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    object-fit: cover;
+}
+
+
+/* =========================================================
+   REMOVE BUTTON
+========================================================= */
+
+.remove-product-image {
+    position: absolute;
+
+    top: 8px;
+    right: 8px;
+
+    width: 32px;
+    height: 32px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+    border-radius: 50%;
+
+    background: var(--danger-color);
+    color: var(--danger-text-color);
+
+    cursor: pointer;
+
+    font-size: 14px;
+
+    transition: all 0.2s ease;
+}
+
+
+.remove-product-image:hover {
+    transform: scale(1.08);
+
+    background: var(--danger-hover-color);
+}
+
+
+/* =========================================================
+   MAIN IMAGE BADGE
+========================================================= */
+
+.main-image-badge {
+    position: absolute;
+
+    left: 8px;
+    bottom: 8px;
+
+    padding: 5px 9px;
+
+    font-size: 10px;
+    font-weight: 600;
+
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+
+    background: var(--accent-color);
+    color: var(--accent-text-color);
+}
+
+
+/* =========================================================
+   IMAGE COUNT
+========================================================= */
+
+.product-image-count {
+    margin-top: 12px;
+
+    font-size: 12px;
+
+    color: var(--text-secondary-color);
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 576px) {
+
+    .multiple-image-upload {
+        min-height: 180px;
+
+        padding: 20px;
+    }
+
+
+    .multiple-upload-content i {
+        font-size: 35px;
+    }
+
+
+    .multiple-upload-content strong {
+        font-size: 14px;
+    }
+
+
+    .product-images-preview {
+        grid-template-columns: repeat(
+            2,
+            minmax(0, 1fr)
+        );
+
+        gap: 10px;
+    }
+
+
+    .remove-product-image {
+        width: 28px;
+        height: 28px;
+
+        top: 6px;
+        right: 6px;
+    }
+
+}
+
+
+   
 /* ============================================
    Product Image Upload & Preview
 ============================================ */

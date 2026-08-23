@@ -32,7 +32,7 @@ CLOUDINARY_STORAGE = {
 SECRET_KEY = 'django-insecure-a))(&56-#%7qa$v0x=1qtv&y5evr#b6rq1x475*&q21%^!8@a='
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'experiment1',
     'admin_dashboard',
     'account',
+
 ]
 
 

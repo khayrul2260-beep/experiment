@@ -117,7 +117,6 @@ def products_page(request):
         context
     )
 
-
 def add_product_page(request):
 
     categories = Category.objects.filter(
@@ -128,41 +127,105 @@ def add_product_page(request):
 
     if request.method == "POST":
 
-        product_name = request.POST.get("product_name", "").strip()
-        description = request.POST.get("description", "").strip()
+        # ==========================================
+        # BASIC PRODUCT DATA
+        # ==========================================
+
+        product_name = request.POST.get(
+            "product_name",
+            ""
+        ).strip()
+
+        description = request.POST.get(
+            "description",
+            ""
+        ).strip()
 
         price = request.POST.get("price")
-        discount_price = request.POST.get("discount_price") or None
 
-        stock = int(request.POST.get("stock") or 0)
+        discount_price = (
+            request.POST.get("discount_price")
+            or None
+        )
 
         image = request.FILES.get("image")
 
-        is_available = "is_available" in request.POST
-        is_featured = "is_featured" in request.POST
+        additional_images = request.FILES.getlist(
+            "additional_images"
+        )
+        
+        is_available = (
+            "is_available" in request.POST
+        )
 
-        # Category
-        category_id = request.POST.get("category")
+        is_featured = (
+            "is_featured" in request.POST
+        )
 
-
-        # Create Product
-        product = ProductsModel.objects.create(
-            name=product_name,
-            description=description,
-            price=price,
-            discount_price=discount_price,
-            stock=stock,
-            image=image,
-            is_available=is_available,
-            is_featured=is_featured,
-            category_id=category_id,
+        category_id = request.POST.get(
+            "category"
         )
 
 
-        action = request.POST.get("save_action")
+        # ==========================================
+        # SIZE-WISE STOCK
+        # ==========================================
+
+        size_stock = {}
+
+        for size in ["M", "L", "XL", "XXL"]:
+
+            # Check whether this size was selected
+            size_selected = (
+                f"size_{size}" in request.POST
+            )
+
+            # If size is not selected,
+            # skip it completely
+            if not size_selected:
+                continue
 
 
-        # Image validation
+            # Get stock for selected size
+            stock_value = request.POST.get(
+                f"stock_{size}",
+                "0"
+            )
+
+
+            # Convert stock to integer
+            try:
+
+                stock_value = int(
+                    stock_value or 0
+                )
+
+            except (ValueError, TypeError):
+
+                stock_value = 0
+
+
+            # Selected size must have stock
+            if stock_value <= 0:
+
+                messages.error(
+                    request,
+                    f"Please enter valid stock for size {size}."
+                )
+
+                return redirect(
+                    "add_product_page"
+                )
+
+
+            # Store size and stock
+            size_stock[size] = stock_value
+
+
+        # ==========================================
+        # IMAGE VALIDATION
+        # ==========================================
+
         if image is None:
 
             messages.error(
@@ -171,12 +234,98 @@ def add_product_page(request):
             )
 
             return redirect(
-                "edit_product_page",
-                product.id
+                "add_product_page"
             )
 
 
-        # Save
+        # ==========================================
+        # SIZE VALIDATION
+        # ==========================================
+
+        if not size_stock:
+
+            messages.error(
+                request,
+                "Please select at least one size and enter its stock."
+            )
+
+            return redirect(
+                "add_product_page"
+            )
+
+
+        # ==========================================
+        # TOTAL STOCK
+        # ==========================================
+
+        total_stock = sum(
+            size_stock.values()
+        )
+
+
+        # ==========================================
+        # CREATE PRODUCT
+        # ==========================================
+
+        product = ProductsModel.objects.create(
+
+            name=product_name,
+
+            description=description,
+
+            price=price,
+
+            discount_price=discount_price,
+
+            stock=total_stock,
+
+            image=image,
+
+            is_available=is_available,
+
+            is_featured=is_featured,
+
+            category_id=category_id,
+        )
+        for image_file in additional_images:
+        
+            ProductImage.objects.create(
+                product=product,
+                image=image_file
+            )
+
+
+        # ==========================================
+        # CREATE PRODUCT SIZE RECORDS
+        # ==========================================
+
+        for size, stock in size_stock.items():
+
+            ProductSize.objects.create(
+
+                product=product,
+
+                size=size,
+
+                stock=stock,
+
+                is_available=True,
+            )
+
+
+        # ==========================================
+        # SAVE ACTION
+        # ==========================================
+
+        action = request.POST.get(
+            "save_action"
+        )
+
+
+        # ==========================================
+        # SAVE
+        # ==========================================
+
         if action == "save":
 
             messages.success(
@@ -184,10 +333,15 @@ def add_product_page(request):
                 "Product added successfully."
             )
 
-            return redirect("products_page")
+            return redirect(
+                "products_page"
+            )
 
 
-        # Save and Add Another
+        # ==========================================
+        # SAVE & ADD ANOTHER
+        # ==========================================
+
         elif action == "save_add":
 
             messages.success(
@@ -195,10 +349,15 @@ def add_product_page(request):
                 "Product added successfully."
             )
 
-            return redirect("add_product_page")
+            return redirect(
+                "add_product_page"
+            )
 
 
-        # Save and Continue Editing
+        # ==========================================
+        # SAVE & CONTINUE EDITING
+        # ==========================================
+
         elif action == "save_edit":
 
             messages.success(
@@ -212,11 +371,23 @@ def add_product_page(request):
             )
 
 
+    # ==========================================
+    # CONTEXT
+    # ==========================================
+
     context = {
+
         "product": product,
+
         "page_title": "Products",
+
         "categories": categories,
     }
+
+
+    # ==========================================
+    # RENDER
+    # ==========================================
 
     return render(
         request,
@@ -227,69 +398,326 @@ def add_product_page(request):
 
 def edit_product_page(request, id):
 
-    product = get_object_or_404(ProductsModel, id=id)
+    # ==========================================
+    # GET PRODUCT
+    # ==========================================
+
+    product = get_object_or_404(
+        ProductsModel,
+        id=id
+    )
+
+
+    # ==========================================
+    # GET CATEGORIES
+    # ==========================================
 
     categories = Category.objects.filter(
-        Q(is_active=True) | Q(id=product.category_id)
+        Q(is_active=True) |
+        Q(id=product.category_id)
     ).order_by('name')
-    
+
+
+    # ==========================================
+    # GET EXISTING SIZES
+    # ==========================================
+
+    existing_sizes = {
+        item.size: item
+        for item in product.sizes.all()
+    }
+
+
+    # ==========================================
+    # GET EXISTING ADDITIONAL IMAGES
+    # ==========================================
+
+    additional_images = product.images.all()
+
+
+    # ==========================================
+    # POST
+    # ==========================================
+
     if request.method == "POST":
 
-        product_name = request.POST.get("product_name").strip()
-        description = request.POST.get("description").strip()
+        product_name = request.POST.get(
+            "product_name",
+            ""
+        ).strip()
+
+        description = request.POST.get(
+            "description",
+            ""
+        ).strip()
+
         price = request.POST.get("price")
-        discount_price = request.POST.get("discount_price") or None
-        stock = int(request.POST.get("stock") or 0)
+
+        discount_price = (
+            request.POST.get("discount_price")
+            or None
+        )
+
+        # Main product image
         image = request.FILES.get("image")
 
-        is_available = "is_available" in request.POST
-        is_featured = "is_featured" in request.POST
+        # Additional product images
+        additional_images_upload = request.FILES.getlist(
+            "additional_images"
+        )
 
-        # Category
-        category_id = request.POST.get("category")
+        is_available = (
+            "is_available" in request.POST
+        )
+
+        is_featured = (
+            "is_featured" in request.POST
+        )
+
+        category_id = request.POST.get(
+            "category"
+        )
 
 
-        # Update Product
+        # ==========================================
+        # SIZE-WISE STOCK
+        # ==========================================
+
+        size_stock = {}
+
+        for size in ["M", "L", "XL", "XXL"]:
+
+            size_selected = (
+                f"size_{size}" in request.POST
+            )
+
+            if not size_selected:
+                continue
+
+
+            stock_value = request.POST.get(
+                f"stock_{size}",
+                "0"
+            )
+
+
+            try:
+
+                stock_value = int(
+                    stock_value or 0
+                )
+
+            except (ValueError, TypeError):
+
+                stock_value = 0
+
+
+            if stock_value <= 0:
+
+                messages.error(
+                    request,
+                    f"Please enter valid stock for size {size}."
+                )
+
+                return redirect(
+                    "edit_product_page",
+                    id=product.id
+                )
+
+
+            size_stock[size] = stock_value
+
+
+        # ==========================================
+        # SIZE VALIDATION
+        # ==========================================
+
+        if not size_stock:
+
+            messages.error(
+                request,
+                "Please select at least one size and enter its stock."
+            )
+
+            return redirect(
+                "edit_product_page",
+                id=product.id
+            )
+
+
+        # ==========================================
+        # TOTAL STOCK
+        # ==========================================
+
+        total_stock = sum(
+            size_stock.values()
+        )
+
+
+        # ==========================================
+        # UPDATE PRODUCT
+        # ==========================================
+
         product.name = product_name
-        product.description = description
-        product.price = price
-        product.discount_price = discount_price
-        product.stock = stock
-        category_id=category_id
 
-        # Image only if new image uploaded
-        if image:
-            product.image = image
+        product.description = description
+
+        product.price = price
+
+        product.discount_price = discount_price
+
+        product.stock = total_stock
+
+        product.category_id = category_id
 
         product.is_available = is_available
+
         product.is_featured = is_featured
+
+
+        # ==========================================
+        # UPDATE MAIN IMAGE
+        # ==========================================
+
+        if image:
+
+            product.image = image
+
+
+        # ==========================================
+        # SAVE PRODUCT
+        # ==========================================
 
         product.save()
 
-        action = request.POST.get("save_action")
+
+        # ==========================================
+        # SAVE ADDITIONAL IMAGES
+        # ==========================================
+
+        for image_file in additional_images_upload:
+
+            ProductImage.objects.create(
+
+                product=product,
+
+                image=image_file
+
+            )
+
+
+        # ==========================================
+        # UPDATE PRODUCT SIZES
+        # ==========================================
+
+        for size in ["M", "L", "XL", "XXL"]:
+
+            if size in size_stock:
+
+                ProductSize.objects.update_or_create(
+
+                    product=product,
+
+                    size=size,
+
+                    defaults={
+                        "stock": size_stock[size],
+                        "is_available": True,
+                    }
+
+                )
+
+            else:
+
+                ProductSize.objects.filter(
+                    product=product,
+                    size=size
+                ).delete()
+
+
+        # ==========================================
+        # SAVE ACTION
+        # ==========================================
+
+        action = request.POST.get(
+            "save_action"
+        )
+
 
         if action == "save":
-            messages.success(request, "Product updated successfully.")
-            return redirect("products_page")
+
+            messages.success(
+                request,
+                "Product updated successfully."
+            )
+
+            return redirect(
+                "products_page"
+            )
+
 
         elif action == "save_add":
-            messages.success(request, "Product updated successfully.")
-            return redirect("add_product_page")
+
+            messages.success(
+                request,
+                "Product updated successfully."
+            )
+
+            return redirect(
+                "add_product_page"
+            )
+
 
         elif action == "save_edit":
-            messages.success(request, "Product updated successfully.")
-            return redirect("edit_product_page", id=product.id)
+
+            messages.success(
+                request,
+                "Product updated successfully."
+            )
+
+            return redirect(
+                "edit_product_page",
+                id=product.id
+            )
+
 
         else:
-            return redirect("products_page")
+
+            return redirect(
+                "products_page"
+            )
+
+
+    # ==========================================
+    # CONTEXT
+    # ==========================================
 
     context = {
+
         "product": product,
+
         "page_title": "Products",
+
         "categories": categories,
+
+        "existing_sizes": existing_sizes,
+
+        "additional_images": additional_images,
+
     }
 
-    return render(request, "admin_dashboard/edit_product.html", context)
+
+    # ==========================================
+    # RENDER
+    # ==========================================
+
+    return render(
+        request,
+        "admin_dashboard/edit_product.html",
+        context
+    )
+
+
 
 
 def delete_product_page(request, id):

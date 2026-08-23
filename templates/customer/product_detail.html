@@ -1,0 +1,492 @@
+{% extends "customer/master/base.html" %}
+
+{% load static %}
+
+{% block title %}
+    {{ product.name }} | NAFI
+{% endblock %}
+
+
+{% block extra_css %}
+
+<link rel="stylesheet" href="{% static 'customer/css/product_detail.css' %}">
+
+{% endblock %}
+
+
+
+{% block content %}
+
+<div class="product-detail-page">
+
+    <div class="product-detail-container">
+
+        <!-- =====================================================
+             PRODUCT IMAGE
+        ====================================================== -->
+
+        <div class="product-detail-image">
+
+            {% if product.image %}
+
+                <img
+                    src="{{ product.image.url }}"
+                    alt="{{ product.name }}"
+                >
+
+            {% else %}
+
+                <div class="product-no-image">
+                    <i class="bi bi-image"></i>
+                    <span>No Image</span>
+                </div>
+
+            {% endif %}
+
+        </div>
+
+
+
+        <!-- =====================================================
+             PRODUCT INFORMATION
+        ====================================================== -->
+
+        <div class="product-detail-info">
+
+            <!-- Product Category -->
+
+            {% if product.category %}
+
+                <p class="product-category">
+                    {{ product.category.name }}
+                </p>
+
+            {% endif %}
+
+
+
+            <!-- Product Name -->
+
+            <h1 class="product-name">
+                {{ product.name }}
+            </h1>
+
+
+
+            <!-- Product Code -->
+
+            <p class="product-code">
+                {{ product.product_code }}
+            </p>
+
+
+
+            <!-- =================================================
+                 PRICE
+            ================================================== -->
+
+            <div class="product-price">
+
+                {% if product.discount_price %}
+
+                    <span class="old-price">
+                        ৳{{ product.price }}
+                    </span>
+
+                    <span class="discount-price">
+                        ৳{{ product.discount_price }}
+                    </span>
+
+                {% else %}
+
+                    <span class="regular-price">
+                        ৳{{ product.price }}
+                    </span>
+
+                {% endif %}
+
+            </div>
+
+
+
+            <!-- =================================================
+                 AVAILABILITY
+            ================================================== -->
+
+            {% if has_stock %}
+
+                <p class="product-availability available">
+                    <i class="bi bi-check2"></i>
+                    In Stock
+                </p>
+
+            {% else %}
+
+                <p class="product-availability unavailable">
+                    <i class="bi bi-x-lg"></i>
+                    Out of Stock
+                </p>
+
+            {% endif %}
+
+
+            <!-- =================================================
+                 SIZE
+            ================================================== -->
+
+            <div class="product-size-section">
+
+                <div class="size-heading">
+
+                    <h3>
+                        Size
+                    </h3>
+
+                    <span>
+                        Select your size
+                    </span>
+
+                </div>
+
+
+                <div class="size-options">
+
+                    {% for size in sizes %}
+
+                        {% if size.stock > 0 and size.is_available %}
+
+                            <button
+                                type="button"
+                                class="size-btn"
+                                data-size="{{ size.size }}"
+                            >
+                                {{ size.size }}
+                            </button>
+
+                        {% else %}
+
+                            <button
+                                type="button"
+                                class="size-btn size-disabled"
+                                disabled
+                            >
+                                {{ size.size }}
+                            </button>
+
+                        {% endif %}
+
+                    {% empty %}
+
+                        <p class="no-size">
+                            No sizes available.
+                        </p>
+
+                    {% endfor %}
+
+                </div>
+
+                <p
+                    class="size-error"
+                    id="sizeError"
+                >
+                    Please select a size.
+                </p>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 QUANTITY
+            ================================================== -->
+
+            <div class="quantity-section">
+
+                <h3>
+                    Quantity
+                </h3>
+
+                <div class="quantity-control">
+
+                    <button
+                        type="button"
+                        id="quantityMinus"
+                        class="quantity-btn"
+                    >
+                        -
+                    </button>
+
+                    <span
+                        id="quantityValue"
+                        class="quantity-value"
+                    >
+                        1
+                    </span>
+
+                    <button
+                        type="button"
+                        id="quantityPlus"
+                        class="quantity-btn"
+                    >
+                        +
+                    </button>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 ACTION BUTTONS
+            ================================================== -->
+
+            <div class="product-actions">
+
+                <button
+                    type="button"
+                    class="add-cart-btn"
+                    id="addToCartBtn"
+                    {% if not has_stock %}disabled{% endif %}
+                >
+
+                    <i class="bi bi-bag"></i>
+
+                    Add to Cart
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="buy-now-btn"
+                    id="buyNowBtn"
+                    {% if not has_stock %}disabled{% endif %}
+                >
+
+                    Buy Now
+
+                </button>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 PRODUCT DETAILS
+            ================================================== -->
+
+            <div class="product-extra-info">
+
+                <div class="extra-info-item">
+
+                    <i class="bi bi-truck"></i>
+
+                    <div>
+                        <strong>Delivery</strong>
+                        <span>Fast delivery across Bangladesh</span>
+                    </div>
+
+                </div>
+
+
+                <div class="extra-info-item">
+
+                    <i class="bi bi-arrow-repeat"></i>
+
+                    <div>
+                        <strong>Easy Exchange</strong>
+                        <span>Simple exchange policy</span>
+                    </div>
+
+                </div>
+
+
+                <div class="extra-info-item">
+
+                    <i class="bi bi-shield-check"></i>
+
+                    <div>
+                        <strong>Secure Shopping</strong>
+                        <span>Safe and secure checkout</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+    
+
+    <!-- =================================================
+         DESCRIPTION
+    ================================================== -->
+    <div class="product-description">
+        <h3>
+            Description
+        </h3>
+        <p>
+            {{ product.description }}
+        </p>
+    </div>
+
+
+
+
+</div>
+
+{% endblock %}
+
+
+
+{% block extra_js %}
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    /* =====================================================
+       SIZE SELECTION
+    ====================================================== */
+
+    const sizeButtons =
+        document.querySelectorAll(".size-btn:not(.size-disabled)");
+
+    const sizeError =
+        document.getElementById("sizeError");
+
+    let selectedSize = null;
+
+
+    sizeButtons.forEach(function (button) {
+
+        button.addEventListener("click", function () {
+
+            sizeButtons.forEach(function (btn) {
+
+                btn.classList.remove("selected");
+
+            });
+
+
+            this.classList.add("selected");
+
+            selectedSize =
+                this.dataset.size;
+
+
+            sizeError.style.display = "none";
+
+        });
+
+    });
+
+
+
+    /* =====================================================
+       QUANTITY
+    ====================================================== */
+
+    const minusButton =
+        document.getElementById("quantityMinus");
+
+    const plusButton =
+        document.getElementById("quantityPlus");
+
+    const quantityValue =
+        document.getElementById("quantityValue");
+
+
+    let quantity = 1;
+
+
+    minusButton.addEventListener("click", function () {
+
+        if (quantity > 1) {
+
+            quantity--;
+
+            quantityValue.textContent =
+                quantity;
+
+        }
+
+    });
+
+
+    plusButton.addEventListener("click", function () {
+
+        quantity++;
+
+        quantityValue.textContent =
+            quantity;
+
+    });
+
+
+
+    /* =====================================================
+       ADD TO CART
+    ====================================================== */
+
+    const addToCartBtn =
+        document.getElementById("addToCartBtn");
+
+
+    addToCartBtn.addEventListener("click", function () {
+
+        if (!selectedSize) {
+
+            sizeError.style.display =
+                "block";
+
+            return;
+
+        }
+
+
+        console.log({
+            product: "{{ product.id }}",
+            size: selectedSize,
+            quantity: quantity
+        });
+
+    });
+
+
+
+    /* =====================================================
+       BUY NOW
+    ====================================================== */
+
+    const buyNowBtn =
+        document.getElementById("buyNowBtn");
+
+
+    buyNowBtn.addEventListener("click", function () {
+
+        if (!selectedSize) {
+
+            sizeError.style.display =
+                "block";
+
+            return;
+
+        }
+
+
+        console.log({
+            product: "{{ product.id }}",
+            size: selectedSize,
+            quantity: quantity
+        });
+
+    });
+
+});
+
+</script>
+
+{% endblock %}

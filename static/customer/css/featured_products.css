@@ -1,0 +1,422 @@
+/* =====================================================
+   NAFI — FEATURED PRODUCTS
+===================================================== */
+
+.nafi-featured {
+    width: 100%;
+    padding: 70px 30px;
+    background-color: var(--background-color);
+}
+
+
+/* =====================================================
+   SECTION HEADER
+===================================================== */
+
+.featured-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}
+
+
+.featured {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 0%);
+}
+
+
+
+.featured-header h2 {
+    margin: 0;
+
+    font-size: 30px;
+    color: var(--large-text);
+    font-weight: 700;
+
+    letter-spacing: -0.5px;
+}
+
+.featured-header p {
+    margin: 6px 0 0;
+
+    font-size: 14px;
+    color: #777;
+}
+
+
+/* =====================================================
+   VIEW ALL
+===================================================== */
+
+.featured-view-all {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 7px;
+
+    color: var(--large-text);
+    text-decoration: none;
+
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.featured-view-all:hover {
+    text-decoration: underline;
+}
+
+
+/* =====================================================
+   PRODUCT GRID
+===================================================== */
+
+.featured-grid {
+    display: grid;
+
+    /*
+       Laptop / Desktop
+       5 products per row
+    */
+
+    grid-template-columns: repeat(
+        5,
+        minmax(0, 1fr)
+    );
+
+    gap: 10px 1px;
+}
+
+
+/* =====================================================
+   PRODUCT
+===================================================== */
+
+.featured-product {
+    min-width: 0;
+}
+
+
+/* =====================================================
+   PRODUCT IMAGE
+===================================================== */
+
+.featured-image-link {
+    display: block;
+
+    width: 100%;
+
+    overflow: hidden;
+
+    background: #f5f5f5;
+
+    text-decoration: none;
+}
+
+.featured-image {
+    display: block;
+
+    width: 100%;
+
+    aspect-ratio: 3 / 4;
+
+    object-fit: cover;
+
+    transition:
+        transform 0.3s ease;
+}
+
+
+/* Very subtle hover */
+
+.featured-image-link:hover
+.featured-image {
+
+    transform: scale(1.02);
+
+}
+
+
+/* =====================================================
+   NO IMAGE
+===================================================== */
+
+.featured-no-image {
+
+    width: 100%;
+
+    aspect-ratio: 3 / 4;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    background: #f5f5f5;
+
+    color: #999;
+
+    font-size: 30px;
+}
+
+
+/* =====================================================
+   PRODUCT INFORMATION
+===================================================== */
+
+.featured-info {
+
+    padding-top: 10px;
+}
+
+
+/* =====================================================
+   PRODUCT NAME
+===================================================== */
+
+.featured-name {
+
+    display: block;
+
+    color: var(--large-text);
+
+    text-decoration: none;
+
+    font-size: 18px;
+
+    line-height: 1.4;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+}
+
+.featured-name:hover {
+
+    text-decoration: underline;
+    color: var(--buy-button);
+
+}
+
+
+/* =====================================================
+   PRICE
+===================================================== */
+
+.featured-price {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin-top: 5px;
+
+    font-size: 14px;
+}
+
+
+/* Normal */
+
+.featured-normal-price {
+
+    color: var(--large-text);
+    font-weight: 500;
+}
+
+
+/* Old price */
+
+.featured-old-price {
+
+    color: var(--small-text);
+
+    text-decoration: line-through;
+}
+
+
+/* Discount price */
+
+.featured-discount-price {
+
+    color: var(--large-text);
+
+    font-weight: 600;
+}
+
+
+/* =====================================================
+   EMPTY STATE
+===================================================== */
+
+.featured-empty {
+
+    grid-column: 1 / -1;
+
+    text-align: center;
+
+    padding: 60px 20px;
+
+    color: #777;
+}
+
+.featured-empty i {
+
+    display: block;
+
+    margin-bottom: 10px;
+
+    font-size: 30px;
+}
+
+.featured-empty p {
+
+    margin: 0;
+
+    font-size: 14px;
+}
+
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media (max-width: 991px) {
+
+    .featured-grid {
+
+        grid-template-columns:
+            repeat(
+                4,
+                minmax(0, 1fr)
+            );
+
+    }
+
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 767px) {
+
+    .nafi-featured {
+
+        padding: 45px 0;
+
+    }
+
+
+    .featured-header {
+
+        align-items: center;
+
+        margin-bottom: 20px;
+
+    }
+
+
+    .featured-header h2 {
+
+        font-size: 22px;
+
+    }
+
+
+    .featured-header p {
+
+        display: none;
+
+    }
+
+
+    .featured-view-all {
+
+        font-size: 13px;
+
+    }
+
+
+    /*
+       Mobile
+       3 products per row
+    */
+
+    .featured-grid {
+
+        grid-template-columns:
+            repeat(
+                3,
+                minmax(0, 1fr)
+            );
+
+        gap: 25px 8px;
+
+    }
+
+
+    .featured-info {
+
+        padding-top: 7px;
+
+    }
+
+
+    .featured-name {
+
+        font-size: 12px;
+
+    }
+
+
+    .featured-price {
+
+        gap: 5px;
+
+        margin-top: 3px;
+
+        font-size: 12px;
+
+    }
+
+}
+
+
+/* =====================================================
+   SMALL MOBILE
+===================================================== */
+
+@media (max-width: 400px) {
+
+    .featured-grid {
+
+        gap: 20px 6px;
+
+    }
+
+
+    .featured-name {
+
+        font-size: 11px;
+
+    }
+
+
+    .featured-price {
+
+        font-size: 11px;
+
+    }
+
+}

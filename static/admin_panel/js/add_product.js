@@ -1,102 +1,590 @@
-const productImageInput =
-    document.getElementById("ProductImage");
-
-const productImageUpload =
-    document.getElementById("productImageUpload");
-
-const productUploadContent =
-    document.getElementById("productUploadContent");
-
-const productPreviewArea =
-    document.getElementById("productPreviewArea");
-
-const productPreview =
-    document.getElementById("productPreview");
-
-const productFileName =
-    document.getElementById("productFileName");
+document.addEventListener("DOMContentLoaded", function () {
 
 
-function showProductPreview(file) {
+    // =====================================================
+    // MULTIPLE PRODUCT IMAGE ELEMENTS
+    // =====================================================
 
-    if (!file) {
-        return;
-    }
+    const multipleImageUpload =
+        document.getElementById("multipleImageUpload");
 
-    if (!file.type.startsWith("image/")) {
-        return;
-    }
+    const productImagesInput =
+        document.getElementById("ProductImages");
 
-    const reader = new FileReader();
+    const multipleUploadContent =
+        document.getElementById("multipleUploadContent");
 
-    reader.onload = function (event) {
+    const productImagesPreview =
+        document.getElementById("productImagesPreview");
 
-        // Set image
-        productPreview.src = event.target.result;
-
-        // Set filename
-        productFileName.textContent = file.name;
-
-        // Hide upload content
-        productUploadContent.style.display = "none";
-
-        // Show preview
-        productPreviewArea.style.display = "block";
-    };
-
-    reader.readAsDataURL(file);
-}
+    const productImageCount =
+        document.getElementById("productImageCount");
 
 
-/* =========================
-   FILE SELECT
-========================= */
+    // =====================================================
+    // MULTIPLE IMAGE UPLOAD
+    // =====================================================
 
-productImageInput.addEventListener(
-    "change",
-    function () {
+    if (
+        multipleImageUpload &&
+        productImagesInput
+    ) {
 
-        const file = this.files[0];
+        /*
+         * Open file selector
+         */
 
-        showProductPreview(file);
-    }
-);
+        multipleImageUpload.addEventListener(
+            "click",
+            function (event) {
 
+                /*
+                 * Do not trigger twice when
+                 * clicking directly on input.
+                 */
 
-/* =========================
-   PASTE IMAGE
-========================= */
+                if (
+                    event.target !==
+                    productImagesInput
+                ) {
 
-productImageUpload.addEventListener(
-    "paste",
-    function (event) {
+                    productImagesInput.click();
 
-        const items = event.clipboardData.items;
-
-        for (const item of items) {
-
-            if (item.type.startsWith("image/")) {
-
-                const file = item.getAsFile();
-
-                if (!file) {
-                    return;
                 }
 
-                const dataTransfer =
-                    new DataTransfer();
-
-                dataTransfer.items.add(file);
-
-                productImageInput.files =
-                    dataTransfer.files;
-
-                showProductPreview(file);
-
-                event.preventDefault();
-
-                break;
             }
-        }
+        );
+
+
+        /*
+         * File selection
+         */
+
+        productImagesInput.addEventListener(
+            "change",
+            function () {
+
+                const files =
+                    Array.from(this.files);
+
+                showMultipleImagePreview(files);
+
+            }
+        );
+
     }
-);
+
+
+    // =====================================================
+    // SHOW MULTIPLE IMAGE PREVIEW
+    // =====================================================
+
+    function showMultipleImagePreview(files) {
+
+        if (!productImagesPreview) {
+            return;
+        }
+
+
+        /*
+         * Clear previous preview
+         */
+
+        productImagesPreview.innerHTML = "";
+
+
+        /*
+         * No images
+         */
+
+        if (!files.length) {
+
+            if (productImageCount) {
+
+                productImageCount.textContent =
+                    "No images selected.";
+
+            }
+
+            return;
+
+        }
+
+
+        /*
+         * Image count
+         */
+
+        if (productImageCount) {
+
+            productImageCount.textContent =
+                `${files.length} image${files.length > 1 ? "s" : ""} selected.`;
+
+        }
+
+
+        /*
+         * Create preview for every image
+         */
+
+        files.forEach(
+            function (file, index) {
+
+
+                /*
+                 * Validate image
+                 */
+
+                if (
+                    !file.type.startsWith("image/")
+                ) {
+
+                    return;
+
+                }
+
+
+                const reader =
+                    new FileReader();
+
+
+                reader.onload =
+                    function (event) {
+
+
+                        /*
+                         * Preview container
+                         */
+
+                        const previewItem =
+                            document.createElement(
+                                "div"
+                            );
+
+                        previewItem.className =
+                            "product-image-preview-item";
+
+
+                        /*
+                         * Image
+                         */
+
+                        const image =
+                            document.createElement(
+                                "img"
+                            );
+
+                        image.src =
+                            event.target.result;
+
+                        image.alt =
+                            file.name;
+
+
+                        /*
+                         * Main image badge
+                         */
+
+                        if (index === 0) {
+
+                            const badge =
+                                document.createElement(
+                                    "div"
+                                );
+
+                            badge.className =
+                                "main-image-badge";
+
+                            badge.textContent =
+                                "Main Image";
+
+                            previewItem.appendChild(
+                                badge
+                            );
+
+                        }
+
+
+                        /*
+                         * Remove button
+                         */
+
+                        const removeButton =
+                            document.createElement(
+                                "button"
+                            );
+
+                        removeButton.type =
+                            "button";
+
+                        removeButton.className =
+                            "remove-product-image";
+
+                        removeButton.innerHTML =
+                            '<i class="bi bi-x"></i>';
+
+
+                        /*
+                         * Remove image
+                         */
+
+                        removeButton.addEventListener(
+                            "click",
+                            function (event) {
+
+                                event.preventDefault();
+
+                                event.stopPropagation();
+
+                                removeImage(index);
+
+                            }
+                        );
+
+
+                        /*
+                         * Add image
+                         */
+
+                        previewItem.appendChild(
+                            image
+                        );
+
+
+                        /*
+                         * Add remove button
+                         */
+
+                        previewItem.appendChild(
+                            removeButton
+                        );
+
+
+                        /*
+                         * Add preview item
+                         */
+
+                        productImagesPreview.appendChild(
+                            previewItem
+                        );
+
+                    };
+
+
+                /*
+                 * Read image
+                 */
+
+                reader.readAsDataURL(file);
+
+            }
+        );
+
+    }
+
+
+    // =====================================================
+    // REMOVE IMAGE
+    // =====================================================
+
+    function removeImage(index) {
+
+        if (!productImagesInput) {
+            return;
+        }
+
+
+        /*
+         * Get current files
+         */
+
+        const files =
+            Array.from(
+                productImagesInput.files
+            );
+
+
+        /*
+         * Remove selected file
+         */
+
+        files.splice(index, 1);
+
+
+        /*
+         * Create new DataTransfer
+         */
+
+        const dataTransfer =
+            new DataTransfer();
+
+
+        /*
+         * Add remaining files
+         */
+
+        files.forEach(
+            function (file) {
+
+                dataTransfer.items.add(
+                    file
+                );
+
+            }
+        );
+
+
+        /*
+         * Update input
+         */
+
+        productImagesInput.files =
+            dataTransfer.files;
+
+
+        /*
+         * Update preview
+         */
+
+        showMultipleImagePreview(
+            files
+        );
+
+    }
+
+
+    // =====================================================
+    // SIZE & STOCK MANAGEMENT
+    // =====================================================
+
+    const sizeToggles =
+        document.querySelectorAll(
+            ".size-toggle"
+        );
+
+
+    const totalStockElement =
+        document.getElementById(
+            "totalStock"
+        );
+
+
+    // =====================================================
+    // UPDATE TOTAL STOCK
+    // =====================================================
+
+    function updateTotalStock() {
+
+        let total = 0;
+
+
+        document
+            .querySelectorAll(
+                ".size-stock-input"
+            )
+            .forEach(
+                function (input) {
+
+                    if (!input.disabled) {
+
+                        total +=
+                            parseInt(
+                                input.value
+                            ) || 0;
+
+                    }
+
+                }
+            );
+
+
+        if (totalStockElement) {
+
+            totalStockElement.textContent =
+                total;
+
+        }
+
+    }
+
+
+    // =====================================================
+    // SIZE CHECKBOX
+    // =====================================================
+
+    sizeToggles.forEach(
+        function (checkbox) {
+
+            checkbox.addEventListener(
+                "change",
+                function () {
+
+
+                    const size =
+                        this.dataset.size;
+
+
+                    const stockInput =
+                        document.querySelector(
+                            `[data-stock="${size}"]`
+                        );
+
+
+                    if (!stockInput) {
+                        return;
+                    }
+
+
+                    /*
+                     * Enable stock input
+                     */
+
+                    if (this.checked) {
+
+                        stockInput.disabled =
+                            false;
+
+                        stockInput.focus();
+
+                    }
+
+
+                    /*
+                     * Disable stock input
+                     */
+
+                    else {
+
+                        stockInput.disabled =
+                            true;
+
+                        stockInput.value =
+                            0;
+
+                    }
+
+
+                    /*
+                     * Update total
+                     */
+
+                    updateTotalStock();
+
+                }
+            );
+
+        }
+    );
+
+
+    // =====================================================
+    // STOCK INPUT CHANGE
+    // =====================================================
+
+    document
+        .querySelectorAll(
+            ".size-stock-input"
+        )
+        .forEach(
+            function (input) {
+
+                input.addEventListener(
+                    "input",
+                    updateTotalStock
+                );
+
+            }
+        );
+
+
+    // =====================================================
+    // INITIAL TOTAL STOCK
+    // =====================================================
+
+    updateTotalStock();
+
+});
+
+// ==========================================================
+// PRODUCT DESCRIPTION EDITOR
+// ==========================================================
+
+const descriptionEditorElement =
+    document.getElementById("descriptionEditor");
+
+const descriptionInput =
+    document.getElementById("description");
+
+
+if (descriptionEditorElement && descriptionInput) {
+
+    const quill = new Quill(
+        "#descriptionEditor",
+        {
+            theme: "snow",
+
+            placeholder:
+                "Write your product description...",
+
+            modules: {
+
+                toolbar: [
+
+                    ["bold", "italic", "underline"],
+
+                    [
+                        {
+                            header: [1, 2, 3, false]
+                        }
+                    ],
+
+                    [
+                        {
+                            list: "ordered"
+                        },
+                        {
+                            list: "bullet"
+                        }
+                    ],
+
+                    [
+                        {
+                            align: []
+                        }
+                    ],
+
+                    ["link"],
+
+                    ["clean"]
+
+                ]
+
+            }
+
+        }
+    );
+
+
+    // ======================================================
+    // BEFORE FORM SUBMIT
+    // ======================================================
+
+    const productForm =
+        descriptionEditorElement.closest("form");
+
+
+    if (productForm) {
+
+        productForm.addEventListener(
+            "submit",
+            function () {
+
+                descriptionInput.value =
+                    quill.root.innerHTML;
+
+            }
+        );
+
+    }
+
+}

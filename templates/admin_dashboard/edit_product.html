@@ -8,8 +8,10 @@
 
 
 {% block css %}
+
     <link rel="stylesheet" href="{% static 'admin_panel/css/add_product.css' %}">
     <link rel="stylesheet" href="{% static 'admin_panel/css/edit_product.css' %}">
+
 {% endblock %}
 
 
@@ -17,15 +19,25 @@
 
 <div class="add-product-page">
 
-    <!-- Page Header -->
+    <!-- =====================================================
+         PAGE HEADER
+    ====================================================== -->
+
     <div class="add-product-header">
 
         <div>
             <h1>Edit Product</h1>
-            <p>Update and manage your product information</p>
+
+            <p>
+                Update and manage your product information
+            </p>
         </div>
 
-        <a href="{% url 'products_page' %}" class="back-btn">
+
+        <a
+            href="{% url 'products_page' %}"
+            class="back-btn"
+        >
             <i class="bi bi-arrow-left"></i>
             Back to Products
         </a>
@@ -33,15 +45,26 @@
     </div>
 
 
-    <!-- Product Form Card -->
+
+    <!-- =====================================================
+         PRODUCT FORM
+    ====================================================== -->
+
     <div class="product-form-card">
 
-        <form method="POST" enctype="multipart/form-data">
+        <form
+            method="POST"
+            enctype="multipart/form-data"
+        >
 
             {% csrf_token %}
 
 
-            <!-- Basic Information -->
+
+            <!-- =================================================
+                 BASIC INFORMATION
+            ================================================== -->
+
             <div class="form-section">
 
                 <div class="section-heading">
@@ -52,19 +75,28 @@
 
                     <div>
                         <h3>Basic Information</h3>
-                        <p>Update the basic details of your product</p>
+
+                        <p>
+                            Update the basic details of your product
+                        </p>
                     </div>
 
                 </div>
 
 
+
                 <!-- Product Name -->
+
                 <div class="form-group">
 
                     <label for="ProductName">
+
                         Product Name
+
                         <span>*</span>
+
                     </label>
+
 
                     <input
                         name="product_name"
@@ -78,48 +110,65 @@
                 </div>
 
 
+
+                <!-- Category -->
+
                 <div class="form-group">
-                
+
                     <label for="category">
+
                         Category
+
                         <span>*</span>
+
                     </label>
-                  
+
+
                     <select
                         name="category"
                         id="category"
                         class="form-control"
                         required
                     >
-                  
+
                         <option value="">
                             Select Category
                         </option>
-                      
+
+
                         {% for category in categories %}
-                      
-                            <option value="{{ category.id }}" 
-                            {% if product.category_id == category.id %} 
-                                selected 
-                            {% endif %}>
-                            {{ category.name }}
+
+                            <option
+                                value="{{ category.id }}"
+                                {% if product.category_id == category.id %}
+                                    selected
+                                {% endif %}
+                            >
+
+                                {{ category.name }}
+
                             </option>
-                          
+
                         {% endfor %}
-                          
+
                     </select>
-                  
+
                 </div>
 
 
 
                 <!-- Description -->
+
                 <div class="form-group">
 
                     <label for="description">
+
                         Description
+
                         <span>*</span>
+
                     </label>
+
 
                     <textarea
                         name="description"
@@ -134,36 +183,58 @@
             </div>
 
 
-            <!-- Pricing & Inventory -->
+
+            <!-- =================================================
+                 PRICING
+            ================================================== -->
+
             <div class="form-section">
 
                 <div class="section-heading">
 
                     <div class="section-icon">
+
                         <i class="bi bi-currency-dollar"></i>
+
                     </div>
 
+
                     <div>
-                        <h3>Pricing & Inventory</h3>
-                        <p>Update product pricing and stock information</p>
+
+                        <h3>
+                            Pricing & Inventory
+                        </h3>
+
+                        <p>
+                            Update product pricing and stock information
+                        </p>
+
                     </div>
 
                 </div>
 
 
+
                 <div class="form-grid">
 
+
                     <!-- Price -->
+
                     <div class="form-group">
 
                         <label for="ProductPrice">
+
                             Price
+
                             <span>*</span>
+
                         </label>
+
 
                         <div class="input-with-icon">
 
                             <span>৳</span>
+
 
                             <input
                                 name="price"
@@ -181,21 +252,27 @@
                     </div>
 
 
+
                     <!-- Discount Price -->
+
                     <div class="form-group">
 
                         <label for="DiscountPrice">
+
                             Discount Price
+
                         </label>
+
 
                         <div class="input-with-icon">
 
                             <span>৳</span>
 
+
                             <input
                                 name="discount_price"
                                 type="number"
-                                value="{{ product.discount_price }}"
+                                value="{{ product.discount_price|default_if_none:'' }}"
                                 min="0"
                                 step="0.01"
                                 placeholder="Optional"
@@ -208,13 +285,17 @@
                     </div>
 
 
-                    <!-- Stock -->
+
+                    <!-- Total Stock -->
+
                     <div class="form-group">
 
                         <label for="ProductStock">
-                            Stock
-                            <span>*</span>
+
+                            Total Stock
+
                         </label>
+
 
                         <input
                             name="stock"
@@ -223,8 +304,15 @@
                             min="0"
                             class="form-control"
                             id="ProductStock"
-                            required
+                            readonly
                         >
+
+
+                        <small class="field-help">
+
+                            Total stock is calculated automatically from size inventory.
+
+                        </small>
 
                     </div>
 
@@ -233,21 +321,309 @@
             </div>
 
 
-            <!-- Product Image -->
+
+            <!-- =================================================
+                 SIZE & INVENTORY
+            ================================================== -->
+
             <div class="form-section">
 
                 <div class="section-heading">
 
                     <div class="section-icon">
-                        <i class="bi bi-image"></i>
+
+                        <i class="bi bi-rulers"></i>
+
                     </div>
 
+
                     <div>
-                        <h3>Product Image</h3>
-                        <p>View the current image or upload a new one</p>
+
+                        <h3>
+                            Size & Inventory
+                        </h3>
+
+                        <p>
+                            Manage available sizes and stock quantity for each size.
+                        </p>
+
                     </div>
 
                 </div>
+
+
+
+                <div class="form-group size-inventory-group">
+
+                    <label>
+
+                        Available Sizes
+
+                        <span>*</span>
+
+                    </label>
+
+
+                    <p class="field-help">
+
+                        Select available sizes and enter stock quantity for each size.
+
+                    </p>
+
+
+
+                    <div class="size-inventory-grid">
+
+
+                        <!-- =================================================
+                             M
+                        ================================================== -->
+
+                        <div class="size-stock-row">
+
+                            <label class="size-checkbox">
+
+                                <input
+                                    type="checkbox"
+                                    name="size_M"
+                                    value="M"
+                                    class="size-toggle"
+
+                                    data-size="M"
+
+                                    {% if existing_sizes.M %}
+                                        checked
+                                    {% endif %}
+                                >
+
+                                <span>M</span>
+
+                            </label>
+
+
+                            <input
+                                type="number"
+
+                                name="stock_M"
+
+                                min="0"
+
+                                value="{% if existing_sizes.M %}{{ existing_sizes.M.stock }}{% else %}0{% endif %}"
+
+                                class="size-stock-input"
+
+                                data-stock="M"
+
+                                placeholder="Stock"
+
+                                {% if not existing_sizes.M %}
+                                    disabled
+                                {% endif %}
+                            >
+
+                        </div>
+
+
+
+                        <!-- =================================================
+                             L
+                        ================================================== -->
+
+                        <div class="size-stock-row">
+
+                            <label class="size-checkbox">
+
+                                <input
+                                    type="checkbox"
+                                    name="size_L"
+                                    value="L"
+                                    class="size-toggle"
+
+                                    data-size="L"
+
+                                    {% if existing_sizes.L %}
+                                        checked
+                                    {% endif %}
+                                >
+
+                                <span>L</span>
+
+                            </label>
+
+
+                            <input
+                                type="number"
+
+                                name="stock_L"
+
+                                min="0"
+
+                                value="{% if existing_sizes.L %}{{ existing_sizes.L.stock }}{% else %}0{% endif %}"
+
+                                class="size-stock-input"
+
+                                data-stock="L"
+
+                                placeholder="Stock"
+
+                                {% if not existing_sizes.L %}
+                                    disabled
+                                {% endif %}
+                            >
+
+                        </div>
+
+
+
+                        <!-- =================================================
+                             XL
+                        ================================================== -->
+
+                        <div class="size-stock-row">
+
+                            <label class="size-checkbox">
+
+                                <input
+                                    type="checkbox"
+                                    name="size_XL"
+                                    value="XL"
+                                    class="size-toggle"
+
+                                    data-size="XL"
+
+                                    {% if existing_sizes.XL %}
+                                        checked
+                                    {% endif %}
+                                >
+
+                                <span>XL</span>
+
+                            </label>
+
+
+                            <input
+                                type="number"
+
+                                name="stock_XL"
+
+                                min="0"
+
+                                value="{% if existing_sizes.XL %}{{ existing_sizes.XL.stock }}{% else %}0{% endif %}"
+
+                                class="size-stock-input"
+
+                                data-stock="XL"
+
+                                placeholder="Stock"
+
+                                {% if not existing_sizes.XL %}
+                                    disabled
+                                {% endif %}
+                            >
+
+                        </div>
+
+
+
+                        <!-- =================================================
+                             XXL
+                        ================================================== -->
+
+                        <div class="size-stock-row">
+
+                            <label class="size-checkbox">
+
+                                <input
+                                    type="checkbox"
+                                    name="size_XXL"
+                                    value="XXL"
+                                    class="size-toggle"
+
+                                    data-size="XXL"
+
+                                    {% if existing_sizes.XXL %}
+                                        checked
+                                    {% endif %}
+                                >
+
+                                <span>XXL</span>
+
+                            </label>
+
+
+                            <input
+                                type="number"
+
+                                name="stock_XXL"
+
+                                min="0"
+
+                                value="{% if existing_sizes.XXL %}{{ existing_sizes.XXL.stock }}{% else %}0{% endif %}"
+
+                                class="size-stock-input"
+
+                                data-stock="XXL"
+
+                                placeholder="Stock"
+
+                                {% if not existing_sizes.XXL %}
+                                    disabled
+                                {% endif %}
+                            >
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- Total Stock -->
+
+                    <div class="total-stock-display">
+
+                        Total Stock:
+
+                        <strong id="totalStock">
+                            {{ product.stock }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 PRODUCT IMAGE
+            ================================================== -->
+
+            <div class="form-section">
+
+                <div class="section-heading">
+
+                    <div class="section-icon">
+
+                        <i class="bi bi-image"></i>
+
+                    </div>
+
+
+                    <div>
+
+                        <h3>
+                            Product Image
+                        </h3>
+
+                        <p>
+                            View the current image or upload a new one
+                        </p>
+
+                    </div>
+
+                </div>
+
 
 
                 <!-- Current Image -->
@@ -265,9 +641,12 @@
 
                         </div>
 
+
                         <div class="current-image-info">
 
-                            <strong>Current Image</strong>
+                            <strong>
+                                Current Image
+                            </strong>
 
                             <span>
                                 This image is currently used for this product.
@@ -282,8 +661,15 @@
                             <i class="bi bi-image"></i>
 
                             <div>
-                                <strong>No Image Available</strong>
-                                <span>Upload a new product image below.</span>
+
+                                <strong>
+                                    No Image Available
+                                </strong>
+
+                                <span>
+                                    Upload a new product image below.
+                                </span>
+
                             </div>
 
                         </div>
@@ -293,93 +679,125 @@
                 </div>
 
 
+
                 <!-- New Image -->
 
-                <!-- Product Image -->
-                <div class="form-section">
-                
+                <div class="product-image-upload"
+                     id="productImageUpload"
+                     tabindex="0">
+
+
+                    <!-- Upload Content -->
+
                     <div
-                        class="product-image-upload"
-                        id="productImageUpload"
-                        tabindex="0"
+                        class="upload-content"
+                        id="productUploadContent"
                     >
-                
-                        <!-- Upload Content -->
-                        <div
-                            class="upload-content"
-                            id="productUploadContent"
-                        >
-                            <i class="bi bi-cloud-arrow-up"></i>
-                
-                            <strong>
-                                Upload New Product Image
-                            </strong>
-                        
-                            <span>
-                                PNG, JPG or WEBP
-                            </span>
-                        </div>
-                    
-                    
-                        <!-- Preview -->
-                        <!-- Preview -->
-                        <div class="product-preview-area" id="productPreviewArea">
-                        
-                            <img
-                                id="productPreview"
-                                class="product-preview"
-                                src=""
-                                alt="Product Preview"
-                            >
-                        
-                            <div class="product-file-info">
-                                <h3>New Product Image</h3>
-                                <p>Recently uploaded image.</p>
-                                <div>
-                                    <i class="bi bi-image"></i>
-                                    <span id="productFileName"></span>
-                                </div>
-                            </div>
-                        
-                        </div>
-                    
-                    
-                        <!-- File Input -->
-                        <input
-                            name="image"
-                            type="file"
-                            accept="image/*"
-                            id="ProductImage"
-                        >
-                    
+
+                        <i class="bi bi-cloud-arrow-up"></i>
+
+
+                        <strong>
+                            Upload New Product Image
+                        </strong>
+
+
+                        <span>
+                            PNG, JPG or WEBP
+                        </span>
+
                     </div>
-                
+
+
+
+                    <!-- Preview -->
+
+                    <div
+                        class="product-preview-area"
+                        id="productPreviewArea"
+                    >
+
+                        <img
+                            id="productPreview"
+                            class="product-preview"
+                            src=""
+                            alt="Product Preview"
+                        >
+
+
+                        <div class="product-file-info">
+
+                            <h3>
+                                New Product Image
+                            </h3>
+
+                            <p>
+                                Recently uploaded image.
+                            </p>
+
+
+                            <div>
+
+                                <i class="bi bi-image"></i>
+
+                                <span id="productFileName"></span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- File Input -->
+
+                    <input
+                        name="image"
+                        type="file"
+                        accept="image/*"
+                        id="ProductImage"
+                    >
+
                 </div>
-
-
-
 
             </div>
 
 
-            <!-- Product Settings -->
+
+            <!-- =================================================
+                 PRODUCT SETTINGS
+            ================================================== -->
+
             <div class="form-section">
 
                 <div class="section-heading">
 
                     <div class="section-icon">
+
                         <i class="bi bi-sliders"></i>
+
                     </div>
 
+
                     <div>
-                        <h3>Product Settings</h3>
-                        <p>Control product visibility and features</p>
+
+                        <h3>
+                            Product Settings
+                        </h3>
+
+                        <p>
+                            Control product visibility and features
+                        </p>
+
                     </div>
 
                 </div>
 
 
+
                 <div class="settings-container">
+
 
                     <!-- Available -->
 
@@ -388,12 +806,18 @@
                         <div class="setting-left">
 
                             <div class="setting-icon available">
+
                                 <i class="bi bi-check-circle"></i>
+
                             </div>
+
 
                             <div>
 
-                                <strong>Available</strong>
+                                <strong>
+                                    Available
+                                </strong>
+
 
                                 <p>
                                     Make this product available for purchase
@@ -403,14 +827,19 @@
 
                         </div>
 
+
                         <input
                             type="checkbox"
                             name="is_available"
                             id="is_available"
-                            {% if product.is_available %}checked{% endif %}
+
+                            {% if product.is_available %}
+                                checked
+                            {% endif %}
                         >
 
                     </label>
+
 
 
                     <!-- Featured -->
@@ -420,12 +849,18 @@
                         <div class="setting-left">
 
                             <div class="setting-icon featured">
+
                                 <i class="bi bi-star"></i>
+
                             </div>
+
 
                             <div>
 
-                                <strong>Featured Product</strong>
+                                <strong>
+                                    Featured Product
+                                </strong>
+
 
                                 <p>
                                     Display this product as a featured item
@@ -435,11 +870,15 @@
 
                         </div>
 
+
                         <input
                             type="checkbox"
                             name="is_featured"
                             id="is_featured"
-                            {% if product.is_featured %}checked{% endif %}
+
+                            {% if product.is_featured %}
+                                checked
+                            {% endif %}
                         >
 
                     </label>
@@ -449,27 +888,45 @@
             </div>
 
 
-            <!-- Form Actions -->
+
+            <!-- =================================================
+                 FORM ACTIONS
+            ================================================== -->
+
             <div class="product-form-actions">
+
+                <!-- Delete -->
+
+                <button
+                    type="button"
+                    class="delete-product-btn"
+
+                    onclick="openDeleteModal(
+                        {{ product.id }},
+                        '{{ product.name|escapejs }}'
+                    );"
+                >
+
+                    <i class="bi bi-trash3"></i>
+
+                    Delete
+
+                </button>
+
+
+
+                <!-- Cancel -->
 
                 <a
                     href="{% url 'products_page' %}"
                     class="cancel-btn"
                 >
+
                     Cancel
+
                 </a>
 
-
-                <button
-                    name="save_action"
-                    type="submit"
-                    value="save_add"
-                    class="secondary-action-btn"
-                >
-                    <i class="bi bi-plus-circle"></i>
-                    Save & Add Another
-                </button>
-
+                <!-- Save & Continue Editing -->
 
                 <button
                     name="save_action"
@@ -477,10 +934,29 @@
                     value="save_edit"
                     class="secondary-action-btn"
                 >
+
                     <i class="bi bi-pencil"></i>
+
                     Save & Continue Editing
+
                 </button>
 
+                <!-- Save & Add Another -->
+
+                <button
+                    name="save_action"
+                    type="submit"
+                    value="save_add"
+                    class="secondary-action-btn"
+                >
+
+                    <i class="bi bi-plus-circle"></i>
+
+                    Save & Add Another
+
+                </button>
+
+                <!-- Save -->
 
                 <button
                     name="save_action"
@@ -488,23 +964,11 @@
                     value="save"
                     class="save-product-btn"
                 >
+
                     <i class="bi bi-check-lg"></i>
+
                     Save Product
-                </button>
 
-
-                <!-- Delete -->
-
-                <button
-                    type="button"
-                    class="delete-product-btn"
-                    onclick="openDeleteModal(
-                        {{ product.id }},
-                        '{{ product.name|escapejs }}'
-                    );"
-                >
-                    <i class="bi bi-trash3"></i>
-                    Delete
                 </button>
 
             </div>
@@ -514,39 +978,64 @@
     </div>
 
 
-    <!-- Delete Modal -->
 
-    <div class="delete-overlay" id="deleteOverlay">
+    <!-- =====================================================
+         DELETE MODAL
+    ====================================================== -->
+
+    <div
+        class="delete-overlay"
+        id="deleteOverlay"
+    >
 
         <div class="delete-modal">
 
+
             <div class="delete-icon">
+
                 <i class="bi bi-trash3"></i>
+
             </div>
 
-            <h3>Delete Product</h3>
+
+            <h3>
+                Delete Product
+            </h3>
+
 
             <p>
+
                 Are you sure you want to delete
+
                 <strong id="productName"></strong>?
+
                 This action cannot be undone.
+
             </p>
 
+
+
             <div class="modal-buttons">
+
 
                 <button
                     type="button"
                     class="modal-cancel-btn"
                     onclick="closeDeleteModal()"
                 >
+
                     Cancel
+
                 </button>
+
 
                 <a
                     id="deleteLink"
                     class="modal-delete-btn"
                 >
+
                     Delete Product
+
                 </a>
 
             </div>
@@ -560,9 +1049,11 @@
 {% endblock %}
 
 
+
 {% block js %}
 
 <script src="{% static 'admin_panel/js/product.js' %}"></script>
+
 <script src="{% static 'admin_panel/js/add_product.js' %}"></script>
 
 {% endblock %}

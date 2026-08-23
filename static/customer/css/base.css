@@ -1,11 +1,25 @@
 :root {
     --footer-color: rgb(1, 0, 26);
-    --background-color: rgb(50, 49, 49);
+    --background-color: rgb(1, 1, 1);
     --navbar-color: rgb(1, 0, 37);
+
+    --small-text: gray;
+    --large-text: rgb(255, 252, 252);
+    --opposite-text: black;
+    --cart-button: rgb(249, 247, 247);
+    --buy-button: rgba(137, 255, 153, 0.719);
+    --border: rgb(50, 50, 50);
+    --icon: rgb(0, 251, 255);
+    --size-box: rgb(5, 5, 5);
+    --available: green;
+    --unavailable: rgb(255, 115, 115);
 
 
     --max-width: 2000px;
 }
+
+
+
 
 
 /* ==============================

@@ -1,0 +1,325 @@
+/* =====================================================
+   NAFI — NEW ARRIVALS
+===================================================== */
+
+.nafi-new-arrivals {
+    width: 100%;
+    padding: 70px 30px;
+    background-color: var(--background-color);
+}
+
+
+/* =====================================================
+   SECTION HEADER
+===================================================== */
+
+.new-arrivals-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+
+    margin-bottom: 30px;
+}
+
+.new-arrivals-header h2 {
+    margin: 0;
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: var(--large-text);
+}
+
+.new_arrivals{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 0%);
+}
+
+
+.new-arrivals-header p {
+    margin: 6px 0 0;
+
+    font-size: 14px;
+    color: #777;
+}
+
+.view-all-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+
+    color: var(--large-text);
+    text-decoration: none;
+
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.view-all-link:hover {
+    text-decoration: underline;
+}
+
+
+/* =====================================================
+   PRODUCT GRID
+===================================================== */
+
+.new-arrivals-grid {
+    display: grid;
+
+    /*
+       Laptop/Desktop
+       5 products per row
+    */
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+
+    gap: 10px 1px;
+}
+
+
+/* =====================================================
+   PRODUCT CARD
+===================================================== */
+
+.new-arrival-product {
+    min-width: 0;
+}
+
+
+/* =====================================================
+   PRODUCT IMAGE
+===================================================== */
+
+.product-image-link {
+    display: block;
+
+    width: 100%;
+
+    text-decoration: none;
+
+    overflow: hidden;
+
+    background: #f5f5f5;
+}
+
+.new-arrival-image {
+    display: block;
+
+    width: 100%;
+    aspect-ratio: 3 / 4;
+
+    object-fit: cover;
+
+    transition: transform 0.3s ease;
+}
+
+
+/* Very subtle image hover */
+
+.product-image-link:hover .new-arrival-image {
+    transform: scale(1.02);
+}
+
+
+/* =====================================================
+   NO IMAGE
+===================================================== */
+
+.product-no-image {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #f5f5f5;
+
+    color: #999;
+
+    font-size: 30px;
+}
+
+
+/* =====================================================
+   PRODUCT INFORMATION
+===================================================== */
+
+.new-arrival-info {
+    padding-top: 10px;
+}
+
+.new-arrival-name {
+    display: block;
+
+    color: var(--large-text);
+    text-decoration: none;
+
+    font-size: 18px;
+    line-height: 1.4;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.new-arrival-name:hover {
+    text-decoration: underline;
+    color: var(--buy-button);
+}
+
+
+/* =====================================================
+   PRICE
+===================================================== */
+
+.new-arrival-price {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 5px;
+
+    font-size: 14px;
+}
+
+.product-price {
+    color: var(--large-text);
+    font-weight: 500;
+}
+
+.product-old-price {
+    color:var(--small-text);
+
+    text-decoration: line-through;
+}
+
+.product-discount-price {
+    color: var(--large-text);
+    font-weight: 600;
+}
+
+
+/* =====================================================
+   EMPTY STATE
+===================================================== */
+
+.new-arrivals-empty {
+    grid-column: 1 / -1;
+
+    text-align: center;
+
+    padding: 60px 20px;
+
+    color: #777;
+}
+
+.new-arrivals-empty i {
+    display: block;
+
+    margin-bottom: 10px;
+
+    font-size: 30px;
+}
+
+.new-arrivals-empty p {
+    margin: 0;
+
+    font-size: 14px;
+}
+
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media (max-width: 991px) {
+
+    .new-arrivals-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 767px) {
+
+    .nafi-new-arrivals {
+        padding: 45px 0;
+    }
+
+    .new-arrivals-header {
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .new-arrivals-header h2 {
+        font-size: 22px;
+    }
+
+    .new-arrivals-header p {
+        display: none;
+    }
+
+    .view-all-link {
+        font-size: 13px;
+    }
+
+
+    /*
+       Mobile
+       3 products per row
+    */
+
+    .new-arrivals-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+
+        gap: 25px 8px;
+    }
+
+
+    .new-arrival-info {
+        padding-top: 7px;
+    }
+
+    .new-arrival-name {
+        font-size: 12px;
+    }
+
+    .new-arrival-price {
+        gap: 5px;
+
+        margin-top: 3px;
+
+        font-size: 12px;
+    }
+
+}
+
+
+/* =====================================================
+   SMALL MOBILE
+===================================================== */
+
+@media (max-width: 400px) {
+
+    .new-arrivals-grid {
+        gap: 20px 6px;
+    }
+
+    .new-arrival-name {
+        font-size: 11px;
+    }
+
+    .new-arrival-price {
+        font-size: 11px;
+    }
+
+}

@@ -8,9 +8,18 @@
 
 
 {% block css %}
-    <link rel="stylesheet" href="{% static 'admin_panel/css/add_product.css' %}">
-{% endblock %}
 
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{% static 'admin_panel/css/add_product.css' %}"
+    >
+
+{% endblock %}
 
 {% block content %}
 
@@ -109,21 +118,23 @@
 
                 <!-- Description -->
                 <div class="form-group">
-
-                    <label for="description">
+                
+                    <label>
                         Description
                         <span>*</span>
                     </label>
-
+                
+                    <!-- Quill Editor -->
+                    <div id="descriptionEditor"></div>
+                
+                    <!-- Hidden field -->
                     <textarea
                         name="description"
-                        class="form-control"
                         id="description"
-                        rows="5"
-                        placeholder="Describe your product..."
+                        hidden
                         required
                     ></textarea>
-
+                
                 </div>
 
             </div>
@@ -198,26 +209,145 @@
                         </div>
 
                     </div>
-
+                    <br>
 
                     <!-- Stock -->
-                    <div class="form-group">
-
-                        <label for="ProductStock">
-                            Stock
+                    <!-- Size & Inventory -->
+                    <div class="form-group size-inventory-group">
+                    
+                        <label>
+                            Size & Inventory
                             <span>*</span>
                         </label>
-
-                        <input
-                            name="stock"
-                            type="number"
-                            min="0"
-                            class="form-control"
-                            id="ProductStock"
-                            placeholder="Enter stock quantity"
-                            required
-                        >
-
+                    
+                        <p class="field-help">
+                            Select available sizes and enter stock quantity for each size.
+                        </p>
+                    
+                        <div class="size-inventory-grid">
+                        
+                            <!-- M -->
+                            <div class="size-stock-row">
+                            
+                                <label class="size-checkbox">
+                                    <input
+                                        type="checkbox"
+                                        name="size_M"
+                                        value="M"
+                                        class="size-toggle"
+                                        data-size="M"
+                                    >
+                                
+                                    <span>M</span>
+                                </label>
+                            
+                                <input
+                                    type="number"
+                                    name="stock_M"
+                                    min="0"
+                                    value="0"
+                                    class="size-stock-input"
+                                    data-stock="M"
+                                    placeholder="Stock"
+                                    disabled
+                                >
+                            
+                            </div>
+                        
+                        
+                            <!-- L -->
+                            <div class="size-stock-row">
+                            
+                                <label class="size-checkbox">
+                                    <input
+                                        type="checkbox"
+                                        name="size_L"
+                                        value="L"
+                                        class="size-toggle"
+                                        data-size="L"
+                                    >
+                                
+                                    <span>L</span>
+                                </label>
+                            
+                                <input
+                                    type="number"
+                                    name="stock_L"
+                                    min="0"
+                                    value="0"
+                                    class="size-stock-input"
+                                    data-stock="L"
+                                    placeholder="Stock"
+                                    disabled
+                                >
+                            
+                            </div>
+                        
+                        
+                            <!-- XL -->
+                            <div class="size-stock-row">
+                            
+                                <label class="size-checkbox">
+                                    <input
+                                        type="checkbox"
+                                        name="size_XL"
+                                        value="XL"
+                                        class="size-toggle"
+                                        data-size="XL"
+                                    >
+                                
+                                    <span>XL</span>
+                                </label>
+                            
+                                <input
+                                    type="number"
+                                    name="stock_XL"
+                                    min="0"
+                                    value="0"
+                                    class="size-stock-input"
+                                    data-stock="XL"
+                                    placeholder="Stock"
+                                    disabled
+                                >
+                            
+                            </div>
+                        
+                        
+                            <!-- XXL -->
+                            <div class="size-stock-row">
+                            
+                                <label class="size-checkbox">
+                                    <input
+                                        type="checkbox"
+                                        name="size_XXL"
+                                        value="XXL"
+                                        class="size-toggle"
+                                        data-size="XXL"
+                                    >
+                                
+                                    <span>XXL</span>
+                                </label>
+                            
+                                <input
+                                    type="number"
+                                    name="stock_XXL"
+                                    min="0"
+                                    value="0"
+                                    class="size-stock-input"
+                                    data-stock="XXL"
+                                    placeholder="Stock"
+                                    disabled
+                                >
+                            
+                            </div>
+                        
+                        </div>
+                    
+                        <div class="total-stock-display">
+                            Total Stock:
+                            <strong id="totalStock">0</strong>
+                        </div>
+                    
                     </div>
 
                 </div>
@@ -226,81 +356,90 @@
 
 
 <!-- Product Image -->
+<!-- =========================================================
+     PRODUCT IMAGES
+========================================================= -->
+
 <div class="form-section">
 
     <div class="section-heading">
+
         <div class="section-icon">
-            <i class="bi bi-image"></i>
+            <i class="bi bi-images"></i>
         </div>
 
         <div>
-            <h3>Product Image</h3>
-            <p>Upload the main image of your product</p>
+            <h3>Product Images</h3>
+
+            <p>
+                Upload multiple images of your product
+            </p>
         </div>
+
     </div>
 
 
+    <!-- Upload Area -->
+
     <div
-        class="product-image-upload"
-        id="productImageUpload"
+        class="multiple-image-upload"
+        id="multipleImageUpload"
         tabindex="0"
     >
 
-        <!-- Upload Content -->
         <div
-            class="upload-content"
-            id="productUploadContent"
+            class="multiple-upload-content"
+            id="multipleUploadContent"
         >
+
             <i class="bi bi-cloud-arrow-up"></i>
 
             <strong>
-                Upload Product Image
+                Upload Product Images
             </strong>
 
             <span>
-                PNG, JPG or WEBP
+                PNG, JPG or WEBP — You can select multiple images
             </span>
-        </div>
 
-
-        <!-- Preview -->
-        <!-- Preview -->
-        <div class="product-preview-area" id="productPreviewArea">
-        
-            <img
-                id="productPreview"
-                class="product-preview"
-                src=""
-                alt="Product Preview"
-            >
-        
-            <div class="product-file-info">
-                <h3>Product Image</h3>
-                <p>Recently uploaded image.</p>
-                <div>
-                    <i class="bi bi-image"></i>
-                    <span id="productFileName"></span>
-                </div>
-            </div>
-        
         </div>
 
 
         <!-- File Input -->
+
         <input
-            name="image"
             type="file"
-            accept="image/*"
-            id="ProductImage"
-            required
+            name="images"
+            id="ProductImages"
+            accept="image/png,image/jpeg,image/webp"
+            multiple
         >
 
     </div>
 
+
+    <!-- Image Count -->
+
+    <p
+        class="product-image-count"
+        id="productImageCount"
+    >
+        No images selected.
+    </p>
+
+
+    <!-- Preview Grid -->
+
+    <div
+        class="product-images-preview"
+        id="productImagesPreview"
+    >
+
+        <!-- JavaScript will add images here -->
+
+    </div>
+
 </div>
-
-
-
 
 
             <!-- Product Settings -->
@@ -391,18 +530,6 @@
                     Cancel
                 </a>
 
-
-                <button
-                    name="save_action"
-                    type="submit"
-                    value="save_add"
-                    class="secondary-action-btn"
-                >
-                    <i class="bi bi-plus-circle"></i>
-                    Save & Add Another
-                </button>
-
-
                 <button
                     name="save_action"
                     type="submit"
@@ -412,7 +539,16 @@
                     <i class="bi bi-pencil"></i>
                     Save & Continue Editing
                 </button>
-
+                
+                <button
+                    name="save_action"
+                    type="submit"
+                    value="save_add"
+                    class="secondary-action-btn"
+                >
+                    <i class="bi bi-plus-circle"></i>
+                    Save & Add Another
+                </button>
 
                 <button
                     name="save_action"
@@ -434,8 +570,11 @@
 
 {% endblock %}
 
-
 {% block js %}
+
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+
     <script src="{% static 'admin_panel/js/add_product.js' %}"></script>
-{% endblock  %}
+
+{% endblock %}
     

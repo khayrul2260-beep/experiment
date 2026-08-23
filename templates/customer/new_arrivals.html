@@ -1,0 +1,153 @@
+{% load static %}
+
+<section class="nafi-new-arrivals">
+
+    <!-- =====================================================
+         SECTION HEADER
+    ====================================================== -->
+
+    <div class="new-arrivals-header">
+
+        <div class="new_arrivals">
+            <h2>New Arrivals</h2>
+
+            <p>
+                Discover our latest styles.
+            </p>
+        </div>
+
+
+        <a
+            href="#"
+            class="view-all-link"
+        >
+            View All
+            <i class="bi bi-arrow-right"></i>
+        </a>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         PRODUCT GRID
+    ====================================================== -->
+
+    <div class="new-arrivals-grid">
+
+        {% for product in new_arrivals %}
+
+            <article class="new-arrival-product">
+
+
+                <!-- =================================================
+                     PRODUCT IMAGE
+                ================================================== -->
+
+                <a
+                    href="{% url 'product_detail_page' product.slug %}"
+                    class="product-image-link"
+                >
+
+                    {% if product.image %}
+
+                        <img
+                            src="{{ product.image.url }}"
+                            alt="{{ product.name }}"
+                            class="new-arrival-image"
+                            loading="lazy"
+                        >
+
+                    {% else %}
+
+                        <div class="product-no-image">
+
+                            <i class="bi bi-image"></i>
+
+                        </div>
+
+                    {% endif %}
+
+                </a>
+
+
+
+                <!-- =================================================
+                     PRODUCT INFORMATION
+                ================================================== -->
+
+                <div class="new-arrival-info">
+
+
+                    <!-- Product Name -->
+
+                    <a
+                        href="{% url 'product_detail_page' product.slug %}"
+                        class="new-arrival-name"
+                    >
+
+                        {{ product.name }}
+
+                    </a>
+
+
+
+                    <!-- Price -->
+
+                    <div class="new-arrival-price">
+
+                        {% if product.discount_price %}
+
+                            <span class="product-old-price">
+
+                                ৳{{ product.price }}
+
+                            </span>
+
+
+                            <span class="product-discount-price">
+
+                                ৳{{ product.discount_price }}
+
+                            </span>
+
+                        {% else %}
+
+                            <span class="product-price">
+
+                                ৳{{ product.price }}
+
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </article>
+
+
+        {% empty %}
+
+
+            <!-- =================================================
+                 NO PRODUCTS
+            ================================================== -->
+
+            <div class="new-arrivals-empty">
+
+                <i class="bi bi-box-seam"></i>
+
+                <p>
+                    No new arrivals available right now.
+                </p>
+
+            </div>
+
+
+        {% endfor %}
+
+    </div>
+
+</section>

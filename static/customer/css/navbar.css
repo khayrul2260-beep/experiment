@@ -47,6 +47,8 @@
 }
 
 
+
+
 .nafi-topbar-container {
 
     width: 100%;
@@ -171,27 +173,23 @@
 ===================================================== */
 
 .nafi-navbar {
-
     position: sticky;
-
     top: 0;
-
     z-index: 1000;
-
     width: 100%;
-
     height: 78px;
 
     background: var(--nafi-black);
-
     border-bottom: 1px solid var(--nafi-border);
 
     transition:
-        height 0.3s ease,
-        background 0.3s ease,
-        box-shadow 0.3s ease;
-
+        background 0.35s ease,
+        backdrop-filter 0.35s ease,
+        -webkit-backdrop-filter 0.35s ease,
+        box-shadow 0.35s ease,
+        border-color 0.35s ease;
 }
+
 
 
 /* =====================================================
@@ -873,20 +871,21 @@
 
 .nafi-navbar.navbar-scrolled {
 
-    height: 66px;
+    /* Transparent black glass */
+    background: rgba(1, 1, 1, 0.79);
 
-    background: rgba(5, 6, 8, 0.96);
+    /* Strong glass blur */
+    backdrop-filter: blur(22px) saturate(140%);
+    -webkit-backdrop-filter: blur(22px) saturate(140%);
 
-    backdrop-filter: blur(12px);
+    /* Glass edge */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
 
-    -webkit-backdrop-filter: blur(12px);
-
+    /* Glass shadow */
     box-shadow:
-        0 8px 30px rgba(0, 0, 0, 0.30);
-
+        0 8px 32px rgba(0, 0, 0, 0.45),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
-
-
 /* =====================================================
    MOBILE TOGGLE
 ===================================================== */
@@ -1505,15 +1504,6 @@ body.nafi-menu-open {
 
 @media (max-width: 991px) {
 
-    /* TOPBAR */
-
-    .nafi-topbar {
-
-        display: none;
-
-    }
-
-
     /* NAVBAR */
 
     .nafi-navbar {
@@ -1614,11 +1604,15 @@ body.nafi-menu-open {
 ===================================================== */
 
 @media (max-width: 575px) {
-
+    
+    .nafi-topbar {
+        font-size: 9px;
+        height: 30px;
+    }
+    
     .nafi-navbar-container {
 
         padding: 0 15px;
-
     }
 
 
@@ -1679,6 +1673,8 @@ body.nafi-menu-open {
 ===================================================== */
 
 @media (max-width: 380px) {
+
+
 
     .nafi-navbar {
 
