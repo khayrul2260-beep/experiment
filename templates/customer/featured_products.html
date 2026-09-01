@@ -2,6 +2,7 @@
 
 <section class="nafi-featured">
 
+
     <!-- =====================================================
          SECTION HEADER
     ====================================================== -->
@@ -9,22 +10,31 @@
     <div class="featured-header">
 
         <div class="featured">
-            <h2>Special Product</h2>
+
+            <h2>
+                Special Product
+            </h2>
 
             <p>
                 Selected styles from NAFI.
             </p>
+
         </div>
+
 
         <a
             href="#"
             class="featured-view-all"
         >
+
             View All
+
             <i class="bi bi-arrow-right"></i>
+
         </a>
 
     </div>
+
 
 
     <!-- =====================================================
@@ -32,6 +42,7 @@
     ====================================================== -->
 
     <div class="featured-grid">
+
 
         {% for product in featured_products %}
 
@@ -47,26 +58,66 @@
                     class="featured-image-link"
                 >
 
-                    {% if product.image %}
+                    <div class="featured-image-wrapper">
 
-                        <img
-                            src="{{ product.image.url }}"
-                            alt="{{ product.name }}"
-                            class="featured-image"
-                            loading="lazy"
-                        >
 
-                    {% else %}
+                        <!-- =========================================
+                             MAIN IMAGE
+                        ========================================== -->
 
-                        <div class="featured-no-image">
+                        {% if product.image %}
 
-                            <i class="bi bi-image"></i>
+                            <img
+                                src="{{ product.image.url }}"
+                                alt="{{ product.name }}"
+                                class="featured-image main-featured-image"
+                                loading="lazy"
+                            >
 
-                        </div>
+                        {% endif %}
 
-                    {% endif %}
+
+
+                        <!-- =========================================
+                             SECONDARY IMAGE
+                        ========================================== -->
+
+                        {% for product_image in product.images.all %}
+
+                            {% if product_image.image_type == "secondary" %}
+
+                                <img
+                                    src="{{ product_image.image.url }}"
+                                    alt="{{ product.name }}"
+                                    class="featured-image secondary-featured-image"
+                                    loading="lazy"
+                                >
+
+                            {% endif %}
+
+                        {% endfor %}
+
+
+
+                        <!-- =========================================
+                             NO IMAGE FALLBACK
+                        ========================================== -->
+
+                        {% if not product.image %}
+
+                            <div class="featured-no-image">
+
+                                <i class="bi bi-image"></i>
+
+                            </div>
+
+                        {% endif %}
+
+
+                    </div>
 
                 </a>
+
 
 
                 <!-- =================================================
@@ -75,39 +126,56 @@
 
                 <div class="featured-info">
 
+
+                    <!-- Product Name -->
+
                     <a
                         href="{% url 'product_detail_page' product.slug %}"
                         class="featured-name"
                     >
+
                         {{ product.name }}
+
                     </a>
 
 
-                    <!-- Price -->
+
+                    <!-- =================================================
+                         PRICE
+                    ================================================== -->
 
                     <div class="featured-price">
 
                         {% if product.discount_price %}
 
                             <span class="featured-old-price">
+
                                 ৳{{ product.price }}
+
                             </span>
 
+
                             <span class="featured-discount-price">
+
                                 ৳{{ product.discount_price }}
+
                             </span>
 
                         {% else %}
 
                             <span class="featured-normal-price">
+
                                 ৳{{ product.price }}
+
                             </span>
 
                         {% endif %}
 
                     </div>
 
+
                 </div>
+
 
             </article>
 
@@ -131,6 +199,7 @@
 
 
         {% endfor %}
+
 
     </div>
 

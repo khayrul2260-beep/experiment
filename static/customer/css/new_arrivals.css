@@ -5,8 +5,10 @@
 .nafi-new-arrivals {
     width: 100%;
     padding: 70px 30px;
+
     background-color: var(--background-color);
 }
+
 
 
 /* =====================================================
@@ -15,27 +17,38 @@
 
 .new-arrivals-header {
     display: flex;
+
     align-items: flex-end;
     justify-content: space-between;
 
     margin-bottom: 30px;
 }
 
+
 .new-arrivals-header h2 {
     margin: 0;
+
     font-size: 30px;
     font-weight: 700;
+
     letter-spacing: -0.5px;
+
     color: var(--large-text);
 }
 
-.new_arrivals{
+
+.new_arrivals {
     display: flex;
+
     flex-direction: column;
+
     justify-content: center;
     align-items: center;
+
     position: absolute;
+
     left: 50%;
+
     transform: translate(-50%, 0%);
 }
 
@@ -44,24 +57,31 @@
     margin: 6px 0 0;
 
     font-size: 14px;
+
     color: #777;
 }
 
+
 .view-all-link {
     display: inline-flex;
+
     align-items: center;
+
     gap: 7px;
 
     color: var(--large-text);
+
     text-decoration: none;
 
     font-size: 14px;
     font-weight: 500;
 }
 
+
 .view-all-link:hover {
     text-decoration: underline;
 }
+
 
 
 /* =====================================================
@@ -72,13 +92,16 @@
     display: grid;
 
     /*
-       Laptop/Desktop
+       Laptop / Desktop
        5 products per row
     */
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+
+    grid-template-columns:
+        repeat(5, minmax(0, 1fr));
 
     gap: 10px 1px;
 }
+
 
 
 /* =====================================================
@@ -90,8 +113,9 @@
 }
 
 
+
 /* =====================================================
-   PRODUCT IMAGE
+   PRODUCT IMAGE LINK
 ===================================================== */
 
 .product-image-link {
@@ -106,23 +130,142 @@
     background: #f5f5f5;
 }
 
+
+
+/* =====================================================
+   IMAGE WRAPPER
+===================================================== */
+
+.new-arrival-image-wrapper {
+    position: relative;
+
+    width: 100%;
+
+    aspect-ratio: 3 / 4;
+
+    overflow: hidden;
+
+    background: #f5f5f5;
+}
+
+
+
+/* =====================================================
+   PRODUCT IMAGES
+===================================================== */
+
 .new-arrival-image {
+    position: absolute;
+
+    inset: 0;
+
     display: block;
 
     width: 100%;
-    aspect-ratio: 3 / 4;
+    height: 100%;
 
     object-fit: cover;
 
-    transition: transform 0.3s ease;
+    transition:
+        opacity 0.35s ease,
+        transform 0.35s ease;
 }
 
 
-/* Very subtle image hover */
 
-.product-image-link:hover .new-arrival-image {
+/* =====================================================
+   MAIN IMAGE
+===================================================== */
+
+/*
+   Main image is hidden initially
+   when a secondary image exists.
+*/
+
+.main-product-image {
+    opacity: 0;
+
+    z-index: 1;
+}
+
+
+
+/* =====================================================
+   SECONDARY IMAGE
+===================================================== */
+
+/*
+   Secondary image is the default image.
+*/
+
+.secondary-product-image {
+    opacity: 1;
+
+    z-index: 2;
+}
+
+
+
+/* =====================================================
+   HOVER
+===================================================== */
+
+/*
+   When hovering the product image:
+   Secondary → Main
+*/
+
+.product-image-link:hover
+.main-product-image {
+    opacity: 1;
+
     transform: scale(1.02);
 }
+
+
+.product-image-link:hover
+.secondary-product-image {
+    opacity: 0;
+
+    transform: scale(1.02);
+}
+
+
+
+/* =====================================================
+   MAIN IMAGE FALLBACK
+===================================================== */
+
+/*
+   If there is NO secondary image,
+   main image should remain visible.
+*/
+
+.new-arrival-image-wrapper:not(
+    :has(.secondary-product-image)
+)
+.main-product-image {
+    opacity: 1;
+
+    z-index: 1;
+}
+
+
+
+/* =====================================================
+   IMAGE HOVER WITHOUT SECONDARY
+===================================================== */
+
+.new-arrival-image-wrapper:not(
+    :has(.secondary-product-image)
+)
+.product-image-link:hover
+.main-product-image {
+    opacity: 1;
+
+    transform: scale(1.02);
+}
+
 
 
 /* =====================================================
@@ -131,9 +274,11 @@
 
 .product-no-image {
     width: 100%;
+
     aspect-ratio: 3 / 4;
 
     display: flex;
+
     align-items: center;
     justify-content: center;
 
@@ -145,6 +290,7 @@
 }
 
 
+
 /* =====================================================
    PRODUCT INFORMATION
 ===================================================== */
@@ -153,24 +299,32 @@
     padding-top: 10px;
 }
 
+
 .new-arrival-name {
     display: block;
 
     color: var(--large-text);
+
     text-decoration: none;
 
     font-size: 18px;
+
     line-height: 1.4;
 
     white-space: nowrap;
+
     overflow: hidden;
+
     text-overflow: ellipsis;
 }
 
+
 .new-arrival-name:hover {
     text-decoration: underline;
+
     color: var(--buy-button);
 }
+
 
 
 /* =====================================================
@@ -179,28 +333,37 @@
 
 .new-arrival-price {
     display: flex;
+
     align-items: center;
+
     gap: 8px;
+
     margin-top: 5px;
 
     font-size: 14px;
 }
 
+
 .product-price {
     color: var(--large-text);
+
     font-weight: 500;
 }
 
+
 .product-old-price {
-    color:var(--small-text);
+    color: var(--small-text);
 
     text-decoration: line-through;
 }
 
+
 .product-discount-price {
     color: var(--large-text);
+
     font-weight: 600;
 }
+
 
 
 /* =====================================================
@@ -217,6 +380,7 @@
     color: #777;
 }
 
+
 .new-arrivals-empty i {
     display: block;
 
@@ -225,11 +389,13 @@
     font-size: 30px;
 }
 
+
 .new-arrivals-empty p {
     margin: 0;
 
     font-size: 14px;
 }
+
 
 
 /* =====================================================
@@ -239,10 +405,12 @@
 @media (max-width: 991px) {
 
     .new-arrivals-grid {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
+        grid-template-columns:
+            repeat(4, minmax(0, 1fr));
     }
 
 }
+
 
 
 /* =====================================================
@@ -250,48 +418,58 @@
 ===================================================== */
 
 @media (max-width: 767px) {
-
     .nafi-new-arrivals {
-        padding: 45px 0;
+        padding: 30px 8px;
     }
 
     .new-arrivals-header {
         align-items: center;
+
         margin-bottom: 20px;
     }
+
 
     .new-arrivals-header h2 {
         font-size: 22px;
     }
 
+
     .new-arrivals-header p {
-        display: none;
+        font-size: 11px;
     }
+
 
     .view-all-link {
-        font-size: 13px;
+        font-size: 11px;
     }
 
 
-    /*
-       Mobile
-       3 products per row
-    */
+
+    /* ================================================
+       MOBILE
+       3 PRODUCTS PER ROW
+    ================================================= */
 
     .new-arrivals-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-
-        gap: 25px 8px;
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr));
     }
 
+
+
+    /* ================================================
+       PRODUCT INFORMATION
+    ================================================= */
 
     .new-arrival-info {
         padding-top: 7px;
     }
 
+
     .new-arrival-name {
         font-size: 12px;
     }
+
 
     .new-arrival-price {
         gap: 5px;
@@ -304,19 +482,17 @@
 }
 
 
+
 /* =====================================================
    SMALL MOBILE
 ===================================================== */
 
 @media (max-width: 400px) {
 
-    .new-arrivals-grid {
-        gap: 20px 6px;
-    }
-
     .new-arrival-name {
         font-size: 11px;
     }
+
 
     .new-arrival-price {
         font-size: 11px;

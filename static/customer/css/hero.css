@@ -109,7 +109,6 @@
 
     /* transform: scaleX(0.5); */
     transform-origin: left center;
-
 }
 
 
@@ -131,7 +130,6 @@
     -webkit-text-fill-color: transparent;
 }
 
-
 /* =========================================================
    HERO DESCRIPTION
 ========================================================= */
@@ -149,7 +147,6 @@
 
     color: rgba(255, 255, 255, 0.68);
 }
-
 
 /* =========================================================
    HERO BUTTONS
@@ -518,12 +515,6 @@
         margin-right: 8px;
     }
 
-    .nafi-hero-title {
-        font-size: clamp(40px, 12vw, 58px);
-
-        letter-spacing: -2px;
-    }
-
     .nafi-hero-description {
         font-size: 14px;
 
@@ -580,3 +571,4 @@
         display: none;
     }
 }
+

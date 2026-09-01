@@ -1,6 +1,6 @@
 :root {
     --footer-color: rgb(1, 0, 26);
-    --background-color: rgb(1, 1, 1);
+    --background-color: rgb(0, 0, 0);
     --navbar-color: rgb(1, 0, 37);
 
     --small-text: gray;
@@ -37,7 +37,7 @@ body {
     margin: 0;
     padding: 0;
 
-    background-color: var(--background-color);
+    background: var(--background-color) !important;
 }
 
 

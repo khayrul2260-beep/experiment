@@ -2,6 +2,7 @@
 
 {% load static %}
 
+
 {% block title %}
     {{ product.name }} | NAFI
 {% endblock %}
@@ -9,7 +10,10 @@
 
 {% block extra_css %}
 
-<link rel="stylesheet" href="{% static 'customer/css/product_detail.css' %}">
+<link
+    rel="stylesheet"
+    href="{% static 'customer/css/product_detail.css' %}"
+>
 
 {% endblock %}
 
@@ -21,27 +25,120 @@
 
     <div class="product-detail-container">
 
+
         <!-- =====================================================
-             PRODUCT IMAGE
+             PRODUCT IMAGE SECTION
         ====================================================== -->
 
-        <div class="product-detail-image">
+        <div class="product-detail-image-section">
 
-            {% if product.image %}
 
-                <img
-                    src="{{ product.image.url }}"
-                    alt="{{ product.name }}"
-                >
+            <!-- =================================================
+                 IMAGE THUMBNAILS
+            ================================================== -->
 
-            {% else %}
+            <div class="product-image-thumbnails">
 
-                <div class="product-no-image">
-                    <i class="bi bi-image"></i>
-                    <span>No Image</span>
-                </div>
 
-            {% endif %}
+                <!-- MAIN IMAGE THUMBNAIL -->
+
+                {% if product.image %}
+
+                    <button
+                        type="button"
+                        class="product-image-thumbnail active"
+                        data-image="{{ product.image.url }}"
+                        aria-label="Main image"
+                    >
+
+                        <img
+                            src="{{ product.image.url }}"
+                            alt="{{ product.name }}"
+                        >
+
+                    </button>
+
+                {% endif %}
+
+
+
+                <!-- SECONDARY IMAGE THUMBNAIL -->
+
+                {% if secondary_image %}
+
+                    <button
+                        type="button"
+                        class="product-image-thumbnail"
+                        data-image="{{ secondary_image.image.url }}"
+                        aria-label="Secondary image"
+                    >
+
+                        <img
+                            src="{{ secondary_image.image.url }}"
+                            alt="{{ product.name }}"
+                        >
+
+                    </button>
+
+                {% endif %}
+
+
+
+                <!-- GALLERY IMAGE THUMBNAILS -->
+
+                {% for image in gallery_images %}
+
+                    <button
+                        type="button"
+                        class="product-image-thumbnail"
+                        data-image="{{ image.image.url }}"
+                        aria-label="Gallery image {{ forloop.counter }}"
+                    >
+
+                        <img
+                            src="{{ image.image.url }}"
+                            alt="{{ product.name }}"
+                        >
+
+                    </button>
+
+                {% endfor %}
+
+
+            </div>
+
+
+
+            <!-- =================================================
+                 MAIN IMAGE PREVIEW
+            ================================================== -->
+
+            <div class="product-detail-image">
+
+                {% if product.image %}
+
+                    <img
+                        id="productMainImage"
+                        src="{{ product.image.url }}"
+                        alt="{{ product.name }}"
+                    >
+
+                {% else %}
+
+                    <div class="product-no-image">
+
+                        <i class="bi bi-image"></i>
+
+                        <span>
+                            No Image
+                        </span>
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
 
         </div>
 
@@ -52,6 +149,7 @@
         ====================================================== -->
 
         <div class="product-detail-info">
+
 
             <!-- Product Category -->
 
@@ -116,18 +214,25 @@
             {% if has_stock %}
 
                 <p class="product-availability available">
+
                     <i class="bi bi-check2"></i>
+
                     In Stock
+
                 </p>
 
             {% else %}
 
                 <p class="product-availability unavailable">
+
                     <i class="bi bi-x-lg"></i>
+
                     Out of Stock
+
                 </p>
 
             {% endif %}
+
 
 
             <!-- =================================================
@@ -185,6 +290,7 @@
 
                 </div>
 
+
                 <p
                     class="size-error"
                     id="sizeError"
@@ -240,7 +346,6 @@
             <!-- =================================================
                  ACTION BUTTONS
             ================================================== -->
-
             <div class="product-actions">
 
                 <button
@@ -271,9 +376,8 @@
             </div>
 
 
-
             <!-- =================================================
-                 PRODUCT DETAILS
+                 PRODUCT EXTRA INFORMATION
             ================================================== -->
 
             <div class="product-extra-info">
@@ -283,8 +387,15 @@
                     <i class="bi bi-truck"></i>
 
                     <div>
-                        <strong>Delivery</strong>
-                        <span>Fast delivery across Bangladesh</span>
+
+                        <strong>
+                            Delivery
+                        </strong>
+
+                        <span>
+                            Fast delivery across Bangladesh
+                        </span>
+
                     </div>
 
                 </div>
@@ -295,8 +406,15 @@
                     <i class="bi bi-arrow-repeat"></i>
 
                     <div>
-                        <strong>Easy Exchange</strong>
-                        <span>Simple exchange policy</span>
+
+                        <strong>
+                            Easy Exchange
+                        </strong>
+
+                        <span>
+                            Simple exchange policy
+                        </span>
+
                     </div>
 
                 </div>
@@ -307,32 +425,43 @@
                     <i class="bi bi-shield-check"></i>
 
                     <div>
-                        <strong>Secure Shopping</strong>
-                        <span>Safe and secure checkout</span>
+
+                        <strong>
+                            Secure Shopping
+                        </strong>
+
+                        <span>
+                            Safe and secure checkout
+                        </span>
+
                     </div>
 
                 </div>
 
             </div>
 
+
         </div>
 
     </div>
-    
 
-    <!-- =================================================
+<br>
+<hr>
+    <!-- =====================================================
          DESCRIPTION
-    ================================================== -->
+    ====================================================== -->
+
     <div class="product-description">
+
         <h3>
             Description
         </h3>
+
         <p>
-            {{ product.description }}
+            {{ product.description|safe }}
         </p>
+
     </div>
-
-
 
 
 </div>
@@ -347,39 +476,132 @@
 
 document.addEventListener("DOMContentLoaded", function () {
 
+
+    /* =====================================================
+       PRODUCT IMAGE GALLERY
+    ====================================================== */
+
+    const thumbnails =
+        document.querySelectorAll(
+            ".product-image-thumbnail"
+        );
+
+
+    const mainImage =
+        document.getElementById(
+            "productMainImage"
+        );
+
+
+    thumbnails.forEach(function (thumbnail) {
+
+        thumbnail.addEventListener(
+            "click",
+            function () {
+
+
+                /* -----------------------------------------
+                   GET SELECTED IMAGE
+                ----------------------------------------- */
+
+                const imageUrl =
+                    this.dataset.image;
+
+
+                if (!mainImage || !imageUrl) {
+                    return;
+                }
+
+
+                /* -----------------------------------------
+                   CHANGE MAIN IMAGE
+                ----------------------------------------- */
+
+                mainImage.src =
+                    imageUrl;
+
+
+                /* -----------------------------------------
+                   REMOVE ACTIVE FROM ALL
+                ----------------------------------------- */
+
+                thumbnails.forEach(
+                    function (item) {
+
+                        item.classList.remove(
+                            "active"
+                        );
+
+                    }
+                );
+
+
+                /* -----------------------------------------
+                   ADD ACTIVE TO SELECTED
+                ----------------------------------------- */
+
+                this.classList.add(
+                    "active"
+                );
+
+            }
+        );
+
+    });
+
+
+
     /* =====================================================
        SIZE SELECTION
     ====================================================== */
 
     const sizeButtons =
-        document.querySelectorAll(".size-btn:not(.size-disabled)");
+        document.querySelectorAll(
+            ".size-btn:not(.size-disabled)"
+        );
+
 
     const sizeError =
-        document.getElementById("sizeError");
+        document.getElementById(
+            "sizeError"
+        );
+
 
     let selectedSize = null;
 
 
     sizeButtons.forEach(function (button) {
 
-        button.addEventListener("click", function () {
-
-            sizeButtons.forEach(function (btn) {
-
-                btn.classList.remove("selected");
-
-            });
+        button.addEventListener(
+            "click",
+            function () {
 
 
-            this.classList.add("selected");
+                sizeButtons.forEach(
+                    function (btn) {
 
-            selectedSize =
-                this.dataset.size;
+                        btn.classList.remove(
+                            "selected"
+                        );
+
+                    }
+                );
 
 
-            sizeError.style.display = "none";
+                this.classList.add(
+                    "selected"
+                );
 
-        });
+
+                selectedSize =
+                    this.dataset.size;
+
+
+                sizeError.style.display =
+                    "none";
+
+            }
+        );
 
     });
 
@@ -390,40 +612,54 @@ document.addEventListener("DOMContentLoaded", function () {
     ====================================================== */
 
     const minusButton =
-        document.getElementById("quantityMinus");
+        document.getElementById(
+            "quantityMinus"
+        );
+
 
     const plusButton =
-        document.getElementById("quantityPlus");
+        document.getElementById(
+            "quantityPlus"
+        );
+
 
     const quantityValue =
-        document.getElementById("quantityValue");
+        document.getElementById(
+            "quantityValue"
+        );
 
 
     let quantity = 1;
 
 
-    minusButton.addEventListener("click", function () {
+    minusButton.addEventListener(
+        "click",
+        function () {
 
-        if (quantity > 1) {
+            if (quantity > 1) {
 
-            quantity--;
+                quantity--;
+
+                quantityValue.textContent =
+                    quantity;
+
+            }
+
+        }
+    );
+
+
+    plusButton.addEventListener(
+        "click",
+        function () {
+
+            quantity++;
 
             quantityValue.textContent =
                 quantity;
 
         }
-
-    });
-
-
-    plusButton.addEventListener("click", function () {
-
-        quantity++;
-
-        quantityValue.textContent =
-            quantity;
-
-    });
+    );
 
 
 
@@ -432,28 +668,41 @@ document.addEventListener("DOMContentLoaded", function () {
     ====================================================== */
 
     const addToCartBtn =
-        document.getElementById("addToCartBtn");
+        document.getElementById(
+            "addToCartBtn"
+        );
 
 
-    addToCartBtn.addEventListener("click", function () {
+    addToCartBtn.addEventListener(
+        "click",
+        function () {
 
-        if (!selectedSize) {
 
-            sizeError.style.display =
-                "block";
+            if (!selectedSize) {
 
-            return;
+                sizeError.style.display =
+                    "block";
+
+                return;
+
+            }
+
+
+            console.log({
+
+                product:
+                    "{{ product.id }}",
+
+                size:
+                    selectedSize,
+
+                quantity:
+                    quantity
+
+            });
 
         }
-
-
-        console.log({
-            product: "{{ product.id }}",
-            size: selectedSize,
-            quantity: quantity
-        });
-
-    });
+    );
 
 
 
@@ -462,31 +711,46 @@ document.addEventListener("DOMContentLoaded", function () {
     ====================================================== */
 
     const buyNowBtn =
-        document.getElementById("buyNowBtn");
+        document.getElementById(
+            "buyNowBtn"
+        );
 
 
-    buyNowBtn.addEventListener("click", function () {
+    buyNowBtn.addEventListener(
+        "click",
+        function () {
 
-        if (!selectedSize) {
 
-            sizeError.style.display =
-                "block";
+            if (!selectedSize) {
 
-            return;
+                sizeError.style.display =
+                    "block";
+
+                return;
+
+            }
+
+
+            console.log({
+
+                product:
+                    "{{ product.id }}",
+
+                size:
+                    selectedSize,
+
+                quantity:
+                    quantity
+
+            });
 
         }
+    );
 
-
-        console.log({
-            product: "{{ product.id }}",
-            size: selectedSize,
-            quantity: quantity
-        });
-
-    });
 
 });
 
 </script>
 
 {% endblock %}
+

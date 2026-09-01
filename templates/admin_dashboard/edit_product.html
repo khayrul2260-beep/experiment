@@ -11,6 +11,10 @@
 
     <link rel="stylesheet" href="{% static 'admin_panel/css/add_product.css' %}">
     <link rel="stylesheet" href="{% static 'admin_panel/css/edit_product.css' %}">
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css"
+    >
 
 {% endblock %}
 
@@ -160,24 +164,20 @@
                 <!-- Description -->
 
                 <div class="form-group">
-
-                    <label for="description">
-
+                
+                    <label>
                         Description
-
                         <span>*</span>
-
                     </label>
-
-
+                
+                    <div id="descriptionEditor"></div>
+                
                     <textarea
                         name="description"
-                        class="form-control"
                         id="description"
-                        rows="5"
-                        required
-                    >{{ product.description }}</textarea>
-
+                        hidden
+                    >{{ product.description|default:"" }}</textarea>
+                
                 </div>
 
             </div>
@@ -598,151 +598,272 @@
             <!-- =================================================
                  PRODUCT IMAGE
             ================================================== -->
+<!-- =====================================================
+     PRODUCT IMAGES
+====================================================== -->
+<!-- =========================================================
+     PRODUCT IMAGES
+========================================================= -->
 
-            <div class="form-section">
+<div class="product-images-section">
 
-                <div class="section-heading">
+    <div class="section-header">
+        <h3>Product Images</h3>
 
-                    <div class="section-icon">
+        <p>
+            Manage your main, secondary and gallery images.
+        </p>
+    </div>
 
-                        <i class="bi bi-image"></i>
 
-                    </div>
+    <!-- =====================================================
+         MAIN + SECONDARY IMAGE
+    ====================================================== -->
+
+    <div class="primary-images-grid">
 
 
-                    <div>
+        <!-- =================================================
+             MAIN IMAGE
+        ================================================== -->
 
-                        <h3>
-                            Product Image
-                        </h3>
+        <div class="image-upload-card">
+
+            <div class="image-card-header">
+
+                <h4>
+                    Main Image
+                </h4>
+
+                <span>
+                    Primary
+                </span>
+
+            </div>
+
+
+            <div
+                class="single-image-box"
+                id="mainImageBox"
+            >
+
+                {% if product.image %}
+
+                    <img
+                        src="{{ product.image.url }}"
+                        alt="{{ product.name }}"
+                        id="mainImagePreview"
+                    >
+
+                {% else %}
+
+                    <div class="empty-image-state">
+
+                        <span>
+                            +
+                        </span>
 
                         <p>
-                            View the current image or upload a new one
+                            Click to add image
                         </p>
 
                     </div>
 
-                </div>
+                {% endif %}
+
+
+                <!-- Main image upload -->
+
+                <input
+                    type="file"
+                    id="mainImageInput"
+                    name="main_image"
+                    accept="image/*"
+                    hidden
+                >
+
+            </div>
+
+        </div>
 
 
 
-                <!-- Current Image -->
+        <!-- =================================================
+             SECONDARY IMAGE
+        ================================================== -->
 
-                <div class="current-image-container">
+        <div class="image-upload-card">
 
-                    {% if product.image %}
+            <div class="image-card-header">
 
-                        <div class="current-image">
+                <h4>
+                    Secondary Image
+                </h4>
 
-                            <img
-                                src="{{ product.image.url }}"
-                                alt="{{ product.name }}"
-                            >
+                <span>
+                    Optional
+                </span>
 
-                        </div>
-
-
-                        <div class="current-image-info">
-
-                            <strong>
-                                Current Image
-                            </strong>
-
-                            <span>
-                                This image is currently used for this product.
-                            </span>
-
-                        </div>
-
-                    {% else %}
-
-                        <div class="no-image">
-
-                            <i class="bi bi-image"></i>
-
-                            <div>
-
-                                <strong>
-                                    No Image Available
-                                </strong>
-
-                                <span>
-                                    Upload a new product image below.
-                                </span>
-
-                            </div>
-
-                        </div>
-
-                    {% endif %}
-
-                </div>
+            </div>
 
 
+            <div
+                class="single-image-box"
+                id="secondaryImageBox"
+            >
 
-                <!-- New Image -->
+                {% if secondary_image and secondary_image.image %}
 
-                <div class="product-image-upload"
-                     id="productImageUpload"
-                     tabindex="0">
-
-
-                    <!-- Upload Content -->
-
-                    <div
-                        class="upload-content"
-                        id="productUploadContent"
+                    <img
+                        src="{{ secondary_image.image.url }}"
+                        alt="{{ product.name }}"
+                        id="secondaryImagePreview"
                     >
 
-                        <i class="bi bi-cloud-arrow-up"></i>
+                {% else %}
 
-
-                        <strong>
-                            Upload New Product Image
-                        </strong>
-
+                    <div class="empty-image-state">
 
                         <span>
-                            PNG, JPG or WEBP
+                            +
                         </span>
+
+                        <p>
+                            Click to add image
+                        </p>
 
                     </div>
 
+                {% endif %}
 
 
-                    <!-- Preview -->
+                <!-- Secondary image upload -->
 
-                    <div
-                        class="product-preview-area"
-                        id="productPreviewArea"
-                    >
+                <input
+                    type="file"
+                    id="secondaryImageInput"
+                    name="secondary_image"
+                    accept="image/*"
+                    hidden
+                >
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         GALLERY IMAGES
+    ====================================================== -->
+
+    <div class="gallery-section">
+
+
+        <!-- =================================================
+             GALLERY HEADER
+        ================================================== -->
+
+        <div class="gallery-header">
+
+            <div>
+
+                <h4>
+                    Gallery Images
+                </h4>
+
+                <p>
+                    Add, replace, delete and reorder gallery images.
+                </p>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="gallery-add-btn"
+                id="addGalleryImageBtn"
+            >
+                + Add Image
+            </button>
+
+        </div>
+
+
+
+        <!-- =================================================
+             GALLERY IMAGE GRID
+
+             IMPORTANT:
+             JS uses this ID to manage:
+             - existing images
+             - new images
+             - drag & drop
+             - reorder
+        ================================================== -->
+
+        <div
+            class="gallery-images-grid"
+            id="galleryImagesContainer"
+        >
+
+
+            <!-- =============================================
+                 EXISTING DATABASE GALLERY IMAGES
+            ============================================== -->
+
+            {% for image in gallery_images %}
+
+                <div
+                    class="gallery-image-item"
+                    data-image-id="{{ image.id }}"
+                    data-original-order="{{ image.sort_order }}"
+                    draggable="true"
+                >
+
+
+                    <!-- =====================================
+                         IMAGE
+                    ====================================== -->
+
+                    <div class="gallery-image-wrapper">
 
                         <img
-                            id="productPreview"
-                            class="product-preview"
-                            src=""
-                            alt="Product Preview"
+                            src="{{ image.image.url }}"
+                            alt="{{ product.name }}"
+                            class="gallery-image-preview"
                         >
 
 
-                        <div class="product-file-info">
+                        <!-- =================================
+                             IMAGE CONTROLS
+                        ================================== -->
 
-                            <h3>
-                                New Product Image
-                            </h3>
-
-                            <p>
-                                Recently uploaded image.
-                            </p>
+                        <div class="gallery-image-controls">
 
 
-                            <div>
+                            <!-- Change -->
 
-                                <i class="bi bi-image"></i>
+                            <button
+                                type="button"
+                                class="gallery-change-btn"
+                                title="Replace image"
+                            >
+                                ✏
+                            </button>
 
-                                <span id="productFileName"></span>
 
-                            </div>
+                            <!-- Delete -->
+
+                            <button
+                                type="button"
+                                class="gallery-delete-btn"
+                                title="Delete image"
+                            >
+                                🗑
+                            </button>
 
                         </div>
 
@@ -750,18 +871,113 @@
 
 
 
-                    <!-- File Input -->
+                    <!-- =====================================
+                         EXISTING IMAGE REPLACE INPUT
+
+                         JS will dynamically use:
+
+                         gallery_replace_files[]
+                    ====================================== -->
 
                     <input
-                        name="image"
                         type="file"
+                        class="gallery-change-input"
                         accept="image/*"
-                        id="ProductImage"
+                        hidden
+                    >
+
+
+
+                    <!-- =====================================
+                         EXISTING IMAGE REPLACE ID
+
+                         JS enables this only when user
+                         actually selects a replacement.
+                    ====================================== -->
+
+                    <input
+                        type="hidden"
+                        class="gallery-replace-id-input"
+                        name="gallery_replace_ids[]"
+                        value="{{ image.id }}"
+                        disabled
+                    >
+
+
+
+                    <!-- =====================================
+                         EXISTING IMAGE DELETE
+
+                         JS enables this only when user
+                         clicks Delete.
+                    ====================================== -->
+
+                    <input
+                        type="hidden"
+                        class="delete-image-input"
+                        name="delete_image_ids"
+                        value="{{ image.id }}"
+                        disabled
                     >
 
                 </div>
 
-            </div>
+            {% empty %}
+
+
+                <!-- =========================================
+                     EMPTY GALLERY
+                ========================================== -->
+
+                <div
+                    class="gallery-empty-state"
+                    id="galleryEmptyState"
+                >
+
+                    <div class="empty-gallery-icon">
+                        +
+                    </div>
+
+                    <p>
+                        No gallery images yet
+                    </p>
+
+                    <span>
+                        Click "Add Image" to upload gallery images.
+                    </span>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+
+
+        <!-- =================================================
+             NEW GALLERY IMAGE UPLOAD
+
+             JS uses DataTransfer to maintain all selected
+             files and finally submits them as:
+
+             gallery_images
+        ================================================== -->
+
+        <input
+            type="file"
+            id="galleryImageInput"
+            name="gallery_images"
+            accept="image/*"
+            multiple
+            hidden
+        >
+
+    </div>
+
+</div>
+
+
+
 
 
 
@@ -1051,9 +1267,8 @@
 
 
 {% block js %}
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
 
-<script src="{% static 'admin_panel/js/product.js' %}"></script>
-
-<script src="{% static 'admin_panel/js/add_product.js' %}"></script>
+<script src="{% static 'admin_panel/js/edit_product.js' %}"></script>
 
 {% endblock %}

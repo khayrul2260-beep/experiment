@@ -2,6 +2,7 @@
 
 <section class="nafi-new-arrivals">
 
+
     <!-- =====================================================
          SECTION HEADER
     ====================================================== -->
@@ -9,11 +10,15 @@
     <div class="new-arrivals-header">
 
         <div class="new_arrivals">
-            <h2>New Arrivals</h2>
+
+            <h2>
+                New Arrivals
+            </h2>
 
             <p>
                 Discover our latest styles.
             </p>
+
         </div>
 
 
@@ -22,7 +27,9 @@
             class="view-all-link"
         >
             View All
+
             <i class="bi bi-arrow-right"></i>
+
         </a>
 
     </div>
@@ -49,24 +56,63 @@
                     class="product-image-link"
                 >
 
-                    {% if product.image %}
+                    <div class="new-arrival-image-wrapper">
 
-                        <img
-                            src="{{ product.image.url }}"
-                            alt="{{ product.name }}"
-                            class="new-arrival-image"
-                            loading="lazy"
-                        >
 
-                    {% else %}
+                        <!-- =========================================
+                             MAIN IMAGE
+                        ========================================== -->
 
-                        <div class="product-no-image">
+                        {% if product.image %}
 
-                            <i class="bi bi-image"></i>
+                            <img
+                                src="{{ product.image.url }}"
+                                alt="{{ product.name }}"
+                                class="new-arrival-image main-product-image"
+                                loading="lazy"
+                            >
 
-                        </div>
+                        {% endif %}
 
-                    {% endif %}
+
+
+                        <!-- =========================================
+                             SECONDARY IMAGE
+                        ========================================== -->
+
+                        {% for product_image in product.images.all %}
+
+                            {% if product_image.image_type == "secondary" %}
+
+                                <img
+                                    src="{{ product_image.image.url }}"
+                                    alt="{{ product.name }}"
+                                    class="new-arrival-image secondary-product-image"
+                                    loading="lazy"
+                                >
+
+                            {% endif %}
+
+                        {% endfor %}
+
+
+
+                        <!-- =========================================
+                             NO IMAGE FALLBACK
+                        ========================================== -->
+
+                        {% if not product.image %}
+
+                            <div class="product-no-image">
+
+                                <i class="bi bi-image"></i>
+
+                            </div>
+
+                        {% endif %}
+
+
+                    </div>
 
                 </a>
 
@@ -123,7 +169,9 @@
 
                     </div>
 
+
                 </div>
+
 
             </article>
 
@@ -151,3 +199,4 @@
     </div>
 
 </section>
+

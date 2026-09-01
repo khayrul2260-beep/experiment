@@ -1,0 +1,1949 @@
+/* =========================================================
+   NAFI PREMIUM HOMEPAGE
+   DESKTOP + TABLET + MOBILE
+   COMPLETE RESPONSIVE CSS
+========================================================= */
+
+
+/* =========================================================
+   ROOT
+========================================================= */
+
+:root {
+
+    --nafi-black: #050505;
+    --nafi-black-2: #080808;
+    --nafi-black-3: #0d0d0f;
+
+    --nafi-panel: #101012;
+    --nafi-panel-2: #141416;
+
+    --nafi-border: #25262a;
+    --nafi-border-light: #303136;
+
+    --nafi-white: #f5f5f5;
+    --nafi-white-2: #dddddf;
+
+    --nafi-gray: #a2a2a7;
+    --nafi-gray-2: #77777d;
+
+    --nafi-blue: #4d8dff;
+
+    --nafi-radius: 18px;
+}
+
+/* =========================================================
+   MAIN HOME
+========================================================= */
+
+.mobile-nafi-page {
+
+    position: relative;
+
+    width: 100%;
+    overflow: hidden;
+    background:
+
+        radial-gradient(
+            circle at 50% 0%,
+            rgba(255,255,255,.035),
+            transparent 32%
+        ),
+
+        var(--nafi-black);
+
+    color: var(--nafi-white);
+
+    font-family:
+        "Manrope",
+        "Helvetica Neue",
+        Arial,
+        sans-serif;
+}
+
+
+/* Prevent horizontal overflow */
+
+.mobile-nafi-page *,
+.mobile-nafi-page *::before,
+.mobile-nafi-page *::after {
+
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.mobile-nafi-hero {
+
+    position: relative;
+
+    width: 100%;
+
+    overflow: hidden;
+
+    background: var(--nafi-black);
+}
+
+
+/* =========================================================
+   HERO SLIDER
+========================================================= */
+
+.mobile-hero-slider {
+
+    position: relative;
+
+    width: 100%;
+
+    overflow: hidden;
+
+    background: #090909;
+}
+
+
+/* =========================================================
+   HERO SLIDES
+========================================================= */
+
+.mobile-hero-slide {
+
+    position: absolute;
+
+    inset: 0;
+
+    width: 100%;
+
+    height: 100%;
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    /*
+       No zoom.
+       Image will remain completely visible.
+    */
+
+    transform: none;
+
+    transition:
+        opacity 1.1s ease,
+        visibility 1.1s ease;
+}
+
+
+
+/*
+   First slide remains in normal document flow.
+
+   This allows its image to automatically
+   determine the complete hero height.
+*/
+
+.mobile-hero-slide:first-child {
+
+    position: relative;
+
+    inset: auto;
+}
+
+
+
+/* =========================================================
+   ACTIVE SLIDE
+========================================================= */
+
+.mobile-hero-slide.active {
+
+    opacity: 1;
+
+    visibility: visible;
+
+    transform: none;
+}
+
+
+/* =========================================================
+   HERO IMAGE
+========================================================= */
+
+.mobile-hero-slide img {
+
+    display: block;
+
+    width: 100%;
+
+    height: auto;
+
+    /*
+       IMPORTANT:
+
+       Full image will be visible.
+       No crop.
+       No stretching.
+       Original aspect ratio maintained.
+    */
+
+    object-fit: contain;
+
+    object-position: center center;
+
+    background: #050505;
+}
+
+
+/* =========================================================
+   HERO OVERLAY / GRADIENT
+========================================================= */
+
+.mobile-hero-image-gradient {
+
+    position: absolute;
+
+    inset: 0;
+
+    z-index: 2;
+
+    pointer-events: none;
+
+    background:
+
+        linear-gradient(
+            90deg,
+            rgba(0,0,0,.45),
+            transparent 48%,
+            rgba(0,0,0,.18)
+        ),
+
+        linear-gradient(
+            to bottom,
+            rgba(0,0,0,.08) 0%,
+            rgba(0,0,0,.04) 35%,
+            rgba(0,0,0,.28) 58%,
+            rgba(0,0,0,.84) 82%,
+            rgb(0,0,0) 100%
+        );
+}
+
+
+/* =========================================================
+   HERO CONTENT
+========================================================= */
+
+.mobile-hero-content {
+
+    position: absolute;
+
+    left: 0;
+
+    bottom: 50px;
+
+    z-index: 5;
+
+    width: 100%;
+
+    max-width: 1900px;
+
+    margin: 0 auto;
+
+    padding: 0 70px;
+}
+
+
+/* =========================================================
+   HERO EYEBROW
+========================================================= */
+
+.mobile-hero-eyebrow {
+
+    display: block;
+
+    margin-bottom: 17px;
+
+    color: #bdbdc1;
+
+    font-size: 14px;
+
+    font-weight: 400;
+
+    letter-spacing: 3px;
+
+    line-height: 1.2;
+}
+
+
+/* =========================================================
+   HERO TITLE
+========================================================= */
+
+.mobile-hero-title {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 4px;
+
+    margin: 0;
+
+    padding: 0;
+
+    text-transform: uppercase;
+
+    line-height: 1.02;
+}
+
+
+.mobile-hero-title strong {
+
+    display: block;
+
+    color: #f7f7f8;
+
+    font-size: clamp(
+        38px,
+        4.5vw,
+        68px
+    );
+
+    font-weight: 800;
+
+    letter-spacing: .3px;
+}
+
+
+.mobile-hero-title span {
+
+    display: block;
+
+    color: #bcbcc1;
+
+    font-size: clamp(
+        34px,
+        4.2vw,
+        63px
+    );
+
+    font-weight: 400;
+
+    letter-spacing: .3px;
+}
+
+
+/* =========================================================
+   HERO LINE
+========================================================= */
+
+.mobile-hero-line {
+
+    width: 245px;
+
+    height: 1px;
+
+    margin:
+        28px 0 25px;
+
+    background:
+        rgba(255,255,255,.75);
+}
+
+
+/* =========================================================
+   HERO BUTTON
+========================================================= */
+
+.mobile-hero-button {
+
+    width: 340px;
+
+    min-height: 64px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding:
+        0 27px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.9);
+
+    background:
+        rgba(0,0,0,.16);
+
+    color: #f4f4f4;
+
+    text-decoration: none;
+
+    text-transform: uppercase;
+
+    font-size: 14px;
+
+    font-weight: 500;
+
+    letter-spacing: 1.6px;
+
+    backdrop-filter: blur(4px);
+
+    transition:
+        background .3s ease,
+        transform .3s ease,
+        border-color .3s ease;
+}
+
+
+.mobile-hero-button:hover {
+
+    background:
+        rgba(255,255,255,.08);
+
+    border-color: #ffffff;
+
+    color: #ffffff;
+
+    transform: translateY(-2px);
+}
+
+
+/* =========================================================
+   BUTTON ARROW
+========================================================= */
+
+.mobile-button-arrow {
+
+    font-size: 27px;
+
+    font-weight: 300;
+
+    line-height: 1;
+}
+
+
+/* =========================================================
+   SLIDER INDICATORS
+========================================================= */
+
+.mobile-slider-indicators {
+
+    position: absolute;
+
+    left: 50%;
+
+    top: 22px;
+
+    transform:
+        translateX(-50%);
+
+    z-index: 10;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+}
+
+
+.mobile-slider-indicators button {
+
+    width: 6px;
+
+    height: 6px;
+
+    padding: 0;
+
+    border: 0;
+
+    border-radius: 50%;
+
+    background:
+        rgba(255,255,255,.35);
+
+    cursor: pointer;
+
+    transition:
+        width .3s ease,
+        background .3s ease;
+}
+
+
+.mobile-slider-indicators button.active {
+
+    width: 24px;
+
+    border-radius: 10px;
+
+    background: #f4f4f4;
+}
+
+
+/* =========================================================
+   FEATURES
+========================================================= */
+
+.mobile-feature-section {
+
+    position: relative;
+
+    width: 100%;
+
+    padding:
+        38px 50px 20px;
+
+    background: transparent;
+}
+
+
+.mobile-feature-card {
+
+    width: 100%;
+
+    max-width: 1900px;
+    margin: 0 auto;
+
+    display: grid;
+
+    grid-template-columns:
+        1fr
+        1px
+        1fr
+        1px
+        1fr;
+
+    align-items: center;
+
+    padding:
+        20px;
+
+    border:
+        1px solid
+        var(--nafi-border);
+
+    border-radius: 14px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #121214,
+            #0b0b0d85
+        );
+
+    box-shadow:
+        0 15px 45px
+        rgba(0,0,0,.25);
+}
+
+
+.mobile-feature-item {
+
+    min-width: 0;
+
+    text-align: center;
+
+    padding: 5px 20px;
+}
+
+
+.mobile-feature-divider {
+
+    width: 1px;
+
+    height: 75px;
+
+    background:
+        #292a2e;
+}
+
+
+/* =========================================================
+   FEATURE ICON
+========================================================= */
+
+.mobile-feature-icon {
+
+    width: 35px;
+
+    height: 35px;
+
+    margin:
+        0 auto 10px;
+}
+
+
+.mobile-feature-icon svg {
+
+    width: 100%;
+
+    height: 100%;
+
+    fill: none;
+
+    stroke: #ededee;
+
+    stroke-width: 1.6;
+
+    stroke-linecap: round;
+
+    stroke-linejoin: round;
+}
+
+
+.mobile-feature-item h3 {
+
+    margin: 0;
+
+    color: #e9e9ea;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    letter-spacing: 1px;
+
+    line-height: 1.3;
+}
+
+
+.mobile-feature-item p {
+
+    margin:
+        6px 0 0;
+
+    color: #88888d;
+
+    font-size: 10px;
+
+    font-weight: 400;
+
+    line-height: 1.3;
+}
+
+
+/* =========================================================
+   CATEGORIES
+========================================================= */
+
+.mobile-categories-section {
+
+    width: 100%;
+
+    padding:
+        0px 50px 60px;
+
+    background: transparent;
+}
+
+
+.mobile-section-heading {
+
+    width: 100%;
+
+    max-width: 1900px;
+
+    margin:
+        0 auto 25px;
+}
+
+
+.mobile-section-heading span {
+
+    display: block;
+
+    margin-bottom: 7px;
+
+    color: #737379;
+
+    font-size: 11px;
+
+    letter-spacing: 3px;
+
+    font-weight: 500;
+}
+
+
+.mobile-section-heading h2 {
+
+    margin: 0;
+
+    color: #eeeeef;
+
+    font-size: 32px;
+
+    font-weight: 700;
+
+    letter-spacing: 1px;
+}
+
+
+/* =========================================================
+   CATEGORY GRID
+========================================================= */
+
+.mobile-category-grid {
+
+    width: 100%;
+
+    max-width: 1900px;
+
+    margin: 0 auto;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+}
+
+
+/* =========================================================
+   CATEGORY CARD
+========================================================= */
+
+.mobile-category-card {
+
+    position: relative;
+
+    height: 440px;
+
+    overflow: hidden;
+
+    border:
+        1px solid
+        #28292d;
+
+    border-radius: 22px;
+
+    background: #111;
+
+    text-decoration: none;
+
+    isolation: isolate;
+}
+
+
+.mobile-category-card img {
+
+    position: absolute;
+
+    inset: 0;
+
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: cover;
+
+    object-position: center;
+
+    transition:
+        transform .7s ease;
+}
+
+
+.mobile-category-card:hover img {
+
+    transform: scale(1.055);
+}
+
+
+/* =========================================================
+   CATEGORY OVERLAY
+========================================================= */
+
+.mobile-category-overlay {
+
+    position: absolute;
+
+    inset: 0;
+
+    z-index: 1;
+
+    background:
+
+        linear-gradient(
+            to bottom,
+            rgba(0,0,0,.02) 25%,
+            rgba(0,0,0,.20) 45%,
+            rgba(0,0,0,.86) 100%
+        );
+}
+
+
+/* =========================================================
+   CATEGORY CONTENT
+========================================================= */
+
+.mobile-category-content {
+
+    position: absolute;
+
+    left: 0;
+
+    right: 0;
+
+    bottom: 30px;
+
+    z-index: 2;
+
+    padding:
+        0 28px;
+}
+
+
+.mobile-category-content h3 {
+
+    margin:
+        0 0 12px;
+
+    color: #f4f4f4;
+
+    font-size: 23px;
+
+    font-weight: 700;
+
+    letter-spacing: .7px;
+}
+
+
+.mobile-category-content span {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    color: #c7c7ca;
+
+    font-size: 12px;
+
+    letter-spacing: 1.5px;
+}
+
+
+.mobile-category-content b {
+
+    font-size: 21px;
+
+    font-weight: 300;
+
+    line-height: 1;
+}
+
+
+/* =========================================================
+   SECURE SHOPPING
+========================================================= */
+
+.mobile-secure-section {
+
+    width: 100%;
+
+    padding:
+        0 50px 60px;
+
+    background: var(--background-color);
+}
+
+
+.mobile-secure-card {
+
+    width: 100%;
+
+    max-width: 1900px;
+
+    min-height: 50px;
+
+    margin: 0 auto;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 20px;
+
+    padding:
+        10px 25px;
+
+    border:
+        1px solid
+        #27282c;
+
+    border-radius: 13px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #121214,
+            #0b0b0d
+        );
+
+    color: white;
+
+    text-decoration: none;
+
+    transition:
+        border-color .3s ease,
+        background .3s ease;
+}
+
+
+.mobile-secure-card:hover {
+
+    border-color:
+        #3a3b40;
+
+    background:
+        linear-gradient(
+            145deg,
+            #151517,
+            #0d0d0f
+        );
+}
+
+
+/* =========================================================
+   SECURE ICON
+========================================================= */
+
+.mobile-secure-icon {
+
+    width: 30px;
+
+    height: 30px;
+
+    flex:
+        0 0 43px;
+}
+
+
+.mobile-secure-icon svg {
+
+    width: 100%;
+
+    height: 100%;
+
+    fill: none;
+
+    stroke: #f0f0f1;
+
+    stroke-width: 1.7;
+
+    stroke-linecap: round;
+
+    stroke-linejoin: round;
+}
+
+
+.mobile-secure-content {
+
+    flex: 1;
+
+    min-width: 0;
+}
+
+
+.mobile-secure-content h3 {
+
+    margin: 0;
+
+    color: #eeeeef;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    letter-spacing: .7px;
+}
+
+
+.mobile-secure-content p {
+
+    margin:
+        5px 0 0;
+
+    color: #89898e;
+
+    font-size: 11px;
+
+    font-weight: 400;
+}
+
+
+.mobile-secure-arrow {
+
+    font-size: 24px;
+
+    font-weight: 300;
+
+    color: #eeeeef;
+}
+
+
+
+/* ============================================
+   SECOND HERO SECTION
+   ============================================ */
+
+.second_hero_section {
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+
+    background-image: url("../images/background.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    /* z-index negative রাখবে না */
+    z-index: 0;
+}
+
+
+/* ============================================
+   BACKGROUND IMAGE OVERLAY
+   শুধু background image-এর উপর থাকবে
+   ============================================ */
+
+.second_hero_section::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 280px;
+
+    background: linear-gradient(
+        to bottom,
+
+        rgba(0, 0, 0, 1) 2%,
+        rgba(0, 0, 0, 0.95) 12%,
+        rgba(0, 0, 0, 0.85) 30%,
+        rgba(0, 0, 0, 0.65) 50%,
+        rgba(0, 0, 0, 0.30) 70%,
+        rgba(0, 0, 0, 0.005) 100%
+    );
+
+    /*
+       Background-এর উপরে
+       কিন্তু content-এর নিচে
+    */
+    z-index: 0;
+
+    pointer-events: none;
+}
+
+.second_hero_section::after {
+    content: "";
+
+    position: absolute;
+
+    bottom: 0;
+    left: 0;
+
+    width: 100%;
+    height: 182px;
+
+    background: linear-gradient(
+        to top,
+
+        rgba(0, 0, 0, 1) 2%,
+
+        rgba(0, 0, 0, 0.95) 12%,
+        rgba(0, 0, 0, 0.85) 30%,
+        rgba(0, 0, 0, 0.65) 50%,
+        rgba(0, 0, 0, 0.30) 70%,
+        rgba(0, 0, 0, 0.005) 100%
+    );
+
+    /*
+       Background-এর উপরে
+       কিন্তু content-এর নিচে
+    */
+    z-index: 0;
+
+    pointer-events: none;
+}
+
+
+/* ============================================
+   SECOND SECTION-এর ভিতরের সব content
+   overlay-এর উপরে থাকবে
+   ============================================ */
+
+.second_hero_section > * {
+    position: relative;
+
+    z-index: 1;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 991px) {
+    .mobile_hero_image {
+        display: none;
+    }
+
+    .mobile-hero-content {
+
+        padding: 0 35px;
+    }
+
+
+    .mobile-hero-title strong {
+
+        font-size: clamp(
+            32px,
+            6vw,
+            52px
+        );
+    }
+
+
+    .mobile-hero-title span {
+
+        font-size: clamp(
+            29px,
+            5.6vw,
+            48px
+        );
+    }
+
+
+    .mobile-hero-button {
+
+        width: 300px;
+
+        min-height: 58px;
+    }
+
+    .mobile-feature-section {
+
+        padding:
+            30px 30px 15px;
+    }
+
+
+    .mobile-category-section,
+    .mobile-categories-section {
+
+        padding-left: 30px;
+
+        padding-right: 30px;
+    }
+
+
+    .mobile-feature-card {
+        padding: 10px;
+        height: fit-content;
+    }
+
+    .mobile-feature-icon {
+
+        width: 30px;
+
+        height: 30px;
+    }
+
+
+    .mobile-category-card {
+
+        height: 250px;
+    }
+
+
+    .mobile-secure-section {
+
+        padding-left: 30px;
+
+        padding-right: 30px;
+    }
+
+}
+
+/* =========================================================
+   MOBILE — EVERYTHING FITS IN FIRST VIEW
+========================================================= */
+
+/* @media (max-width: 768px) {
+
+
+    .mobile-hero-content {
+
+        padding:
+            0 20px;
+
+        bottom: 10px;
+    }
+
+    .mobile-hero-button {
+        width: 200px;
+        height: 10px;
+        gap: 5px;
+        padding: 10px;
+        font-size: 8px;
+    }
+    .mobile-hero-title strong {
+
+        font-size: 30px;
+    }
+
+
+    .mobile-hero-title span {
+
+        font-size: 27px;
+    }
+
+} */
+
+@media (max-width: 768px) {
+
+    .mobile-hero-content {
+
+        bottom: 18px;
+
+        padding: 0 22px;
+    }
+    
+
+    .mobile-hero-eyebrow {
+
+        margin-bottom: 11px;
+
+        font-size: 10px;
+
+        letter-spacing: 2px;
+    }
+
+
+    .mobile-hero-title {
+
+        gap: 2px;
+    }
+
+
+    .mobile-hero-title strong {
+
+        font-size: clamp(
+            24px,
+            7.2vw,
+            36px
+        );
+    }
+
+
+    .mobile-hero-title span {
+
+        font-size: clamp(
+            22px,
+            6.7vw,
+            34px
+        );
+    }
+
+
+    .mobile-hero-line {
+
+        width: 150px;
+
+        height: 1px;
+
+        margin:
+            17px 0 16px;
+    }
+
+
+    .mobile-hero-button {
+
+        width: 235px;
+
+        min-height: 48px;
+
+        padding:
+            0 17px;
+
+        font-size: 10px;
+
+        letter-spacing: 1.2px;
+    }
+
+
+    .mobile-button-arrow {
+
+        font-size: 21px;
+    }
+
+
+    .mobile-slider-indicators {
+
+        bottom: 13px;
+
+        gap: 6px;
+    }
+
+
+    .mobile-slider-indicators button {
+
+        width: 5px;
+
+        height: 5px;
+    }
+
+
+    .mobile-slider-indicators button.active {
+
+        width: 19px;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+/* ============================================
+   mobile
+   ============================================ */
+
+/* =========================================================
+   NFX VAULT HERO
+   INDEPENDENT MOBILE SLIDER
+========================================================= */
+
+.nfx-vault-hero {
+    display: none;
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+    height: fit-content;
+    overflow: hidden;
+    background: #050505;
+    z-index: 0;
+}
+
+
+/* =========================================================
+   SLIDER WRAPPER
+========================================================= */
+
+.nfx-vault-slider {
+    position: relative;
+    height: fit-content;
+    overflow: hidden;
+    background: #050505;
+    z-index: 0;
+}
+
+
+/* =========================================================
+   SLIDE
+========================================================= */
+
+.nfx-vault-panel {
+    position: absolute;
+
+    inset: 0;
+
+    height: fit-content;
+
+    opacity: 0;
+    visibility: hidden;
+
+    pointer-events: none;
+
+    transition:
+        opacity 1s ease,
+        visibility 1s ease;
+    z-index: 0;
+}
+
+
+/*
+   First slide creates the actual hero height.
+*/
+
+.nfx-vault-panel:first-child {
+    position: relative;
+
+    inset: auto;
+
+    width: 100%;
+    height: auto;
+}
+
+
+/* =========================================================
+   ACTIVE SLIDE
+========================================================= */
+
+.nfx-vault-panel.is-active {
+    opacity: 1;
+    visibility: visible;
+
+    pointer-events: auto;
+}
+
+
+/* =========================================================
+   HERO IMAGE
+========================================================= */
+
+.nfx-vault-image {
+    display: block;
+    width: 100%;
+    min-width: 200px;
+    height: auto;
+    object-fit: cover;
+
+    object-position: center center;
+
+    background: #050505;
+}
+
+
+/* =========================================================
+   IMAGE SHADE / GRADIENT
+========================================================= */
+
+.nfx-vault-shade {
+    position: absolute;
+
+    inset: 0;
+
+    z-index: 3;
+
+    pointer-events: none;
+
+    background:
+
+        linear-gradient(
+            90deg,
+            rgba(0, 0, 0, .45),
+            transparent 48%,
+            rgba(0, 0, 0, .18)
+        ),
+
+        linear-gradient(
+            to bottom,
+            rgba(0, 0, 0, .08) 0%,
+            rgba(0, 0, 0, .03) 35%,
+            rgba(0, 0, 0, .28) 58%,
+            rgba(0, 0, 0, .84) 82%,
+            rgba(0, 0, 0, 1) 100%
+        );
+}
+
+
+/* =========================================================
+   HERO CONTENT
+========================================================= */
+
+.nfx-vault-copy {
+    position: absolute;
+    display: none;
+    left: 0;
+    bottom: calc(25vw + 76px + 10px + 10px);
+
+
+    z-index: 10;
+
+    width: 100%;
+    max-width: 1900px;
+
+    margin: 0 auto;
+
+    padding: 0 15px;
+}
+
+
+/* =========================================================
+   EYEBROW
+========================================================= */
+
+.nfx-vault-kicker {
+    display: block;
+
+    margin-bottom: 17px;
+
+    color: #bdbdc1;
+
+    font-size: 14px;
+    font-weight: 400;
+
+    letter-spacing: 3px;
+
+    line-height: 1.2;
+}
+
+
+/* =========================================================
+   TITLE
+========================================================= */
+
+.nfx-vault-heading {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 4px;
+
+    margin: 0;
+    padding: 0;
+
+    text-transform: uppercase;
+
+    line-height: 1.02;
+}
+
+
+.nfx-vault-heading strong {
+    display: block;
+
+    color: #f7f7f8;
+
+    font-size: clamp(
+        38px,
+        4.5vw,
+        68px
+    );
+
+    font-weight: 800;
+
+    letter-spacing: .3px;
+}
+
+
+.nfx-vault-heading span {
+    display: block;
+
+    color: #bcbcc1;
+
+    font-size: clamp(
+        34px,
+        4.2vw,
+        63px
+    );
+
+    font-weight: 400;
+
+    letter-spacing: .3px;
+}
+
+
+/* =========================================================
+   HORIZONTAL RULE
+========================================================= */
+
+.nfx-vault-rule {
+    width: 245px;
+
+    height: 1px;
+
+    margin:
+        28px 0 25px;
+
+    background:
+        rgba(255, 255, 255, .75);
+}
+
+
+/* =========================================================
+   ACTION BUTTON
+========================================================= */
+
+.nfx-vault-action {
+    width: 340px;
+
+    min-height: 64px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 0 27px;
+
+    border:
+        1px solid
+        rgba(255, 255, 255, .9);
+
+    background:
+        rgba(0, 0, 0, .16);
+
+    color: #f4f4f4;
+
+    text-decoration: none;
+
+    text-transform: uppercase;
+
+    font-size: 14px;
+
+    font-weight: 500;
+
+    letter-spacing: 1.6px;
+
+    backdrop-filter: blur(4px);
+
+    transition:
+        background .3s ease,
+        border-color .3s ease,
+        transform .3s ease;
+}
+
+
+.nfx-vault-action:hover {
+    background:
+        rgba(255, 255, 255, .08);
+
+    border-color:
+        #ffffff;
+
+    color:
+        #ffffff;
+
+    transform:
+        translateY(-2px);
+}
+
+
+/* =========================================================
+   ARROW
+========================================================= */
+
+.nfx-vault-arrow {
+    font-size: 27px;
+
+    font-weight: 300;
+
+    line-height: 1;
+}
+
+
+/* =========================================================
+   INDICATORS
+========================================================= */
+
+.nfx-vault-dots {
+    position: absolute;
+
+    left: 50%;
+
+    top: 22px;
+
+    transform:
+        translateX(-50%);
+
+    z-index: 10;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+}
+
+
+.nfx-vault-dots button {
+    width: 6px;
+    height: 6px;
+
+    padding: 0;
+
+    border: 0;
+
+    border-radius: 50%;
+
+    background:
+        rgba(255, 255, 255, .35);
+
+    cursor: pointer;
+
+    transition:
+        width .3s ease,
+        background .3s ease;
+}
+
+
+.nfx-vault-dots button.is-active {
+    width: 24px;
+
+    border-radius: 10px;
+
+    background:
+        #f4f4f4;
+}
+
+/* =========================================================
+   NAFI HERO TYPOGRAPHY
+   Premium • Masculine • Modern • Minimal
+========================================================= */
+
+.nafi-hero-subtitle {
+    display: block;
+
+    margin-bottom: 18px;
+
+    font-family: "Manrope", sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    line-height: 1.4;
+
+    text-transform: uppercase;
+
+    color: rgba(255, 255, 255, 0.72);
+
+    position: relative;
+    padding-left: 42px;
+}
+
+
+/* Small editorial line before subtitle */
+.nafi-hero-subtitle::before {
+    content: "";
+
+    position: absolute;
+    left: 0;
+    top: 50%;
+
+    width: 28px;
+    height: 1px;
+
+    background: rgba(255, 255, 255, 0.55);
+
+    transform: translateY(-50%);
+}
+
+
+/* =========================================================
+   MAIN HERO TITLE
+========================================================= */
+
+.nafi-hero-title {
+    margin: 0;
+
+    font-family: "Manrope", sans-serif;
+
+    font-size: clamp(42px, 6vw, 82px);
+
+    font-weight: 300;
+
+    line-height: 0.98;
+
+    letter-spacing: -3px;
+
+    text-transform: uppercase;
+
+    color: #ffffff;
+
+    max-width: 850px;
+
+    text-wrap: balance;
+}
+
+
+/* Strong second line */
+.nafi-hero-title span {
+    display: block;
+
+    margin-top: 4px;
+
+    font-weight: 800;
+
+    letter-spacing: -4px;
+
+    color: #ffffff;
+}
+
+
+/* =========================================================
+   DESCRIPTION
+========================================================= */
+
+.nafi-hero-description {
+    max-width: 540px;
+
+    margin: 15px 0px;
+
+    font-family: "Manrope", sans-serif;
+
+    font-size: 15px;
+    font-weight: 400;
+
+    line-height: 1.8;
+
+    letter-spacing: 0.2px;
+
+    color: rgba(255, 255, 255, 0.68);
+}
+
+/* =========================================================
+   VERY SMALL MOBILE
+========================================================= */
+
+@media (max-width: 500px) {
+
+    .nfx-vault-hero {
+        display: block;
+    }
+
+
+    .mobile-nafi-hero {
+        display: none;
+    }
+
+    .nfx-vault-copy {
+        display: block;
+    }
+
+    .nfx-vault-action {
+        width: 60vw;
+    }
+    .nfx-vault-action span {
+        font-size: 18px;
+    }
+    .nfx-vault-arrow {
+        font-size: 24px;
+    }
+
+
+    .second_hero_section {
+        display: block;
+        background: transparent;
+        background-image: none;
+        position: absolute;
+        bottom: 10px;
+        z-index: 10;
+    }
+    .mobile-feature-section {
+        padding: 0px 10px 6px;
+    }
+    .mobile-feature-card {
+        height: 70px;
+        padding: 0px;
+    }
+
+    .mobile-feature-item {
+        height: fit-content;
+        padding: 0px 10px;
+    }
+
+    .mobile-feature-icon {
+        width: 18px;
+    
+        height: 18px;
+    }
+
+    .mobile-feature-item h3{
+        font-size: 9px;
+        font-weight: normal;
+    }
+    .mobile-feature-item p{
+        font-size: 7px;
+        padding: 0px;
+    }
+
+    .mobile-feature-divider {
+        height: 40px;
+    }
+
+    .mobile-categories-section  {
+        padding: 0px 10px;
+    }
+
+    .mobile-category-grid {
+        gap: 5px;
+    }
+
+    .mobile-category-card {
+        height: 25vw;
+        border-radius: 10px;
+    }
+
+    .mobile-category-content {
+        padding: 5px;
+        height: fit-content;
+        position: absolute;
+        bottom: 5px;
+    }
+
+    .mobile-category-content h3 {
+        font-size: 11px;
+        margin: 0px;
+        font-weight: normal;
+    }
+
+    .mobile-category-content span {
+        font-size: 7px;
+        font-weight: thin;
+    }
+    .mobile-category-content span b {
+        font-size: 7px;
+        font-weight: thin;
+    }
+
+
+    .second_hero_section::after, 
+    .second_hero_section::before {
+        display: none;
+    }
+
+    .mobile-secure-section {
+        display: none;
+    }
+    .mobile-nafi-page {
+        width: 100%;
+        height: calc(100vh - 96px);
+        max-height: 200vw;
+        min-height: 120vw;
+        overflow: hidden;
+
+    }
+
+    .nafi-hero-subtitle {
+        font-size: 10px;
+        letter-spacing: 3px;
+        margin-bottom: 14px;
+        padding-left: 32px;
+    }
+
+    .nafi-hero-subtitle::before {
+        width: 22px;
+    }
+
+    .nafi-hero-title {
+        font-size: clamp(38px, 11vw, 58px);
+        line-height: 0.98;
+        letter-spacing: -2.5px;
+    }
+
+    .nafi-hero-title span {
+        letter-spacing: -3px;
+    }
+
+    .nafi-hero-description {
+        margin: 20px 0px;
+        font-size: 13px;
+        line-height: 1.7;
+        max-width: 380px;
+    }
+
+}
+

@@ -1,278 +1,624 @@
-/* ========================================
-   Current Product Image
-======================================== */
+ /* ==========================================
+   PRODUCT IMAGES SECTION
+========================================== */
 
-.current-image-container {
-    display: flex;
-    align-items: center;
-    gap: 18px;
-
-    padding: 16px;
-
-    margin-bottom: 15px;
-
-    background: var(--primary-color);
-
-    border: 1px solid var(--border-color-special);
-    border-radius: var(--border-radius);
+.product-images-section {
+    width: 100%;
+    margin-top: 30px;
+    padding: 28px;
+    background: #0b0b0b;
+    border: 1px solid #1d1d1d;
+    border-radius: 16px;
 }
 
 
-.current-image {
-    width: 110px;
-    height: 110px;
+/* ==========================================
+   SECTION HEADER
+========================================== */
 
+.section-header {
+    margin-bottom: 25px;
+}
+
+.section-header h3 {
+    margin: 0 0 6px;
+    color: #ffffff;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.section-header p {
+    margin: 0;
+    color: #858585;
+    font-size: 13px;
+}
+
+
+/* ==========================================
+   MAIN + SECONDARY IMAGE
+========================================== */
+
+.primary-images-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px;
+}
+
+
+/* ==========================================
+   IMAGE CARD
+========================================== */
+
+.image-upload-card {
+    min-width: 0;
+}
+
+.image-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.image-card-header h4 {
+    margin: 0;
+    color: #f5f5f5;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.image-card-header span {
+    color: #777;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+
+/* ==========================================
+   SINGLE IMAGE BOX
+========================================== */
+
+.single-image-box {
+    position: relative;
+    width: 100%;
+    height: 360px;
+    overflow: hidden;
+    cursor: pointer;
+
+    background: #111;
+    border: 1px solid #252525;
+    border-radius: 12px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transition:
+        border-color 0.25s ease,
+        transform 0.25s ease,
+        background 0.25s ease;
+}
+
+.single-image-box:hover {
+    border-color: #4b4b4b;
+    background: #151515;
+}
+
+
+/* ==========================================
+   SINGLE IMAGE
+========================================== */
+
+.single-image-box img {
+    width: 100%;
+    height: 100%;
+    display: block;
+
+    object-fit: cover;
+
+    transition:
+        transform 0.35s ease,
+        opacity 0.25s ease;
+}
+
+.single-image-box:hover img {
+    transform: scale(1.025);
+}
+
+
+/* ==========================================
+   EMPTY IMAGE STATE
+========================================== */
+
+.empty-image-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    height: 100%;
+
+    color: #777;
+}
+
+.empty-image-state span {
+    width: 48px;
+    height: 48px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 12px;
+
+    border: 1px solid #333;
+    border-radius: 50%;
+
+    color: #aaa;
+    font-size: 25px;
+    font-weight: 300;
+}
+
+.empty-image-state p {
+    margin: 0;
+    color: #777;
+    font-size: 13px;
+}
+
+
+/* ==========================================
+   GALLERY SECTION
+========================================== */
+
+.gallery-section {
+    margin-top: 30px;
+    padding-top: 28px;
+    border-top: 1px solid #1d1d1d;
+}
+
+
+/* ==========================================
+   GALLERY HEADER
+========================================== */
+
+.gallery-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+
+    margin-bottom: 18px;
+}
+
+.gallery-header h4 {
+    margin: 0 0 5px;
+
+    color: #f5f5f5;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.gallery-header p {
+    margin: 0;
+
+    color: #777;
+    font-size: 12px;
+}
+
+
+/* ==========================================
+   ADD IMAGE BUTTON
+========================================== */
+
+.gallery-add-btn {
     flex-shrink: 0;
+
+    padding: 10px 16px;
+
+    border: 1px solid #303030;
+    border-radius: 8px;
+
+    background: #151515;
+    color: #f2f2f2;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background 0.25s ease,
+        border-color 0.25s ease,
+        transform 0.2s ease;
+}
+
+.gallery-add-btn:hover {
+    background: #202020;
+    border-color: #505050;
+}
+
+.gallery-add-btn:active {
+    transform: scale(0.97);
+}
+
+
+/* ==========================================
+   GALLERY GRID
+========================================== */
+
+.gallery-images-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: 14px;
+
+    min-height: 150px;
+}
+
+
+/* ==========================================
+   GALLERY IMAGE ITEM
+========================================== */
+
+.gallery-image-item {
+    min-width: 0;
+}
+
+.gallery-image-wrapper {
+    position: relative;
+
+    width: 100%;
+    aspect-ratio: 1 / 1;
 
     overflow: hidden;
 
-    background: var(--background-color);
+    background: #111;
+    border: 1px solid #252525;
+    border-radius: 10px;
 
-    border-radius: var(--border-radius);
+    cursor: pointer;
 }
 
 
-.current-image img {
+/* ==========================================
+   GALLERY IMAGE
+========================================== */
+
+.gallery-image-wrapper img {
     width: 100%;
     height: 100%;
 
     display: block;
 
     object-fit: cover;
+
+    transition:
+        transform 0.3s ease,
+        opacity 0.25s ease;
+}
+
+.gallery-image-wrapper:hover img {
+    transform: scale(1.05);
 }
 
 
-.current-image-info {
-    display: flex;
-    flex-direction: column;
+/* ==========================================
+   GALLERY HOVER OVERLAY
+========================================== */
 
-    gap: 5px;
-}
+.gallery-image-controls {
+    position: absolute;
 
-
-.current-image-info strong {
-    font-size: 18px;
-    font-weight: 600;
-
-    color: rgb(173, 173, 173);
-}
-
-
-.current-image-info span {
-    font-size: 11px;
-
-    color: var(--text-light);
-}
-
-
-/* ========================================
-   No Image
-======================================== */
-
-.no-image {
-    width: 100%;
+    left: 0;
+    right: 0;
+    bottom: 0;
 
     display: flex;
-    align-items: center;
-    gap: 12px;
-
-    padding: 16px;
-
-    color: var(--text-light);
-}
-
-
-.no-image > i {
-    font-size: 30px;
-}
-
-
-.no-image div {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
-
-.no-image strong {
-    font-size: 13px;
-
-    color: var(--text-color);
-}
-
-
-.no-image span {
-    font-size: 11px;
-}
-
-
-/* ========================================
-   New Image Upload
-======================================== */
-
-.product-image-upload {
-    position: relative;
-
-    width: 100%;
-    height: 180px;
-
-    padding: 20px;
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    gap: 25px;
-
-    background: var(--primary-color);
-
-    border: 1px dashed var(--border-color-special);
-    border-radius: 14px;
-
-    cursor: pointer;
-
-    overflow: hidden;
-
-    transition: var(--transition);
-}
-
-.product-image-upload:hover {
-    border-color: var(--primary-hover);
-}
-
-
-/* Upload Content */
-
-.upload-content {
-    flex: 1;
-
-    display: flex;
-    flex-direction: column;
-
-    align-items: center;
     justify-content: center;
-
     gap: 8px;
 
-    text-align: center;
+    padding: 12px;
 
-    pointer-events: none;
-}
-
-.upload-content i {
-    font-size: 40px;
-    color: #4f8cff;
-}
-
-.upload-content strong {
-    font-size: 16px;
-    font-weight: 600;
-}
-
-.upload-content span {
-    font-size: 11px;
-    color: var(--text-light);
-}
-
-
-/* Preview Area */
-
-.product-preview-area {
-    display: none;
-    gap: 10px;
-    position: relative;
-    width: 100%;
-    height: 100%;
-    flex-shrink: 0;
-    padding: 0px;
-
-    border-radius: 10px;
-    overflow: hidden;
-}
-
-
-/* Preview Image */
-
-.product-preview {
-    display: block;
-    position: absolute;
-    left: 0px;
-    max-width: 200px;
-    height: 100%;
-    object-fit: contain;
-
-    border-radius: 7px;
-
-    background: rgba(0, 0, 0, 0.15);
-    overflow: hidden;
-}
-
-
-/* File Name */
-
-.product-file-info {
-
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    align-items: start;
-    left: 220px;
-    top: 50%;
-
-    transform: translate(0%, -50%);
-
-    gap: 7px;
-
-    margin-top: 9px;
-    color: var(--text-light);
-}
-
-.product-file-info p {
-    font-size: 12px;
-}
-.product-file-info h3 {
-    color: rgb(173, 173, 173);
-}
-
-
-
-.product-file-info i {
-    flex-shrink: 0;
-
-    font-size: 20px;
-
-    color: var(--primary-hover);
-}
-
-.product-file-info span {
-    min-width: 0;
-
-    overflow: hidden;
-
-    white-space: nowrap;
-
-    text-overflow: ellipsis;
-}
-
-
-/* File input */
-
-.product-image-upload input[type="file"] {
-    position: absolute;
-
-    inset: 0;
-
-    width: 100%;
-    height: 100%;
+    background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.9),
+        rgba(0, 0, 0, 0)
+    );
 
     opacity: 0;
 
-    cursor: pointer;
+    transform: translateY(8px);
 
-    z-index: 10;
+    transition:
+        opacity 0.25s ease,
+        transform 0.25s ease;
+}
+
+.gallery-image-wrapper:hover .gallery-image-controls {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 
+/* ==========================================
+   GALLERY CONTROL BUTTONS
+========================================== */
+
+.gallery-change-btn,
+.gallery-delete-btn {
+    width: 34px;
+    height: 34px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 7px;
+
+    background: rgba(15, 15, 15, 0.9);
+    color: #ffffff;
+
+    font-size: 14px;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.gallery-change-btn:hover,
+.gallery-delete-btn:hover {
+    background: #252525;
+    border-color: #555;
+}
+
+.gallery-change-btn:active,
+.gallery-delete-btn:active {
+    transform: scale(0.92);
+}
+
+
+/* ==========================================
+   EMPTY GALLERY
+========================================== */
+
+.gallery-empty-state {
+    grid-column: 1 / -1;
+
+    min-height: 180px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px dashed #292929;
+    border-radius: 12px;
+
+    background: #101010;
+}
+
+.empty-gallery-icon {
+    width: 45px;
+    height: 45px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 10px;
+
+    border: 1px solid #303030;
+    border-radius: 50%;
+
+    color: #777;
+    font-size: 24px;
+}
+
+.gallery-empty-state p {
+    margin: 0 0 5px;
+
+    color: #aaa;
+    font-size: 13px;
+}
+
+.gallery-empty-state span {
+    color: #5f5f5f;
+    font-size: 11px;
+}
+
+
+
+
+
+/* ==========================================================
+   GALLERY DRAG & DROP
+========================================================== */
+
+.gallery-image-item {
+    cursor: grab;
+    position: relative;
+}
+
+.gallery-image-item:active {
+    cursor: grabbing;
+}
+
+.gallery-image-item.gallery-dragging {
+    opacity: 0.45;
+    transform: scale(0.97);
+}
+
+
+/* ==========================================================
+   GALLERY IMAGE WRAPPER
+========================================================== */
+
+.gallery-image-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+
+/* ==========================================================
+   GALLERY IMAGE
+========================================================== */
+
+.gallery-image-preview {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+/* ==========================================================
+   GALLERY CONTROLS
+========================================================== */
+
+.gallery-image-controls {
+    position: absolute;
+    right: 8px;
+    bottom: 8px;
+
+    display: flex;
+    gap: 6px;
+
+    z-index: 5;
+}
+
+
+/* ==========================================================
+   CHANGE / DELETE BUTTON
+========================================================== */
+
+.gallery-change-btn,
+.gallery-delete-btn {
+    width: 32px;
+    height: 32px;
+
+    border: 0;
+    border-radius: 6px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+
+    font-size: 14px;
+}
+
+
+/* ==========================================================
+   NEW GALLERY ITEM
+========================================================== */
+
+.gallery-new-item {
+    position: relative;
+}
+
+
+/* ==========================================================
+   EMPTY GALLERY
+========================================================== */
+
+.gallery-empty-state {
+    width: 100%;
+    min-height: 180px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+}
+
+.gallery-empty-state p {
+    margin: 8px 0 4px;
+}
+
+.gallery-empty-state span {
+    font-size: 13px;
+}
+
+
+/* ==========================================================
+   HIDDEN FILE INPUT
+========================================================== */
+
+.gallery-change-input,
+#galleryImageInput,
+#mainImageInput,
+#secondaryImageInput {
+    display: none;
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width: 900px) {
+
+    .primary-images-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .single-image-box {
+        height: 320px;
+    }
+
+    .gallery-images-grid {
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr));
+    }
+}
+
+
+@media (max-width: 600px) {
+
+    .product-images-section {
+        padding: 18px;
+    }
+
+    .gallery-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .gallery-add-btn {
+        width: 100%;
+    }
+
+    .gallery-images-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 10px;
+    }
+
+    .single-image-box {
+        height: 280px;
+    }
+}
+
+
+@media (max-width: 400px) {
+
+    .gallery-images-grid {
+        grid-template-columns: 1fr;
+    }
+}
 
 
 /* ========================================

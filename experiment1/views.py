@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from admin_dashboard.models import ProductsModel
+from admin_dashboard.models import *
 from django.shortcuts import render, redirect, get_object_or_404
 
 
@@ -47,27 +47,89 @@ def home_page(request):
 
 def product_detail_page(request, slug):
 
+    # ==================================================
+    # GET PRODUCT
+    # ==================================================
+
     product = get_object_or_404(
         ProductsModel,
         slug=slug,
         is_available=True
     )
 
+
+    # ==================================================
+    # GET PRODUCT SIZES
+    # ==================================================
+
     sizes = product.sizes.all()
+
+
+    # ==================================================
+    # CHECK STOCK
+    # ==================================================
 
     has_stock = product.sizes.filter(
         is_available=True,
         stock__gt=0
     ).exists()
 
+
+    # ==================================================
+    # GET PRODUCT IMAGES
+    # ==================================================
+
+    product_images = product.images.all().order_by(
+        "sort_order",
+        "created_at"
+    )
+
+
+    # ==================================================
+    # SECONDARY IMAGE
+    # ==================================================
+
+    secondary_image = product_images.filter(
+        image_type="secondary"
+    ).first()
+
+
+    # ==================================================
+    # GALLERY IMAGES
+    # ==================================================
+
+    gallery_images = product_images.filter(
+        image_type="gallery"
+    )
+
+
+    # ==================================================
+    # CONTEXT
+    # ==================================================
+
     context = {
-        'product': product,
-        'sizes': sizes,
-        'has_stock': has_stock,
+        "product": product,
+        "sizes": sizes,
+        "has_stock": has_stock,
+
+        # Main image
+        "main_image": product.image,
+
+        # Secondary image
+        "secondary_image": secondary_image,
+
+        # Gallery images
+        "gallery_images": gallery_images,
     }
+
+
+    # ==================================================
+    # RENDER
+    # ==================================================
 
     return render(
         request,
-        'customer/product_detail.html',
+        "customer/product_detail.html",
         context
     )
+

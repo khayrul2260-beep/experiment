@@ -8,18 +8,15 @@
 
 
 {% block css %}
-
-    <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css"
-    >
-
-    <link
-        rel="stylesheet"
-        href="{% static 'admin_panel/css/add_product.css' %}"
-    >
+<link
+    href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css"
+    rel="stylesheet"
+>
+    <link rel="stylesheet" href="{% static 'admin_panel/css/add_product.css' %}">
+    <link rel="stylesheet" href="{% static 'admin_panel/css/product_description.css' %}">
 
 {% endblock %}
+
 
 {% block content %}
 
@@ -44,7 +41,7 @@
     <!-- Product Form -->
     <div class="product-form-card">
 
-        <form method="POST" enctype="multipart/form-data">
+        <form id="productForm" method="POST" enctype="multipart/form-data">
 
             {% csrf_token %}
 
@@ -116,26 +113,36 @@
                 </div>
 
 
-                <!-- Description -->
-                <div class="form-group">
-                
-                    <label>
-                        Description
-                        <span>*</span>
-                    </label>
-                
-                    <!-- Quill Editor -->
-                    <div id="descriptionEditor"></div>
-                
-                    <!-- Hidden field -->
-                    <textarea
-                        name="description"
-                        id="description"
-                        hidden
-                        required
-                    ></textarea>
-                
-                </div>
+<!-- =====================================================
+     PRODUCT DESCRIPTION
+===================================================== -->
+
+<div class="form-group product-description-group">
+
+    <label
+        for="productDescription"
+        class="form-label"
+    >
+        Description
+    </label>
+
+
+    <!-- Quill Editor -->
+    <div
+        id="productDescription"
+        class="product-description-editor"
+    ></div>
+
+
+    <!-- Hidden Django form field -->
+    <textarea
+        id="description"
+        name="description"
+        hidden
+    ></textarea>
+
+</div>
+
 
             </div>
 
@@ -359,6 +366,9 @@
 <!-- =========================================================
      PRODUCT IMAGES
 ========================================================= -->
+<!-- =========================================================
+     PRODUCT IMAGES
+========================================================= -->
 
 <div class="form-section">
 
@@ -372,70 +382,205 @@
             <h3>Product Images</h3>
 
             <p>
-                Upload multiple images of your product
+                Add your main, secondary and gallery images
             </p>
         </div>
 
     </div>
 
 
-    <!-- Upload Area -->
+    <!-- =====================================================
+         MAIN IMAGE
+    ====================================================== -->
 
-    <div
-        class="multiple-image-upload"
-        id="multipleImageUpload"
-        tabindex="0"
-    >
+    <div class="product-image-field">
+
+        <div class="image-field-header">
+
+            <div>
+                <h4>Main Image <span>*</span></h4>
+
+                <p>
+                    Primary product image displayed by default.
+                </p>
+            </div>
+
+        </div>
+
 
         <div
-            class="multiple-upload-content"
-            id="multipleUploadContent"
+            class="single-image-upload"
+            id="mainImageUpload"
         >
 
-            <i class="bi bi-cloud-arrow-up"></i>
+            <div
+                class="single-upload-content"
+                id="mainUploadContent"
+            >
 
-            <strong>
-                Upload Product Images
-            </strong>
+                <i class="bi bi-cloud-arrow-up"></i>
 
-            <span>
-                PNG, JPG or WEBP — You can select multiple images
+                <strong>
+                    Upload Main Image
+                </strong>
+
+                <span>
+                    PNG, JPG or WEBP
+                </span>
+
+            </div>
+
+
+            <div
+                class="single-image-preview"
+                id="mainImagePreview"
+            ></div>
+
+
+            <input
+                type="file"
+                name="main_image"
+                id="mainImageInput"
+                accept="image/png,image/jpeg,image/webp"
+                required
+            >
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         SECONDARY IMAGE
+    ====================================================== -->
+
+    <div class="product-image-field">
+
+        <div class="image-field-header">
+
+            <div>
+                <h4>Secondary Image <span>*</span></h4>
+
+                <p>
+                    This image will appear when customers hover
+                    over the product card.
+                </p>
+            </div>
+
+        </div>
+
+
+        <div
+            class="single-image-upload"
+            id="secondaryImageUpload"
+        >
+
+            <div
+                class="single-upload-content"
+                id="secondaryUploadContent"
+            >
+
+                <i class="bi bi-cloud-arrow-up"></i>
+
+                <strong>
+                    Upload Secondary Image
+                </strong>
+
+                <span>
+                    PNG, JPG or WEBP
+                </span>
+
+            </div>
+
+
+            <div
+                class="single-image-preview"
+                id="secondaryImagePreview"
+            ></div>
+
+
+            <input
+                type="file"
+                name="secondary_image"
+                id="secondaryImageInput"
+                accept="image/png,image/jpeg,image/webp"
+                required
+            >
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         GALLERY IMAGES
+    ====================================================== -->
+
+    <div class="product-image-field">
+
+        <div class="image-field-header">
+
+            <div>
+                <h4>Gallery Images</h4>
+
+                <p>
+                    Optional. You can select multiple images.
+                </p>
+            </div>
+
+            <span class="optional-badge">
+                Optional
             </span>
 
         </div>
 
 
-        <!-- File Input -->
-
-        <input
-            type="file"
-            name="images"
-            id="ProductImages"
-            accept="image/png,image/jpeg,image/webp"
-            multiple
+        <div
+            class="multiple-image-upload"
+            id="galleryImageUpload"
         >
 
-    </div>
+            <div
+                class="multiple-upload-content"
+                id="galleryUploadContent"
+            >
+
+                <i class="bi bi-images"></i>
+
+                <strong>
+                    Upload Gallery Images
+                </strong>
+
+                <span>
+                    PNG, JPG or WEBP — Select multiple images
+                </span>
+
+            </div>
 
 
-    <!-- Image Count -->
+            <input
+                type="file"
+                name="gallery_images"
+                id="galleryImagesInput"
+                accept="image/png,image/jpeg,image/webp"
+                multiple
+            >
 
-    <p
-        class="product-image-count"
-        id="productImageCount"
-    >
-        No images selected.
-    </p>
+        </div>
 
 
-    <!-- Preview Grid -->
+        <p
+            class="product-image-count"
+            id="galleryImageCount"
+        >
+            No gallery images selected.
+        </p>
 
-    <div
-        class="product-images-preview"
-        id="productImagesPreview"
-    >
 
-        <!-- JavaScript will add images here -->
+        <div
+            class="product-images-preview"
+            id="galleryImagesPreview"
+        ></div>
 
     </div>
 
@@ -570,11 +715,14 @@
 
 {% endblock %}
 
+
 {% block js %}
 
-    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
 
-    <script src="{% static 'admin_panel/js/add_product.js' %}"></script>
+<script src="{% static 'admin_panel/js/product_description.js' %}"></script>
 
-{% endblock %}
+<script src="{% static 'admin_panel/js/add_product.js' %}"></script>
+
+{% endblock  %}
     

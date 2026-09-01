@@ -163,28 +163,51 @@ class ProductsModel(models.Model):
 
 class ProductImage(models.Model):
 
+    IMAGE_TYPE_CHOICES = [
+        ("secondary", "Secondary"),
+        ("gallery", "Gallery"),
+    ]
+
     product = models.ForeignKey(
         ProductsModel,
         on_delete=models.CASCADE,
-        related_name='images'
+        related_name="images"
     )
 
     image = models.ImageField(
-        upload_to='products/'
+        upload_to="products/gallery/"
     )
 
-    is_primary = models.BooleanField(
-        default=False
+    image_type = models.CharField(
+        max_length=20,
+        choices=IMAGE_TYPE_CHOICES
+    )
+
+    sort_order = models.PositiveIntegerField(
+        default=0
     )
 
     created_at = models.DateTimeField(
         auto_now_add=True
     )
 
+    class Meta:
+        ordering = ["sort_order", "created_at"]
+
+        constraints = [
+            models.UniqueConstraint(
+                fields=["product", "image_type"],
+                condition=models.Q(
+                    image_type="secondary"
+                ),
+                name="unique_secondary_image_per_product"
+            )
+        ]
+
     def __str__(self):
-        return f"{self.product.name} Image"
+        return f"{self.product.name} - {self.image_type}"
 
-
+        
 
 class ProductSize(models.Model):
 

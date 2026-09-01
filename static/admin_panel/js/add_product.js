@@ -2,72 +2,296 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // =====================================================
-    // MULTIPLE PRODUCT IMAGE ELEMENTS
+    // PRODUCT IMAGE MANAGEMENT
+    // Main + Secondary + Gallery
     // =====================================================
-
-    const multipleImageUpload =
-        document.getElementById("multipleImageUpload");
-
-    const productImagesInput =
-        document.getElementById("ProductImages");
-
-    const multipleUploadContent =
-        document.getElementById("multipleUploadContent");
-
-    const productImagesPreview =
-        document.getElementById("productImagesPreview");
-
-    const productImageCount =
-        document.getElementById("productImageCount");
 
 
     // =====================================================
-    // MULTIPLE IMAGE UPLOAD
+    // MAIN IMAGE ELEMENTS
     // =====================================================
 
-    if (
-        multipleImageUpload &&
-        productImagesInput
+    const mainImageUpload =
+        document.getElementById("mainImageUpload");
+
+    const mainImageInput =
+        document.getElementById("mainImageInput");
+
+    const mainUploadContent =
+        document.getElementById("mainUploadContent");
+
+    const mainImagePreview =
+        document.getElementById("mainImagePreview");
+
+
+    // =====================================================
+    // SECONDARY IMAGE ELEMENTS
+    // =====================================================
+
+    const secondaryImageUpload =
+        document.getElementById("secondaryImageUpload");
+
+    const secondaryImageInput =
+        document.getElementById("secondaryImageInput");
+
+    const secondaryUploadContent =
+        document.getElementById("secondaryUploadContent");
+
+    const secondaryImagePreview =
+        document.getElementById("secondaryImagePreview");
+
+
+    // =====================================================
+    // GALLERY IMAGE ELEMENTS
+    // =====================================================
+
+    const galleryImageUpload =
+        document.getElementById("galleryImageUpload");
+
+    const galleryImagesInput =
+        document.getElementById("galleryImagesInput");
+
+    const galleryUploadContent =
+        document.getElementById("galleryUploadContent");
+
+    const galleryImagesPreview =
+        document.getElementById("galleryImagesPreview");
+
+    const galleryImageCount =
+        document.getElementById("galleryImageCount");
+
+
+    // =====================================================
+    // SINGLE IMAGE PREVIEW
+    // =====================================================
+
+    function showSingleImagePreview(
+        input,
+        previewContainer,
+        uploadContainer,
+        uploadContent
     ) {
 
-        /*
-         * Open file selector
-         */
+        if (
+            !input ||
+            !previewContainer
+        ) {
+            return;
+        }
 
-        multipleImageUpload.addEventListener(
-            "click",
+
+        const file =
+            input.files[0];
+
+
+        // -------------------------------------------------
+        // No image selected
+        // -------------------------------------------------
+
+        if (!file) {
+
+            previewContainer.innerHTML = "";
+
+            previewContainer.classList.remove(
+                "active"
+            );
+
+            if (uploadContainer) {
+
+                uploadContainer.classList.remove(
+                    "has-image"
+                );
+
+            }
+
+            if (uploadContent) {
+
+                uploadContent.style.display =
+                    "flex";
+
+            }
+
+            return;
+        }
+
+
+        // -------------------------------------------------
+        // Validate image
+        // -------------------------------------------------
+
+        if (
+            !file.type.startsWith("image/")
+        ) {
+
+            alert(
+                "Please select a valid image file."
+            );
+
+            input.value = "";
+
+            return;
+        }
+
+
+        // -------------------------------------------------
+        // FileReader
+        // -------------------------------------------------
+
+        const reader =
+            new FileReader();
+
+
+        reader.onload =
             function (event) {
 
-                /*
-                 * Do not trigger twice when
-                 * clicking directly on input.
-                 */
+                previewContainer.innerHTML = "";
 
-                if (
-                    event.target !==
-                    productImagesInput
-                ) {
 
-                    productImagesInput.click();
+                // -----------------------------------------
+                // Image
+                // -----------------------------------------
+
+                const image =
+                    document.createElement("img");
+
+                image.src =
+                    event.target.result;
+
+                image.alt =
+                    file.name;
+
+
+                // -----------------------------------------
+                // Remove button
+                // -----------------------------------------
+
+                const removeButton =
+                    document.createElement("button");
+
+                removeButton.type =
+                    "button";
+
+                removeButton.className =
+                    "single-image-remove";
+
+                removeButton.setAttribute(
+                    "aria-label",
+                    "Remove image"
+                );
+
+                removeButton.innerHTML =
+                    '<i class="bi bi-x"></i>';
+
+
+                // -----------------------------------------
+                // Remove image
+                // -----------------------------------------
+
+                removeButton.addEventListener(
+                    "click",
+                    function (event) {
+
+                        event.preventDefault();
+
+                        event.stopPropagation();
+
+                        input.value = "";
+
+                        previewContainer.innerHTML = "";
+
+                        previewContainer.classList.remove(
+                            "active"
+                        );
+
+                        if (uploadContainer) {
+
+                            uploadContainer.classList.remove(
+                                "has-image"
+                            );
+
+                        }
+
+                        if (uploadContent) {
+
+                            uploadContent.style.display =
+                                "flex";
+
+                        }
+
+                    }
+                );
+
+
+                // -----------------------------------------
+                // Add image
+                // -----------------------------------------
+
+                previewContainer.appendChild(
+                    image
+                );
+
+
+                // -----------------------------------------
+                // Add remove button
+                // -----------------------------------------
+
+                previewContainer.appendChild(
+                    removeButton
+                );
+
+
+                // -----------------------------------------
+                // Show preview
+                // -----------------------------------------
+
+                previewContainer.classList.add(
+                    "active"
+                );
+
+
+                if (uploadContainer) {
+
+                    uploadContainer.classList.add(
+                        "has-image"
+                    );
 
                 }
 
-            }
-        );
+
+                if (uploadContent) {
+
+                    uploadContent.style.display =
+                        "none";
+
+                }
+
+            };
 
 
-        /*
-         * File selection
-         */
+        reader.readAsDataURL(file);
 
-        productImagesInput.addEventListener(
+    }
+
+
+    // =====================================================
+    // MAIN IMAGE
+    // =====================================================
+
+    if (
+        mainImageInput &&
+        mainImagePreview
+    ) {
+
+        mainImageInput.addEventListener(
             "change",
             function () {
 
-                const files =
-                    Array.from(this.files);
-
-                showMultipleImagePreview(files);
+                showSingleImagePreview(
+                    mainImageInput,
+                    mainImagePreview,
+                    mainImageUpload,
+                    mainUploadContent
+                );
 
             }
         );
@@ -76,64 +300,122 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // =====================================================
-    // SHOW MULTIPLE IMAGE PREVIEW
+    // SECONDARY IMAGE
     // =====================================================
 
-    function showMultipleImagePreview(files) {
+    if (
+        secondaryImageInput &&
+        secondaryImagePreview
+    ) {
 
-        if (!productImagesPreview) {
+        secondaryImageInput.addEventListener(
+            "change",
+            function () {
+
+                showSingleImagePreview(
+                    secondaryImageInput,
+                    secondaryImagePreview,
+                    secondaryImageUpload,
+                    secondaryUploadContent
+                );
+
+            }
+        );
+
+    }
+
+
+    // =====================================================
+    // GALLERY IMAGE SELECTION
+    // =====================================================
+
+    if (
+        galleryImagesInput &&
+        galleryImagesPreview
+    ) {
+
+        galleryImagesInput.addEventListener(
+            "change",
+            function () {
+
+                const files =
+                    Array.from(
+                        this.files
+                    );
+
+                showGalleryImagePreview(
+                    files
+                );
+
+            }
+        );
+
+    }
+
+
+    // =====================================================
+    // SHOW GALLERY IMAGE PREVIEW
+    // =====================================================
+
+    function showGalleryImagePreview(
+        files
+    ) {
+
+        if (!galleryImagesPreview) {
             return;
         }
 
 
-        /*
-         * Clear previous preview
-         */
+        // -------------------------------------------------
+        // Clear previous preview
+        // -------------------------------------------------
 
-        productImagesPreview.innerHTML = "";
+        galleryImagesPreview.innerHTML = "";
 
 
-        /*
-         * No images
-         */
+        // -------------------------------------------------
+        // No images
+        // -------------------------------------------------
 
         if (!files.length) {
 
-            if (productImageCount) {
+            if (galleryImageCount) {
 
-                productImageCount.textContent =
-                    "No images selected.";
+                galleryImageCount.textContent =
+                    "No gallery images selected.";
 
             }
 
             return;
+        }
+
+
+        // -------------------------------------------------
+        // Update image count
+        // -------------------------------------------------
+
+        if (galleryImageCount) {
+
+            galleryImageCount.textContent =
+                `${files.length} image${
+                    files.length > 1
+                        ? "s"
+                        : ""
+                } selected.`;
 
         }
 
 
-        /*
-         * Image count
-         */
-
-        if (productImageCount) {
-
-            productImageCount.textContent =
-                `${files.length} image${files.length > 1 ? "s" : ""} selected.`;
-
-        }
-
-
-        /*
-         * Create preview for every image
-         */
+        // -------------------------------------------------
+        // Create previews
+        // -------------------------------------------------
 
         files.forEach(
             function (file, index) {
 
-
-                /*
-                 * Validate image
-                 */
+                // -----------------------------------------
+                // Skip invalid files
+                // -----------------------------------------
 
                 if (
                     !file.type.startsWith("image/")
@@ -144,6 +426,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
 
 
+                // -----------------------------------------
+                // FileReader
+                // -----------------------------------------
+
                 const reader =
                     new FileReader();
 
@@ -152,9 +438,9 @@ document.addEventListener("DOMContentLoaded", function () {
                     function (event) {
 
 
-                        /*
-                         * Preview container
-                         */
+                        // ---------------------------------
+                        // Preview item
+                        // ---------------------------------
 
                         const previewItem =
                             document.createElement(
@@ -165,9 +451,9 @@ document.addEventListener("DOMContentLoaded", function () {
                             "product-image-preview-item";
 
 
-                        /*
-                         * Image
-                         */
+                        // ---------------------------------
+                        // Image
+                        // ---------------------------------
 
                         const image =
                             document.createElement(
@@ -181,33 +467,9 @@ document.addEventListener("DOMContentLoaded", function () {
                             file.name;
 
 
-                        /*
-                         * Main image badge
-                         */
-
-                        if (index === 0) {
-
-                            const badge =
-                                document.createElement(
-                                    "div"
-                                );
-
-                            badge.className =
-                                "main-image-badge";
-
-                            badge.textContent =
-                                "Main Image";
-
-                            previewItem.appendChild(
-                                badge
-                            );
-
-                        }
-
-
-                        /*
-                         * Remove button
-                         */
+                        // ---------------------------------
+                        // Remove button
+                        // ---------------------------------
 
                         const removeButton =
                             document.createElement(
@@ -220,13 +482,18 @@ document.addEventListener("DOMContentLoaded", function () {
                         removeButton.className =
                             "remove-product-image";
 
+                        removeButton.setAttribute(
+                            "aria-label",
+                            "Remove gallery image"
+                        );
+
                         removeButton.innerHTML =
                             '<i class="bi bi-x"></i>';
 
 
-                        /*
-                         * Remove image
-                         */
+                        // ---------------------------------
+                        // Remove gallery image
+                        // ---------------------------------
 
                         removeButton.addEventListener(
                             "click",
@@ -236,44 +503,41 @@ document.addEventListener("DOMContentLoaded", function () {
 
                                 event.stopPropagation();
 
-                                removeImage(index);
+                                removeGalleryImage(
+                                    index
+                                );
 
                             }
                         );
 
 
-                        /*
-                         * Add image
-                         */
+                        // ---------------------------------
+                        // Build preview
+                        // ---------------------------------
 
                         previewItem.appendChild(
                             image
                         );
-
-
-                        /*
-                         * Add remove button
-                         */
 
                         previewItem.appendChild(
                             removeButton
                         );
 
 
-                        /*
-                         * Add preview item
-                         */
+                        // ---------------------------------
+                        // Add preview to grid
+                        // ---------------------------------
 
-                        productImagesPreview.appendChild(
+                        galleryImagesPreview.appendChild(
                             previewItem
                         );
 
                     };
 
 
-                /*
-                 * Read image
-                 */
+                // -----------------------------------------
+                // Read image
+                // -----------------------------------------
 
                 reader.readAsDataURL(file);
 
@@ -284,44 +548,61 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // =====================================================
-    // REMOVE IMAGE
+    // REMOVE GALLERY IMAGE
     // =====================================================
 
-    function removeImage(index) {
+    function removeGalleryImage(
+        index
+    ) {
 
-        if (!productImagesInput) {
+        if (!galleryImagesInput) {
             return;
         }
 
 
-        /*
-         * Get current files
-         */
+        // -------------------------------------------------
+        // Get current files
+        // -------------------------------------------------
 
         const files =
             Array.from(
-                productImagesInput.files
+                galleryImagesInput.files
             );
 
 
-        /*
-         * Remove selected file
-         */
+        // -------------------------------------------------
+        // Validate index
+        // -------------------------------------------------
 
-        files.splice(index, 1);
+        if (
+            index < 0 ||
+            index >= files.length
+        ) {
+            return;
+        }
 
 
-        /*
-         * Create new DataTransfer
-         */
+        // -------------------------------------------------
+        // Remove selected file
+        // -------------------------------------------------
+
+        files.splice(
+            index,
+            1
+        );
+
+
+        // -------------------------------------------------
+        // Create DataTransfer
+        // -------------------------------------------------
 
         const dataTransfer =
             new DataTransfer();
 
 
-        /*
-         * Add remaining files
-         */
+        // -------------------------------------------------
+        // Add remaining files
+        // -------------------------------------------------
 
         files.forEach(
             function (file) {
@@ -334,19 +615,19 @@ document.addEventListener("DOMContentLoaded", function () {
         );
 
 
-        /*
-         * Update input
-         */
+        // -------------------------------------------------
+        // Update input
+        // -------------------------------------------------
 
-        productImagesInput.files =
+        galleryImagesInput.files =
             dataTransfer.files;
 
 
-        /*
-         * Update preview
-         */
+        // -------------------------------------------------
+        // Update preview
+        // -------------------------------------------------
 
-        showMultipleImagePreview(
+        showGalleryImagePreview(
             files
         );
 
@@ -435,9 +716,9 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
 
 
-                    /*
-                     * Enable stock input
-                     */
+                    // -------------------------------------
+                    // Enable stock input
+                    // -------------------------------------
 
                     if (this.checked) {
 
@@ -449,9 +730,9 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
 
 
-                    /*
-                     * Disable stock input
-                     */
+                    // -------------------------------------
+                    // Disable stock input
+                    // -------------------------------------
 
                     else {
 
@@ -464,9 +745,9 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
 
 
-                    /*
-                     * Update total
-                     */
+                    // -------------------------------------
+                    // Update total stock
+                    // -------------------------------------
 
                     updateTotalStock();
 
@@ -504,87 +785,3 @@ document.addEventListener("DOMContentLoaded", function () {
     updateTotalStock();
 
 });
-
-// ==========================================================
-// PRODUCT DESCRIPTION EDITOR
-// ==========================================================
-
-const descriptionEditorElement =
-    document.getElementById("descriptionEditor");
-
-const descriptionInput =
-    document.getElementById("description");
-
-
-if (descriptionEditorElement && descriptionInput) {
-
-    const quill = new Quill(
-        "#descriptionEditor",
-        {
-            theme: "snow",
-
-            placeholder:
-                "Write your product description...",
-
-            modules: {
-
-                toolbar: [
-
-                    ["bold", "italic", "underline"],
-
-                    [
-                        {
-                            header: [1, 2, 3, false]
-                        }
-                    ],
-
-                    [
-                        {
-                            list: "ordered"
-                        },
-                        {
-                            list: "bullet"
-                        }
-                    ],
-
-                    [
-                        {
-                            align: []
-                        }
-                    ],
-
-                    ["link"],
-
-                    ["clean"]
-
-                ]
-
-            }
-
-        }
-    );
-
-
-    // ======================================================
-    // BEFORE FORM SUBMIT
-    // ======================================================
-
-    const productForm =
-        descriptionEditorElement.closest("form");
-
-
-    if (productForm) {
-
-        productForm.addEventListener(
-            "submit",
-            function () {
-
-                descriptionInput.value =
-                    quill.root.innerHTML;
-
-            }
-        );
-
-    }
-
-}

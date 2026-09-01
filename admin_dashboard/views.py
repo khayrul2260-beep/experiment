@@ -6,6 +6,7 @@ from django.contrib import messages
 from .models import *
 from django.db.models import Q
 from .forms import CategoryForm
+from django.db import transaction
 
 
 
@@ -117,11 +118,12 @@ def products_page(request):
         context
     )
 
+
 def add_product_page(request):
 
     categories = Category.objects.filter(
         is_active=True
-    ).order_by('name')
+    ).order_by("name")
 
     product = None
 
@@ -141,19 +143,19 @@ def add_product_page(request):
             ""
         ).strip()
 
-        price = request.POST.get("price")
+        price = request.POST.get(
+            "price"
+        )
 
         discount_price = (
             request.POST.get("discount_price")
             or None
         )
 
-        image = request.FILES.get("image")
-
-        additional_images = request.FILES.getlist(
-            "additional_images"
+        category_id = request.POST.get(
+            "category"
         )
-        
+
         is_available = (
             "is_available" in request.POST
         )
@@ -162,9 +164,55 @@ def add_product_page(request):
             "is_featured" in request.POST
         )
 
-        category_id = request.POST.get(
-            "category"
+
+        # ==========================================
+        # PRODUCT IMAGES
+        # ==========================================
+
+        # Main Image
+        main_image = request.FILES.get(
+            "main_image"
         )
+
+        # Secondary Image
+        secondary_image = request.FILES.get(
+            "secondary_image"
+        )
+
+        # Gallery Images - Optional
+        gallery_images = request.FILES.getlist(
+            "gallery_images"
+        )
+
+
+        # ==========================================
+        # IMAGE VALIDATION
+        # ==========================================
+
+        # Main image is required
+        if main_image is None:
+
+            messages.error(
+                request,
+                "Please upload a main image."
+            )
+
+            return redirect(
+                "add_product_page"
+            )
+
+
+        # Secondary image is required
+        if secondary_image is None:
+
+            messages.error(
+                request,
+                "Please upload a secondary image."
+            )
+
+            return redirect(
+                "add_product_page"
+            )
 
 
         # ==========================================
@@ -223,22 +271,6 @@ def add_product_page(request):
 
 
         # ==========================================
-        # IMAGE VALIDATION
-        # ==========================================
-
-        if image is None:
-
-            messages.error(
-                request,
-                "Please upload an image."
-            )
-
-            return redirect(
-                "add_product_page"
-            )
-
-
-        # ==========================================
         # SIZE VALIDATION
         # ==========================================
 
@@ -264,53 +296,91 @@ def add_product_page(request):
 
 
         # ==========================================
-        # CREATE PRODUCT
+        # CREATE PRODUCT + IMAGES + SIZES
         # ==========================================
 
-        product = ProductsModel.objects.create(
+        with transaction.atomic():
 
-            name=product_name,
+            # ======================================
+            # CREATE MAIN PRODUCT
+            # ======================================
 
-            description=description,
+            product = ProductsModel.objects.create(
 
-            price=price,
+                name=product_name,
 
-            discount_price=discount_price,
+                description=description,
 
-            stock=total_stock,
+                price=price,
 
-            image=image,
+                discount_price=discount_price,
 
-            is_available=is_available,
+                stock=total_stock,
 
-            is_featured=is_featured,
+                # MAIN IMAGE
+                image=main_image,
 
-            category_id=category_id,
-        )
-        for image_file in additional_images:
-        
+                is_available=is_available,
+
+                is_featured=is_featured,
+
+                category_id=category_id,
+            )
+
+
+            # ======================================
+            # CREATE SECONDARY IMAGE
+            # ======================================
+
             ProductImage.objects.create(
-                product=product,
-                image=image_file
-            )
-
-
-        # ==========================================
-        # CREATE PRODUCT SIZE RECORDS
-        # ==========================================
-
-        for size, stock in size_stock.items():
-
-            ProductSize.objects.create(
 
                 product=product,
 
-                size=size,
+                image=secondary_image,
 
-                stock=stock,
+                image_type="secondary",
 
-                is_available=True,
+                sort_order=0,
             )
+
+
+            # ======================================
+            # CREATE GALLERY IMAGES
+            # ======================================
+
+            for index, gallery_image in enumerate(
+                gallery_images,
+                start=1
+            ):
+
+                ProductImage.objects.create(
+
+                    product=product,
+
+                    image=gallery_image,
+
+                    image_type="gallery",
+
+                    sort_order=index,
+                )
+
+
+            # ======================================
+            # CREATE PRODUCT SIZE RECORDS
+            # ======================================
+
+            for size, stock in size_stock.items():
+
+                ProductSize.objects.create(
+
+                    product=product,
+
+                    size=size,
+
+                    stock=stock,
+
+                    is_available=True,
+                )
 
 
         # ==========================================
@@ -396,11 +466,12 @@ def add_product_page(request):
     )
 
 
+
 def edit_product_page(request, id):
 
-    # ==========================================
+    # ==========================================================
     # GET PRODUCT
-    # ==========================================
+    # ==========================================================
 
     product = get_object_or_404(
         ProductsModel,
@@ -408,19 +479,19 @@ def edit_product_page(request, id):
     )
 
 
-    # ==========================================
+    # ==========================================================
     # GET CATEGORIES
-    # ==========================================
+    # ==========================================================
 
     categories = Category.objects.filter(
         Q(is_active=True) |
         Q(id=product.category_id)
-    ).order_by('name')
+    ).order_by("name")
 
 
-    # ==========================================
+    # ==========================================================
     # GET EXISTING SIZES
-    # ==========================================
+    # ==========================================================
 
     existing_sizes = {
         item.size: item
@@ -428,18 +499,44 @@ def edit_product_page(request, id):
     }
 
 
-    # ==========================================
-    # GET EXISTING ADDITIONAL IMAGES
-    # ==========================================
+    # ==========================================================
+    # GET SECONDARY IMAGE
+    # ==========================================================
 
-    additional_images = product.images.all()
+    secondary_image = (
+        product.images
+        .filter(
+            image_type="secondary"
+        )
+        .first()
+    )
 
 
-    # ==========================================
+    # ==========================================================
+    # GET GALLERY IMAGES
+    # ==========================================================
+
+    gallery_images = (
+        product.images
+        .filter(
+            image_type="gallery"
+        )
+        .order_by(
+            "sort_order",
+            "id"
+        )
+    )
+
+
+    # ==========================================================
     # POST
-    # ==========================================
+    # ==========================================================
 
     if request.method == "POST":
+
+        # ======================================================
+        # BASIC PRODUCT DATA
+        # ======================================================
 
         product_name = request.POST.get(
             "product_name",
@@ -451,19 +548,19 @@ def edit_product_page(request, id):
             ""
         ).strip()
 
-        price = request.POST.get("price")
+        price = request.POST.get(
+            "price"
+        )
 
         discount_price = (
-            request.POST.get("discount_price")
+            request.POST.get(
+                "discount_price"
+            )
             or None
         )
 
-        # Main product image
-        image = request.FILES.get("image")
-
-        # Additional product images
-        additional_images_upload = request.FILES.getlist(
-            "additional_images"
+        category_id = request.POST.get(
+            "category"
         )
 
         is_available = (
@@ -474,26 +571,132 @@ def edit_product_page(request, id):
             "is_featured" in request.POST
         )
 
-        category_id = request.POST.get(
-            "category"
+
+        # ======================================================
+        # IMAGE FILES
+        # ======================================================
+
+        # Main image
+        main_image = request.FILES.get(
+            "main_image"
         )
 
 
-        # ==========================================
+        # Secondary image
+        secondary_image_upload = (
+            request.FILES.get(
+                "secondary_image"
+            )
+        )
+
+
+        # New gallery images
+        gallery_images_upload = (
+            request.FILES.getlist(
+                "gallery_images"
+            )
+        )
+
+
+        # ======================================================
+        # GALLERY IMAGE REPLACE
+        # ======================================================
+
+        # Existing gallery image IDs
+        gallery_replace_ids = request.POST.getlist(
+            "gallery_replace_ids[]"
+        )
+
+        # New files corresponding to those IDs
+        gallery_replace_files = request.FILES.getlist(
+            "gallery_replace_files[]"
+        )
+
+
+        # ------------------------------------------------------
+        # Fallback
+        # ------------------------------------------------------
+        # If JS sends without [] Django will still support it.
+
+        if not gallery_replace_ids:
+            gallery_replace_ids = request.POST.getlist(
+                "gallery_replace_ids"
+            )
+
+        if not gallery_replace_files:
+            gallery_replace_files = request.FILES.getlist(
+                "gallery_replace_files"
+            )
+
+
+        # ======================================================
+        # GALLERY REORDER
+        # ======================================================
+
+        gallery_order = request.POST.getlist(
+            "gallery_order[]"
+        )
+
+
+        # ------------------------------------------------------
+        # Fallback for comma-separated order
+        # ------------------------------------------------------
+
+        if not gallery_order:
+
+            gallery_order_string = request.POST.get(
+                "gallery_order",
+                ""
+            ).strip()
+
+            if gallery_order_string:
+
+                gallery_order = [
+                    item.strip()
+                    for item in gallery_order_string.split(",")
+                    if item.strip()
+                ]
+
+
+        # ======================================================
+        # EXISTING IMAGE DELETE REQUESTS
+        # ======================================================
+
+        delete_image_ids = request.POST.getlist(
+            "delete_image_ids"
+        )
+
+
+        # ======================================================
         # SIZE-WISE STOCK
-        # ==========================================
+        # ======================================================
 
         size_stock = {}
 
-        for size in ["M", "L", "XL", "XXL"]:
+
+        for size in [
+            "M",
+            "L",
+            "XL",
+            "XXL"
+        ]:
+
+            # --------------------------------------------------
+            # Check selected size
+            # --------------------------------------------------
 
             size_selected = (
                 f"size_{size}" in request.POST
             )
 
+
             if not size_selected:
                 continue
 
+
+            # --------------------------------------------------
+            # Get stock
+            # --------------------------------------------------
 
             stock_value = request.POST.get(
                 f"stock_{size}",
@@ -507,10 +710,17 @@ def edit_product_page(request, id):
                     stock_value or 0
                 )
 
-            except (ValueError, TypeError):
+            except (
+                ValueError,
+                TypeError
+            ):
 
                 stock_value = 0
 
+
+            # --------------------------------------------------
+            # Validate stock
+            # --------------------------------------------------
 
             if stock_value <= 0:
 
@@ -528,9 +738,9 @@ def edit_product_page(request, id):
             size_stock[size] = stock_value
 
 
-        # ==========================================
+        # ======================================================
         # SIZE VALIDATION
-        # ==========================================
+        # ======================================================
 
         if not size_stock:
 
@@ -545,18 +755,18 @@ def edit_product_page(request, id):
             )
 
 
-        # ==========================================
+        # ======================================================
         # TOTAL STOCK
-        # ==========================================
+        # ======================================================
 
         total_stock = sum(
             size_stock.values()
         )
 
 
-        # ==========================================
-        # UPDATE PRODUCT
-        # ==========================================
+        # ======================================================
+        # UPDATE BASIC PRODUCT DATA
+        # ======================================================
 
         product.name = product_name
 
@@ -575,57 +785,490 @@ def edit_product_page(request, id):
         product.is_featured = is_featured
 
 
-        # ==========================================
+        # ======================================================
         # UPDATE MAIN IMAGE
-        # ==========================================
+        # ======================================================
 
-        if image:
+        if main_image:
 
-            product.image = image
+            old_main_image = product.image
+
+            product.image = main_image
+
+            # Save first so new Cloudinary image
+            # is uploaded successfully.
+            product.save()
 
 
-        # ==========================================
-        # SAVE PRODUCT
-        # ==========================================
+            # --------------------------------------------------
+            # Delete old main image
+            # --------------------------------------------------
 
-        product.save()
+            if (
+                old_main_image
+                and old_main_image.name
+            ):
+
+                try:
+
+                    old_main_image.storage.delete(
+                        old_main_image.name
+                    )
+
+                except Exception:
+
+                    pass
+
+        else:
+
+            product.save()
 
 
-        # ==========================================
-        # SAVE ADDITIONAL IMAGES
-        # ==========================================
+        # ======================================================
+        # DELETE SELECTED EXISTING IMAGES
+        # ======================================================
 
-        for image_file in additional_images_upload:
+        if delete_image_ids:
 
-            ProductImage.objects.create(
-
-                product=product,
-
-                image=image_file
-
+            images_to_delete = (
+                ProductImage.objects.filter(
+                    product=product,
+                    id__in=delete_image_ids,
+                    image_type__in=[
+                        "secondary",
+                        "gallery"
+                    ]
+                )
             )
 
 
-        # ==========================================
-        # UPDATE PRODUCT SIZES
-        # ==========================================
+            for image_obj in images_to_delete:
 
-        for size in ["M", "L", "XL", "XXL"]:
+                # --------------------------------------------------
+                # Delete Cloudinary file
+                # --------------------------------------------------
+
+                if image_obj.image:
+
+                    try:
+
+                        image_obj.image.storage.delete(
+                            image_obj.image.name
+                        )
+
+                    except Exception:
+
+                        pass
+
+
+                # --------------------------------------------------
+                # Delete database record
+                # --------------------------------------------------
+
+                image_obj.delete()
+
+
+        # ======================================================
+        # UPDATE / REPLACE SECONDARY IMAGE
+        # ======================================================
+
+        if secondary_image_upload:
+
+            # --------------------------------------------------
+            # Get current secondary image
+            # --------------------------------------------------
+
+            current_secondary = (
+                ProductImage.objects.filter(
+                    product=product,
+                    image_type="secondary"
+                )
+                .first()
+            )
+
+
+            # --------------------------------------------------
+            # Existing secondary
+            # --------------------------------------------------
+
+            if current_secondary:
+
+                old_secondary_image = (
+                    current_secondary.image
+                )
+
+
+                current_secondary.image = (
+                    secondary_image_upload
+                )
+
+                current_secondary.sort_order = 0
+
+                current_secondary.save()
+
+
+                # --------------------------------------------------
+                # Delete old Cloudinary image
+                # --------------------------------------------------
+
+                if (
+                    old_secondary_image
+                    and old_secondary_image.name
+                ):
+
+                    try:
+
+                        old_secondary_image.storage.delete(
+                            old_secondary_image.name
+                        )
+
+                    except Exception:
+
+                        pass
+
+
+            # --------------------------------------------------
+            # No secondary image yet
+            # --------------------------------------------------
+
+            else:
+
+                ProductImage.objects.create(
+                    product=product,
+                    image=secondary_image_upload,
+                    image_type="secondary",
+                    sort_order=0
+                )
+
+
+        # ======================================================
+        # REPLACE INDIVIDUAL GALLERY IMAGES
+        # ======================================================
+
+        if (
+            gallery_replace_ids
+            and gallery_replace_files
+        ):
+
+            # --------------------------------------------------
+            # Pair image ID + uploaded file
+            # --------------------------------------------------
+
+            for image_id, new_image_file in zip(
+                gallery_replace_ids,
+                gallery_replace_files
+            ):
+
+                # ----------------------------------------------
+                # Validate ID
+                # ----------------------------------------------
+
+                try:
+
+                    image_id = int(
+                        image_id
+                    )
+
+                except (
+                    ValueError,
+                    TypeError
+                ):
+
+                    continue
+
+
+                # ----------------------------------------------
+                # Never allow deleted image to be replaced
+                # ----------------------------------------------
+
+                if str(image_id) in delete_image_ids:
+
+                    continue
+
+
+                # ----------------------------------------------
+                # Get only this product's gallery image
+                # ----------------------------------------------
+
+                gallery_image = (
+                    ProductImage.objects.filter(
+                        id=image_id,
+                        product=product,
+                        image_type="gallery"
+                    )
+                    .first()
+                )
+
+
+                if not gallery_image:
+                    continue
+
+
+                # ----------------------------------------------
+                # Keep old image reference
+                # ----------------------------------------------
+
+                old_gallery_image = (
+                    gallery_image.image
+                )
+
+
+                # ----------------------------------------------
+                # Replace image
+                # ----------------------------------------------
+
+                gallery_image.image = (
+                    new_image_file
+                )
+
+                gallery_image.save()
+
+
+                # ----------------------------------------------
+                # Delete old Cloudinary image
+                # ----------------------------------------------
+
+                if (
+                    old_gallery_image
+                    and old_gallery_image.name
+                ):
+
+                    try:
+
+                        old_gallery_image.storage.delete(
+                            old_gallery_image.name
+                        )
+
+                    except Exception:
+
+                        pass
+
+
+        # ======================================================
+        # NORMALIZE EXISTING GALLERY ORDER
+        # ======================================================
+
+        gallery_queryset = (
+            ProductImage.objects.filter(
+                product=product,
+                image_type="gallery"
+            )
+            .order_by(
+                "sort_order",
+                "id"
+            )
+        )
+
+
+        # ======================================================
+        # REORDER GALLERY IMAGES
+        # ======================================================
+
+        if gallery_order:
+
+            # ----------------------------------------------
+            # Convert submitted IDs to integers
+            # ----------------------------------------------
+
+            submitted_ids = []
+
+            for image_id in gallery_order:
+
+                try:
+
+                    submitted_ids.append(
+                        int(image_id)
+                    )
+
+                except (
+                    ValueError,
+                    TypeError
+                ):
+
+                    continue
+
+
+            # ----------------------------------------------
+            # Get current gallery IDs
+            # ----------------------------------------------
+
+            current_ids = list(
+                gallery_queryset.values_list(
+                    "id",
+                    flat=True
+                )
+            )
+
+
+            # ----------------------------------------------
+            # Validate submitted order
+            #
+            # The IDs must represent the existing
+            # gallery images after deletion.
+            # ----------------------------------------------
+
+            if (
+                set(submitted_ids)
+                == set(current_ids)
+                and len(submitted_ids)
+                == len(current_ids)
+            ):
+
+                # ------------------------------------------
+                # Temporarily move all sort orders
+                #
+                # This avoids possible uniqueness issues
+                # if a future constraint is added.
+                # ------------------------------------------
+
+                for image_obj in gallery_queryset:
+
+                    image_obj.sort_order = (
+                        image_obj.sort_order + 100000
+                    )
+
+                    image_obj.save(
+                        update_fields=[
+                            "sort_order"
+                        ]
+                    )
+
+
+                # ------------------------------------------
+                # Save new order
+                # ------------------------------------------
+
+                for sort_order, image_id in enumerate(
+                    submitted_ids
+                ):
+
+                    ProductImage.objects.filter(
+                        id=image_id,
+                        product=product,
+                        image_type="gallery"
+                    ).update(
+                        sort_order=sort_order
+                    )
+
+
+        # ======================================================
+        # NORMALIZE GALLERY ORDER
+        #
+        # This keeps sort_order clean:
+        #
+        # 0, 1, 2, 3...
+        #
+        # instead of:
+        #
+        # 0, 4, 7, 9...
+        # ======================================================
+
+        gallery_queryset = (
+            ProductImage.objects.filter(
+                product=product,
+                image_type="gallery"
+            )
+            .order_by(
+                "sort_order",
+                "id"
+            )
+        )
+
+
+        for sort_order, image_obj in enumerate(
+            gallery_queryset
+        ):
+
+            if image_obj.sort_order != sort_order:
+
+                ProductImage.objects.filter(
+                    id=image_obj.id
+                ).update(
+                    sort_order=sort_order
+                )
+
+
+        # ======================================================
+        # ADD NEW GALLERY IMAGES
+        # ======================================================
+
+        if gallery_images_upload:
+
+            # --------------------------------------------------
+            # Find current highest sort order
+            # --------------------------------------------------
+
+            last_gallery = (
+                ProductImage.objects.filter(
+                    product=product,
+                    image_type="gallery"
+                )
+                .order_by(
+                    "-sort_order"
+                )
+                .first()
+            )
+
+
+            if last_gallery:
+
+                next_sort_order = (
+                    last_gallery.sort_order + 1
+                )
+
+            else:
+
+                next_sort_order = 0
+
+
+            # --------------------------------------------------
+            # Save new gallery images
+            # --------------------------------------------------
+
+            for index, image_file in enumerate(
+                gallery_images_upload
+            ):
+
+                ProductImage.objects.create(
+                    product=product,
+                    image=image_file,
+                    image_type="gallery",
+                    sort_order=(
+                        next_sort_order + index
+                    )
+                )
+
+
+        # ======================================================
+        # UPDATE PRODUCT SIZES
+        # ======================================================
+
+        for size in [
+            "M",
+            "L",
+            "XL",
+            "XXL"
+        ]:
+
+            # --------------------------------------------------
+            # Selected size
+            # --------------------------------------------------
 
             if size in size_stock:
 
                 ProductSize.objects.update_or_create(
-
                     product=product,
-
                     size=size,
-
                     defaults={
                         "stock": size_stock[size],
                         "is_available": True,
                     }
-
                 )
+
+
+            # --------------------------------------------------
+            # Unselected size
+            # --------------------------------------------------
 
             else:
 
@@ -635,14 +1278,18 @@ def edit_product_page(request, id):
                 ).delete()
 
 
-        # ==========================================
+        # ======================================================
         # SAVE ACTION
-        # ==========================================
+        # ======================================================
 
         action = request.POST.get(
             "save_action"
         )
 
+
+        # ======================================================
+        # SAVE
+        # ======================================================
 
         if action == "save":
 
@@ -656,6 +1303,10 @@ def edit_product_page(request, id):
             )
 
 
+        # ======================================================
+        # SAVE & ADD ANOTHER
+        # ======================================================
+
         elif action == "save_add":
 
             messages.success(
@@ -667,6 +1318,10 @@ def edit_product_page(request, id):
                 "add_product_page"
             )
 
+
+        # ======================================================
+        # SAVE & CONTINUE EDITING
+        # ======================================================
 
         elif action == "save_edit":
 
@@ -681,16 +1336,60 @@ def edit_product_page(request, id):
             )
 
 
+        # ======================================================
+        # DEFAULT
+        # ======================================================
+
         else:
+
+            messages.success(
+                request,
+                "Product updated successfully."
+            )
 
             return redirect(
                 "products_page"
             )
 
 
-    # ==========================================
+    # ==========================================================
+    # REFRESH IMAGE DATA
+    # ==========================================================
+
+    secondary_image = (
+        product.images
+        .filter(
+            image_type="secondary"
+        )
+        .first()
+    )
+
+
+    gallery_images = (
+        product.images
+        .filter(
+            image_type="gallery"
+        )
+        .order_by(
+            "sort_order",
+            "id"
+        )
+    )
+
+
+    # ==========================================================
+    # REFRESH EXISTING SIZES
+    # ==========================================================
+
+    existing_sizes = {
+        item.size: item
+        for item in product.sizes.all()
+    }
+
+
+    # ==========================================================
     # CONTEXT
-    # ==========================================
+    # ==========================================================
 
     context = {
 
@@ -702,22 +1401,22 @@ def edit_product_page(request, id):
 
         "existing_sizes": existing_sizes,
 
-        "additional_images": additional_images,
+        "secondary_image": secondary_image,
+
+        "gallery_images": gallery_images,
 
     }
 
 
-    # ==========================================
+    # ==========================================================
     # RENDER
-    # ==========================================
+    # ==========================================================
 
     return render(
         request,
         "admin_dashboard/edit_product.html",
         context
     )
-
-
 
 
 def delete_product_page(request, id):

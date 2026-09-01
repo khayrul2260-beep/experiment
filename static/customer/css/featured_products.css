@@ -5,8 +5,10 @@
 .nafi-featured {
     width: 100%;
     padding: 70px 30px;
+
     background-color: var(--background-color);
 }
+
 
 
 /* =====================================================
@@ -15,40 +17,51 @@
 
 .featured-header {
     display: flex;
+
     align-items: flex-end;
     justify-content: space-between;
+
     margin-bottom: 30px;
 }
 
 
 .featured {
     display: flex;
+
     flex-direction: column;
+
     justify-content: center;
     align-items: center;
+
     position: absolute;
+
     left: 50%;
+
     transform: translate(-50%, 0%);
 }
-
 
 
 .featured-header h2 {
     margin: 0;
 
     font-size: 30px;
+
     color: var(--large-text);
+
     font-weight: 700;
 
     letter-spacing: -0.5px;
 }
 
+
 .featured-header p {
     margin: 6px 0 0;
 
     font-size: 14px;
+
     color: #777;
 }
+
 
 
 /* =====================================================
@@ -57,20 +70,25 @@
 
 .featured-view-all {
     display: inline-flex;
+
     align-items: center;
 
     gap: 7px;
 
     color: var(--large-text);
+
     text-decoration: none;
 
     font-size: 14px;
+
     font-weight: 500;
 }
+
 
 .featured-view-all:hover {
     text-decoration: underline;
 }
+
 
 
 /* =====================================================
@@ -85,13 +103,15 @@
        5 products per row
     */
 
-    grid-template-columns: repeat(
-        5,
-        minmax(0, 1fr)
-    );
+    grid-template-columns:
+        repeat(
+            5,
+            minmax(0, 1fr)
+        );
 
     gap: 10px 1px;
 }
+
 
 
 /* =====================================================
@@ -103,8 +123,9 @@
 }
 
 
+
 /* =====================================================
-   PRODUCT IMAGE
+   PRODUCT IMAGE LINK
 ===================================================== */
 
 .featured-image-link {
@@ -119,28 +140,141 @@
     text-decoration: none;
 }
 
-.featured-image {
-    display: block;
+
+
+/* =====================================================
+   IMAGE WRAPPER
+===================================================== */
+
+.featured-image-wrapper {
+    position: relative;
 
     width: 100%;
 
     aspect-ratio: 3 / 4;
 
+    overflow: hidden;
+
+    background: #f5f5f5;
+}
+
+
+
+/* =====================================================
+   PRODUCT IMAGE
+===================================================== */
+
+.featured-image {
+    position: absolute;
+
+    inset: 0;
+
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
     object-fit: cover;
 
     transition:
-        transform 0.3s ease;
+        opacity 0.35s ease,
+        transform 0.35s ease;
 }
 
 
-/* Very subtle hover */
+
+/* =====================================================
+   MAIN IMAGE
+===================================================== */
+
+/*
+   Main image remains hidden initially
+   when secondary image exists.
+*/
+
+.main-featured-image {
+    opacity: 0;
+
+    z-index: 1;
+}
+
+
+
+/* =====================================================
+   SECONDARY IMAGE
+===================================================== */
+
+/*
+   Secondary image is the default image.
+*/
+
+.secondary-featured-image {
+    opacity: 1;
+
+    z-index: 2;
+}
+
+
+
+/* =====================================================
+   HOVER
+===================================================== */
+
+/*
+   Secondary → Main
+*/
 
 .featured-image-link:hover
-.featured-image {
+.main-featured-image {
+    opacity: 1;
 
     transform: scale(1.02);
-
 }
+
+
+.featured-image-link:hover
+.secondary-featured-image {
+    opacity: 0;
+
+    transform: scale(1.02);
+}
+
+
+
+/* =====================================================
+   MAIN IMAGE FALLBACK
+===================================================== */
+
+/*
+   If secondary image does not exist,
+   main image remains visible.
+*/
+
+.featured-image-wrapper:not(
+    :has(.secondary-featured-image)
+)
+.main-featured-image {
+    opacity: 1;
+
+    z-index: 1;
+}
+
+
+
+/* =====================================================
+   HOVER WITHOUT SECONDARY IMAGE
+===================================================== */
+
+.featured-image-wrapper:not(
+    :has(.secondary-featured-image)
+)
+.featured-image-link:hover
+.main-featured-image {
+    opacity: 1;
+
+    transform: scale(1.02);
+}
+
 
 
 /* =====================================================
@@ -148,7 +282,6 @@
 ===================================================== */
 
 .featured-no-image {
-
     width: 100%;
 
     aspect-ratio: 3 / 4;
@@ -156,6 +289,7 @@
     display: flex;
 
     align-items: center;
+
     justify-content: center;
 
     background: #f5f5f5;
@@ -166,14 +300,15 @@
 }
 
 
+
 /* =====================================================
    PRODUCT INFORMATION
 ===================================================== */
 
 .featured-info {
-
     padding-top: 10px;
 }
+
 
 
 /* =====================================================
@@ -181,7 +316,6 @@
 ===================================================== */
 
 .featured-name {
-
     display: block;
 
     color: var(--large-text);
@@ -199,12 +333,13 @@
     text-overflow: ellipsis;
 }
 
+
 .featured-name:hover {
-
     text-decoration: underline;
-    color: var(--buy-button);
 
+    color: var(--buy-button);
 }
+
 
 
 /* =====================================================
@@ -212,7 +347,6 @@
 ===================================================== */
 
 .featured-price {
-
     display: flex;
 
     align-items: center;
@@ -225,33 +359,41 @@
 }
 
 
-/* Normal */
+
+/* =====================================================
+   NORMAL PRICE
+===================================================== */
 
 .featured-normal-price {
-
     color: var(--large-text);
+
     font-weight: 500;
 }
 
 
-/* Old price */
+
+/* =====================================================
+   OLD PRICE
+===================================================== */
 
 .featured-old-price {
-
     color: var(--small-text);
 
     text-decoration: line-through;
 }
 
 
-/* Discount price */
+
+/* =====================================================
+   DISCOUNT PRICE
+===================================================== */
 
 .featured-discount-price {
-
     color: var(--large-text);
 
     font-weight: 600;
 }
+
 
 
 /* =====================================================
@@ -259,7 +401,6 @@
 ===================================================== */
 
 .featured-empty {
-
     grid-column: 1 / -1;
 
     text-align: center;
@@ -269,8 +410,8 @@
     color: #777;
 }
 
-.featured-empty i {
 
+.featured-empty i {
     display: block;
 
     margin-bottom: 10px;
@@ -278,12 +419,13 @@
     font-size: 30px;
 }
 
-.featured-empty p {
 
+.featured-empty p {
     margin: 0;
 
     font-size: 14px;
 }
+
 
 
 /* =====================================================
@@ -293,16 +435,15 @@
 @media (max-width: 991px) {
 
     .featured-grid {
-
         grid-template-columns:
             repeat(
                 4,
                 minmax(0, 1fr)
             );
-
     }
 
 }
+
 
 
 /* =====================================================
@@ -312,85 +453,68 @@
 @media (max-width: 767px) {
 
     .nafi-featured {
-
-        padding: 45px 0;
-
+        padding: 30px 8px;
     }
 
 
     .featured-header {
-
         align-items: center;
 
         margin-bottom: 20px;
-
     }
 
 
     .featured-header h2 {
-
         font-size: 22px;
-
     }
 
 
     .featured-header p {
-
-        display: none;
-
+        font-size: 11px;
     }
 
 
     .featured-view-all {
-
-        font-size: 13px;
-
+        font-size: 11px;
     }
 
 
-    /*
-       Mobile
-       3 products per row
-    */
+
+    /* ================================================
+       MOBILE
+       3 PRODUCTS PER ROW
+    ================================================= */
 
     .featured-grid {
-
         grid-template-columns:
             repeat(
                 3,
                 minmax(0, 1fr)
             );
 
-        gap: 25px 8px;
-
     }
 
 
     .featured-info {
-
         padding-top: 7px;
-
     }
 
 
     .featured-name {
-
         font-size: 12px;
-
     }
 
 
     .featured-price {
-
         gap: 5px;
 
         margin-top: 3px;
 
         font-size: 12px;
-
     }
 
 }
+
 
 
 /* =====================================================
@@ -398,25 +522,13 @@
 ===================================================== */
 
 @media (max-width: 400px) {
-
-    .featured-grid {
-
-        gap: 20px 6px;
-
-    }
-
-
     .featured-name {
-
         font-size: 11px;
-
     }
 
 
     .featured-price {
-
         font-size: 11px;
-
     }
 
 }

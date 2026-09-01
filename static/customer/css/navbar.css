@@ -85,7 +85,6 @@
     gap: 8px;
 
     color: #eeeeee;
-
 }
 
 
@@ -211,7 +210,6 @@
     display: flex;
 
     align-items: center;
-
     box-sizing: border-box;
 
 }
@@ -223,7 +221,7 @@
 
 .nafi-logo {
 
-    width: auto;
+    width: fit-content;
 
     height: 60px;
 
@@ -521,7 +519,7 @@
 
     width: 210px;
 
-    padding: 10px 0;
+    padding: 10px 15px;
 
     background: #000000;
 
@@ -535,6 +533,7 @@
     opacity: 0;
 
     visibility: hidden;
+    color: white;
 
     pointer-events: none;
 
@@ -570,7 +569,7 @@
    DROPDOWN ITEM
 ===================================================== */
 
-.dropdown-item {
+.dropdown-item{
 
     position: relative;
 
@@ -607,6 +606,7 @@
 }
 
 
+
 /* =====================================================
    DROPDOWN HOVER
 ===================================================== */
@@ -632,11 +632,9 @@
 
     align-items: center;
 
-    justify-content: flex-end;
+    justify-content: end;
 
     gap: 20px;
-
-    flex-shrink: 0;
 
 }
 
@@ -902,10 +900,6 @@
 
     margin: 0;
 
-    align-items: center;
-
-    justify-content: center;
-
     border: none;
 
     outline: none;
@@ -914,7 +908,7 @@
 
     color: #ffffff;
 
-    font-size: 27px;
+    font-size: 30px;
 
     cursor: pointer;
 
@@ -1509,6 +1503,7 @@ body.nafi-menu-open {
     .nafi-navbar {
 
         height: 68px;
+        display: flex;
 
     }
 
@@ -1525,11 +1520,8 @@ body.nafi-menu-open {
     /* MOBILE TOGGLE */
 
     .nafi-mobile-toggle {
-
-        display: flex;
-
-        order: 1;
-
+        display: block;
+        max-width: 40px;
     }
 
 
@@ -1537,15 +1529,9 @@ body.nafi-menu-open {
 
     .nafi-logo {
 
-        position: absolute;
+        width: fit-content;
+        height: 50px;
 
-        left: 50px;
-
-        width: 60px;
-
-        height: 60px;
-
-        transform: translateX(-50%);
 
     }
 
@@ -1562,8 +1548,6 @@ body.nafi-menu-open {
     /* RIGHT ACTIONS */
 
     .nafi-actions {
-
-        margin-left: auto;
 
         gap: 15px;
 
@@ -1615,11 +1599,21 @@ body.nafi-menu-open {
         padding: 0 15px;
     }
 
+    .topbar-left {
+        position: absolute;
+        top: 5px;
+        left: 10px;
+    }
+    .topbar-right {
+        position: absolute;
+        top: 5px;
+        right: 10px;
+    }
+
 
     .nafi-actions {
 
         gap: 11px;
-
     }
 
 
@@ -1633,10 +1627,9 @@ body.nafi-menu-open {
 
 
     .nafi-mobile-toggle {
-
-        width: 38px;
-
-        font-size: 25px;
+        width: fit-content;
+        height: fit-content;
+        font-size: 32px;
 
     }
 
@@ -1684,10 +1677,7 @@ body.nafi-menu-open {
 
 
     .nafi-logo {
-
-        width: 52px;
-
-        height: 52px;
+        height:45px;
 
     }
 
