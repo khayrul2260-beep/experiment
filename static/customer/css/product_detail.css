@@ -810,11 +810,13 @@
 
         padding-top: 20px;
     }
-
+    .product-detail-info {
+        padding: 15px;
+    }
 
     .product-actions {
         flex-direction: column;
-
+        height: 100px;
         gap: 8px;
     }
 
