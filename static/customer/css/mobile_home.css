@@ -338,7 +338,7 @@
     letter-spacing: -4px;
 
     text-transform: uppercase;
-    color: #ffffff77;
+    color: #ffffff40;
 
     max-width: 900px;
     text-wrap: balance;
@@ -349,11 +349,12 @@
     display: block;
 
     margin-top: 15px;
+    letter-spacing: 4px;
 
     background: linear-gradient(
         90deg,
-        #fde5c496,
-        #04ecec9d
+        #fde5c440,
+        #04ecec40
     );
 
     -webkit-background-clip: text;
@@ -385,7 +386,7 @@
         40px 0 20px;
 
     background:
-        rgba(255,255,255,.75);
+        rgba(255, 255, 255, 0.377);
 }
 
 
@@ -410,7 +411,7 @@
 
     border:
         1px solid
-        rgba(255, 255, 255, 0.336);
+        rgba(255, 255, 255, 0.212);
 
     background:
         rgba(0,0,0,.16);
@@ -445,7 +446,6 @@
 
     color: #ffffff;
 
-    transform: translateY(-2px);
 }
 
 
@@ -1620,7 +1620,7 @@
         28px 0 25px;
 
     background:
-        rgba(255, 255, 255, .75);
+        rgba(255, 255, 255, 0.192);
 }
 
 
@@ -1631,7 +1631,7 @@
 .nfx-vault-action {
     width: 340px;
 
-    min-height: 60px;
+    min-height: 50px;
 
     display: flex;
 
@@ -1643,7 +1643,7 @@
 
     border:
         1px solid
-        rgba(255, 255, 255, .9);
+        rgba(255, 255, 255, 0.226);
 
     background:
         rgba(0, 0, 0, .16);
@@ -1662,10 +1662,6 @@
 
     backdrop-filter: blur(4px);
 
-    transition:
-        background .3s ease,
-        border-color .3s ease,
-        transform .3s ease;
 }
 
 
@@ -1674,13 +1670,11 @@
         rgba(255, 255, 255, .08);
 
     border-color:
-        #ffffff;
+        #00ffc8;
 
     color:
         #ffffff;
 
-    transform:
-        translateY(-2px);
 }
 
 
