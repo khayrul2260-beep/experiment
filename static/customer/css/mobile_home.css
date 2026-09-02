@@ -1631,9 +1631,9 @@
 ========================================================= */
 
 .nfx-vault-action {
-    width: 340px;
+    width: fit-content;
 
-    min-height: 50px;
+    min-height: 40px;
 
     display: flex;
 
@@ -1641,14 +1641,8 @@
 
     justify-content: space-between;
 
-    padding: 0 27px;
+    padding: 0 27px 0 0;
 
-    border:
-        1px solid
-        rgba(255, 255, 255, 0.164);
-
-    background:
-        rgba(0, 0, 0, 0.041);
 
     color: #f4f4f4;
 
@@ -1660,24 +1654,19 @@
 
     font-weight: 500;
 
-    letter-spacing: 1.6px;
-
-    backdrop-filter: blur(2px);
+    letter-spacing: 8px;
+/* 
+    backdrop-filter: blur(2px); */
 
 }
 
 
 .nfx-vault-action:hover {
-    background:
-        rgba(255, 255, 255, .08);
-
-    border-color:
-        #00ffc848;
-
     color:
-        #ffffff;
-
+        #03f8c3cc;
 }
+
+
 
 
 /* =========================================================
@@ -1772,7 +1761,7 @@
     }
 
     .nfx-vault-action {
-        width: 60vw;
+        gap: 20px;
     }
     .nfx-vault-action span {
         font-size: 18px;

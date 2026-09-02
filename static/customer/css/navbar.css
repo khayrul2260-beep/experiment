@@ -1034,23 +1034,32 @@
 
 .mobile-logo {
 
-    height: 45px;
+    height: 100%;
 
     display: flex;
-
+    flex-direction: row;
+    gap: 5px;
     align-items: center;
 
 }
 
 
-.mobile-logo img {
+.mobile-logo-brand {
 
     width: auto;
 
-    height: 38px;
+    height: 30px;
 
-    max-width: 100px;
+    max-width: 70px;
 
+    object-fit: contain;
+
+}
+
+.mobile-logo-title {
+    flex: 1;
+    max-width: 150px;
+    height: 100%;
     object-fit: contain;
 
 }
