@@ -148,7 +148,7 @@
     width: 100%;
     min-height: 600px;
 
-    background: #ffffff;
+    background: var(--background-color);
 
     display: flex;
     align-items: center;
