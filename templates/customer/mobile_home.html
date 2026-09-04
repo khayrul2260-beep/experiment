@@ -214,89 +214,81 @@
         </div>
       </div>
     </section>
-
     <!-- =========================================
          CATEGORIES
     ========================================== -->
     <section class="mobile-categories-section" id="categories">
-      <div class="mobile-category-grid">
-        <!-- PUNJABI -->
-
-        <a href="#" class="mobile-category-card">
-          <img 
-            src="{% static 'admin_panel/images/categories/t-shirt.jpg' %}"
-            alt="Punjabi" 
-          />
-
-          <div class="mobile-category-overlay"></div>
-
-          <div class="mobile-category-content">
-            <h3>PUNJABI</h3>
-
-            <span>
-              EXPLORE
-              <b>→</b>
-            </span>
-          </div>
-        </a>
-
-        <!-- SHIRTS -->
-
-        <a href="#" class="mobile-category-card">
-          <img src="{% static 'admin_panel/images/categories/punjabi.png' %}" alt="Shirts" />
-
-          <div class="mobile-category-overlay"></div>
-
-          <div class="mobile-category-content">
-            <h3>SHIRTS</h3>
-
-            <span>
-              EXPLORE
-              <b>→</b>
-            </span>
-          </div>
-        </a>
-
-        <!-- T-SHIRTS -->
-
-        <a href="#" class="mobile-category-card">
-          <img
-            src="{% static 'admin_panel/images/categories/shirt.png' %}"
-            alt="T-Shirts"
-          />
-
-          <div class="mobile-category-overlay"></div>
-
-          <div class="mobile-category-content">
-            <h3>T-SHIRTS</h3>
-
-            <span>
-              EXPLORE
-              <b>→</b>
-            </span>
-          </div>
-        </a>
-
-        <a href="#" class="mobile-category-card">
-          <img
-            src="{% static 'admin_panel/images/categories/pant.png' %}"
-            alt="pants"
-          />
-
-          <div class="mobile-category-overlay"></div>
-
-          <div class="mobile-category-content">
-            <h3>Pants</h3>
-
-            <span>
-              EXPLORE
-              <b>→</b>
-            </span>
-          </div>
-        </a>
-      </div>
-    </section>
     
+        <div class="mobile-category-slider">
+        
+            <div class="mobile-category-grid">
+            
+                {% for category in categories %}
+            
+                    <a
+                        {% if category.is_active %}
+                            href="{% url 'category_products' category.slug %}"
+                        {% else %} 
+                            href="#" 
+                        {% endif %}
+            
+                        class="
+                            mobile-category-card
+                            {% if not category.is_active %}
+                                category-unavailable
+                            {% endif %}
+                        "
+                    >
+            
+                        {% if category.image %}
+            
+                            <img
+                                src="{{ category.image.url }}"
+                                alt="{{ category.name }}"
+                            >
+            
+                        {% endif %}
+            
+            
+                        <div class="mobile-category-overlay"></div>
+            
+            
+                        <div class="mobile-category-content">
+                        
+                            <h3>
+                                {{ category.name|upper }}
+                            </h3>
+                          
+                            <span>
+                                {% if category.is_active %}
+                                    EXPLORE
+                                    <b>→</b>
+                                {% else %}
+                                    UNAVAILABLE
+                                    <b>×</b>
+                                {% endif %}
+                            </span>
+                          
+                        </div>
+                      
+                      
+                        {% if not category.is_active %}
+                      
+                            <div class="category-unavailable-badge">
+                                UNAVAILABLE
+                            </div>
+                          
+                        {% endif %}
+                          
+                    </a>
+                  
+                {% endfor %}
+                  
+            </div>
+          
+        </div>
+      
+    </section>
   </section>
 
 

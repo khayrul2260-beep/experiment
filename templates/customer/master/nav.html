@@ -134,41 +134,48 @@
 
                 <!-- CATEGORIES -->
 
+                <!-- =================================================
+                     CATEGORIES
+                ================================================== -->
+                
                 <li class="nav-item nav-dropdown">
-
+                
                     <button
                         type="button"
                         class="nav-link_ dropdown-trigger"
                         aria-expanded="false"
                     >
+                
                         <span>CATEGORIES</span>
+                
                         <i class="bi bi-chevron-down"></i>
+                
                     </button>
-
-
+                
+                
                     <div class="nafi-dropdown">
-
-                        <a href="#" class="dropdown-item">
-                            T-Shirts
-                        </a>
-
-                        <a href="#" class="dropdown-item">
-                            Shirts
-                        </a>
-
-                        <a href="#" class="dropdown-item">
-                            Panjabi
-                        </a>
-
-                        <a href="#" class="dropdown-item">
-                            New Collection
-                        </a>
-
+                    
+                        {% for category in navbar_categories %}
+                    
+                            <a
+                                href="{% url 'category_products' category.slug %}"
+                                class="dropdown-item"
+                            >
+                                {{ category.name }}
+                            </a>
+                        
+                        {% empty %}
+                        
+                            <span class="dropdown-item">
+                                No Categories
+                            </span>
+                        
+                        {% endfor %}
+                        
                     </div>
-
+                
                 </li>
-
-
+                
                 <!-- NEW ARRIVALS -->
 
                 <li class="nav-item">
@@ -450,43 +457,46 @@
 
             <!-- CATEGORIES -->
 
+            <!-- =================================================
+                 CATEGORIES
+            ================================================== -->
+            
             <li class="mobile-nav-dropdown">
-
+            
                 <button
                     type="button"
                     class="mobile-dropdown-trigger"
                     aria-expanded="false"
                 >
-
+            
                     <span>CATEGORIES</span>
-
+            
                     <i class="bi bi-chevron-down"></i>
-
+            
                 </button>
-
-
+            
+            
                 <div class="mobile-dropdown">
-
-                    <a href="#">
-                        T-Shirts
-                    </a>
-
-                    <a href="#">
-                        Shirts
-                    </a>
-
-                    <a href="#">
-                        Panjabi
-                    </a>
-
-                    <a href="#">
-                        New Collection
-                    </a>
-
+                
+                    {% for category in navbar_categories %}
+                
+                        <a
+                            href="{% url 'category_products' category.slug %}"
+                        >
+                            {{ category.name }}
+                        </a>
+                    
+                    {% empty %}
+                    
+                        <span>
+                            No Categories
+                        </span>
+                    
+                    {% endfor %}
+                    
                 </div>
-
+            
             </li>
-
 
             <!-- NEW ARRIVALS -->
 

@@ -27,6 +27,7 @@ def home_page(request):
         stock__gt=0
     ).order_by('-created_at')[:10]
 
+    categories = Category.objects.all().order_by('created_at')
 
     # =====================================================
     # CONTEXT
@@ -35,6 +36,7 @@ def home_page(request):
     context = {
         'new_arrivals': new_arrivals,
         'featured_products': featured_products,
+            'categories': categories,
     }
 
 
@@ -130,6 +132,52 @@ def product_detail_page(request, slug):
     return render(
         request,
         "customer/product_detail.html",
+        context
+    )
+
+
+
+
+def category_products_page(request, slug):
+
+    # ==================================================
+    # GET CATEGORY
+    # ==================================================
+
+    category = get_object_or_404(
+        Category,
+        slug=slug,
+        is_active=True
+    )
+
+
+    # ==================================================
+    # GET CATEGORY PRODUCTS
+    # ==================================================
+
+    products = category.products.filter(
+        is_available=True,
+        stock__gt=0
+    ).order_by('-created_at')
+
+
+    # ==================================================
+    # CONTEXT
+    # ==================================================
+
+    context = {
+        'category': category,
+        'products': products,
+    }
+
+
+    # ==================================================
+    # RENDER
+    # ==================================================
+
+    return render(
+        request,
+        'customer/category_products.html',
         context
     )
 

@@ -30,7 +30,9 @@
     --nafi-blue: #4d8dff;
 
     --nafi-radius: 18px;
+
 }
+
 
 /* =========================================================
    MAIN HOME
@@ -41,34 +43,37 @@
     position: relative;
 
     width: 100%;
-    overflow: hidden;
-    background:
 
+    overflow: hidden;
+
+    background:
         radial-gradient(
             circle at 50% 0%,
-            rgba(255,255,255,.035),
+            rgba(255, 255, 255, .035),
             transparent 32%
         ),
-
         var(--nafi-black);
 
-    color: var(--nafi-white);
+    color:
+        var(--nafi-white);
 
     font-family:
         "Manrope",
         "Helvetica Neue",
         Arial,
         sans-serif;
+
 }
 
 
-/* Prevent horizontal overflow */
+/* Prevent unwanted overflow */
 
 .mobile-nafi-page *,
 .mobile-nafi-page *::before,
 .mobile-nafi-page *::after {
 
     box-sizing: border-box;
+
 }
 
 
@@ -84,7 +89,9 @@
 
     overflow: hidden;
 
-    background: var(--nafi-black);
+    background:
+        var(--nafi-black);
+
 }
 
 
@@ -100,7 +107,9 @@
 
     overflow: hidden;
 
-    background: #090909;
+    background:
+        #090909;
+
 }
 
 
@@ -122,25 +131,18 @@
 
     visibility: hidden;
 
-    /*
-       No zoom.
-       Image will remain completely visible.
-    */
-
     transform: none;
 
     transition:
         opacity 1.1s ease,
         visibility 1.1s ease;
+
 }
 
 
-
 /*
-   First slide remains in normal document flow.
-
-   This allows its image to automatically
-   determine the complete hero height.
+   First slide stays in document flow.
+   This creates the actual hero height.
 */
 
 .mobile-hero-slide:first-child {
@@ -148,12 +150,12 @@
     position: relative;
 
     inset: auto;
+
 }
 
 
-
 /* =========================================================
-   ACTIVE SLIDE
+   ACTIVE HERO SLIDE
 ========================================================= */
 
 .mobile-hero-slide.active {
@@ -163,6 +165,7 @@
     visibility: visible;
 
     transform: none;
+
 }
 
 
@@ -178,25 +181,19 @@
 
     height: auto;
 
-    /*
-       IMPORTANT:
-
-       Full image will be visible.
-       No crop.
-       No stretching.
-       Original aspect ratio maintained.
-    */
-
     object-fit: contain;
 
-    object-position: center center;
+    object-position:
+        center center;
 
-    background: #050505;
+    background:
+        #050505;
+
 }
 
 
 /* =========================================================
-   HERO OVERLAY / GRADIENT
+   HERO IMAGE GRADIENT
 ========================================================= */
 
 .mobile-hero-image-gradient {
@@ -213,19 +210,20 @@
 
         linear-gradient(
             90deg,
-            rgba(0,0,0,.45),
+            rgba(0, 0, 0, .45),
             transparent 48%,
-            rgba(0,0,0,.18)
+            rgba(0, 0, 0, .18)
         ),
 
         linear-gradient(
             to bottom,
-            rgba(0,0,0,.08) 0%,
-            rgba(0,0,0,.04) 35%,
-            rgba(0,0,0,.28) 58%,
-            rgba(0,0,0,.84) 82%,
-            rgb(0,0,0) 100%
+            rgba(0, 0, 0, .08) 0%,
+            rgba(0, 0, 0, .04) 35%,
+            rgba(0, 0, 0, .28) 58%,
+            rgba(0, 0, 0, .84) 82%,
+            rgb(0, 0, 0) 100%
         );
+
 }
 
 
@@ -249,7 +247,9 @@
 
     margin: 0 auto;
 
-    padding: 0 30px;
+    padding:
+        0 30px;
+
 }
 
 
@@ -263,7 +263,8 @@
 
     margin-bottom: 17px;
 
-    color: #bdbdc1;
+    color:
+        #bdbdc1;
 
     font-size: 14px;
 
@@ -272,104 +273,130 @@
     letter-spacing: 3px;
 
     line-height: 1.2;
+
 }
 
 
 /* =========================================================
-   HERO TITLE
-========================================================= */
-
-
-
-
-/* =========================================================
-   MAIN HERO TITLE
+   MAIN HERO SUBTITLE
 ========================================================= */
 
 .nafi-hero-subtitle {
+
+    position: relative;
+
     display: block;
 
     margin-bottom: 30px;
 
-    font-family: "Manrope", sans-serif;
+    padding-left: 42px;
+
+    color:
+        rgba(182, 178, 178, .72);
+
+    font-family:
+        "Manrope",
+        sans-serif;
+
     font-size: 12px;
+
     font-weight: 700;
+
     letter-spacing: 4px;
+
     line-height: 1.4;
 
     text-transform: uppercase;
 
-    color: rgba(182, 178, 178, 0.72);
-
-    position: relative;
-    padding-left: 42px;
 }
 
 
-/* Small editorial line before subtitle */
+/* Editorial line */
+
 .nafi-hero-subtitle::before {
+
     content: "";
 
     position: absolute;
+
     left: 0;
+
     top: 50%;
 
     width: 28px;
+
     height: 1px;
 
-    background: rgba(255, 255, 255, 0.55);
+    background:
+        rgba(255, 255, 255, .55);
 
-    transform: translateY(-50%);
+    transform:
+        translateY(-50%);
+
 }
 
 
 /* =========================================================
    MAIN HERO TITLE
 ========================================================= */
+
 .nafi-hero-title {
+
+    max-width: 900px;
+
     margin: 0;
 
-    font-family: "Manrope", sans-serif;
+    color:
+        #ffffff;
 
-    font-size: clamp(45px, 6vw, 90px);
+    font-family:
+        "Manrope",
+        sans-serif;
+
+    font-size:
+        clamp(45px, 6vw, 90px);
 
     font-weight: 400;
-    line-height: 0.90;
+
+    line-height: .90;
+
     letter-spacing: -4px;
 
     text-transform: uppercase;
-    color: #ffffff;
 
-    max-width: 900px;
     text-wrap: balance;
+
 }
 
 
+/* Highlighted title line */
+
 .nafi-hero-title span {
+
     display: block;
 
     margin-top: 15px;
-    letter-spacing: 4px;
 
-    background: linear-gradient(
-        90deg,
-        #fde5c4,
-        #04ecec
-    );
+    background:
+        linear-gradient(
+            90deg,
+            #fde5c4,
+            #04ecec
+        );
 
     -webkit-background-clip: text;
+
     background-clip: text;
+
+    color: transparent;
 
     font-weight: 800;
 
+    letter-spacing: 4px;
+
     -webkit-text-fill-color: transparent;
+
 }
-
-
-/* =========================================================
-   DESCRIPTION
-========================================================= */
-
 
 
 /* =========================================================
@@ -386,7 +413,8 @@
         40px 0 20px;
 
     background:
-        rgba(255, 255, 255, 0.377);
+        rgba(255, 255, 255, .377);
+
 }
 
 
@@ -411,12 +439,13 @@
 
     border:
         1px solid
-        rgba(255, 255, 255, 0.212);
+        rgba(255, 255, 255, .212);
 
     background:
-        rgba(0,0,0,.16);
+        rgba(0, 0, 0, .16);
 
-    color: #f4f4f4;
+    color:
+        #f4f4f4;
 
     text-decoration: none;
 
@@ -428,23 +457,33 @@
 
     letter-spacing: 1.6px;
 
-    backdrop-filter: blur(4px);
+    backdrop-filter:
+        blur(4px);
 
     transition:
         background .3s ease,
         transform .3s ease,
         border-color .3s ease;
+
 }
 
 
-.mobile-hero-button:hover {
+/* Desktop hover */
 
-    background:
-        rgba(255,255,255,.08);
+@media (hover: hover) and (pointer: fine) {
 
-    border-color: #02fce7;
+    .mobile-hero-button:hover {
 
-    color: #ffffff;
+        background:
+            rgba(255, 255, 255, .08);
+
+        border-color:
+            #02fce7;
+
+        color:
+            #ffffff;
+
+    }
 
 }
 
@@ -460,11 +499,12 @@
     font-weight: 300;
 
     line-height: 1;
+
 }
 
 
 /* =========================================================
-   SLIDER INDICATORS
+   HERO SLIDER INDICATORS
 ========================================================= */
 
 .mobile-slider-indicators {
@@ -475,9 +515,6 @@
 
     top: 22px;
 
-    transform:
-        translateX(-50%);
-
     z-index: 10;
 
     display: flex;
@@ -485,6 +522,10 @@
     align-items: center;
 
     gap: 8px;
+
+    transform:
+        translateX(-50%);
+
 }
 
 
@@ -501,13 +542,14 @@
     border-radius: 50%;
 
     background:
-        rgba(255,255,255,.35);
+        rgba(255, 255, 255, .35);
 
     cursor: pointer;
 
     transition:
         width .3s ease,
         background .3s ease;
+
 }
 
 
@@ -517,7 +559,9 @@
 
     border-radius: 10px;
 
-    background: #f4f4f4;
+    background:
+        #f4f4f4;
+
 }
 
 
@@ -534,7 +578,9 @@
     padding:
         38px 30px 20px;
 
-    background: transparent;
+    background:
+        transparent;
+
 }
 
 
@@ -543,6 +589,7 @@
     width: 100%;
 
     max-width: 1900px;
+
     margin: 0 auto;
 
     display: grid;
@@ -563,7 +610,8 @@
         1px solid
         var(--nafi-border);
 
-    border-radius: 14px;
+    border-radius:
+        14px;
 
     background:
         linear-gradient(
@@ -574,9 +622,11 @@
 
     box-shadow:
         0 15px 45px
-        rgba(0, 0, 0, 0.336);
+        rgba(0, 0, 0, .336);
 
-    backdrop-filter: blur(2px);
+    backdrop-filter:
+        blur(2px);
+
 }
 
 
@@ -584,9 +634,11 @@
 
     min-width: 0;
 
+    padding:
+        5px 20px;
+
     text-align: center;
 
-    padding: 5px 20px;
 }
 
 
@@ -598,6 +650,7 @@
 
     background:
         #292a2e;
+
 }
 
 
@@ -613,6 +666,7 @@
 
     margin:
         0 auto 10px;
+
 }
 
 
@@ -624,13 +678,15 @@
 
     fill: none;
 
-    stroke: #ededee;
+    stroke:
+        #ededee;
 
     stroke-width: 1.6;
 
     stroke-linecap: round;
 
     stroke-linejoin: round;
+
 }
 
 
@@ -638,7 +694,8 @@
 
     margin: 0;
 
-    color: #e9e9ea;
+    color:
+        #e9e9ea;
 
     font-size: 12px;
 
@@ -647,6 +704,7 @@
     letter-spacing: 1px;
 
     line-height: 1.3;
+
 }
 
 
@@ -655,18 +713,21 @@
     margin:
         6px 0 0;
 
-    color: #88888d;
+    color:
+        #88888d;
 
     font-size: 10px;
 
     font-weight: 400;
 
     line-height: 1.3;
+
 }
 
 
 /* =========================================================
    CATEGORIES
+   INFINITE HORIZONTAL SLIDER
 ========================================================= */
 
 .mobile-categories-section {
@@ -674,71 +735,105 @@
     width: 100%;
 
     padding:
-        0px 30px 60px;
+        0 30px 60px;
 
-    background: transparent;
-}
+    background:
+        transparent;
 
-
-.mobile-section-heading {
-
-    width: 100%;
-
-    max-width: 1900px;
-
-    margin:
-        0 auto 25px;
-}
-
-
-.mobile-section-heading span {
-
-    display: block;
-
-    margin-bottom: 7px;
-
-    color: #737379;
-
-    font-size: 11px;
-
-    letter-spacing: 3px;
-
-    font-weight: 500;
-}
-
-
-.mobile-section-heading h2 {
-
-    margin: 0;
-
-    color: #eeeeef;
-
-    font-size: 32px;
-
-    font-weight: 700;
-
-    letter-spacing: 1px;
 }
 
 
 /* =========================================================
-   CATEGORY GRID
+   CATEGORY SLIDER
+========================================================= */
+.mobile-category-slider {
+
+    width: 100%;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+    cursor: grab;
+
+    user-select: none;
+    -webkit-user-select: none;
+
+    scroll-behavior: auto;
+
+    /*
+       VERY IMPORTANT
+    */
+    touch-action: pan-y;
+
+}
+
+
+.mobile-category-slider::-webkit-scrollbar {
+    display: none;
+}
+
+
+.mobile-category-slider.is-dragging {
+    cursor: grabbing;
+}
+
+
+.mobile-category-grid {
+
+    display: flex !important;
+
+    flex-direction: row !important;
+
+    flex-wrap: nowrap !important;
+
+    width: max-content !important;
+
+    min-width: max-content !important;
+
+    max-width: none !important;
+
+    gap: 20px;
+
+    margin: 0;
+
+    padding: 0;
+
+}
+
+
+.mobile-category-card {
+
+    flex:
+        0 0 auto !important;
+
+    min-width: 0;
+
+}
+
+/* =========================================================
+   CATEGORY TRACK
 ========================================================= */
 
 .mobile-category-grid {
 
-    width: 100%;
+    display: flex !important;
 
-    max-width: 1900px;
+    flex-direction: row !important;
 
-    margin: 0 auto;
+    flex-wrap: nowrap !important;
 
-    display: grid;
+    width: max-content !important;
 
-    grid-template-columns:
-        repeat(4, 1fr);
-    
-    gap: 30px;
+    max-width: none !important;
+
+    gap: 20px;
+
+    margin: 0;
+
+    padding: 0;
 
 }
 
@@ -751,27 +846,100 @@
 
     position: relative;
 
-    height: 20vw;
+    flex:
+        0 0 auto !important;
 
     overflow: hidden;
+
+    aspect-ratio:
+        8 / 9;
 
     border:
         1px solid
         #f6f6f7;
 
-    border-radius: 22px;
+    border-radius:
+        22px;
 
-    background: #111;
+    background:
+        #111;
 
     text-decoration: none;
 
     isolation: isolate;
-}
-.mobile-category-card:hover {
-    border-bottom: 3px solid rgb(0, 248, 227);
+
 }
 
 
+/* =========================================================
+   DESKTOP
+   1400px+
+   9 CARDS
+========================================================= */
+
+@media (min-width: 1400px) {
+
+    .mobile-category-card {
+
+        width:
+            calc(
+                (100vw - 60px - 160px) / 9
+            );
+
+    }
+
+}
+
+
+/* =========================================================
+   LAPTOP
+   900px - 1399px
+   7 CARDS
+========================================================= */
+
+@media
+(min-width: 900px)
+and
+(max-width: 1399px) {
+
+    .mobile-category-card {
+
+        width:
+            calc(
+                (100vw - 60px - 120px) / 7
+            );
+
+    }
+
+}
+
+
+/* =========================================================
+   TABLET
+   500px - 899px
+   5 CARDS
+========================================================= */
+
+@media
+(min-width: 500px)
+and
+(max-width: 899px) {
+
+    .mobile-category-card {
+
+        width:
+            calc(
+                (100vw - 60px - 80px) / 5
+            );
+
+    }
+
+}
+
+
+/* =========================================================
+   CATEGORY IMAGE
+========================================================= */
 
 .mobile-category-card img {
 
@@ -785,16 +953,41 @@
 
     object-fit: cover;
 
-    object-position: center;
+    object-position:
+        center center;
 
     transition:
         transform .7s ease;
+
 }
 
 
-.mobile-category-card:hover img {
+/* =========================================================
+   CATEGORY HOVER
+   ONLY REAL MOUSE DEVICES
+========================================================= */
 
-    transform: scale(1.055);
+@media
+(hover: hover)
+and
+(pointer: fine) {
+
+    .mobile-category-card:hover {
+
+        border-bottom:
+            3px solid
+            rgb(0, 248, 227);
+
+    }
+
+
+    .mobile-category-card:hover img {
+
+        transform:
+            scale(1.055);
+
+    }
+
 }
 
 
@@ -811,13 +1004,13 @@
     z-index: 1;
 
     background:
-
         linear-gradient(
             to bottom,
-            rgba(0,0,0,.02) 25%,
-            rgba(0,0,0,.20) 45%,
-            rgba(0,0,0,.86) 100%
+            rgba(0, 0, 0, .02) 25%,
+            rgba(0, 0, 0, .20) 45%,
+            rgba(0, 0, 0, .86) 100%
         );
+
 }
 
 
@@ -839,6 +1032,7 @@
 
     padding:
         0 28px;
+
 }
 
 
@@ -847,13 +1041,15 @@
     margin:
         0 0 12px;
 
-    color: #f4f4f4;
+    color:
+        #f4f4f4;
 
     font-size: 23px;
 
     font-weight: 700;
 
     letter-spacing: .7px;
+
 }
 
 
@@ -865,11 +1061,13 @@
 
     gap: 9px;
 
-    color: #c7c7ca;
+    color:
+        #c7c7ca;
 
     font-size: 12px;
 
     letter-spacing: 1.5px;
+
 }
 
 
@@ -880,6 +1078,140 @@
     font-weight: 300;
 
     line-height: 1;
+
+}
+
+
+/* =========================================================
+   UNAVAILABLE CATEGORY
+========================================================= */
+
+.mobile-category-card.category-unavailable {
+
+    cursor:
+        not-allowed;
+
+    box-shadow:
+        0 12px 35px
+        rgba(0, 0, 0, .548);
+
+}
+
+
+/* Dark overlay */
+
+.mobile-category-card.category-unavailable
+.mobile-category-overlay {
+
+    background:
+        linear-gradient(
+            to bottom,
+            rgba(0, 0, 0, .685) 100%
+        );
+
+}
+
+
+/* Prevent zoom */
+
+.mobile-category-card.category-unavailable img {
+
+    filter:
+        grayscale(1)
+        brightness(.40);
+
+}
+
+
+/* Never zoom unavailable cards */
+
+@media
+(hover: hover)
+and
+(pointer: fine) {
+
+    .mobile-category-card.category-unavailable:hover img {
+
+        transform:
+            none;
+
+    }
+
+}
+
+
+/* =========================================================
+   UNAVAILABLE BADGE
+========================================================= */
+
+.category-unavailable-badge {
+
+    position: absolute;
+
+    top: 50%;
+
+    left: 50%;
+
+    z-index: 10;
+
+    padding:
+        7px 12px;
+
+    border:
+        1px solid
+        rgba(255, 255, 255, .514);
+
+    border-radius:
+        6px;
+
+    background:
+        rgba(0, 0, 0, .171);
+
+    color:
+        rgb(255, 255, 255);
+
+    font-size: 9px;
+
+    font-weight: 600;
+
+    letter-spacing: 1.5px;
+
+    white-space: nowrap;
+
+    backdrop-filter:
+        blur(5px);
+
+    transform:
+        translate(-50%, -50%);
+
+}
+
+
+/* =========================================================
+   UNAVAILABLE TEXT
+========================================================= */
+
+.mobile-category-card.category-unavailable
+.mobile-category-content span {
+
+    color:
+        rgb(192, 1, 1);
+
+    font-weight: 600;
+
+}
+
+
+.mobile-category-card.category-unavailable
+.mobile-category-content span b {
+
+    font-size: 17px;
+
+    color:
+        rgb(192, 1, 1);
+
+    font-weight: 600;
+
 }
 
 
@@ -894,9 +1226,11 @@
     padding:
         0 50px 60px;
 
-    background: var(--background-color);
+    background:
+        var(--background-color);
 
     z-index: 5;
+
 }
 
 
@@ -923,7 +1257,8 @@
         1px solid
         #27282c;
 
-    border-radius: 13px;
+    border-radius:
+        13px;
 
     background:
         linear-gradient(
@@ -932,27 +1267,39 @@
             #0b0b0d
         );
 
-    color: white;
+    color:
+        white;
 
     text-decoration: none;
 
     transition:
         border-color .3s ease,
         background .3s ease;
+
 }
 
 
-.mobile-secure-card:hover {
+/* Secure card hover */
 
-    border-color:
-        #3a3b40;
+@media
+(hover: hover)
+and
+(pointer: fine) {
 
-    background:
-        linear-gradient(
-            145deg,
-            #151517,
-            #0d0d0f
-        );
+    .mobile-secure-card:hover {
+
+        border-color:
+            #3a3b40;
+
+        background:
+            linear-gradient(
+                145deg,
+                #151517,
+                #0d0d0f
+            );
+
+    }
+
 }
 
 
@@ -968,6 +1315,7 @@
 
     flex:
         0 0 43px;
+
 }
 
 
@@ -979,21 +1327,28 @@
 
     fill: none;
 
-    stroke: #f0f0f1;
+    stroke:
+        #f0f0f1;
 
     stroke-width: 1.7;
 
     stroke-linecap: round;
 
     stroke-linejoin: round;
+
 }
 
+
+/* =========================================================
+   SECURE CONTENT
+========================================================= */
 
 .mobile-secure-content {
 
     flex: 1;
 
     min-width: 0;
+
 }
 
 
@@ -1001,13 +1356,15 @@
 
     margin: 0;
 
-    color: #eeeeef;
+    color:
+        #eeeeef;
 
     font-size: 13px;
 
     font-weight: 600;
 
     letter-spacing: .7px;
+
 }
 
 
@@ -1016,157 +1373,157 @@
     margin:
         5px 0 0;
 
-    color: #89898e;
+    color:
+        #89898e;
 
     font-size: 11px;
 
     font-weight: 400;
+
 }
 
 
 .mobile-secure-arrow {
 
+    color:
+        #eeeeef;
+
     font-size: 24px;
 
     font-weight: 300;
 
-    color: #eeeeef;
 }
 
 
-
-/* ============================================
+/* =========================================================
    SECOND HERO SECTION
-   ============================================ */
+========================================================= */
 
 .second_hero_section {
-    width: 100%;
+
     position: relative;
+
+    width: 100%;
+
     overflow: hidden;
 
-    background-image: url("../images/background.png");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+    background-image:
+        url("../images/background.png");
 
-    /* z-index negative রাখবে না */
+    background-size:
+        cover;
+
+    background-position:
+        center center;
+
+    background-repeat:
+        no-repeat;
+
     z-index: 0;
+
 }
 
 
-/* ============================================
-   BACKGROUND IMAGE OVERLAY
-   শুধু background image-এর উপর থাকবে
-   ============================================ */
+/* =========================================================
+   SECOND HERO TOP OVERLAY
+========================================================= */
 
 .second_hero_section::before {
+
     content: "";
 
     position: absolute;
 
     top: 0;
+
     left: 0;
 
     width: 100%;
+
     height: 280px;
 
-    background: linear-gradient(
-        to bottom,
+    background:
+        linear-gradient(
+            to bottom,
+            rgba(0, 0, 0, 1) 2%,
+            rgba(0, 0, 0, .95) 12%,
+            rgba(0, 0, 0, .85) 30%,
+            rgba(0, 0, 0, .65) 50%,
+            rgba(0, 0, 0, .30) 70%,
+            rgba(0, 0, 0, .005) 100%
+        );
 
-        rgba(0, 0, 0, 1) 2%,
-        rgba(0, 0, 0, 0.95) 12%,
-        rgba(0, 0, 0, 0.85) 30%,
-        rgba(0, 0, 0, 0.65) 50%,
-        rgba(0, 0, 0, 0.30) 70%,
-        rgba(0, 0, 0, 0.005) 100%
-    );
-
-    /*
-       Background-এর উপরে
-       কিন্তু content-এর নিচে
-    */
     z-index: 0;
 
     pointer-events: none;
+
 }
 
+
+/* =========================================================
+   SECOND HERO BOTTOM OVERLAY
+========================================================= */
+
 .second_hero_section::after {
+
     content: "";
 
     position: absolute;
 
     bottom: 0;
+
     left: 0;
 
     width: 100%;
+
     height: 182px;
 
-    background: linear-gradient(
-        to top,
+    background:
+        linear-gradient(
+            to top,
+            rgba(0, 0, 0, 1) 2%,
+            rgba(0, 0, 0, .95) 12%,
+            rgba(0, 0, 0, .85) 30%,
+            rgba(0, 0, 0, .65) 50%,
+            rgba(0, 0, 0, .30) 70%,
+            rgba(0, 0, 0, .005) 100%
+        );
 
-        rgba(0, 0, 0, 1) 2%,
-
-        rgba(0, 0, 0, 0.95) 12%,
-        rgba(0, 0, 0, 0.85) 30%,
-        rgba(0, 0, 0, 0.65) 50%,
-        rgba(0, 0, 0, 0.30) 70%,
-        rgba(0, 0, 0, 0.005) 100%
-    );
-
-    /*
-       Background-এর উপরে
-       কিন্তু content-এর নিচে
-    */
     z-index: 0;
 
     pointer-events: none;
+
 }
 
 
-/* ============================================
-   SECOND SECTION-এর ভিতরের সব content
-   overlay-এর উপরে থাকবে
-   ============================================ */
+/* Content above overlay */
 
 .second_hero_section > * {
+
     position: relative;
 
     z-index: 1;
+
 }
 
 
 /* =========================================================
    TABLET
+   MAX 991px
 ========================================================= */
 
 @media (max-width: 991px) {
-    .mobile_hero_image {
-        display: none;
-    }
+
+
+    /* -----------------------------------------
+       HERO
+    ----------------------------------------- */
 
     .mobile-hero-content {
 
-        padding: 0 35px;
-    }
+        padding:
+            0 35px;
 
-
-    .mobile-hero-title strong {
-
-        font-size: clamp(
-            32px,
-            6vw,
-            52px
-        );
-    }
-
-
-    .mobile-hero-title span {
-
-        font-size: clamp(
-            29px,
-            5.6vw,
-            48px
-        );
     }
 
 
@@ -1175,323 +1532,508 @@
         width: 300px;
 
         min-height: 58px;
+
     }
+
+
+    /* -----------------------------------------
+       FEATURES
+    ----------------------------------------- */
 
     .mobile-feature-section {
 
         padding:
             30px 30px 15px;
-    }
 
-
-    .mobile-category-section,
-    .mobile-categories-section {
-
-        padding-left: 30px;
-
-        padding-right: 30px;
     }
 
 
     .mobile-feature-card {
-        padding: 10px;
-        height: fit-content;
+
+        padding:
+            10px;
+
+        height:
+            fit-content;
+
     }
+
 
     .mobile-feature-icon {
 
         width: 30px;
 
         height: 30px;
+
+    }
+
+
+    /* -----------------------------------------
+       CATEGORIES
+    ----------------------------------------- */
+
+    .mobile-categories-section {
+
+        padding-left:
+            30px;
+
+        padding-right:
+            30px;
+
+    }
+
+
+    .mobile-category-grid {
+
+        gap:
+            20px;
+
     }
 
 
     .mobile-category-card {
 
-        height: 250px;
+        aspect-ratio:
+            8 / 9;
+
     }
 
 
+    /* -----------------------------------------
+       SECURE
+    ----------------------------------------- */
+
     .mobile-secure-section {
 
-        padding-left: 30px;
+        padding-left:
+            30px;
 
-        padding-right: 30px;
+        padding-right:
+            30px;
+
     }
 
 }
 
+
 /* =========================================================
-   MOBILE — EVERYTHING FITS IN FIRST VIEW
+   MOBILE
+   MAX 768px
 ========================================================= */
-
-/* @media (max-width: 768px) {
-
-
-    .mobile-hero-content {
-
-        padding:
-            0 20px;
-
-        bottom: 10px;
-    }
-
-    .mobile-hero-button {
-        width: 200px;
-        height: 10px;
-        gap: 5px;
-        padding: 10px;
-        font-size: 8px;
-    }
-    .mobile-hero-title strong {
-
-        font-size: 30px;
-    }
-
-
-    .mobile-hero-title span {
-
-        font-size: 27px;
-    }
-
-} */
 
 @media (max-width: 768px) {
 
+
+    /* -----------------------------------------
+       HERO CONTENT
+    ----------------------------------------- */
+
     .mobile-hero-content {
 
-        bottom: 18px;
+        bottom:
+            18px;
 
-        padding: 0 22px;
+        padding:
+            0 22px;
+
     }
-    
 
+
+    /* -----------------------------------------
+       HERO EYEBROW
+    ----------------------------------------- */
 
     .mobile-hero-eyebrow {
 
-        margin-bottom: 11px;
+        margin-bottom:
+            11px;
 
-        font-size: 10px;
+        font-size:
+            10px;
 
-        letter-spacing: 2px;
+        letter-spacing:
+            2px;
+
     }
 
 
-    .mobile-hero-title {
+    /* -----------------------------------------
+       HERO SUBTITLE
+    ----------------------------------------- */
 
-        gap: 2px;
+    .nafi-hero-subtitle {
+
+        margin-bottom:
+            14px;
+
+        padding-left:
+            32px;
+
+        font-size:
+            10px;
+
+        letter-spacing:
+            3px;
+
     }
 
 
-    .mobile-hero-title strong {
+    .nafi-hero-subtitle::before {
 
-        font-size: clamp(
-            24px,
-            7.2vw,
-            36px
-        );
+        width:
+            22px;
+
     }
 
 
-    .mobile-hero-title span {
+    /* -----------------------------------------
+       HERO TITLE
+    ----------------------------------------- */
 
-        font-size: clamp(
-            22px,
-            6.7vw,
-            34px
-        );
+    .nafi-hero-title {
+
+        font-size:
+            clamp(
+                42px,
+                11vw,
+                64px
+            );
+
+        line-height:
+            .98;
+
+        letter-spacing:
+            -2.5px;
+
     }
 
+
+    .nafi-hero-title span {
+
+        margin-top:
+            10px;
+
+        letter-spacing:
+            -3px;
+
+    }
+
+
+    /* -----------------------------------------
+       HERO LINE
+    ----------------------------------------- */
 
     .mobile-hero-line {
 
-        width: 150px;
+        width:
+            150px;
 
-        height: 1px;
+        height:
+            1px;
 
         margin:
             17px 0 16px;
+
     }
 
 
+    /* -----------------------------------------
+       HERO BUTTON
+    ----------------------------------------- */
+
     .mobile-hero-button {
 
-        width: 235px;
+        width:
+            235px;
 
-        min-height: 48px;
+        min-height:
+            48px;
 
         padding:
             0 17px;
 
-        font-size: 10px;
+        font-size:
+            10px;
 
-        letter-spacing: 1.2px;
+        letter-spacing:
+            1.2px;
+
     }
 
 
     .mobile-button-arrow {
 
-        font-size: 21px;
+        font-size:
+            21px;
+
     }
 
 
+    /* -----------------------------------------
+       INDICATORS
+    ----------------------------------------- */
+
     .mobile-slider-indicators {
 
-        bottom: 13px;
+        bottom:
+            13px;
 
-        gap: 6px;
+        top:
+            auto;
+
+        gap:
+            6px;
+
     }
 
 
     .mobile-slider-indicators button {
 
-        width: 5px;
+        width:
+            5px;
 
-        height: 5px;
+        height:
+            5px;
+
     }
 
 
     .mobile-slider-indicators button.active {
 
-        width: 19px;
-    }
-}
+        width:
+            19px;
 
-
-@media (max-width: 600px) and (min-width: 499px) {
-    .mobile-hero-slide {
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-    }
-    .mobile-hero-slide img {
-        width: auto;
-        height: 100%;
-        max-width: 150vw;
-        position: relative;
-        left: 50%;
-        transform: translateX(-50%);
     }
 
-}
-
-
-
-
-
-
-/* ============================================
-   mobile
-   ============================================ */
-
-/* =========================================================
-   NFX VAULT HERO
-   INDEPENDENT MOBILE SLIDER
-========================================================= */
-
-.nfx-vault-hero {
-    display: none;
-    position: relative;
-    width: 100%;
-    max-width: 500px;
-    height: fit-content;
-    overflow: hidden;
-    background: #050505;
-    z-index: 0;
-}
-
-
-/* =========================================================
-   SLIDER WRAPPER
-========================================================= */
-
-.nfx-vault-slider {
-    position: relative;
-    height: fit-content;
-    overflow: hidden;
-    background: #050505;
-    z-index: 0;
-}
-
-
-/* =========================================================
-   SLIDE
-========================================================= */
-
-.nfx-vault-panel {
-    position: absolute;
-
-    inset: 0;
-
-    height: fit-content;
-
-    opacity: 0;
-    visibility: hidden;
-
-    pointer-events: none;
-
-    transition:
-        opacity 1s ease,
-        visibility 1s ease;
-    z-index: 0;
-}
-
-
-/*
-   First slide creates the actual hero height.
-*/
-
-.nfx-vault-panel:first-child {
-    position: relative;
-
-    inset: auto;
-
-    width: 100%;
-    height: auto;
-}
-
-
-/* =========================================================
-   ACTIVE SLIDE
-========================================================= */
-
-.nfx-vault-panel.is-active {
-    opacity: 1;
-    visibility: visible;
-
-    pointer-events: auto;
 }
 
 
 /* =========================================================
    HERO IMAGE
+   499px - 600px
 ========================================================= */
 
-.nfx-vault-image {
-    display: block;
-    width: 100%;
-    min-width: 200px;
-    height: auto;
-    object-fit: cover;
+@media
+(min-width: 499px)
+and
+(max-width: 600px) {
 
-    object-position: center center;
+    .mobile-hero-slide {
 
-    background: #050505;
+        width:
+            100%;
+
+        height:
+            100%;
+
+        overflow:
+            hidden;
+
+    }
+
+
+    .mobile-hero-slide img {
+
+        position:
+            relative;
+
+        left:
+            50%;
+
+        width:
+            auto;
+
+        height:
+            100%;
+
+        max-width:
+            150vw;
+
+        transform:
+            translateX(-50%);
+
+    }
+
 }
 
 
 /* =========================================================
-   IMAGE SHADE / GRADIENT
+   NFX VAULT HERO
+   INDEPENDENT MOBILE HERO
+========================================================= */
+
+.nfx-vault-hero {
+
+    display:
+        none;
+
+    position:
+        relative;
+
+    width:
+        100%;
+
+    max-width:
+        500px;
+
+    height:
+        fit-content;
+
+    overflow:
+        hidden;
+
+    background:
+        #050505;
+
+    z-index:
+        0;
+
+}
+
+
+/* =========================================================
+   NFX SLIDER
+========================================================= */
+
+.nfx-vault-slider {
+
+    position:
+        relative;
+
+    height:
+        fit-content;
+
+    overflow:
+        hidden;
+
+    background:
+        #050505;
+
+    z-index:
+        0;
+
+}
+
+
+/* =========================================================
+   NFX SLIDE
+========================================================= */
+
+.nfx-vault-panel {
+
+    position:
+        absolute;
+
+    inset:
+        0;
+
+    width:
+        100%;
+
+    height:
+        fit-content;
+
+    opacity:
+        0;
+
+    visibility:
+        hidden;
+
+    pointer-events:
+        none;
+
+    transition:
+        opacity 1s ease,
+        visibility 1s ease;
+
+    z-index:
+        0;
+
+}
+
+
+/* First slide creates height */
+
+.nfx-vault-panel:first-child {
+
+    position:
+        relative;
+
+    inset:
+        auto;
+
+    width:
+        100%;
+
+    height:
+        auto;
+
+}
+
+
+/* Active slide */
+
+.nfx-vault-panel.is-active {
+
+    opacity:
+        1;
+
+    visibility:
+        visible;
+
+    pointer-events:
+        auto;
+
+}
+
+
+/* =========================================================
+   NFX IMAGE
+========================================================= */
+
+.nfx-vault-image {
+
+    display:
+        block;
+
+    width:
+        100%;
+
+    min-width:
+        200px;
+
+    height:
+        auto;
+
+    object-fit:
+        cover;
+
+    object-position:
+        center center;
+
+    background:
+        #050505;
+
+}
+
+
+/* =========================================================
+   NFX IMAGE SHADE
 ========================================================= */
 
 .nfx-vault-shade {
-    position: absolute;
 
-    inset: 0;
+    position:
+        absolute;
 
-    z-index: 0;
+    inset:
+        0;
 
-    pointer-events: none;
+    z-index:
+        0;
+
+    pointer-events:
+        none;
 
     background:
 
@@ -1510,389 +2052,982 @@
             rgba(0, 0, 0, .84) 82%,
             rgba(0, 0, 0, 1) 100%
         );
+
 }
 
 
 /* =========================================================
-   HERO CONTENT
+   NFX COPY
 ========================================================= */
 
 .nfx-vault-copy {
-    position: absolute;
-    display: none;
-    left: 0;
-    bottom: calc(25vw + 76px + 10px + 10px);
 
+    position:
+        absolute;
 
-    z-index: 10;
+    display:
+        none;
 
-    width: 100%;
-    max-width: 1900px;
+    left:
+        0;
 
-    margin: 0 auto;
+    bottom:
+        calc(
+            25vw
+            + 76px
+            + 10px
+            + 10px
+        );
 
-    padding: 0 15px;
+    z-index:
+        10;
+
+    width:
+        100%;
+
+    max-width:
+        1900px;
+
+    margin:
+        0 auto;
+
+    padding:
+        0 15px;
+
 }
 
 
 /* =========================================================
-   EYEBROW
+   NFX KICKER
 ========================================================= */
 
 .nfx-vault-kicker {
-    display: block;
 
-    margin-bottom: 17px;
+    display:
+        block;
 
-    color: #bdbdc1;
+    margin-bottom:
+        17px;
 
-    font-size: 14px;
-    font-weight: 400;
+    color:
+        #bdbdc1;
 
-    letter-spacing: 3px;
+    font-size:
+        14px;
 
-    line-height: 1.2;
+    font-weight:
+        400;
+
+    letter-spacing:
+        3px;
+
+    line-height:
+        1.2;
+
 }
 
 
 /* =========================================================
-   TITLE
+   NFX HEADING
 ========================================================= */
 
 .nfx-vault-heading {
-    display: flex;
 
-    flex-direction: column;
+    display:
+        flex;
 
-    gap: 4px;
+    flex-direction:
+        column;
 
-    margin: 0;
-    padding: 0;
+    gap:
+        4px;
 
-    text-transform: uppercase;
+    margin:
+        0;
 
-    line-height: 1.02;
+    padding:
+        0;
+
+    text-transform:
+        uppercase;
+
+    line-height:
+        1.02;
+
 }
 
 
 .nfx-vault-heading strong {
-    display: block;
 
-    color: #f7f7f8;
+    display:
+        block;
 
-    font-size: clamp(
-        38px,
-        4.5vw,
-        68px
-    );
+    color:
+        #f7f7f8;
 
-    font-weight: 800;
+    font-size:
+        clamp(
+            38px,
+            4.5vw,
+            68px
+        );
 
-    letter-spacing: .3px;
+    font-weight:
+        800;
+
+    letter-spacing:
+        .3px;
+
 }
 
 
 .nfx-vault-heading span {
-    display: block;
 
-    color: #bcbcc1;
+    display:
+        block;
 
-    font-size: clamp(
-        34px,
-        4.2vw,
-        63px
-    );
+    color:
+        #bcbcc1;
 
-    font-weight: 400;
+    font-size:
+        clamp(
+            34px,
+            4.2vw,
+            63px
+        );
 
-    letter-spacing: .3px;
+    font-weight:
+        400;
+
+    letter-spacing:
+        .3px;
+
 }
 
 
 /* =========================================================
-   HORIZONTAL RULE
+   NFX RULE
 ========================================================= */
 
 .nfx-vault-rule {
-    width: 245px;
 
-    height: 1px;
+    width:
+        245px;
+
+    height:
+        1px;
 
     margin:
         28px 0 25px;
 
     background:
-        rgba(255, 255, 255, 0.192);
+        rgba(255, 255, 255, .192);
+
 }
 
 
 /* =========================================================
-   ACTION BUTTON
+   NFX ACTION
 ========================================================= */
 
 .nfx-vault-action {
-    width: fit-content;
 
-    min-height: 40px;
+    width:
+        fit-content;
 
-    display: flex;
+    min-height:
+        40px;
 
-    align-items: center;
+    display:
+        flex;
 
-    justify-content: space-between;
+    align-items:
+        center;
 
-    padding: 0 27px 0 0;
+    justify-content:
+        space-between;
 
+    gap:
+        20px;
 
-    color: #f4f4f4;
+    padding:
+        0 27px 0 0;
 
-    text-decoration: none;
-
-    text-transform: uppercase;
-
-    font-size: 14px;
-
-    font-weight: 500;
-
-    letter-spacing: 8px;
-/* 
-    backdrop-filter: blur(2px); */
-
-}
-
-
-.nfx-vault-action:hover {
     color:
-        #03f8c3cc;
+        #f4f4f4;
+
+    text-decoration:
+        none;
+
+    text-transform:
+        uppercase;
+
+    font-size:
+        14px;
+
+    font-weight:
+        500;
+
+    letter-spacing:
+        8px;
+
 }
 
 
+/* Desktop hover */
+
+@media
+(hover: hover)
+and
+(pointer: fine) {
+
+    .nfx-vault-action:hover {
+
+        color:
+            #03f8c3cc;
+
+    }
+
+}
 
 
 /* =========================================================
-   ARROW
+   NFX ARROW
 ========================================================= */
 
 .nfx-vault-arrow {
-    font-size: 27px;
 
-    font-weight: 300;
+    font-size:
+        27px;
 
-    line-height: 1;
+    font-weight:
+        300;
+
+    line-height:
+        1;
+
 }
 
 
 /* =========================================================
-   INDICATORS
+   NFX DOTS
 ========================================================= */
 
 .nfx-vault-dots {
-    position: absolute;
 
-    left: 50%;
+    position:
+        absolute;
 
-    top: 22px;
+    left:
+        50%;
+
+    top:
+        22px;
+
+    z-index:
+        10;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        8px;
 
     transform:
         translateX(-50%);
 
-    z-index: 10;
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 8px;
 }
 
 
 .nfx-vault-dots button {
-    width: 6px;
-    height: 6px;
 
-    padding: 0;
+    width:
+        6px;
 
-    border: 0;
+    height:
+        6px;
 
-    border-radius: 50%;
+    padding:
+        0;
+
+    border:
+        0;
+
+    border-radius:
+        50%;
 
     background:
         rgba(255, 255, 255, .35);
 
-    cursor: pointer;
+    cursor:
+        pointer;
 
     transition:
         width .3s ease,
         background .3s ease;
+
 }
 
 
 .nfx-vault-dots button.is-active {
-    width: 24px;
 
-    border-radius: 10px;
+    width:
+        24px;
+
+    border-radius:
+        10px;
 
     background:
         #f4f4f4;
+
 }
 
-/* =========================================================
-   NAFI HERO TYPOGRAPHY
-   Premium • Masculine • Modern • Minimal
-========================================================= */
 
 /* =========================================================
    VERY SMALL MOBILE
+   MAX 500px
 ========================================================= */
 
 @media (max-width: 500px) {
 
+
+    /* -----------------------------------------
+       NFX HERO
+    ----------------------------------------- */
+
     .nfx-vault-hero {
-        display: block;
+
+        display:
+            block;
+
     }
 
+
+    /* -----------------------------------------
+       HIDE NORMAL HERO
+    ----------------------------------------- */
 
     .mobile-nafi-hero {
-        display: none;
+
+        display:
+            none;
+
     }
+
+
+    /* -----------------------------------------
+       NFX COPY
+    ----------------------------------------- */
 
     .nfx-vault-copy {
-        display: block;
+
+        display:
+            block;
+
     }
+
 
     .nfx-vault-action {
-        gap: 20px;
-    }
-    .nfx-vault-action span {
-        font-size: 18px;
-    }
-    .nfx-vault-arrow {
-        font-size: 24px;
+
+        gap:
+            20px;
+
     }
 
+
+    .nfx-vault-action span {
+
+        font-size:
+            18px;
+
+    }
+
+
+    .nfx-vault-arrow {
+
+        font-size:
+            24px;
+
+    }
+
+
+    /* -----------------------------------------
+       SECOND HERO
+    ----------------------------------------- */
 
     .second_hero_section {
-        display: block;
-        background: transparent;
-        background-image: none;
-        position: absolute;
-        bottom: 10px;
-        z-index: 10;
+
+        display:
+            block;
+
+        position:
+            absolute;
+
+        bottom:
+            10px;
+
+        width:
+            100%;
+
+        background:
+            transparent;
+
+        background-image:
+            none;
+
+        z-index:
+            10;
+
     }
+
+
+    .second_hero_section::before,
+    .second_hero_section::after {
+
+        display:
+            none;
+
+    }
+
+
+    /* -----------------------------------------
+       FEATURES
+    ----------------------------------------- */
+
     .mobile-feature-section {
-        padding: 0px 10px 6px;
+
+        padding:
+            0 10px 6px;
+
     }
+
+
     .mobile-feature-card {
-        height: 70px;
-        padding: 0px;
+
+        height:
+            70px;
+
+        padding:
+            0;
+
     }
+
 
     .mobile-feature-item {
-        height: fit-content;
-        padding: 0px 10px;
+
+        height:
+            fit-content;
+
+        padding:
+            0 10px;
+
     }
+
 
     .mobile-feature-icon {
-        width: 18px;
-    
-        height: 18px;
+
+        width:
+            18px;
+
+        height:
+            18px;
+
     }
 
-    .mobile-feature-item h3{
-        font-size: 9px;
-        font-weight: normal;
+
+    .mobile-feature-item h3 {
+
+        font-size:
+            9px;
+
+        font-weight:
+            400;
+
     }
-    .mobile-feature-item p{
-        font-size: 7px;
-        padding: 0px;
+
+
+    .mobile-feature-item p {
+
+        margin:
+            3px 0 0;
+
+        padding:
+            0;
+
+        font-size:
+            7px;
+
     }
+
 
     .mobile-feature-divider {
-        height: 40px;
+
+        height:
+            40px;
+
     }
 
-    .mobile-categories-section  {
-        padding: 0px 10px;
+
+    /* -----------------------------------------
+       CATEGORY SECTION
+    ----------------------------------------- */
+
+    .mobile-categories-section {
+
+        padding:
+            0 10px;
+
     }
+
+
+    /* -----------------------------------------
+       CATEGORY TRACK
+    ----------------------------------------- */
 
     .mobile-category-grid {
-        gap: 5px;
+
+        gap:
+            5px;
+
     }
+
+
+    /* -----------------------------------------
+       CATEGORY CARD
+       4 CARDS IN VIEW
+    ----------------------------------------- */
 
     .mobile-category-card {
-        height: 25vw;
-        border-radius: 10px;
+
+        /*
+           Container width:
+           100vw - 20px
+
+           Three gaps:
+           5px × 3 = 15px
+
+           Therefore:
+           remaining width / 4
+        */
+
+        width:
+            calc(
+                (100vw - 35px) / 4
+            );
+
+        height:
+            calc(
+                (100vw - 35px) / 4
+            );
+
+        aspect-ratio:
+            auto;
+
+        border-radius:
+            10px;
+
     }
 
+
+    /* -----------------------------------------
+       CATEGORY CONTENT
+    ----------------------------------------- */
 
     .mobile-category-content {
-        padding: 5px;
-        height: fit-content;
-        position: absolute;
-        bottom: 5px;
+
+        left:
+            0;
+
+        right:
+            0;
+
+        bottom:
+            5px;
+
+        height:
+            fit-content;
+
+        padding:
+            5px;
+
     }
 
+
     .mobile-category-content h3 {
-        font-size: 11px;
-        margin: 0px;
-        font-weight: normal;
+
+        margin:
+            0;
+
+        font-size:
+            11px;
+
+        font-weight:
+            400;
+
+        letter-spacing:
+            .2px;
+
     }
+
 
     .mobile-category-content span {
-        font-size: 7px;
-        font-weight: thin;
+
+        gap:
+            3px;
+
+        margin-top:
+            2px;
+
+        font-size:
+            7px;
+
+        font-weight:
+            400;
+
+        letter-spacing:
+            .4px;
+
     }
+
+
     .mobile-category-content span b {
-        font-size: 7px;
-        font-weight: thin;
+
+        font-size:
+            7px;
+
+        font-weight:
+            400;
+
     }
 
 
-    .second_hero_section::after, 
-    .second_hero_section::before {
-        display: none;
+    /* -----------------------------------------
+       UNAVAILABLE BADGE
+    ----------------------------------------- */
+
+    .category-unavailable-badge {
+
+        padding:
+            4px 7px;
+
+        font-size:
+            6px;
+
+        letter-spacing:
+            .7px;
+
+        border-radius:
+            5px;
+
     }
+
+
+    .mobile-category-card.category-unavailable
+    .mobile-category-content span {
+
+        font-size:
+            6px;
+
+    }
+
+
+    .mobile-category-card.category-unavailable
+    .mobile-category-content span b {
+
+        font-size:
+            7px;
+
+    }
+
+
+    /* -----------------------------------------
+       SECURE SECTION
+    ----------------------------------------- */
 
     .mobile-secure-section {
-        display: none;
-    }
-    .mobile-nafi-page {
-        width: 100%;
-        height: calc(100svh - 96px);
-        max-height: 200vw;
-        min-height: 140vw;
-        overflow: hidden;
+
+        display:
+            none;
 
     }
+
+
+    /* -----------------------------------------
+       MAIN MOBILE PAGE
+    ----------------------------------------- */
+
+    .mobile-nafi-page {
+
+        width:
+            100%;
+
+        height:
+            calc(100svh - 96px);
+
+        max-height:
+            200vw;
+
+        min-height:
+            140vw;
+
+        overflow:
+            hidden;
+
+    }
+
+
+    /* -----------------------------------------
+       NAFI SUBTITLE
+    ----------------------------------------- */
 
     .nafi-hero-subtitle {
-        font-size: 10px;
-        letter-spacing: 3px;
-        margin-bottom: 14px;
-        padding-left: 32px;
+
+        font-size:
+            10px;
+
+        letter-spacing:
+            3px;
+
+        margin-bottom:
+            14px;
+
+        padding-left:
+            32px;
+
     }
+
 
     .nafi-hero-subtitle::before {
-        width: 22px;
+
+        width:
+            22px;
+
     }
+
+
+    /* -----------------------------------------
+       NAFI TITLE
+    ----------------------------------------- */
 
     .nafi-hero-title {
-        font-size: clamp(42px, 11vw, 64px);
-        line-height: 0.98;
-        letter-spacing: -2.5px;
+
+        font-size:
+            clamp(
+                42px,
+                11vw,
+                64px
+            );
+
+        line-height:
+            .98;
+
+        letter-spacing:
+            -2.5px;
+
     }
+
 
     .nafi-hero-title span {
-        letter-spacing: -3px;
-        font-weight: 800;
+
+        letter-spacing:
+            -3px;
+
+        font-weight:
+            800;
+
     }
 
+
+    /* -----------------------------------------
+       DESCRIPTION
+    ----------------------------------------- */
+
     .nafi-hero-description {
-        margin: 20px 0px;
-        font-size: 13px;
-        line-height: 1.7;
-        max-width: 380px;
+
+        margin:
+            20px 0;
+
+        max-width:
+            380px;
+
+        font-size:
+            13px;
+
+        line-height:
+            1.7;
+
     }
 
 }
 
+
+/* =========================================================
+   EXTRA SMALL MOBILE
+   MAX 380px
+========================================================= */
+
+@media (max-width: 380px) {
+
+
+    .nfx-vault-heading strong {
+
+        font-size:
+            34px;
+
+    }
+
+
+    .nfx-vault-heading span {
+
+        font-size:
+            30px;
+
+    }
+
+
+    .nfx-vault-copy {
+
+        bottom:
+            calc(
+                25vw
+                + 70px
+                + 10px
+            );
+
+        padding:
+            0 12px;
+
+    }
+
+
+    .nfx-vault-kicker {
+
+        margin-bottom:
+            12px;
+
+        font-size:
+            10px;
+
+        letter-spacing:
+            2px;
+
+    }
+
+
+    .nfx-vault-rule {
+
+        width:
+            180px;
+
+        margin:
+            18px 0 16px;
+
+    }
+
+
+    .nfx-vault-action {
+
+        min-height:
+            35px;
+
+        padding:
+            0;
+
+        font-size:
+            11px;
+
+        letter-spacing:
+            5px;
+
+    }
+
+
+    .nfx-vault-action span {
+
+        font-size:
+            15px;
+
+    }
+
+
+    .nfx-vault-arrow {
+
+        font-size:
+            20px;
+
+    }
+
+
+    .mobile-feature-card {
+
+        height:
+            65px;
+
+    }
+
+
+    .mobile-feature-item {
+
+        padding:
+            0 6px;
+
+    }
+
+
+    .mobile-feature-item h3 {
+
+        font-size:
+            8px;
+
+    }
+
+
+    .mobile-feature-item p {
+
+        font-size:
+            6px;
+
+    }
+
+
+    .mobile-feature-icon {
+
+        width:
+            16px;
+
+        height:
+            16px;
+
+        margin-bottom:
+            6px;
+
+    }
+
+
+    .mobile-feature-divider {
+
+        height:
+            35px;
+
+    }
+
+
+    .mobile-category-content h3 {
+
+        font-size:
+            10px;
+
+    }
+
+
+    .mobile-category-content span {
+
+        font-size:
+            6px;
+
+    }
+
+}

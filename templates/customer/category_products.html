@@ -1,0 +1,217 @@
+{% extends "customer/master/base.html" %}
+
+{% load static %}
+
+{% block title %}
+    {{ category.name }} - NAFI
+{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'customer/css/category_product.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<section class="nafi-category-page">
+
+
+    <!-- =====================================================
+         CATEGORY HEADER
+    ====================================================== -->
+
+    <div class="category-page-header">
+
+        <div class="category-page-title">
+
+            <span>
+                NAFI COLLECTION
+            </span>
+
+            <h1>
+                {{ category.name }}
+            </h1>
+
+            {% if category.description %}
+
+                <p>
+                    {{ category.description }}
+                </p>
+
+            {% endif %}
+
+        </div>
+
+
+        <div class="category-product-count">
+
+            <span>
+                {{ products|length }}
+            </span>
+
+            <small>
+                PRODUCTS
+            </small>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         CATEGORY PRODUCTS
+    ====================================================== -->
+
+    <div class="category-products-grid">
+
+        {% for product in products %}
+
+            <article class="category-product">
+
+
+                <!-- =================================================
+                     PRODUCT IMAGE
+                ================================================== -->
+
+                <a
+                    href="{% url 'product_detail_page' product.slug %}"
+                    class="category-product-image-link"
+                >
+
+                    <div class="category-product-image-wrapper">
+
+
+                        <!-- MAIN IMAGE -->
+
+                        {% if product.image %}
+
+                            <img
+                                src="{{ product.image.url }}"
+                                alt="{{ product.name }}"
+                                class="category-product-image main-product-image"
+                                loading="lazy"
+                            >
+
+                        {% endif %}
+
+
+
+                        <!-- SECONDARY IMAGE -->
+
+                        {% for product_image in product.images.all %}
+
+                            {% if product_image.image_type == "secondary" %}
+
+                                <img
+                                    src="{{ product_image.image.url }}"
+                                    alt="{{ product.name }}"
+                                    class="category-product-image secondary-product-image"
+                                    loading="lazy"
+                                >
+
+                            {% endif %}
+
+                        {% endfor %}
+
+
+
+                        <!-- NO IMAGE FALLBACK -->
+
+                        {% if not product.image %}
+
+                            <div class="category-product-no-image">
+
+                                <i class="bi bi-image"></i>
+
+                            </div>
+
+                        {% endif %}
+
+
+                    </div>
+
+                </a>
+
+
+
+                <!-- =================================================
+                     PRODUCT INFORMATION
+                ================================================== -->
+
+                <div class="category-product-info">
+
+
+                    <!-- PRODUCT NAME -->
+
+                    <a
+                        href="{% url 'product_detail_page' product.slug %}"
+                        class="category-product-name"
+                    >
+
+                        {{ product.name }}
+
+                    </a>
+
+
+
+                    <!-- PRICE -->
+
+                    <div class="category-product-price">
+
+                        {% if product.discount_price %}
+
+                            <span class="category-old-price">
+                                ৳{{ product.price }}
+                            </span>
+
+                            <span class="category-discount-price">
+                                ৳{{ product.discount_price }}
+                            </span>
+
+                        {% else %}
+
+                            <span class="category-price">
+                                ৳{{ product.price }}
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+                </div>
+
+
+            </article>
+
+
+        {% empty %}
+
+
+            <!-- =================================================
+                 NO PRODUCTS
+            ================================================== -->
+
+            <div class="category-products-empty">
+
+                <i class="bi bi-box-seam"></i>
+
+                <h3>
+                    No Products Available
+                </h3>
+
+                <p>
+                    There are currently no products available
+                    in this category.
+                </p>
+
+            </div>
+
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+{% endblock %}
