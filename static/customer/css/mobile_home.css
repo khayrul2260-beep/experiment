@@ -455,7 +455,7 @@
 
     font-weight: 500;
 
-    letter-spacing: 1.6px;
+    letter-spacing: 15px;
 
     backdrop-filter:
         blur(4px);
@@ -733,9 +733,11 @@
 .mobile-categories-section {
 
     width: 100%;
+    position: absolute;
+    bottom: 0px;
 
     padding:
-        0 30px 60px;
+        15vh 0px;
 
     background:
         transparent;
@@ -845,6 +847,7 @@
 .mobile-category-card {
 
     position: relative;
+    width: 140px;
 
     flex:
         0 0 auto !important;
@@ -871,70 +874,7 @@
 }
 
 
-/* =========================================================
-   DESKTOP
-   1400px+
-   9 CARDS
-========================================================= */
 
-@media (min-width: 1400px) {
-
-    .mobile-category-card {
-
-        width:
-            calc(
-                (100vw - 60px - 160px) / 9
-            );
-
-    }
-
-}
-
-
-/* =========================================================
-   LAPTOP
-   900px - 1399px
-   7 CARDS
-========================================================= */
-
-@media
-(min-width: 900px)
-and
-(max-width: 1399px) {
-
-    .mobile-category-card {
-
-        width:
-            calc(
-                (100vw - 60px - 120px) / 7
-            );
-
-    }
-
-}
-
-
-/* =========================================================
-   TABLET
-   500px - 899px
-   5 CARDS
-========================================================= */
-
-@media
-(min-width: 500px)
-and
-(max-width: 899px) {
-
-    .mobile-category-card {
-
-        width:
-            calc(
-                (100vw - 60px - 80px) / 5
-            );
-
-    }
-
-}
 
 
 /* =========================================================
@@ -1026,12 +966,12 @@ and
 
     right: 0;
 
-    bottom: 30px;
+    bottom: 0px;
 
     z-index: 2;
 
     padding:
-        0 28px;
+        10px;
 
 }
 
@@ -1039,14 +979,14 @@ and
 .mobile-category-content h3 {
 
     margin:
-        0 0 12px;
+        0px;
 
     color:
-        #f4f4f4;
+        #e6e6e6;
 
-    font-size: 23px;
+    font-size: 13px;
 
-    font-weight: 700;
+    font-weight: 600;
 
     letter-spacing: .7px;
 
@@ -1059,12 +999,12 @@ and
 
     align-items: center;
 
-    gap: 9px;
+    gap: 4px;
 
     color:
-        #c7c7ca;
+        #a1a4a1;
 
-    font-size: 12px;
+    font-size: 10px;
 
     letter-spacing: 1.5px;
 
@@ -1073,7 +1013,7 @@ and
 
 .mobile-category-content b {
 
-    font-size: 21px;
+    font-size: 10px;
 
     font-weight: 300;
 
@@ -1195,8 +1135,8 @@ and
 .mobile-category-content span {
 
     color:
-        rgb(192, 1, 1);
-
+        rgb(255, 79, 79);
+    
     font-weight: 600;
 
 }
@@ -1205,10 +1145,10 @@ and
 .mobile-category-card.category-unavailable
 .mobile-category-content span b {
 
-    font-size: 17px;
+    font-size: 12px;
 
     color:
-        rgb(192, 1, 1);
+        rgb(255, 79, 79);
 
     font-weight: 600;
 
@@ -1404,7 +1344,6 @@ and
     position: relative;
 
     width: 100%;
-
     overflow: hidden;
 
     background-image:
@@ -1520,7 +1459,7 @@ and
     ----------------------------------------- */
 
     .mobile-hero-content {
-
+        bottom: 0;
         padding:
             0 35px;
 
@@ -1532,10 +1471,18 @@ and
         width: 300px;
 
         min-height: 58px;
+        letter-spacing: 12px;
 
     }
 
+    .mobile-hero-line {
+        margin-top: 20px;
+        margin-top: 15px;
+    }
 
+    .nafi-hero-subtitle {
+        margin-bottom: 15px;
+    }
     /* -----------------------------------------
        FEATURES
     ----------------------------------------- */
@@ -1575,10 +1522,10 @@ and
     .mobile-categories-section {
 
         padding-left:
-            30px;
+            0px;
 
         padding-right:
-            30px;
+            0px;
 
     }
 
@@ -1631,7 +1578,7 @@ and
     .mobile-hero-content {
 
         bottom:
-            18px;
+            0px;
 
         padding:
             0 22px;
@@ -1694,9 +1641,9 @@ and
 
         font-size:
             clamp(
-                42px,
-                11vw,
-                64px
+                40px,
+                8vw,
+                62px
             );
 
         line-height:
@@ -1720,31 +1667,13 @@ and
 
 
     /* -----------------------------------------
-       HERO LINE
-    ----------------------------------------- */
-
-    .mobile-hero-line {
-
-        width:
-            150px;
-
-        height:
-            1px;
-
-        margin:
-            17px 0 16px;
-
-    }
-
-
-    /* -----------------------------------------
        HERO BUTTON
     ----------------------------------------- */
 
     .mobile-hero-button {
 
         width:
-            235px;
+            35vw;
 
         min-height:
             48px;
@@ -1753,10 +1682,10 @@ and
             0 17px;
 
         font-size:
-            10px;
+            14px;
 
         letter-spacing:
-            1.2px;
+            10px;
 
     }
 
@@ -1775,10 +1704,10 @@ and
 
     .mobile-slider-indicators {
 
-        bottom:
+        top:
             13px;
 
-        top:
+        bottom:
             auto;
 
         gap:
@@ -1832,6 +1761,7 @@ and
     }
 
 
+
     .mobile-hero-slide img {
 
         position:
@@ -1853,6 +1783,27 @@ and
             translateX(-50%);
 
     }
+
+    .nafi-hero-title {
+
+        font-size:
+            clamp(
+                45px,
+                9vw,
+                64px
+            );
+
+        line-height:
+            .98;
+
+        letter-spacing:
+            -2.5px;
+
+    }
+    .mobile-hero-button {
+        letter-spacing: 5px;
+    }
+    
 
 }
 

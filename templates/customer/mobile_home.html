@@ -61,7 +61,7 @@
         <div class="mobile-hero-line"></div>
 
         <a href="#categories" class="mobile-hero-button">
-          <span> EXPLORE COLLECTION </span>
+          <span> EXPLORE</span>
 
           <span class="mobile-button-arrow"> → </span>
         </a>
@@ -214,6 +214,7 @@
         </div>
       </div>
     </section>
+
     <!-- =========================================
          CATEGORIES
     ========================================== -->
@@ -261,10 +262,10 @@
                           
                             <span>
                                 {% if category.is_active %}
-                                    EXPLORE
+                                    Available
                                     <b>→</b>
                                 {% else %}
-                                    UNAVAILABLE
+                                    Unavailable
                                     <b>×</b>
                                 {% endif %}
                             </span>
@@ -275,7 +276,7 @@
                         {% if not category.is_active %}
                       
                             <div class="category-unavailable-badge">
-                                UNAVAILABLE
+                                COMMING SOON
                             </div>
                           
                         {% endif %}
