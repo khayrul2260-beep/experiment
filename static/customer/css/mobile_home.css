@@ -831,7 +831,7 @@
 
     max-width: none !important;
 
-    gap: 20px;
+    gap: 100px;
 
     margin: 0;
 
@@ -862,7 +862,7 @@
         #f6f6f7;
 
     border-radius:
-        22px;
+        10px;
 
     background:
         #111;
@@ -1084,11 +1084,11 @@ and
    UNAVAILABLE BADGE
 ========================================================= */
 
-.category-unavailable-badge {
+.category-unavailable-badge { 
 
     position: absolute;
 
-    top: 50%;
+    top: 10%;
 
     left: 50%;
 
@@ -1122,7 +1122,7 @@ and
         blur(5px);
 
     transform:
-        translate(-50%, -50%);
+        translate(-50%, 0%);
 
 }
 
@@ -1533,7 +1533,7 @@ and
     .mobile-category-grid {
 
         gap:
-            20px;
+            50px;
 
     }
 
