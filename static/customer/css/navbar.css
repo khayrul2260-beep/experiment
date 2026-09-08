@@ -978,9 +978,9 @@
 ===================================================== */
 
 .mobile-dropdown {
-    max-height: 0;
+    max-height: 0px;
 
-    overflow: hidden;
+    overflow: scroll;
 
     opacity: 0;
 
@@ -996,7 +996,7 @@
 
 .mobile-nav-dropdown.dropdown-open
 .mobile-dropdown {
-    max-height: 300px;
+    max-height: 200px;
     opacity: 1;
 }
 

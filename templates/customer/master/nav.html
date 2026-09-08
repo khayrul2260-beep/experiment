@@ -118,11 +118,11 @@
                 
                 
                     <div class="nafi-dropdown">
-                    
+                        <a href="#" class="dropdown-item">
+                            All Products
+                        </a>                    
                         {% for category in navbar_categories %}
-                            <a href="#" class="dropdown-item">
-                                All Products
-                            </a>
+
                     
                             <a
                                 href="{% url 'category_products' category.slug %}"
@@ -134,7 +134,7 @@
                         {% empty %}
                         
                             <span class="dropdown-item">
-                                No Categories
+                                No Enough Categories
                             </span>
                         
                         {% endfor %}
@@ -329,7 +329,7 @@
 
     <div class="mobile-menu-header">
 
-        <a href="/" class="mobile-logo">
+        <a href="{% url 'about' %}" class="mobile-logo">
 
             <img
                 src="{% static 'customer/images/nafi.png' %}"
@@ -371,7 +371,7 @@
 
             <li>
 
-                <a href="/">
+                <a href="home_page">
 
                     <span>HOME</span>
 
@@ -382,7 +382,7 @@
             </li>
 
 
-            <!-- SHOP -->
+            <!-- SHOP categorie wise-->
 
             <li class="mobile-nav-dropdown">
 
@@ -399,71 +399,35 @@
                 </button>
 
 
-                <div class="mobile-dropdown">
+                <div class="mobile-dropdown">                
+                            <a href="#" class="dropdown-item">
+                                All Products
+                            </a>
+                    
+                        {% for category in navbar_categories %}
 
-                    <a href="#">
-                        All Products
-                    </a>
-
-                    <a href="#">
-                        T-Shirts
-                    </a>
-
-                    <a href="#">
-                        Shirts
-                    </a>
-
-                    <a href="#">
-                        Panjabi
-                    </a>
+                    
+                            <a
+                                href="{% url 'category_products' category.slug %}"
+                                class="dropdown-item"
+                            >
+                                {{ category.name }}
+                            </a>
+                        
+                        {% empty %}
+                        
+                            <span class="dropdown-item">
+                                No Categories
+                            </span>
+                        
+                        {% endfor %}
+                        
+                
 
                 </div>
 
             </li>
 
-
-            <!-- CATEGORIES -->
-
-            <!-- =================================================
-                 CATEGORIES
-            ================================================== -->
-            
-            <li class="mobile-nav-dropdown">
-            
-                <button
-                    type="button"
-                    class="mobile-dropdown-trigger"
-                    aria-expanded="false"
-                >
-            
-                    <span>CATEGORIES</span>
-            
-                    <i class="bi bi-chevron-down"></i>
-            
-                </button>
-            
-            
-                <div class="mobile-dropdown">
-                
-                    {% for category in navbar_categories %}
-                
-                        <a
-                            href="{% url 'category_products' category.slug %}"
-                        >
-                            {{ category.name }}
-                        </a>
-                    
-                    {% empty %}
-                    
-                        <span>
-                            No Categories
-                        </span>
-                    
-                    {% endfor %}
-                    
-                </div>
-            
-            </li>
 
             <!-- NEW ARRIVALS -->
 
@@ -484,7 +448,7 @@
 
             <li>
 
-                <a href="#">
+                <a href="{% url 'about' %}">
 
                     <span>ABOUT</span>
 

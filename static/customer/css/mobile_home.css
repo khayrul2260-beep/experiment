@@ -475,13 +475,13 @@
     .mobile-hero-button:hover {
 
         background:
-            rgba(255, 255, 255, .08);
+            rgb(255, 255, 255);
 
         border-color:
-            #02fce7;
+            #333333;
 
         color:
-            #ffffff;
+            #000000;
 
     }
 
@@ -2205,7 +2205,7 @@ and
         0 27px 0 0;
 
     color:
-        #f4f4f4;
+        #a29f9f;
 
     text-decoration:
         none;
@@ -2235,7 +2235,7 @@ and
     .nfx-vault-action:hover {
 
         color:
-            #03f8c3cc;
+            #ffff;
 
     }
 
