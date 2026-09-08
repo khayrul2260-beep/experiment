@@ -1,0 +1,3421 @@
+{% extends "admin_dashboard/master/base.html" %}
+
+{% load static %}
+
+{% block title %}
+    Update About Page
+{% endblock %}
+
+{% block css %}
+
+<link
+    rel="stylesheet"
+    href="{% static 'admin_panel/css/about.css' %}"
+>
+
+{% endblock %}
+
+
+{% block page_title %} About {% endblock %}
+
+{% block content %}
+<div class="about-admin-page">
+
+
+    <!-- =====================================================
+         PAGE HEADER
+    ====================================================== -->
+
+    <div class="about-page-header">
+
+        <div>
+            <div class="about-page-eyebrow">
+                CONTENT MANAGEMENT
+            </div>
+
+            <h1>
+                About Page
+            </h1>
+
+            <p>
+                Manage the content and brand profile of your NAFI About page.
+            </p>
+        </div>
+
+
+        <div class="about-header-actions">
+
+            <a
+                href="{% url 'about' %}"
+                target="_blank"
+                class="about-view-btn"
+            >
+                <i class="bi bi-box-arrow-up-right"></i>
+                View Page
+            </a>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         MESSAGES
+    ====================================================== -->
+
+    {% if messages %}
+
+        <div class="about-messages">
+
+            {% for message in messages %}
+
+                <div class="about-message {{ message.tags }}">
+
+                    <i class="bi bi-check-circle"></i>
+
+                    <span>
+                        {{ message }}
+                    </span>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% endif %}
+
+
+
+    <!-- =====================================================
+         PAGE STATUS
+    ====================================================== -->
+
+    <div class="about-status-card">
+
+        <div class="about-status-info">
+
+            <div class="about-status-icon">
+                <i class="bi bi-globe2"></i>
+            </div>
+
+            <div>
+
+                <h3>
+                    Publication Status
+                </h3>
+
+                <p>
+                    Control whether the About page is visible to customers.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div
+            class="
+                about-status-badge
+                {% if about.is_published %}
+                    published
+                {% else %}
+                    unpublished
+                {% endif %}
+            "
+        >
+
+            {% if about.is_published %}
+                <i class="bi bi-check-circle-fill"></i>
+                Published
+            {% else %}
+                <i class="bi bi-eye-slash-fill"></i>
+                Unpublished
+            {% endif %}
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         MAIN FORM
+    ====================================================== -->
+
+    <form
+        method="POST"
+        action="{% url 'update_about_page' %}"
+        enctype="multipart/form-data"
+        class="about-main-form"
+     >
+
+        {% csrf_token %}
+
+        <input
+            type="hidden"
+            name="about_id"
+            value="{{ about.id }}"
+        >
+
+
+
+        <!-- =========================================================
+             01. HERO SECTION
+        ========================================================= -->
+        
+        <section
+            class="about-admin-card"
+            data-about-section
+            id="about-hero-section"
+         >
+        
+            <!-- =====================================================
+                 SECTION HEADER
+            ====================================================== -->
+            
+            <div class="about-card-header">
+            
+                <div class="about-section-number">
+                    01
+                </div>
+            
+            
+                <div>
+                
+                    <h2>
+                        Hero Section
+                    </h2>
+                
+                    <p>
+                        Main introduction displayed at the top of the About page.
+                    </p>
+                
+                </div>
+            
+            
+                <!-- COLLAPSE BUTTON -->
+            
+                <button
+                    type="button"
+                    class="about-section-toggle"
+                    onclick="toggleAboutSection('about-hero-section')"
+                    aria-label="Toggle Hero section"
+                >
+                    <i class="bi bi-chevron-down"></i>
+                </button>
+            
+            </div>
+        
+        
+            <!-- =====================================================
+                 COLLAPSIBLE CONTENT
+            ====================================================== -->
+            
+            <div class="about-section-content">
+            
+                <div class="about-form-grid">
+                
+                
+                    <!-- =================================================
+                         EYEBROW
+                    ================================================== -->
+                    
+                    <div class="about-field">
+                    
+                        <label>
+                            Eyebrow
+                        </label>
+                    
+                        <input
+                            type="text"
+                            name="hero_eyebrow"
+                            value="{{ about.hero_eyebrow }}"
+                            placeholder="NAFI"
+                        >
+                    
+                    </div>
+                
+                
+                    <!-- =================================================
+                         HERO TITLE
+                    ================================================== -->
+                    
+                    <div class="about-field">
+                    
+                        <label>
+                            Hero Title
+                        </label>
+                    
+                        <input
+                            type="text"
+                            name="hero_title"
+                            value="{{ about.hero_title }}"
+                            placeholder="DEFINED BY SIMPLICITY."
+                        >
+                    
+                    </div>
+                
+                
+                    <!-- =================================================
+                         HERO DESCRIPTION
+                    ================================================== -->
+                    
+                    <div class="about-field full">
+                    
+                        <label>
+                            Hero Description
+                        </label>
+                    
+                        <textarea
+                            name="hero_description"
+                            rows="5"
+                            placeholder="Write your hero description..."
+                        >{{ about.hero_description }}</textarea>
+                    
+                    </div>
+                
+                
+                    <!-- =================================================
+                         HERO IMAGE
+                    ================================================== -->
+                    
+                    <div class="about-field full">
+                    
+                        <label>
+                            Hero Image
+                        </label>
+                    
+                    
+                        <div class="about-image-upload">
+                        
+                        
+                            {% if about.hero_image %}
+                        
+                                <div class="about-existing-image">
+                                
+                                    <img
+                                        src="{{ about.hero_image.url }}"
+                                        alt="Hero Image"
+                                    >
+                                
+                                    <span>
+                                        Current Image
+                                    </span>
+                                
+                                </div>
+                            
+                            {% endif %}
+                            
+                            
+                            <input
+                                type="file"
+                                name="hero_image"
+                                accept="image/*"
+                            >
+                            
+                        </div>
+                    
+                    </div>
+                
+                
+                </div>
+            
+            </div>
+        
+        </section>
+
+
+
+
+        <!-- =========================================================
+             02. WHO WE ARE
+        ========================================================= -->
+        
+        <section
+            class="about-admin-card"
+            data-about-section
+            id="about-who-section"
+         >
+        
+            <!-- =====================================================
+                 SECTION HEADER
+            ====================================================== -->
+            
+            <div class="about-card-header">
+            
+                <div class="about-section-number">
+                    02
+                </div>
+            
+            
+                <div>
+                
+                    <h2>
+                        Who We Are
+                    </h2>
+                
+                    <p>
+                        Introduce NAFI and explain what the brand represents.
+                    </p>
+                
+                </div>
+            
+            
+                <!-- COLLAPSE BUTTON -->
+            
+                <button
+                    type="button"
+                    class="about-section-toggle"
+                    onclick="toggleAboutSection('about-who-section')"
+                    aria-label="Toggle Who We Are section"
+                >
+                    <i class="bi bi-chevron-down"></i>
+                </button>
+            
+            </div>
+        
+        
+            <!-- =====================================================
+                 COLLAPSIBLE CONTENT
+            ====================================================== -->
+            
+            <div class="about-section-content">
+            
+                <div class="about-form-grid">
+                
+                
+                    <!-- =================================================
+                         SECTION TITLE
+                    ================================================== -->
+                    
+                    <div class="about-field full">
+                    
+                        <label>
+                            Section Title
+                        </label>
+                    
+                        <input
+                            type="text"
+                            name="who_title"
+                            value="{{ about.who_title }}"
+                        >
+                    
+                    </div>
+                
+                
+                    <!-- =================================================
+                         CONTENT
+                    ================================================== -->
+                    
+                    <div class="about-field full">
+                    
+                        <label>
+                            Content
+                        </label>
+                    
+                        <textarea
+                            name="who_content"
+                            rows="9"
+                        >{{ about.who_content }}</textarea>
+                    
+                    </div>
+                
+                
+                    <!-- =================================================
+                         SECTION IMAGE
+                    ================================================== -->
+                    
+                    <div class="about-field full">
+                    
+                        <label>
+                            Section Image
+                        </label>
+                    
+                    
+                        <div class="about-image-upload">
+                        
+                        
+                            {% if about.who_image %}
+                        
+                                <div class="about-existing-image">
+                                
+                                    <img
+                                        src="{{ about.who_image.url }}"
+                                        alt="Who We Are"
+                                    >
+                                
+                                    <span>
+                                        Current Image
+                                    </span>
+                                
+                                </div>
+                            
+                            {% endif %}
+                            
+                            
+                            <input
+                                type="file"
+                                name="who_image"
+                                accept="image/*"
+                            >
+                            
+                        </div>
+                    
+                    </div>
+                
+                
+                </div>
+            
+            </div>
+        
+        </section>
+
+        <!-- =========================================================
+             03. BRAND ORIGIN
+        ========================================================= -->
+        
+        <section
+            class="about-admin-card"
+            data-about-section
+            id="about-origin-section"
+         >
+        
+            <!-- =====================================================
+                 SECTION HEADER
+            ====================================================== -->
+            
+            <div class="about-card-header">
+            
+                <div class="about-section-number">
+                    03
+                </div>
+            
+            
+                <div>
+                
+                    <h2>
+                        Brand Origin
+                    </h2>
+                
+                    <p>
+                        Tell the story behind the beginning of NAFI.
+                    </p>
+                
+                </div>
+            
+            
+                <!-- COLLAPSE BUTTON -->
+            
+                <button
+                    type="button"
+                    class="about-section-toggle"
+                    onclick="toggleAboutSection('about-origin-section')"
+                    aria-label="Toggle Brand Origin section"
+                >
+                    <i class="bi bi-chevron-down"></i>
+                </button>
+            
+            </div>
+        
+        
+            <!-- =====================================================
+                 COLLAPSIBLE CONTENT
+            ====================================================== -->
+            
+            <div class="about-section-content">
+            
+                <div class="about-form-grid">
+                
+                
+                    <!-- =================================================
+                         SECTION TITLE
+                    ================================================== -->
+                    
+                    <div class="about-field full">
+                    
+                        <label>
+                            Section Title
+                        </label>
+                    
+                        <input
+                            type="text"
+                            name="origin_title"
+                            value="{{ about.origin_title }}"
+                        >
+                    
+                    </div>
+                
+                
+                    <!-- =================================================
+                         CONTENT
+                    ================================================== -->
+                    
+                    <div class="about-field full">
+                    
+                        <label>
+                            Content
+                        </label>
+                    
+                        <textarea
+                            name="origin_content"
+                            rows="9"
+                        >{{ about.origin_content }}</textarea>
+                    
+                    </div>
+                
+                
+                </div>
+            
+            </div>
+        
+        </section>
+
+
+        <!-- =========================================================
+             04. OUR VISION
+        ========================================================= -->
+        
+        <section
+            class="about-admin-card"
+            data-about-section
+            id="about-vision-section"
+         >
+        
+            <!-- =====================================================
+                 SECTION HEADER
+            ====================================================== -->
+            
+            <div class="about-card-header">
+            
+                <div class="about-section-number">
+                    04
+                </div>
+            
+            
+                <div>
+                
+                    <h2>
+                        Our Vision
+                    </h2>
+                
+                    <p>
+                        Define the long-term vision of the NAFI brand.
+                    </p>
+                
+                </div>
+            
+            
+                <!-- COLLAPSE BUTTON -->
+            
+                <button
+                    type="button"
+                    class="about-section-toggle"
+                    onclick="toggleAboutSection('about-vision-section')"
+                    aria-label="Toggle Our Vision section"
+                >
+                    <i class="bi bi-chevron-down"></i>
+                </button>
+            
+            </div>
+        
+        
+            <!-- =====================================================
+                 COLLAPSIBLE CONTENT
+            ====================================================== -->
+            
+            <div class="about-section-content">
+            
+                <div class="about-form-grid">
+                
+                
+                    <!-- =================================================
+                         SECTION TITLE
+                    ================================================== -->
+                    
+                    <div class="about-field full">
+                    
+                        <label>
+                            Section Title
+                        </label>
+                    
+                        <input
+                            type="text"
+                            name="vision_title"
+                            value="{{ about.vision_title }}"
+                        >
+                    
+                    </div>
+                
+                
+                    <!-- =================================================
+                         VISION STATEMENT
+                    ================================================== -->
+                    
+                    <div class="about-field full">
+                    
+                        <label>
+                            Vision Statement
+                        </label>
+                    
+                        <input
+                            type="text"
+                            name="vision_statement"
+                            value="{{ about.vision_statement }}"
+                        >
+                    
+                    </div>
+                
+                
+                    <!-- =================================================
+                         CONTENT
+                    ================================================== -->
+                    
+                    <div class="about-field full">
+                    
+                        <label>
+                            Content
+                        </label>
+                    
+                        <textarea
+                            name="vision_content"
+                            rows="8"
+                        >{{ about.vision_content }}</textarea>
+                    
+                    </div>
+                
+                
+                </div>
+            
+            </div>
+        
+        </section>
+
+
+
+
+        <!-- =================================================
+             05. MODERN MAN
+        ================================================== -->
+        
+        <section
+            class="about-admin-card"
+            data-about-section
+            id="about-modern-section"
+         >
+        
+            <div class="about-card-header">
+            
+                <div class="about-section-number">
+                    05
+                </div>
+            
+                <div>
+                
+                    <h2>
+                        Made For The Modern Man
+                    </h2>
+                
+                    <p>
+                        Explain who NAFI products are designed for.
+                    </p>
+                
+                </div>
+            
+                <button
+                    type="button"
+                    class="about-section-toggle"
+                    onclick="toggleAboutSection('about-modern-section')"
+                    aria-label="Toggle Made For The Modern Man section"
+                >
+                    <i class="bi bi-chevron-down"></i>
+                </button>
+            
+            </div>
+        
+        
+            <div class="about-section-content">
+            
+                <div class="about-form-grid">
+                
+                    <div class="about-field full">
+                    
+                        <label>
+                            Section Title
+                        </label>
+                    
+                        <input
+                            type="text"
+                            name="modern_title"
+                            value="{{ about.modern_title }}"
+                        >
+                    
+                    </div>
+                
+                
+                    <div class="about-field full">
+                    
+                        <label>
+                            Content
+                        </label>
+                    
+                        <textarea
+                            name="modern_content"
+                            rows="9"
+                        >{{ about.modern_content }}</textarea>
+                    
+                    </div>
+                
+                </div>
+            
+            </div>
+        
+        </section>
+
+                
+        <!-- =================================================
+             06. AESTHETIC
+        ================================================== -->
+        
+        <section
+            class="about-admin-card"
+            data-about-section
+            id="about-aesthetic-section"
+         >
+        
+            <div class="about-card-header">
+            
+                <div class="about-section-number">
+                    06
+                </div>
+            
+                <div>
+                
+                    <h2>
+                        The NAFI Aesthetic
+                    </h2>
+                
+                    <p>
+                        Manage the visual philosophy and aesthetic direction.
+                    </p>
+                
+                </div>
+            
+                <button
+                    type="button"
+                    class="about-section-toggle"
+                    onclick="toggleAboutSection('about-aesthetic-section')"
+                    aria-label="Toggle The NAFI Aesthetic section"
+                >
+                    <i class="bi bi-chevron-down"></i>
+                </button>
+            
+            </div>
+        
+        
+            <div class="about-section-content">
+            
+                <div class="about-form-grid">
+                
+                    <div class="about-field full">
+                    
+                        <label>
+                            Section Title
+                        </label>
+                    
+                        <input
+                            type="text"
+                            name="aesthetic_title"
+                            value="{{ about.aesthetic_title }}"
+                        >
+                    
+                    </div>
+                
+                
+                    <div class="about-field full">
+                    
+                        <label>
+                            Content
+                        </label>
+                    
+                        <textarea
+                            name="aesthetic_content"
+                            rows="9"
+                        >{{ about.aesthetic_content }}</textarea>
+                    
+                    </div>
+                
+                
+                    <div class="about-field full">
+                    
+                        <label>
+                            Section Image
+                        </label>
+                    
+                        <div class="about-image-upload">
+                        
+                            {% if about.aesthetic_image %}
+                        
+                                <div class="about-existing-image">
+                                
+                                    <img
+                                        src="{{ about.aesthetic_image.url }}"
+                                        alt="NAFI Aesthetic"
+                                    >
+                                
+                                    <span>
+                                        Current Image
+                                    </span>
+                                
+                                </div>
+                            
+                            {% endif %}
+                            
+                            <input
+                                type="file"
+                                name="aesthetic_image"
+                                accept="image/*"
+                            >
+                            
+                        </div>
+                    
+                    </div>
+                
+                </div>
+            
+            </div>
+        
+        </section>
+        
+
+        <!-- =================================================
+             10. TRANSPARENCY
+        ================================================= -->
+        
+        <section
+            class="about-admin-card"
+            data-about-section
+            id="about-transparency-section"
+        >
+        
+            <div class="about-card-header">
+            
+                <div class="about-section-number">
+                    10
+                </div>
+            
+                <div>
+                
+                    <h2>
+                        Transparency
+                    </h2>
+                
+                    <p>
+                        Manage NAFI's commitment to customers.
+                    </p>
+                
+                </div>
+            
+            
+                <button
+                    type="button"
+                    class="about-section-toggle"
+                    onclick="toggleAboutSection('about-transparency-section')"
+                    aria-label="Toggle Transparency section"
+                    title="Expand / Collapse"
+                >
+                    <i class="bi bi-chevron-down"></i>
+                </button>
+            
+            </div>
+        
+        
+            <div class="about-section-content">
+            
+                <div class="about-form-grid">
+                
+                    <!-- SECTION TITLE -->
+                
+                    <div class="about-field full">
+                    
+                        <label>
+                            Section Title
+                        </label>
+                    
+                        <input
+                            type="text"
+                            name="transparency_title"
+                            value="{{ about.transparency_title }}"
+                        >
+                    
+                    </div>
+                
+                
+                    <!-- CONTENT -->
+                
+                    <div class="about-field full">
+                    
+                        <label>
+                            Content
+                        </label>
+                    
+                        <textarea
+                            name="transparency_content"
+                            rows="9"
+                        >{{ about.transparency_content }}</textarea>
+                    
+                    </div>
+                
+                </div>
+            
+            </div>
+        
+        </section>
+
+
+        <!-- =================================================
+             11. WHY NAFI
+        ================================================= -->
+        
+        <section
+            class="about-admin-card"
+            data-about-section
+            id="about-why-section"
+        >
+        
+            <div class="about-card-header">
+            
+                <div class="about-section-number">
+                    11
+                </div>
+            
+                <div>
+                
+                    <h2>
+                        Why NAFI?
+                    </h2>
+                
+                    <p>
+                        Explain why customers should choose NAFI.
+                    </p>
+                
+                </div>
+            
+            
+                <button
+                    type="button"
+                    class="about-section-toggle"
+                    onclick="toggleAboutSection('about-why-section')"
+                    aria-label="Toggle Why NAFI section"
+                    title="Expand / Collapse"
+                >
+                    <i class="bi bi-chevron-down"></i>
+                </button>
+            
+            </div>
+        
+        
+            <div class="about-section-content">
+            
+                <div class="about-form-grid">
+                
+                    <!-- SECTION TITLE -->
+                
+                    <div class="about-field full">
+                    
+                        <label>
+                            Section Title
+                        </label>
+                    
+                        <input
+                            type="text"
+                            name="why_title"
+                            value="{{ about.why_title }}"
+                        >
+                    
+                    </div>
+                
+                
+                    <!-- CONTENT -->
+                
+                    <div class="about-field full">
+                    
+                        <label>
+                            Content
+                        </label>
+                    
+                        <textarea
+                            name="why_content"
+                            rows="9"
+                        >{{ about.why_content }}</textarea>
+                    
+                    </div>
+                
+                </div>
+            
+            </div>
+        
+        </section>
+
+        <!-- =================================================
+             12. PROFILE
+        ================================================= -->
+        
+        <section
+            class="about-admin-card"
+            data-about-section
+            id="about-profile-section"
+        >
+        
+            <div class="about-card-header">
+            
+                <div class="about-section-number">
+                    12
+                </div>
+            
+                <div>
+                
+                    <h2>
+                        NAFI At A Glance
+                    </h2>
+                
+                    <p>
+                        Manage the quick brand profile displayed on the page.
+                    </p>
+                
+                </div>
+            
+            
+                <button
+                    type="button"
+                    class="about-section-toggle"
+                    onclick="toggleAboutSection('about-profile-section')"
+                    aria-label="Toggle NAFI At A Glance section"
+                    title="Expand / Collapse"
+                >
+                    <i class="bi bi-chevron-down"></i>
+                </button>
+            
+            </div>
+        
+        
+            <div class="about-section-content">
+            
+                <div class="about-form-grid">
+                
+                
+                    <!-- SECTION TITLE -->
+                
+                    <div class="about-field full">
+                    
+                        <label>
+                            Section Title
+                        </label>
+                    
+                        <input
+                            type="text"
+                            name="profile_title"
+                            value="{{ about.profile_title }}"
+                        >
+                    
+                    </div>
+                
+                
+                    <!-- CATEGORY -->
+                
+                    <div class="about-field">
+                    
+                        <label>
+                            Category
+                        </label>
+                    
+                        <input
+                            type="text"
+                            name="profile_category"
+                            value="{{ about.profile_category }}"
+                        >
+                    
+                    </div>
+                
+                
+                    <!-- FOCUS -->
+                
+                    <div class="about-field">
+                    
+                        <label>
+                            Focus
+                        </label>
+                    
+                        <input
+                            type="text"
+                            name="profile_focus"
+                            value="{{ about.profile_focus }}"
+                        >
+                    
+                    </div>
+                
+                
+                    <!-- STYLE -->
+                
+                    <div class="about-field">
+                    
+                        <label>
+                            Style
+                        </label>
+                    
+                        <input
+                            type="text"
+                            name="profile_style"
+                            value="{{ about.profile_style }}"
+                        >
+                    
+                    </div>
+                
+                
+                    <!-- VALUES -->
+                
+                    <div class="about-field">
+                    
+                        <label>
+                            Values
+                        </label>
+                    
+                        <input
+                            type="text"
+                            name="profile_values"
+                            value="{{ about.profile_values }}"
+                        >
+                    
+                    </div>
+                
+                
+                    <!-- PRODUCTS -->
+                
+                    <div class="about-field full">
+                    
+                        <label>
+                            Products
+                        </label>
+                    
+                        <input
+                            type="text"
+                            name="profile_products"
+                            value="{{ about.profile_products }}"
+                        >
+                    
+                    </div>
+                
+                
+                </div>
+            
+            </div>
+        
+        </section>
+        <!-- =================================================
+             13. FINAL BRAND STATEMENT
+        ================================================= -->
+        
+        <section
+            class="about-admin-card final-card"
+            data-about-section
+            id="about-final-section"
+        >
+        
+            <div class="about-card-header">
+            
+                <div class="about-section-number">
+                    13
+                </div>
+            
+                <div>
+                
+                    <h2>
+                        Final Brand Statement
+                    </h2>
+                
+                    <p>
+                        Manage the final message and CTA of the About page.
+                    </p>
+                
+                </div>
+            
+            
+                <button
+                    type="button"
+                    class="about-section-toggle"
+                    onclick="toggleAboutSection('about-final-section')"
+                    aria-label="Toggle Final Brand Statement section"
+                    title="Expand / Collapse"
+                >
+                    <i class="bi bi-chevron-down"></i>
+                </button>
+            
+            </div>
+        
+        
+            <div class="about-section-content">
+            
+                <div class="about-form-grid">
+                
+                
+                    <!-- FINAL TITLE -->
+                
+                    <div class="about-field full">
+                    
+                        <label>
+                            Final Title
+                        </label>
+                    
+                        <input
+                            type="text"
+                            name="final_title"
+                            value="{{ about.final_title }}"
+                        >
+                    
+                    </div>
+                
+                
+                    <!-- FINAL CONTENT -->
+                
+                    <div class="about-field full">
+                    
+                        <label>
+                            Final Content
+                        </label>
+                    
+                        <textarea
+                            name="final_content"
+                            rows="7"
+                        >{{ about.final_content }}</textarea>
+                    
+                    </div>
+                
+                
+                    <!-- FINAL STATEMENT -->
+                
+                    <div class="about-field">
+                    
+                        <label>
+                            Final Statement
+                        </label>
+                    
+                        <input
+                            type="text"
+                            name="final_statement"
+                            value="{{ about.final_statement }}"
+                        >
+                    
+                    </div>
+                
+                
+                    <!-- CTA TEXT -->
+                
+                    <div class="about-field">
+                    
+                        <label>
+                            CTA Text
+                        </label>
+                    
+                        <input
+                            type="text"
+                            name="cta_text"
+                            value="{{ about.cta_text }}"
+                        >
+                    
+                    </div>
+                
+                
+                    <!-- FINAL IMAGE -->
+                
+                    <div class="about-field full">
+                    
+                        <label>
+                            Final Image
+                        </label>
+                    
+                        <div class="about-image-upload">
+                        
+                            {% if about.final_image %}
+                        
+                                <div class="about-existing-image">
+                                
+                                    <img
+                                        src="{{ about.final_image.url }}"
+                                        alt="Final Brand Image"
+                                    >
+                                
+                                    <span>
+                                        Current Image
+                                    </span>
+                                
+                                </div>
+                            
+                            {% endif %}
+                            
+                            
+                            <input
+                                type="file"
+                                name="final_image"
+                                accept="image/*"
+                            >
+                            
+                        </div>
+                    
+                    </div>
+                
+                
+                </div>
+            
+            </div>
+        
+        </section>
+
+        <!-- =================================================
+             PUBLISH + SAVE
+        ================================================== -->
+
+        <div class="about-save-bar">
+
+            <label class="about-publish-toggle">
+
+                <input
+                    type="checkbox"
+                    name="is_published"
+                    {% if about.is_published %}checked{% endif %}
+                >
+
+                <span class="about-toggle-slider"></span>
+
+                <span>
+                    Publish About Page
+                </span>
+
+            </label>
+
+
+            <button
+                type="submit"
+                class="about-save-btn"
+            >
+
+                <i class="bi bi-check2-circle"></i>
+
+                Save Changes
+
+            </button>
+
+        </div>
+
+        <div class="finishline">
+            <hr>
+            <hr>
+        </div>
+    </form>
+
+            <!-- =================================================
+             07. BRAND VALUES
+        ================================================== -->
+        
+        <section
+            class="about-admin-card"
+            data-about-section
+            id="about-values-section"
+         >
+        
+            <div class="about-card-header">
+            
+                        <div class="about-section-number">
+                    07
+                </div>
+            
+                        <div>
+                    
+                            <h2>
+                        Brand Values
+                    </h2>
+                
+                            <p>
+                        Manage the core values that define NAFI.
+                    </p>
+                
+                        </div>
+                
+                        <button
+                    type="button"
+                    class="about-section-toggle"
+                    onclick="toggleAboutSection('about-values-section')"
+                    aria-label="Toggle Brand Values section"
+                >
+                    <i class="bi bi-chevron-down"></i>
+                </button>
+            
+                    </div>
+            
+            
+            <div class="about-section-content">
+            
+                        <div class="about-items-list">
+                    
+                            {% for value in values %}
+                    
+                                <div class="about-item">
+                            
+                                    <div class="about-item-icon">
+                                
+                                        {% if value.icon %}
+                                    <i class="{{ value.icon }}"></i>
+                                {% else %}
+                                    <i class="bi bi-star"></i>
+                                {% endif %}
+                                
+                                    </div>
+                            
+                            
+                                    <div class="about-item-content">
+                                
+                                        <strong>
+                                    {{ value.title }}
+                                </strong>
+                            
+                                        <p>
+                                    {{ value.description }}
+                                </p>
+                            
+                                        <small>
+                                    Order: {{ value.display_order }}
+                                    
+                                            {% if value.is_active %}
+                                        · Active
+                                    {% else %}
+                                        · Inactive
+                                    {% endif %}
+                                </small>
+                            
+                                    </div>
+                            
+                            
+                                    <div class="about-item-actions">
+                                
+                                        <!-- EDIT -->
+                                
+                                        <button
+                                    type="button"
+                                    class="about-edit-btn"
+                                    onclick="toggleAboutEdit(
+                                        'value-edit-{{ value.id }}'
+                                    )"
+                                    title="Edit"
+                                >
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                            
+                            
+                                        <!-- DELETE -->
+                            
+                                        <form
+                                    method="POST"
+                                    action="{% url 'delete_about_value' value.id %}"
+                                    class="about-delete-form"
+                                    onsubmit="
+                                        return confirm(
+                                            'Are you sure you want to delete this value?'
+                                        );
+                                    "
+                                >
+                            
+                                            {% csrf_token %}
+                            
+                                            <button
+                                        type="submit"
+                                        class="about-delete-btn"
+                                        title="Delete"
+                                    >
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                
+                                        </form>
+                                
+                                    </div>
+                            
+                                </div>
+                        
+                        
+                                <!-- =================================================
+                             EDIT BRAND VALUE
+                        ================================================== -->
+                            
+                                <div
+                            id="value-edit-{{ value.id }}"
+                            class="about-edit-box"
+                            hidden
+                        >
+                            
+                                    <form
+                                method="POST"
+                                action="{% url 'update_about_value' value.id %}"
+                            >
+                            
+                                        {% csrf_token %}
+                            
+                            
+                                        <div class="about-edit-header">
+                                    
+                                            <div>
+                                        
+                                                <h3>
+                                            Edit Brand Value
+                                        </h3>
+                                    
+                                                <p>
+                                            Update this value and save your changes.
+                                        </p>
+                                    
+                                            </div>
+                                    
+                                    
+                                            <button
+                                        type="button"
+                                        class="about-edit-close"
+                                        onclick="toggleAboutEdit(
+                                            'value-edit-{{ value.id }}'
+                                        )"
+                                        title="Close"
+                                    >
+                                        <i class="bi bi-x-lg"></i>
+                                    </button>
+                                
+                                        </div>
+                                
+                                
+                                        <div class="about-form-grid">
+                                    
+                                            <!-- TITLE -->
+                                    
+                                            <div class="about-field">
+                                        
+                                                <label>
+                                            Title
+                                        </label>
+                                    
+                                                <input
+                                            type="text"
+                                            name="title"
+                                            value="{{ value.title }}"
+                                            required
+                                        >
+                                    
+                                            </div>
+                                    
+                                    
+                                            <!-- ICON -->
+                                    
+                                            <div class="about-field">
+                                        
+                                                <label>
+                                            Icon
+                                        </label>
+                                    
+                                                <input
+                                            type="text"
+                                            name="icon"
+                                            value="{{ value.icon }}"
+                                            placeholder="bi bi-gem"
+                                        >
+                                    
+                                            </div>
+                                    
+                                    
+                                            <!-- DESCRIPTION -->
+                                    
+                                            <div class="about-field full">
+                                        
+                                                <label>
+                                            Description
+                                        </label>
+                                    
+                                                <textarea
+                                            name="description"
+                                            required
+                                        >{{ value.description }}</textarea>
+                                    
+                                            </div>
+                                    
+                                    
+                                            <!-- DISPLAY ORDER -->
+                                    
+                                            <div class="about-field">
+                                        
+                                                <label>
+                                            Display Order
+                                        </label>
+                                    
+                                                <input
+                                            type="number"
+                                            name="display_order"
+                                            value="{{ value.display_order }}"
+                                            min="0"
+                                        >
+                                    
+                                            </div>
+                                    
+                                    
+                                            <!-- ACTIVE -->
+                                    
+                                            <div class="about-field">
+                                        
+                                                <label>
+                                            Status
+                                        </label>
+                                    
+                                                <label class="about-active-toggle">
+                                            
+                                                    <input
+                                                type="checkbox"
+                                                name="is_active"
+                                                {% if value.is_active %}
+                                                    checked
+                                                {% endif %}
+                                            >
+                                            
+                                                    <span>
+                                                Active
+                                            </span>
+                                        
+                                                </label>
+                                        
+                                            </div>
+                                    
+                                        </div>
+                                
+                                
+                                        <div class="about-edit-actions">
+                                    
+                                            <button
+                                        type="button"
+                                        class="about-cancel-btn"
+                                        onclick="toggleAboutEdit(
+                                            'value-edit-{{ value.id }}'
+                                        )"
+                                    >
+                                        Cancel
+                                    </button>
+                                
+                                
+                                            <button
+                                        type="submit"
+                                        class="about-update-btn"
+                                    >
+                                        <i class="bi bi-check2"></i>
+                                        Update Value
+                                    </button>
+                                
+                                        </div>
+                                
+                                    </form>
+                            
+                                </div>
+                        
+                            {% empty %}
+                        
+                                <div class="about-empty">
+                            
+                                    No brand values added yet.
+                            
+                                </div>
+                        
+                            {% endfor %}
+                        
+                </di        v>
+            
+            
+                        <!-- =================================================
+                     ADD BRAND VALUE
+                ================================================== -->
+                    
+                        <div class="about-add-box">
+                    
+                            <h3>
+                        Add Brand Value
+                    </h3>
+                
+                
+                            <div class="about-form-grid">
+                        
+                                <div class="about-field">
+                            
+                                    <label>
+                                Title
+                            </label>
+                        
+                                    <input
+                                type="text"
+                                name="value_title"
+                                id="value_title"
+                                placeholder="Example: QUALITY"
+                            >
+                        
+                                </div>
+                        
+                        
+                                <div class="about-field">
+                            
+                                    <label>
+                                Icon Class
+                            </label>
+                        
+                                    <input
+                                type="text"
+                                name="value_icon"
+                                id="value_icon"
+                                placeholder="bi bi-gem"
+                            >
+                        
+                                </div>
+                        
+                        
+                                <div class="about-field full">
+                            
+                                    <label>
+                                Description
+                            </label>
+                        
+                                    <textarea
+                                name="value_description"
+                                id="value_description"
+                                rows="4"
+                                placeholder="Describe this value..."
+                            ></textarea>
+                        
+                                </div>
+                        
+                        
+                                <div class="about-field">
+                            
+                                    <label>
+                                Display Order
+                            </label>
+                        
+                                    <input
+                                type="number"
+                                name="value_display_order"
+                                id="value_display_order"
+                                value="0"
+                                min="0"
+                            >
+                        
+                                </div>
+                        
+                            </div>
+                    
+                    
+                            <button
+                        type="button"
+                        class="about-add-btn"
+                        id="addValueBtn"
+                    >
+                        <i class="bi bi-plus-lg"></i>
+                        Add Brand Value
+                    </button>
+                
+                        </div>
+                
+                    </div>
+            
+        </section>
+        <!-- =========================================================
+             08 — QUALITY COMMITMENTS
+        ========================================================= -->
+        
+        <section
+            class="about-admin-card"
+            data-about-section
+            id="about-quality-section"
+         >
+        
+            <!-- -----------------------------------------------------
+                 SECTION HEADER
+            ------------------------------------------------------ -->
+            
+            <div class="about-card-header">
+            
+                <div class="about-section-number">
+                    08
+                </div>
+            
+                <div>
+                
+                    <h2>
+                        Quality Commitments
+                    </h2>
+                
+                    <p>
+                        Manage the quality principles shown on the About page.
+                    </p>
+                
+                </div>
+            
+                <button
+                    type="button"
+                    class="about-section-toggle"
+                    onclick="toggleAboutSection('about-quality-section')"
+                    aria-label="Toggle Quality Commitments section"
+                >
+                    <i class="bi bi-chevron-down"></i>
+                </button>
+            
+            </div>
+        
+        
+            <div class="about-section-content">
+            
+                <!-- -----------------------------------------------------
+                     QUALITY INTRODUCTION
+                ------------------------------------------------------ -->
+                
+                <div class="about-field full">
+                
+                    <label>
+                        Quality Introduction
+                    </label>
+                
+                    <textarea
+                        name="quality_intro"
+                        rows="6"
+                        placeholder="Write a short introduction about NAFI's quality commitment..."
+                    >{{ about.quality_intro }}</textarea>
+                
+                </div>
+            
+            
+                <!-- -----------------------------------------------------
+                     EXISTING QUALITY COMMITMENTS
+                ------------------------------------------------------ -->
+                
+                <div class="about-items-list quality-list">
+                
+                    {% for item in quality_items %}
+                
+                        <!-- =================================================
+                             QUALITY ITEM
+                        ================================================== -->
+                        
+                        <div class="about-item">
+                        
+                            <!-- ICON -->
+                        
+                            <div class="about-item-icon">
+                            
+                                {% if item.icon %}
+                            
+                                    <i class="{{ item.icon }}"></i>
+                            
+                                {% else %}
+                            
+                                    <i class="bi bi-check2-circle"></i>
+                            
+                                {% endif %}
+                            
+                            </div>
+                        
+                        
+                            <!-- CONTENT -->
+                        
+                            <div class="about-item-content">
+                            
+                                <strong>
+                                    {{ item.title }}
+                                </strong>
+                            
+                                <p>
+                                    {{ item.description }}
+                                </p>
+                            
+                                <small>
+                                
+                                    Order:
+                                    {{ item.display_order }}
+                                
+                                    {% if item.is_active %}
+                                
+                                        · Active
+                                
+                                    {% else %}
+                                
+                                        · Inactive
+                                
+                                    {% endif %}
+                                
+                                </small>
+                            
+                            </div>
+                        
+                        
+                            <!-- ACTIONS -->
+                        
+                            <div class="about-item-actions">
+                            
+                                <!-- EDIT BUTTON -->
+                            
+                                <button
+                                    type="button"
+                                    class="about-edit-btn"
+                                    onclick="toggleAboutEdit(
+                                        'quality-edit-{{ item.id }}'
+                                    )"
+                                    title="Edit"
+                                >
+                            
+                                    <i class="bi bi-pencil"></i>
+                            
+                                </button>
+                            
+                            
+                                <!-- DELETE -->
+                            
+                                <form
+                                    method="POST"
+                                    action="{% url 'delete_about_quality' item.id %}"
+                                    class="about-delete-form"
+                                    onsubmit="
+                                        return confirm(
+                                            'Are you sure you want to delete this quality commitment?'
+                                        );
+                                    "
+                                >
+                            
+                                    {% csrf_token %}
+                            
+                                    <button
+                                        type="submit"
+                                        class="about-delete-btn"
+                                        title="Delete"
+                                    >
+                            
+                                        <i class="bi bi-trash"></i>
+                            
+                                    </button>
+                                
+                                </form>
+                            
+                            </div>
+                        
+                        </div>
+                    
+                    
+                        <!-- =================================================
+                             EDIT QUALITY COMMITMENT
+                        ================================================== -->
+                        
+                        <div
+                            id="quality-edit-{{ item.id }}"
+                            class="about-edit-box"
+                            hidden
+                        >
+                        
+                            <form
+                                method="POST"
+                                action="{% url 'update_about_quality' item.id %}"
+                            >
+                        
+                                {% csrf_token %}
+                        
+                        
+                                <!-- EDIT HEADER -->
+                        
+                                <div class="about-edit-header">
+                                
+                                    <div>
+                                    
+                                        <h3>
+                                            Edit Quality Commitment
+                                        </h3>
+                                    
+                                        <p>
+                                            Update this quality commitment.
+                                        </p>
+                                    
+                                    </div>
+                                
+                                
+                                    <button
+                                        type="button"
+                                        class="about-edit-close"
+                                        onclick="toggleAboutEdit(
+                                            'quality-edit-{{ item.id }}'
+                                        )"
+                                        title="Close"
+                                    >
+                                
+                                        <i class="bi bi-x-lg"></i>
+                                
+                                    </button>
+                                
+                                </div>
+                            
+                            
+                                <!-- EDIT FORM -->
+                            
+                                <div class="about-form-grid">
+                                
+                                    <!-- TITLE -->
+                                
+                                    <div class="about-field">
+                                    
+                                        <label>
+                                            Title
+                                        </label>
+                                    
+                                        <input
+                                            type="text"
+                                            name="title"
+                                            value="{{ item.title }}"
+                                            placeholder="Example: MATERIAL"
+                                            required
+                                        >
+                                    
+                                    </div>
+                                
+                                
+                                    <!-- ICON -->
+                                
+                                    <div class="about-field">
+                                    
+                                        <label>
+                                            Icon Class
+                                        </label>
+                                    
+                                        <input
+                                            type="text"
+                                            name="icon"
+                                            value="{{ item.icon }}"
+                                            placeholder="bi bi-layers"
+                                        >
+                                    
+                                    </div>
+                                
+                                
+                                    <!-- DESCRIPTION -->
+                                
+                                    <div class="about-field full">
+                                    
+                                        <label>
+                                            Description
+                                        </label>
+                                    
+                                        <textarea
+                                            name="description"
+                                            rows="4"
+                                            placeholder="Describe this quality commitment..."
+                                            required
+                                        >{{ item.description }}</textarea>
+                                    
+                                    </div>
+                                
+                                
+                                    <!-- DISPLAY ORDER -->
+                                
+                                    <div class="about-field">
+                                    
+                                        <label>
+                                            Display Order
+                                        </label>
+                                    
+                                        <input
+                                            type="number"
+                                            name="display_order"
+                                            value="{{ item.display_order }}"
+                                            min="0"
+                                        >
+                                    
+                                    </div>
+                                
+                                
+                                    <!-- STATUS -->
+                                
+                                    <div class="about-field">
+                                    
+                                        <label>
+                                            Status
+                                        </label>
+                                    
+                                        <label class="about-active-toggle">
+                                        
+                                            <input
+                                                type="checkbox"
+                                                name="is_active"
+                                                {% if item.is_active %}
+                                                    checked
+                                                {% endif %}
+                                            >
+                                        
+                                            <span>
+                                                Active
+                                            </span>
+                                        
+                                        </label>
+                                    
+                                    </div>
+                                
+                                </div>
+                            
+                            
+                                <!-- EDIT ACTIONS -->
+                            
+                                <div class="about-edit-actions">
+                                
+                                    <button
+                                        type="button"
+                                        class="about-cancel-btn"
+                                        onclick="toggleAboutEdit(
+                                            'quality-edit-{{ item.id }}'
+                                        )"
+                                    >
+                                
+                                        Cancel
+                                
+                                    </button>
+                                
+                                
+                                    <button
+                                        type="submit"
+                                        class="about-update-btn"
+                                    >
+                                
+                                        <i class="bi bi-check2"></i>
+                                
+                                        Update Quality
+                                
+                                    </button>
+                                
+                                </div>
+                            
+                            </form>
+                        
+                        </div>
+                    
+                    {% empty %}
+                    
+                        <div class="about-empty">
+                        
+                            <i class="bi bi-info-circle"></i>
+                        
+                            <div>
+                                No quality commitments added yet.
+                            </div>
+                        
+                        </div>
+                    
+                    {% endfor %}
+                    
+                </div>
+            
+            
+                <!-- -----------------------------------------------------
+                     ADD QUALITY COMMITMENT
+                ------------------------------------------------------ -->
+                
+                <div class="about-add-box">
+                
+                    <h3>
+                        Add Quality Commitment
+                    </h3>
+                
+                
+                    <div class="about-form-grid">
+                    
+                        <!-- TITLE -->
+                    
+                        <div class="about-field">
+                        
+                            <label>
+                                Title
+                            </label>
+                        
+                            <input
+                                type="text"
+                                id="quality_title"
+                                placeholder="Example: MATERIAL"
+                            >
+                        
+                        </div>
+                    
+                    
+                        <!-- ICON -->
+                    
+                        <div class="about-field">
+                        
+                            <label>
+                                Icon Class
+                            </label>
+                        
+                            <input
+                                type="text"
+                                id="quality_icon"
+                                placeholder="bi bi-layers"
+                            >
+                        
+                        </div>
+                    
+                    
+                        <!-- DESCRIPTION -->
+                    
+                        <div class="about-field full">
+                        
+                            <label>
+                                Description
+                            </label>
+                        
+                            <textarea
+                                id="quality_description"
+                                rows="4"
+                                placeholder="Describe this commitment..."
+                            ></textarea>
+                        
+                        </div>
+                    
+                    
+                        <!-- DISPLAY ORDER -->
+                    
+                        <div class="about-field">
+                        
+                            <label>
+                                Display Order
+                            </label>
+                        
+                            <input
+                                type="number"
+                                id="quality_display_order"
+                                value="0"
+                                min="0"
+                            >
+                        
+                        </div>
+                    
+                    </div>
+                
+                
+                    <!-- ADD BUTTON -->
+                
+                    <button
+                        type="button"
+                        class="about-add-btn"
+                        id="addQualityBtn"
+                    >
+                
+                        <i class="bi bi-plus-lg"></i>
+                
+                        Add Quality Commitment
+                
+                    </button>
+                
+                </div>
+            
+            </div>
+        
+        </section>
+
+
+        <!-- =========================================================
+             09. JOURNEY
+        ========================================================= -->
+        
+        <section
+            class="about-admin-card"
+            data-about-section
+            id="about-journey-section"
+         >
+        
+            <!-- SECTION HEADER -->
+        
+            <div class="about-card-header">
+            
+                <div>
+                
+                    <span class="about-section-number">
+                        09
+                    </span>
+                
+                    <h2>
+                        NAFI Journey
+                    </h2>
+                
+                    <p>
+                        Manage the important milestones and development
+                        stages of the NAFI brand.
+                    </p>
+                
+                </div>
+            
+            
+                <button
+                    type="button"
+                    class="about-section-toggle"
+                    onclick="toggleAboutSection('about-journey-section')"
+                    aria-label="Toggle NAFI Journey section"
+                >
+                    <i class="bi bi-chevron-down"></i>
+                </button>
+
+            </div>
+
+
+            <div class="about-section-content">
+
+                <!-- =====================================================
+                     EXISTING JOURNEY ITEMS
+                ====================================================== -->
+
+                <div class="about-items-list">
+
+                    {% for journey in journey_items %}
+
+                        <div class="about-item journey-item">
+
+                            <!-- IMAGE -->
+
+                            <div class="journey-thumb">
+
+                                {% if journey.image %}
+
+                                    <img
+                                        src="{{ journey.image.url }}"
+                                        alt="{{ journey.title }}"
+                                    >
+
+                                {% else %}
+
+                                    <div class="journey-no-image">
+
+                                        <i class="bi bi-image"></i>
+
+                                    </div>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <!-- CONTENT -->
+
+                            <div class="about-item-content">
+
+                                <div class="about-item-top">
+
+                                    <span class="journey-year">
+                                        {{ journey.year }}
+                                    </span>
+
+
+                                    {% if journey.is_active %}
+
+                                        <span class="about-status-badge published">
+                                            Active
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="about-status-badge unpublished">
+                                            Inactive
+                                        </span>
+
+                                    {% endif %}
+
+                                </div>
+
+
+                                <h3>
+                                    {{ journey.title }}
+                                </h3>
+
+
+                                {% if journey.description %}
+
+                                    <p>
+                                        {{ journey.description|linebreaksbr }}
+                                    </p>
+
+                                {% endif %}
+
+
+                                <div class="about-item-meta">
+
+                                    <span>
+
+                                        <i class="bi bi-sort-numeric-down"></i>
+
+                                        Order:
+                                        {{ journey.display_order }}
+
+                                    </span>
+
+                                </div>
+
+
+                                <!-- ACTIONS -->
+
+                                <div class="about-item-actions">
+
+                                    <!-- EDIT -->
+
+                                    <button
+                                        type="button"
+                                        class="about-edit-btn"
+                                        onclick="toggleAboutEdit(
+                                            'journey-edit-{{ journey.id }}'
+                                        )"
+                                        title="Edit"
+                                    >
+
+                                        <i class="bi bi-pencil"></i>
+
+                                    </button>
+
+
+                                    <!-- DELETE -->
+
+                                    <form
+                                        method="POST"
+                                        action="{% url 'delete_about_journey' journey.id %}"
+                                        class="about-delete-form"
+                                        onsubmit="return confirm(
+                                            'Are you sure you want to delete this journey item?'
+                                        );"
+                                    >
+
+                                        {% csrf_token %}
+
+                                        <button
+                                            type="submit"
+                                            class="about-delete-btn"
+                                            title="Delete"
+                                        >
+
+                                            <i class="bi bi-trash"></i>
+
+                                        </button>
+
+                                    </form>
+
+                                </div>
+
+
+                                <!-- =================================================
+                                     INLINE EDIT FORM
+                                ================================================== -->
+
+                                <div
+                                    class="about-edit-box"
+                                    id="journey-edit-{{ journey.id }}"
+                                    hidden
+                                >
+
+                                    <div class="about-edit-header">
+
+                                        <div>
+
+                                            <strong>
+                                                Edit Journey Item
+                                            </strong>
+
+                                            <span>
+                                                Update milestone information
+                                            </span>
+
+                                        </div>
+
+
+                                        <button
+                                            type="button"
+                                            class="about-edit-close"
+                                            onclick="toggleAboutEdit(
+                                                'journey-edit-{{ journey.id }}'
+                                            )"
+                                            aria-label="Close"
+                                            title="Close"
+                                        >
+
+                                            <i class="bi bi-x-lg"></i>
+
+                                        </button>
+
+                                    </div>
+
+
+                                    <!-- EDIT FORM -->
+
+                                    <form
+                                        method="POST"
+                                        action="{% url 'update_about_journey' journey.id %}"
+                                        enctype="multipart/form-data"
+                                    >
+
+                                        {% csrf_token %}
+
+
+                                        <!-- FORM FIELDS -->
+
+                                        <div class="about-form-grid">
+
+                                            <!-- YEAR -->
+
+                                            <div class="about-field">
+
+                                                <label>
+                                                    Year
+                                                </label>
+
+                                                <input
+                                                    type="text"
+                                                    name="year"
+                                                    value="{{ journey.year }}"
+                                                    maxlength="20"
+                                                    required
+                                                >
+
+                                            </div>
+
+
+                                            <!-- DISPLAY ORDER -->
+
+                                            <div class="about-field">
+
+                                                <label>
+                                                    Display Order
+                                                </label>
+
+                                                <input
+                                                    type="number"
+                                                    name="display_order"
+                                                    value="{{ journey.display_order }}"
+                                                    min="0"
+                                                >
+
+                                            </div>
+
+
+                                            <!-- TITLE -->
+
+                                            <div class="about-field full">
+
+                                                <label>
+                                                    Title
+                                                </label>
+
+                                                <input
+                                                    type="text"
+                                                    name="title"
+                                                    value="{{ journey.title }}"
+                                                    maxlength="160"
+                                                    required
+                                                >
+
+                                            </div>
+
+
+                                            <!-- DESCRIPTION -->
+
+                                            <div class="about-field full">
+
+                                                <label>
+                                                    Description
+                                                </label>
+
+                                                <textarea
+                                                    name="description"
+                                                    rows="5"
+                                                >{{ journey.description }}</textarea>
+
+                                            </div>
+
+
+                                            <!-- EXISTING IMAGE -->
+
+                                            <div class="about-field full">
+
+                                                <label>
+                                                    Current Image
+                                                </label>
+
+
+                                                {% if journey.image %}
+
+                                                    <div class="about-existing-image">
+
+                                                        <img
+                                                            src="{{ journey.image.url }}"
+                                                            alt="{{ journey.title }}"
+                                                        >
+
+                                                    </div>
+
+                                                {% else %}
+
+                                                    <div class="about-no-existing-image">
+
+                                                        <i class="bi bi-image"></i>
+
+                                                        <span>
+                                                            No image uploaded
+                                                        </span>
+
+                                                    </div>
+
+                                                {% endif %}
+
+                                            </div>
+
+
+                                            <!-- NEW IMAGE -->
+
+                                            <div class="about-field full">
+
+                                                <label>
+                                                    Replace Image
+                                                </label>
+
+                                                <input
+                                                    type="file"
+                                                    name="image"
+                                                    accept="image/*"
+                                                >
+
+                                                <small>
+                                                    Leave empty to keep the current image.
+                                                </small>
+
+                                            </div>
+
+
+                                            <!-- ACTIVE -->
+
+                                            <div class="about-field full">
+
+                                                <label class="about-active-toggle">
+
+                                                    <input
+                                                        type="checkbox"
+                                                        name="is_active"
+                                                        {% if journey.is_active %}
+                                                            checked
+                                                        {% endif %}
+                                                    >
+
+                                                    <span>
+                                                        Active
+                                                    </span>
+
+                                                </label>
+
+                                            </div>
+
+                                        </div>
+
+
+                                        <!-- EDIT ACTIONS -->
+
+                                        <div class="about-edit-actions">
+
+                                            <button
+                                                type="button"
+                                                class="about-cancel-btn"
+                                                onclick="toggleAboutEdit(
+                                                    'journey-edit-{{ journey.id }}'
+                                                )"
+                                            >
+
+                                                Cancel
+
+                                            </button>
+
+
+                                            <button
+                                                type="submit"
+                                                class="about-update-btn"
+                                            >
+
+                                                <i class="bi bi-check2"></i>
+
+                                                Update Journey
+
+                                            </button>
+
+                                        </div>
+
+                                    </form>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    {% empty %}
+
+                        <div class="about-empty">
+
+                            <i class="bi bi-clock-history"></i>
+
+                            <p>
+                                No journey items have been added yet.
+                            </p>
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- =====================================================
+                     ADD NEW JOURNEY
+                ====================================================== -->
+
+                <div class="about-add-box">
+
+                    <div class="about-add-header">
+
+                        <div>
+
+                            <h3>
+                                Add Journey Item
+                            </h3>
+
+                            <p>
+                                Add a new milestone to the NAFI journey.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <form
+                        method="POST"
+                        action="{% url 'add_about_journey' %}"
+                        enctype="multipart/form-data"
+                    >
+
+                        {% csrf_token %}
+
+
+                        <input
+                            type="hidden"
+                            name="about_id"
+                            value="{{ about.id }}"
+                        >
+
+
+                        <div class="about-form-grid">
+
+                            <!-- YEAR -->
+
+                            <div class="about-field">
+
+                                <label>
+                                    Year
+                                </label>
+
+                                <input
+                                    type="text"
+                                    name="year"
+                                    maxlength="20"
+                                    placeholder="2026"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <!-- DISPLAY ORDER -->
+
+                            <div class="about-field">
+
+                                <label>
+                                    Display Order
+                                </label>
+
+                                <input
+                                    type="number"
+                                    name="display_order"
+                                    value="0"
+                                    min="0"
+                                >
+
+                            </div>
+
+
+                            <!-- TITLE -->
+
+                            <div class="about-field full">
+
+                                <label>
+                                    Title
+                                </label>
+
+                                <input
+                                    type="text"
+                                    name="title"
+                                    maxlength="160"
+                                    placeholder="Building the Identity"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <!-- DESCRIPTION -->
+
+                            <div class="about-field full">
+
+                                <label>
+                                    Description
+                                </label>
+
+                                <textarea
+                                    name="description"
+                                    rows="5"
+                                    placeholder="Describe this milestone..."
+                                ></textarea>
+
+                            </div>
+
+
+                            <!-- IMAGE -->
+
+                            <div class="about-field full">
+
+                                <label>
+                                    Image
+                                </label>
+
+                                <input
+                                    type="file"
+                                    name="image"
+                                    accept="image/*"
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- ADD BUTTON -->
+
+                        <div class="about-add-actions">
+
+                            <button
+                                type="submit"
+                                class="about-add-btn"
+                            >
+
+                                <i class="bi bi-plus-lg"></i>
+
+                                Add Journey Item
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+</div>
+
+
+{% endblock %}
+
+
+{% block js %}
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    /*
+    =========================================================
+    IMPORTANT
+    =========================================================
+
+    The main About form saves the AboutPage fields.
+
+    Brand Values, Quality Commitments and Journey Items
+    use separate POST forms because they are separate
+    database models.
+    */
+
+
+    const mainForm =
+        document.querySelector(".about-main-form");
+
+
+    /*
+    =========================================================
+    ADD BRAND VALUE
+    =========================================================
+    */
+
+    const addValueBtn =
+        document.getElementById("addValueBtn");
+
+
+    if (addValueBtn) {
+
+        addValueBtn.addEventListener("click", function () {
+
+            const title =
+                document.getElementById("value_title").value.trim();
+
+            const description =
+                document.getElementById("value_description").value.trim();
+
+            const icon =
+                document.getElementById("value_icon").value.trim();
+
+            const order =
+                document.getElementById("value_display_order").value;
+
+
+            if (!title || !description) {
+
+                alert(
+                    "Please enter the title and description."
+                );
+
+                return;
+
+            }
+
+
+            const form =
+                document.createElement("form");
+
+            form.method = "POST";
+
+            form.action =
+                "{% url 'add_about_value' %}";
+
+            form.enctype =
+                "multipart/form-data";
+
+
+            form.innerHTML = `
+
+                {% csrf_token %}
+
+                <input
+                    type="hidden"
+                    name="about_id"
+                    value="{{ about.id }}"
+                >
+
+                <input
+                    type="hidden"
+                    name="title"
+                    value="${escapeHtml(title)}"
+                >
+
+                <input
+                    type="hidden"
+                    name="description"
+                    value="${escapeHtml(description)}"
+                >
+
+                <input
+                    type="hidden"
+                    name="icon"
+                    value="${escapeHtml(icon)}"
+                >
+
+                <input
+                    type="hidden"
+                    name="display_order"
+                    value="${escapeHtml(order)}"
+                >
+
+            `;
+
+
+            document.body.appendChild(form);
+
+            form.submit();
+
+        });
+
+    }
+
+
+
+    /*
+    =========================================================
+    ADD QUALITY
+    =========================================================
+    */
+
+    const addQualityBtn =
+        document.getElementById("addQualityBtn");
+
+
+    if (addQualityBtn) {
+
+        addQualityBtn.addEventListener(
+            "click",
+            function () {
+
+                const title =
+                    document.getElementById(
+                        "quality_title"
+                    ).value.trim();
+
+
+                const description =
+                    document.getElementById(
+                        "quality_description"
+                    ).value.trim();
+
+
+                const icon =
+                    document.getElementById(
+                        "quality_icon"
+                    ).value.trim();
+
+
+                const order =
+                    document.getElementById(
+                        "quality_display_order"
+                    ).value;
+
+
+                if (!title || !description) {
+
+                    alert(
+                        "Please enter the title and description."
+                    );
+
+                    return;
+
+                }
+
+
+                const form =
+                    document.createElement("form");
+
+                form.method = "POST";
+
+                form.action =
+                    "{% url 'add_about_quality' %}";
+
+
+                form.innerHTML = `
+
+                    {% csrf_token %}
+
+                    <input
+                        type="hidden"
+                        name="about_id"
+                        value="{{ about.id }}"
+                    >
+
+                    <input
+                        type="hidden"
+                        name="title"
+                        value="${escapeHtml(title)}"
+                    >
+
+                    <input
+                        type="hidden"
+                        name="description"
+                        value="${escapeHtml(description)}"
+                    >
+
+                    <input
+                        type="hidden"
+                        name="icon"
+                        value="${escapeHtml(icon)}"
+                    >
+
+                    <input
+                        type="hidden"
+                        name="display_order"
+                        value="${escapeHtml(order)}"
+                    >
+
+                `;
+
+
+                document.body.appendChild(form);
+
+                form.submit();
+
+            }
+        );
+
+    }
+
+
+
+    /*
+    =========================================================
+    ADD JOURNEY
+    =========================================================
+    */
+
+    const addJourneyBtn =
+        document.getElementById("addJourneyBtn");
+
+
+    if (addJourneyBtn) {
+
+        addJourneyBtn.addEventListener(
+            "click",
+            function () {
+
+                const year =
+                    document.getElementById(
+                        "journey_year"
+                    ).value.trim();
+
+
+                const title =
+                    document.getElementById(
+                        "journey_title"
+                    ).value.trim();
+
+
+                const description =
+                    document.getElementById(
+                        "journey_description"
+                    ).value.trim();
+
+
+                const order =
+                    document.getElementById(
+                        "journey_display_order"
+                    ).value;
+
+
+                const imageInput =
+                    document.getElementById(
+                        "journey_image"
+                    );
+
+
+                if (!year || !title) {
+
+                    alert(
+                        "Please enter year and title."
+                    );
+
+                    return;
+
+                }
+
+
+                const form =
+                    document.createElement("form");
+
+                form.method = "POST";
+
+                form.action =
+                    "{% url 'add_about_journey' %}";
+
+                form.enctype =
+                    "multipart/form-data";
+
+
+                const csrf =
+                    document.querySelector(
+                        "[name=csrfmiddlewaretoken]"
+                    );
+
+
+                form.appendChild(
+                    csrf.cloneNode(true)
+                );
+
+
+                appendHidden(
+                    form,
+                    "about_id",
+                    "{{ about.id }}"
+                );
+
+
+                appendHidden(
+                    form,
+                    "year",
+                    year
+                );
+
+
+                appendHidden(
+                    form,
+                    "title",
+                    title
+                );
+
+
+                appendHidden(
+                    form,
+                    "description",
+                    description
+                );
+
+
+                appendHidden(
+                    form,
+                    "display_order",
+                    order
+                );
+
+
+                if (
+                    imageInput.files &&
+                    imageInput.files.length
+                ) {
+
+                    const clonedInput =
+                        imageInput.cloneNode(true);
+
+                    clonedInput.name =
+                        "image";
+
+                    form.appendChild(
+                        clonedInput
+                    );
+
+                }
+
+
+                document.body.appendChild(form);
+
+                form.submit();
+
+            }
+        );
+
+    }
+
+
+
+    /*
+    =========================================================
+    HELPER
+    =========================================================
+    */
+
+    function appendHidden(
+        form,
+        name,
+        value
+    ) {
+
+        const input =
+            document.createElement("input");
+
+        input.type = "hidden";
+
+        input.name = name;
+
+        input.value = value;
+
+        form.appendChild(input);
+
+    }
+
+
+    function escapeHtml(value) {
+
+        return value
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+
+    }
+
+});
+
+</script>
+
+<script>
+function toggleAboutEdit(id) {
+
+    const box = document.getElementById(id);
+
+    if (!box) return;
+
+    box.hidden = !box.hidden;
+
+}
+
+/* =========================================================
+   DEFAULT COLLAPSE ON PAGE LOAD
+========================================================= */
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const sections = document.querySelectorAll(
+        ".about-admin-card[data-about-section]"
+    );
+
+    sections.forEach(function (section) {
+
+        section.classList.add("is-collapsed");
+
+    });
+
+});
+</script>
+<script>
+/* =========================================================
+   ABOUT ADMIN SECTION COLLAPSE
+========================================================= */
+
+function toggleAboutSection(id) {
+
+    const section = document.getElementById(id);
+
+    if (!section) return;
+
+    section.classList.toggle("is-collapsed");
+
+}
+
+
+/* =========================================================
+   OPEN / CLOSE ALL
+========================================================= */
+
+function toggleAllAboutSections() {
+
+    const sections = document.querySelectorAll(
+        ".about-admin-card[data-about-section]"
+    );
+
+    if (!sections.length) return;
+
+    const hasOpenSection = Array.from(sections).some(
+        section => !section.classList.contains("is-collapsed")
+    );
+
+    sections.forEach(section => {
+
+        if (hasOpenSection) {
+            section.classList.add("is-collapsed");
+        } else {
+            section.classList.remove("is-collapsed");
+        }
+
+    });
+
+}
+
+</script>
+{% endblock %}

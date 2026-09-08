@@ -1,0 +1,1145 @@
+/* =========================================================
+   NAFI ABOUT PAGE
+   PREMIUM BRAND PROFILE
+========================================================= */
+
+.nafi-about-page {
+    width: 100%;
+    background: #080808;
+    color: #f5f5f5;
+    overflow: hidden;
+}
+
+.about-container {
+    width: min(1400px, 92%);
+    margin: 0 auto;
+}
+
+.about-section {
+    position: relative;
+    padding: 130px 0;
+}
+
+.about-section-number {
+    display: block;
+    margin-bottom: 25px;
+
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+
+    color: #8d9baa;
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.about-hero {
+    position: relative;
+    min-height: 88vh;
+
+    display: flex;
+    align-items: center;
+
+    overflow: hidden;
+}
+
+.about-hero-image,
+.about-final-image {
+    position: absolute;
+    inset: 0;
+}
+
+.about-hero-image img,
+.about-final-image img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+    display: block;
+}
+
+.about-hero-overlay,
+.about-final-overlay {
+    position: absolute;
+    inset: 0;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(0, 0, 0, .85),
+            rgba(0, 0, 0, .35),
+            rgba(0, 0, 0, .72)
+        );
+}
+
+.about-hero-content {
+    position: relative;
+    z-index: 2;
+}
+
+.about-eyebrow {
+    display: inline-block;
+
+    margin-bottom: 24px;
+
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+}
+
+.about-hero h1 {
+    max-width: 850px;
+    margin: 0;
+
+    font-size: clamp(48px, 8vw, 110px);
+    line-height: .92;
+    letter-spacing: -4px;
+    font-weight: 700;
+}
+
+.about-hero p {
+    max-width: 620px;
+    margin-top: 35px;
+
+    color: #c7c7c7;
+
+    font-size: 17px;
+    line-height: 1.8;
+}
+
+.about-scroll-indicator {
+    position: absolute;
+    z-index: 2;
+
+    bottom: 35px;
+    right: 4%;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    font-size: 9px;
+    letter-spacing: 2px;
+
+    color: #aaa;
+}
+
+
+/* =========================================================
+   TWO COLUMN
+========================================================= */
+
+.about-two-column {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 100px;
+
+    align-items: center;
+}
+
+.about-text h2,
+.about-section-heading h2 {
+    margin: 0;
+
+    font-size: clamp(36px, 5vw, 68px);
+    line-height: 1;
+    letter-spacing: -2px;
+}
+
+.about-text p {
+    margin: 0;
+
+    color: #b8b8b8;
+
+    font-size: 16px;
+    line-height: 1.9;
+}
+
+.about-divider {
+    width: 70px;
+    height: 1px;
+
+    margin: 30px 0;
+
+    background: #75808c;
+}
+
+.about-image {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+
+    overflow: hidden;
+}
+
+.about-image img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    display: block;
+
+    transition: transform .8s ease;
+}
+
+.about-image:hover img {
+    transform: scale(1.04);
+}
+
+
+/* =========================================================
+   CENTERED SECTIONS
+========================================================= */
+
+.about-centered {
+    max-width: 1000px;
+    text-align: center;
+}
+
+.about-centered .about-divider {
+    margin: 30px auto;
+}
+
+.about-large-text {
+    color: #bdbdbd;
+
+    font-size: 19px;
+    line-height: 2;
+}
+
+
+/* =========================================================
+   ORIGIN
+========================================================= */
+
+.about-origin {
+    background: #0d0d0d;
+}
+
+
+/* =========================================================
+   VISION
+========================================================= */
+
+.about-vision {
+    background: #0a0a0a;
+}
+
+.about-vision-content {
+    max-width: 850px;
+}
+
+.about-vision h3 {
+    margin: 25px 0 0;
+
+    font-size: clamp(24px, 3vw, 40px);
+    line-height: 1.25;
+
+    font-weight: 400;
+    color: #d8d8d8;
+}
+
+
+/* =========================================================
+   MODERN MAN
+========================================================= */
+
+.about-modern {
+    background: #101010;
+}
+
+
+/* =========================================================
+   AESTHETIC
+========================================================= */
+
+.about-aesthetic {
+    background: #080808;
+}
+
+
+/* =========================================================
+   VALUES
+========================================================= */
+
+.about-values {
+    background: #0d0d0d;
+}
+
+.about-section-heading {
+    max-width: 850px;
+    margin-bottom: 70px;
+}
+
+.about-section-heading > p {
+    max-width: 700px;
+    margin-top: 25px;
+
+    color: #aaa;
+    line-height: 1.8;
+}
+
+.about-values-grid {
+    display: grid;
+
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+
+    background: #292929;
+}
+
+.about-value-card {
+    min-height: 300px;
+
+    padding: 40px 30px;
+
+    background: #0d0d0d;
+
+    position: relative;
+}
+
+.about-value-number {
+    display: block;
+
+    margin-bottom: 45px;
+
+    font-size: 11px;
+    color: #69737d;
+}
+
+.about-value-card i {
+    display: block;
+
+    margin-bottom: 25px;
+
+    font-size: 25px;
+}
+
+.about-value-card h3 {
+    margin: 0 0 15px;
+
+    font-size: 21px;
+}
+
+.about-value-card p {
+    margin: 0;
+
+    color: #999;
+
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+
+/* =========================================================
+   QUALITY
+========================================================= */
+
+.about-quality {
+    background: #080808;
+}
+
+.about-quality-grid {
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+}
+
+.about-quality-card {
+    padding: 40px;
+
+    border: 1px solid #242424;
+
+    background: #0d0d0d;
+}
+
+.about-quality-card i {
+    font-size: 25px;
+}
+
+.about-quality-card h3 {
+    margin: 25px 0 15px;
+
+    font-size: 20px;
+}
+
+.about-quality-card p {
+    margin: 0;
+
+    color: #999;
+
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+
+/* =========================================================
+   JOURNEY
+========================================================= */
+
+.about-journey {
+    background: #0d0d0d;
+}
+
+.about-timeline {
+    position: relative;
+}
+
+.about-timeline-item {
+    display: grid;
+
+    grid-template-columns: 130px 30px 1fr;
+
+    gap: 25px;
+
+    min-height: 180px;
+}
+
+.about-timeline-year {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.about-timeline-line {
+    position: relative;
+}
+
+.about-timeline-line::before {
+    content: "";
+
+    position: absolute;
+
+    top: 5px;
+    bottom: 0;
+    left: 50%;
+
+    width: 1px;
+
+    background: #333;
+}
+
+.about-timeline-line span {
+    position: absolute;
+
+    top: 5px;
+    left: 50%;
+
+    width: 9px;
+    height: 9px;
+
+    transform: translateX(-50%);
+
+    border-radius: 50%;
+
+    background: #aaa;
+}
+
+.about-timeline-content {
+    padding-bottom: 60px;
+}
+
+.about-timeline-content h3 {
+    margin: 0 0 15px;
+
+    font-size: 25px;
+}
+
+.about-timeline-content p {
+    max-width: 700px;
+
+    margin: 0;
+
+    color: #999;
+
+    line-height: 1.8;
+}
+
+.about-timeline-content img {
+    width: 100%;
+    max-width: 500px;
+
+    margin-top: 25px;
+
+    display: block;
+}
+
+
+/* =========================================================
+   TRANSPARENCY
+========================================================= */
+
+.about-transparency {
+    background: #101010;
+}
+
+
+/* =========================================================
+   WHY NAFI
+========================================================= */
+
+.about-why {
+    background: #080808;
+}
+
+
+/* =========================================================
+   PROFILE
+========================================================= */
+
+.about-profile {
+    background: #0d0d0d;
+}
+
+.about-profile-grid {
+    border-top: 1px solid #292929;
+}
+
+.about-profile-item {
+    display: grid;
+
+    grid-template-columns: 220px 1fr;
+
+    padding: 25px 0;
+
+    border-bottom: 1px solid #292929;
+}
+
+.about-profile-item span {
+    font-size: 10px;
+    letter-spacing: 2px;
+
+    color: #777;
+}
+
+.about-profile-item strong {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+
+/* =========================================================
+   FINAL
+========================================================= */
+
+.about-final {
+    position: relative;
+
+    min-height: 75vh;
+
+    display: flex;
+    align-items: center;
+
+    overflow: hidden;
+}
+
+.about-final-content {
+    position: relative;
+    z-index: 2;
+
+    text-align: center;
+}
+
+.about-final h2 {
+    margin: 0;
+
+    font-size: clamp(42px, 7vw, 95px);
+    line-height: .95;
+    letter-spacing: -4px;
+}
+
+.about-final p {
+    max-width: 650px;
+
+    margin: 30px auto;
+
+    color: #ccc;
+
+    line-height: 1.8;
+}
+
+.about-final strong {
+    display: block;
+
+    margin-bottom: 35px;
+
+    font-size: 14px;
+    letter-spacing: 4px;
+}
+
+.about-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 15px;
+
+    padding: 15px 25px;
+
+    border: 1px solid rgba(255,255,255,.4);
+
+    color: #fff;
+
+    text-decoration: none;
+
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+
+    transition: .3s ease;
+}
+
+.about-cta:hover {
+    background: #fff;
+    color: #000;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 991px) {
+
+    .about-section {
+        padding: 100px 0;
+    }
+
+    .about-two-column {
+        grid-template-columns: 1fr;
+        gap: 60px;
+    }
+
+    .about-values-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .about-quality-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .about-hero {
+        min-height: 75vh;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+
+    .about-container {
+        width: 90%;
+    }
+
+    .about-section {
+        padding: 80px 0;
+    }
+
+    .about-hero {
+        min-height: 78vh;
+    }
+
+    .about-hero h1 {
+        letter-spacing: -2px;
+    }
+
+    .about-hero p {
+        font-size: 14px;
+        line-height: 1.7;
+    }
+
+    .about-scroll-indicator {
+        display: none;
+    }
+
+    .about-large-text {
+        font-size: 16px;
+        line-height: 1.8;
+    }
+
+    .about-values-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .about-quality-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .about-value-card {
+        min-height: auto;
+    }
+
+    .about-timeline-item {
+        grid-template-columns: 65px 20px 1fr;
+        gap: 15px;
+    }
+
+    .about-timeline-year {
+        font-size: 15px;
+    }
+
+    .about-timeline-content h3 {
+        font-size: 19px;
+    }
+
+    .about-profile-item {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .about-final {
+        min-height: 70vh;
+    }
+
+    .about-final h2 {
+        letter-spacing: -2px;
+    }
+
+}
+
+
+
+
+/* =========================================================
+   NAFI ABOUT — PREMIUM MOTION SYSTEM
+========================================================= */
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.nafi-about-page .about-hero-content {
+    opacity: 0;
+    transform: translateY(28px);
+    transition:
+        opacity 1.1s cubic-bezier(.22, 1, .36, 1),
+        transform 1.1s cubic-bezier(.22, 1, .36, 1);
+}
+
+
+.nafi-about-page .about-hero.hero-loaded
+.about-hero-content {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+
+.nafi-about-page .about-hero-image {
+    overflow: hidden;
+}
+
+
+.nafi-about-page .about-hero-image img {
+    transform: scale(1.08);
+    transition:
+        transform 2.2s cubic-bezier(.16, 1, .3, 1);
+}
+
+
+.nafi-about-page .about-hero.hero-loaded
+.about-hero-image img {
+    transform: scale(1.035);
+}
+
+
+/* =========================================================
+   HERO EYEBROW
+========================================================= */
+
+.nafi-about-page .about-eyebrow {
+    opacity: 0;
+    transform: translateY(15px);
+    transition:
+        opacity .8s ease .15s,
+        transform .8s cubic-bezier(.22, 1, .36, 1) .15s;
+}
+
+
+.nafi-about-page .about-hero.hero-loaded
+.about-eyebrow {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+
+/* =========================================================
+   SECTION REVEAL
+========================================================= */
+
+.nafi-about-page .section-hidden {
+    opacity: 0;
+    transform: translateY(35px);
+}
+
+
+.nafi-about-page .about-section {
+    transition:
+        opacity 1s cubic-bezier(.22, 1, .36, 1),
+        transform 1s cubic-bezier(.22, 1, .36, 1);
+}
+
+
+.nafi-about-page .about-section.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+
+/* =========================================================
+   TEXT REVEAL
+========================================================= */
+
+.nafi-about-page .text-hidden {
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+
+.nafi-about-page .text-visible {
+    opacity: 1;
+    transform: translateY(0);
+
+    transition:
+        opacity .8s ease,
+        transform .8s cubic-bezier(.22, 1, .36, 1);
+}
+
+
+/* =========================================================
+   TEXT STAGGER
+========================================================= */
+
+.nafi-about-page .about-section-number {
+    transition-delay: 0s;
+}
+
+
+.nafi-about-page .about-text h2,
+.nafi-about-page .about-section-heading h2 {
+    transition-delay: .08s;
+}
+
+
+.nafi-about-page .about-text h3,
+.nafi-about-page .about-section-heading p {
+    transition-delay: .14s;
+}
+
+
+.nafi-about-page .about-text p,
+.nafi-about-page .about-vision-content p {
+    transition-delay: .2s;
+}
+
+
+/* =========================================================
+   DIVIDER
+========================================================= */
+
+.nafi-about-page .divider-hidden {
+    width: 0 !important;
+    opacity: 0;
+}
+
+
+.nafi-about-page .about-divider {
+    transition:
+        width .9s cubic-bezier(.22, 1, .36, 1),
+        opacity .6s ease;
+}
+
+
+.nafi-about-page .divider-visible {
+    opacity: 1;
+}
+
+
+/* =========================================================
+   VALUE / QUALITY CARDS
+========================================================= */
+
+.nafi-about-page .card-hidden {
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+
+.nafi-about-page .card-visible {
+    opacity: 1;
+    transform: translateY(0);
+
+    transition:
+        opacity .75s ease,
+        transform .75s cubic-bezier(.22, 1, .36, 1);
+}
+
+
+/* =========================================================
+   CARD HOVER
+========================================================= */
+
+@media (hover: hover) {
+
+    .nafi-about-page .about-value-card,
+    .nafi-about-page .about-quality-card {
+
+        transition:
+            transform .45s cubic-bezier(.22, 1, .36, 1),
+            box-shadow .45s ease;
+
+    }
+
+
+    .nafi-about-page .about-value-card:hover,
+    .nafi-about-page .about-quality-card:hover {
+
+        transform: translateY(-6px);
+
+    }
+
+}
+
+
+/* =========================================================
+   TIMELINE
+========================================================= */
+
+.nafi-about-page .timeline-hidden {
+    opacity: 0;
+    transform: translateX(-30px);
+}
+
+
+.nafi-about-page .timeline-visible {
+
+    opacity: 1;
+    transform: translateX(0);
+
+    transition:
+        opacity .8s ease,
+        transform .9s cubic-bezier(.22, 1, .36, 1);
+}
+
+
+/* =========================================================
+   TIMELINE DOT
+========================================================= */
+
+.nafi-about-page
+.about-timeline-item.timeline-visible
+.about-timeline-line span {
+
+    transform: scale(1);
+
+    transition:
+        transform .5s cubic-bezier(.22, 1, .36, 1) .25s;
+
+}
+
+
+.nafi-about-page
+.about-timeline-line span {
+
+    transform: scale(0);
+
+    transform-origin: center;
+
+}
+
+
+/* =========================================================
+   IMAGE REVEAL
+========================================================= */
+
+.nafi-about-page .image-hidden {
+    opacity: 0;
+    transform: translateY(35px);
+}
+
+
+.nafi-about-page .image-visible {
+    opacity: 1;
+    transform: translateY(0);
+
+    transition:
+        opacity 1.1s ease,
+        transform 1.1s cubic-bezier(.22, 1, .36, 1);
+}
+
+
+/* =========================================================
+   IMAGE INNER MOTION
+========================================================= */
+
+.nafi-about-page .about-image img,
+.nafi-about-page .about-final-image img,
+.nafi-about-page .about-timeline-content img {
+
+    transition:
+        transform 1.2s cubic-bezier(.22, 1, .36, 1);
+
+}
+
+
+@media (hover: hover) {
+
+    .nafi-about-page .about-image:hover img,
+    .nafi-about-page .about-final-image:hover img {
+
+        transform: scale(1.025);
+
+    }
+
+}
+
+
+/* =========================================================
+   PROFILE
+========================================================= */
+
+.nafi-about-page .about-profile-item {
+
+    opacity: 0;
+    transform: translateY(20px);
+
+    transition:
+        opacity .7s ease,
+        transform .7s cubic-bezier(.22, 1, .36, 1);
+
+}
+
+
+.nafi-about-page .about-section.is-visible
+.about-profile-item {
+
+    opacity: 1;
+    transform: translateY(0);
+
+}
+
+
+/* =========================================================
+   FINAL SECTION
+========================================================= */
+
+.nafi-about-page .about-final-content {
+
+    opacity: 0;
+    transform: translateY(30px);
+
+}
+
+
+.nafi-about-page .about-final.final-visible
+.about-final-content {
+
+    opacity: 1;
+    transform: translateY(0);
+
+    transition:
+        opacity 1.1s ease,
+        transform 1.1s cubic-bezier(.22, 1, .36, 1);
+
+}
+
+
+.nafi-about-page .about-final-image img {
+
+    transform: scale(1.07);
+
+}
+
+
+.nafi-about-page .about-final.final-visible
+.about-final-image img {
+
+    transform: scale(1.02);
+
+    transition:
+        transform 2s cubic-bezier(.16, 1, .3, 1);
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 768px) {
+
+    .nafi-about-page .about-hero-image img {
+
+        transform: scale(1.04);
+
+    }
+
+
+    .nafi-about-page .section-hidden {
+
+        transform: translateY(22px);
+
+    }
+
+
+    .nafi-about-page .card-hidden {
+
+        transform: translateY(20px);
+
+    }
+
+
+    .nafi-about-page .timeline-hidden {
+
+        transform: translateY(20px);
+
+    }
+
+
+    .nafi-about-page .image-hidden {
+
+        transform: translateY(22px);
+
+    }
+
+}
+
+
+/* =========================================================
+   ACCESSIBILITY
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .nafi-about-page *,
+    .nafi-about-page *::before,
+    .nafi-about-page *::after {
+
+        animation: none !important;
+        transition: none !important;
+
+    }
+
+
+    .nafi-about-page .about-hero-content,
+    .nafi-about-page .about-hero-image img,
+    .nafi-about-page .section-hidden,
+    .nafi-about-page .text-hidden,
+    .nafi-about-page .card-hidden,
+    .nafi-about-page .timeline-hidden,
+    .nafi-about-page .image-hidden,
+    .nafi-about-page .about-final-content {
+
+        opacity: 1 !important;
+        transform: none !important;
+
+    }
+
+}

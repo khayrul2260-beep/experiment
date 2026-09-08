@@ -256,3 +256,365 @@ class ProductSize(models.Model):
 
     def __str__(self):
         return f'{self.product.name} - {self.size}'
+
+
+# =========================================================
+# NAFI ABOUT PAGE
+# =========================================================
+
+class AboutPage(models.Model):
+    """
+    Main editable content for the NAFI public About / Brand Profile page.
+    Keep only ONE active AboutPage record.
+    """
+
+    # -----------------------------------------------------
+    # HERO
+    # -----------------------------------------------------
+    hero_eyebrow = models.CharField(
+        max_length=80,
+        default="NAFI"
+    )
+
+    hero_title = models.CharField(
+        max_length=160,
+        default="DEFINED BY SIMPLICITY."
+    )
+
+    hero_description = models.TextField(
+        blank=True
+    )
+
+    hero_image = models.ImageField(
+        upload_to="about/",
+        blank=True,
+        null=True
+    )
+
+    # -----------------------------------------------------
+    # WHO WE ARE
+    # -----------------------------------------------------
+    who_title = models.CharField(
+        max_length=160,
+        default="WHO IS NAFI?"
+    )
+
+    who_content = models.TextField(
+        blank=True
+    )
+
+    who_image = models.ImageField(
+        upload_to="about/",
+        blank=True,
+        null=True
+    )
+
+    # -----------------------------------------------------
+    # BRAND ORIGIN
+    # -----------------------------------------------------
+    origin_title = models.CharField(
+        max_length=160,
+        default="WHERE IT BEGAN"
+    )
+
+    origin_content = models.TextField(
+        blank=True
+    )
+
+    # -----------------------------------------------------
+    # VISION
+    # -----------------------------------------------------
+    vision_title = models.CharField(
+        max_length=160,
+        default="OUR VISION"
+    )
+
+    vision_statement = models.CharField(
+        max_length=300,
+        blank=True
+    )
+
+    vision_content = models.TextField(
+        blank=True
+    )
+
+    # -----------------------------------------------------
+    # MADE FOR THE MODERN MAN
+    # -----------------------------------------------------
+    modern_title = models.CharField(
+        max_length=160,
+        default="MADE FOR THE MODERN MAN"
+    )
+
+    modern_content = models.TextField(
+        blank=True
+    )
+
+    # -----------------------------------------------------
+    # NAFI AESTHETIC
+    # -----------------------------------------------------
+    aesthetic_title = models.CharField(
+        max_length=160,
+        default="THE NAFI AESTHETIC"
+    )
+
+    aesthetic_content = models.TextField(
+        blank=True
+    )
+
+    aesthetic_image = models.ImageField(
+        upload_to="about/",
+        blank=True,
+        null=True
+    )
+
+    # -----------------------------------------------------
+    # QUALITY
+    # -----------------------------------------------------
+    quality_title = models.CharField(
+        max_length=160,
+        default="QUALITY IS NOT AN OPTION."
+    )
+
+    quality_intro = models.TextField(
+        blank=True
+    )
+
+    # -----------------------------------------------------
+    # TRANSPARENCY
+    # -----------------------------------------------------
+    transparency_title = models.CharField(
+        max_length=160,
+        default="OUR COMMITMENT TO TRANSPARENCY"
+    )
+
+    transparency_content = models.TextField(
+        blank=True
+    )
+
+    # -----------------------------------------------------
+    # WHY NAFI
+    # -----------------------------------------------------
+    why_title = models.CharField(
+        max_length=160,
+        default="WHY NAFI?"
+    )
+
+    why_content = models.TextField(
+        blank=True
+    )
+
+    # -----------------------------------------------------
+    # NAFI AT A GLANCE
+    # -----------------------------------------------------
+    profile_title = models.CharField(
+        max_length=160,
+        default="NAFI AT A GLANCE"
+    )
+
+    profile_category = models.CharField(
+        max_length=120,
+        default="Men's Fashion"
+    )
+
+    profile_focus = models.CharField(
+        max_length=120,
+        default="Modern Menswear"
+    )
+
+    profile_style = models.CharField(
+        max_length=120,
+        default="Minimal & Refined"
+    )
+
+    profile_values = models.CharField(
+        max_length=255,
+        default="Quality • Design • Comfort • Confidence"
+    )
+
+    profile_products = models.CharField(
+        max_length=255,
+        default="T-Shirts • Shirts • Punjabi"
+    )
+
+    # -----------------------------------------------------
+    # FINAL BRAND STATEMENT
+    # -----------------------------------------------------
+    final_title = models.CharField(
+        max_length=160,
+        default="MINIMAL. MASCULINE. TIMELESS."
+    )
+
+    final_content = models.TextField(
+        blank=True
+    )
+
+    final_statement = models.CharField(
+        max_length=160,
+        default="WEAR YOUR CONFIDENCE."
+    )
+
+    cta_text = models.CharField(
+        max_length=80,
+        default="EXPLORE COLLECTION"
+    )
+
+    final_image = models.ImageField(
+        upload_to="about/",
+        blank=True,
+        null=True
+    )
+
+    # -----------------------------------------------------
+    # STATUS
+    # -----------------------------------------------------
+    is_published = models.BooleanField(
+        default=True
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True
+    )
+
+    class Meta:
+        verbose_name = "About Page"
+        verbose_name_plural = "About Page"
+
+    def __str__(self):
+        return "NAFI About Page"
+
+
+# =========================================================
+# NAFI ABOUT — BRAND VALUES
+# =========================================================
+
+class AboutValue(models.Model):
+
+    about_page = models.ForeignKey(
+        AboutPage,
+        on_delete=models.CASCADE,
+        related_name="values"
+    )
+
+    title = models.CharField(
+        max_length=80
+    )
+
+    description = models.TextField()
+
+    icon = models.CharField(
+        max_length=80,
+        blank=True,
+        help_text="Example: bi bi-gem"
+    )
+
+    display_order = models.PositiveIntegerField(
+        default=0
+    )
+
+    is_active = models.BooleanField(
+        default=True
+    )
+
+    class Meta:
+        ordering = [
+            "display_order",
+            "id"
+        ]
+
+    def __str__(self):
+        return self.title
+
+
+# =========================================================
+# NAFI ABOUT — QUALITY COMMITMENTS
+# =========================================================
+
+class AboutQuality(models.Model):
+
+    about_page = models.ForeignKey(
+        AboutPage,
+        on_delete=models.CASCADE,
+        related_name="quality_items"
+    )
+
+    title = models.CharField(
+        max_length=100
+    )
+
+    description = models.TextField()
+
+    icon = models.CharField(
+        max_length=80,
+        blank=True,
+        help_text="Example: bi bi-check2-circle"
+    )
+
+    display_order = models.PositiveIntegerField(
+        default=0
+    )
+
+    is_active = models.BooleanField(
+        default=True
+    )
+
+    class Meta:
+        ordering = [
+            "display_order",
+            "id"
+        ]
+
+        verbose_name = "About Quality Commitment"
+        verbose_name_plural = "About Quality Commitments"
+
+    def __str__(self):
+        return self.title
+
+
+# =========================================================
+# NAFI ABOUT — BRAND JOURNEY
+# =========================================================
+
+class AboutJourney(models.Model):
+
+    about_page = models.ForeignKey(
+        AboutPage,
+        on_delete=models.CASCADE,
+        related_name="journey_items"
+    )
+
+    year = models.CharField(
+        max_length=20
+    )
+
+    title = models.CharField(
+        max_length=160
+    )
+
+    description = models.TextField(
+        blank=True
+    )
+
+    image = models.ImageField(
+        upload_to="about/journey/",
+        blank=True,
+        null=True
+    )
+
+    display_order = models.PositiveIntegerField(
+        default=0
+    )
+
+    is_active = models.BooleanField(
+        default=True
+    )
+
+    class Meta:
+        ordering = [
+            "display_order",
+            "year",
+            "id"
+        ]
+
+    def __str__(self):
+        return f"{self.year} — {self.title}"

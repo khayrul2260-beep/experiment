@@ -181,3 +181,29 @@ def category_products_page(request, slug):
         context
     )
 
+
+
+def about_page(request):
+    """
+    Display the published NAFI About Page.
+    Content is managed from Django Admin.
+    """
+
+    about = (
+        AboutPage.objects
+        .filter(is_published=True)
+        .prefetch_related(
+            "values",
+            "quality_items",
+            "journey_items",
+        )
+        .first()
+    )
+
+    return render(
+        request,
+        "customer/about.html",
+        {
+            "about": about,
+        },
+    )

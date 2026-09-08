@@ -1,3 +1,4 @@
+
 /* =====================================================
    NAFI NAVIGATION
    CUSTOM CSS — NO BOOTSTRAP NAVBAR DEPENDENCY
@@ -9,22 +10,15 @@
 ===================================================== */
 
 :root {
-
     --nafi-black: #000000;
     --nafi-dark: #050608;
     --nafi-dark-blue: #010025;
-
     --nafi-white: #ffffff;
     --nafi-text: #eeeeee;
     --nafi-muted: #aaaaaa;
-
     --nafi-blue: #1e9bff;
     --nafi-red: #0dd2ec;
-
     --nafi-border: rgba(255, 255, 255, 0.08);
-    /* --max-width: 2000px; */
-
-
 }
 
 
@@ -33,42 +27,23 @@
 ===================================================== */
 
 .nafi-topbar {
-
     width: 100%;
-
     background: var(--nafi-dark-blue);
-
     color: var(--nafi-white);
-
     font-size: 13px;
-
     border-bottom: 1px solid var(--nafi-border);
-
 }
 
-
-
-
 .nafi-topbar-container {
-
     width: 100%;
-
     max-width: var(--max-width);
-
     min-height: 38px;
-
     margin: 0 auto;
-
     padding: 0 3%;
-
     display: flex;
-
     align-items: center;
-
     justify-content: space-between;
-
     box-sizing: border-box;
-
 }
 
 
@@ -77,23 +52,15 @@
 ===================================================== */
 
 .topbar-left {
-
     display: flex;
-
     align-items: center;
-
     gap: 8px;
-
     color: #eeeeee;
 }
 
-
 .topbar-left i {
-
     color: var(--nafi-blue);
-
     font-size: 14px;
-
 }
 
 
@@ -102,53 +69,31 @@
 ===================================================== */
 
 .topbar-right {
-
     display: flex;
-
     align-items: center;
-
     gap: 14px;
-
 }
-
 
 .topbar-right a {
-
     display: flex;
-
     align-items: center;
-
     gap: 4px;
-
     color: #dddddd;
-
     text-decoration: none;
-
     transition: color 0.25s ease;
-
 }
-
 
 .topbar-right a:hover {
-
     color: var(--nafi-blue);
-
 }
-
 
 .topbar-right i {
-
     font-size: 13px;
-
 }
 
-
 .topbar-right .bi-chevron-down {
-
     font-size: 9px;
-
     margin-left: 2px;
-
 }
 
 
@@ -157,13 +102,9 @@
 ===================================================== */
 
 .topbar-divider {
-
     width: 1px;
-
     height: 14px;
-
     background: rgba(255, 255, 255, 0.20);
-
 }
 
 
@@ -177,7 +118,6 @@
     z-index: 1000;
     width: 100%;
     height: 78px;
-
     background: var(--nafi-black);
     border-bottom: 1px solid var(--nafi-border);
 
@@ -190,28 +130,19 @@
 }
 
 
-
 /* =====================================================
    NAVBAR CONTAINER
 ===================================================== */
 
 .nafi-navbar-container {
-
     width: 100%;
-
     max-width: var(--max-width);
-
     height: 100%;
-
     margin: 0 auto;
-
     padding: 0 3%;
-
     display: flex;
-
     align-items: center;
     box-sizing: border-box;
-
 }
 
 
@@ -220,93 +151,53 @@
 ===================================================== */
 
 .nafi-logo {
-
     width: fit-content;
-
     height: 60px;
-
     flex-shrink: 0;
-
     display: flex;
-
     align-items: center;
-
 }
-
 
 .logo_ {
-
     width: auto;
-
     height: 100%;
-
     display: flex;
-
     align-items: center;
-
     justify-content: center;
-
     text-decoration: none;
-
 }
-
 
 .brand_logo_ {
-
     width: auto;
-
     height: 70%;
-
     object-fit: contain;
-
     display: block;
-
     transition: transform 0.25s ease;
-
 }
-
 
 .brand_logo_:hover {
-
     transform: translateY(-2px);
-
 }
 
-
 .brand_logo_:active {
-
     transform: scale(0.96);
-
 }
 
 .brand_title_ {
-
     width: auto;
-
     height: 100%;
-
     object-fit: contain;
-
     display: block;
-
     transition: transform 0.25s ease;
-
 }
-
 
 .brand_title_:hover {
-
     transform: translateY(-2px);
-
 }
-
 
 .brand_title_:active {
-
     transform: scale(0.96);
-
 }
-
 
 
 /* =====================================================
@@ -314,38 +205,22 @@
 ===================================================== */
 
 .nafi-navigation {
-
     height: 100%;
-
     flex: 1;
-
     display: flex;
-
     align-items: center;
-
     justify-content: center;
-
 }
 
-
 .nafi-menu {
-
     height: 100%;
-
     margin: 0;
-
     padding: 0;
-
     list-style: none;
-
     display: flex;
-
     align-items: center;
-
     justify-content: center;
-
     gap: 8px;
-
 }
 
 
@@ -354,15 +229,10 @@
 ===================================================== */
 
 .nafi-menu .nav-item {
-
     position: relative;
-
     height: 100%;
-
     display: flex;
-
     align-items: center;
-
 }
 
 
@@ -371,49 +241,33 @@
 ===================================================== */
 
 .nav-link_ {
-
     position: relative;
-
     height: 100%;
-
     padding: 0 18px;
 
     display: inline-flex;
-
     align-items: center;
-
     justify-content: center;
-
     gap: 7px;
 
     border: none;
-
     outline: none;
-
     background: transparent;
 
     color: var(--nafi-text);
-
     text-decoration: none;
 
     font-family: inherit;
-
     font-size: 12px;
-
     font-weight: 600;
-
     letter-spacing: 0.7px;
 
     cursor: pointer;
-
     white-space: nowrap;
 
     transition:
-
         color 0.25s ease,
-
         transform 0.25s ease;
-
 }
 
 
@@ -422,9 +276,7 @@
 ===================================================== */
 
 .nav-link_:hover {
-
     color: var(--nafi-white);
-
 }
 
 
@@ -433,15 +285,12 @@
 ===================================================== */
 
 .nav-link_::after {
-
     content: "";
 
     position: absolute;
 
     left: 18px;
-
     right: 18px;
-
     bottom: 20px;
 
     height: 2px;
@@ -449,23 +298,37 @@
     background: var(--nafi-red);
 
     transform: scaleX(0);
-
     transform-origin: center;
 
-    transition: transform 0.3s ease;
-
+    transition:
+        transform 0.3s ease;
 }
 
 
 /* =====================================================
-   ACTIVE / HOVER UNDERLINE
+   HOVER UNDERLINE
 ===================================================== */
 
-.nav-link_:hover::after,
-.nav-link_.active::after {
-
+.nav-link_:hover::after {
     transform: scaleX(1);
+}
 
+
+/* =====================================================
+   CURRENT PAGE / ACTIVE UNDERLINE
+===================================================== */
+
+.nav-link_.active::after {
+    transform: scaleX(1);
+}
+
+
+/* =====================================================
+   ACTIVE TEXT
+===================================================== */
+
+.nav-link_.active {
+    color: var(--nafi-white);
 }
 
 
@@ -474,9 +337,7 @@
 ===================================================== */
 
 .dropdown-trigger {
-
     appearance: none;
-
 }
 
 
@@ -485,21 +346,17 @@
 ===================================================== */
 
 .dropdown-trigger i {
-
     font-size: 9px;
-
     transition: transform 0.3s ease;
-
 }
 
 
-/* Arrow rotation when open */
+/* =====================================================
+   ARROW ROTATION WHEN OPEN
+===================================================== */
 
-.nav-dropdown.dropdown-open
-.dropdown-trigger i {
-
+.nav-dropdown.dropdown-open .dropdown-trigger i {
     transform: rotate(180deg);
-
 }
 
 
@@ -508,43 +365,66 @@
 ===================================================== */
 
 .nafi-dropdown {
-
     position: absolute;
 
     top: calc(100% + 1px);
-
     left: 50%;
 
     transform: translate(-50%, 10px);
 
     width: 210px;
+    max-height: 210px;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    scrollbar-width: thin;
+    scrollbar-color: #555 #000000;
 
     padding: 10px 15px;
 
-    background: #000000;
+    background: #000000e9;
 
     border: 1px solid var(--nafi-border);
-
     border-radius: 0;
 
     box-shadow:
         0 15px 40px rgba(0, 0, 0, 0.45);
 
     opacity: 0;
-
     visibility: hidden;
     color: white;
 
     pointer-events: none;
 
+    z-index: 1000;
+
     transition:
-
         opacity 0.25s ease,
-
         visibility 0.25s ease,
-
         transform 0.25s ease;
+}
 
+
+/* =====================================================
+   DROPDOWN SCROLLBAR
+===================================================== */
+
+.nafi-dropdown::-webkit-scrollbar {
+    width: 5px;
+}
+
+.nafi-dropdown::-webkit-scrollbar-track {
+    background: #111;
+}
+
+.nafi-dropdown::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 10px;
+}
+
+.nafi-dropdown::-webkit-scrollbar-thumb:hover {
+    background: #777;
 }
 
 
@@ -553,15 +433,11 @@
 ===================================================== */
 
 .nav-dropdown.dropdown-open .nafi-dropdown {
-
     opacity: 1;
-
     visibility: visible;
-
     pointer-events: auto;
 
     transform: translate(-50%, 0);
-
 }
 
 
@@ -569,16 +445,13 @@
    DROPDOWN ITEM
 ===================================================== */
 
-.dropdown-item{
-
+.dropdown-item {
     position: relative;
 
     display: flex;
-
     align-items: center;
 
     width: 100%;
-
     min-height: 44px;
 
     padding: 0 20px;
@@ -586,25 +459,18 @@
     box-sizing: border-box;
 
     color: #dddddd;
-
     background: transparent;
 
     text-decoration: none;
 
     font-size: 12px;
-
     font-weight: 500;
 
     transition:
-
         color 0.25s ease,
-
         background 0.25s ease,
-
         padding-left 0.25s ease;
-
 }
-
 
 
 /* =====================================================
@@ -612,13 +478,9 @@
 ===================================================== */
 
 .dropdown-item:hover {
-
     color: #ffffff;
-
     background: #101820;
-
     padding-left: 26px;
-
 }
 
 
@@ -627,15 +489,10 @@
 ===================================================== */
 
 .nafi-actions {
-
     display: flex;
-
     align-items: center;
-
     justify-content: end;
-
     gap: 20px;
-
 }
 
 
@@ -644,17 +501,13 @@
 ===================================================== */
 
 .nafi-action {
-
     position: relative;
 
     width: 28px;
-
     height: 40px;
 
     display: flex;
-
     align-items: center;
-
     justify-content: center;
 
     color: var(--nafi-white);
@@ -664,20 +517,13 @@
     font-size: 20px;
 
     transition:
-
         color 0.25s ease,
-
         transform 0.25s ease;
-
 }
 
-
 .nafi-action:hover {
-
     color: var(--nafi-blue);
-
     transform: translateY(-1px);
-
 }
 
 
@@ -686,9 +532,7 @@
 ===================================================== */
 
 .cart-action {
-
     position: relative;
-
 }
 
 
@@ -697,35 +541,26 @@
 ===================================================== */
 
 .cart-count {
-
     position: absolute;
 
     top: 0;
-
     right: -7px;
 
     width: 17px;
-
     height: 17px;
 
     display: flex;
-
     align-items: center;
-
     justify-content: center;
 
     border-radius: 50%;
 
     background: #168cff;
-
     color: #ffffff;
 
     font-size: 9px;
-
     font-weight: 700;
-
     line-height: 1;
-
 }
 
 
@@ -734,11 +569,8 @@
 ===================================================== */
 
 .navbar-account {
-
     display: flex;
-
     align-items: center;
-
 }
 
 
@@ -747,54 +579,39 @@
 ===================================================== */
 
 .account-btn {
-
     min-height: 42px;
 
     padding: 5px 13px;
 
     display: inline-flex;
-
     align-items: center;
-
     justify-content: center;
 
     gap: 9px;
 
     border: 1px solid rgba(255, 255, 255, 0.18);
-
     border-radius: 9px;
 
     background: transparent;
-
     color: #ffffff;
 
     text-decoration: none;
 
     font-size: 13px;
-
     font-weight: 600;
 
     transition:
-
         background 0.25s ease,
-
         border-color 0.25s ease,
-
         transform 0.25s ease;
-
 }
 
-
 .account-btn:hover {
-
     background: rgba(255, 255, 255, 0.08);
-
     border-color: rgba(255, 255, 255, 0.35);
-
     color: #ffffff;
 
     transform: translateY(-1px);
-
 }
 
 
@@ -804,41 +621,28 @@
 
 .account-avatar,
 .account-avatar-placeholder {
-
     width: 30px;
-
     height: 30px;
 
     flex-shrink: 0;
 
     display: flex;
-
     align-items: center;
-
     justify-content: center;
 
     border-radius: 50%;
-
 }
-
 
 .account-avatar {
-
     object-fit: cover;
-
 }
 
-
 .account-avatar-placeholder {
-
     background: #ffffff;
-
     color: #111111;
 
     font-size: 12px;
-
     font-weight: 700;
-
 }
 
 
@@ -847,19 +651,14 @@
 ===================================================== */
 
 .account-icon {
-
     width: 30px;
-
     height: 30px;
 
     display: flex;
-
     align-items: center;
-
     justify-content: center;
 
     font-size: 18px;
-
 }
 
 
@@ -868,57 +667,45 @@
 ===================================================== */
 
 .nafi-navbar.navbar-scrolled {
-
-    /* Transparent black glass */
     background: rgba(1, 1, 1, 0.79);
 
-    /* Strong glass blur */
     backdrop-filter: blur(22px) saturate(140%);
     -webkit-backdrop-filter: blur(22px) saturate(140%);
 
-    /* Glass edge */
     border-bottom: 1px solid rgba(255, 255, 255, 0.12);
 
-    /* Glass shadow */
     box-shadow:
         0 8px 32px rgba(0, 0, 0, 0.45),
         inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
+
+
 /* =====================================================
    MOBILE TOGGLE
 ===================================================== */
 
 .nafi-mobile-toggle {
-
     display: none;
 
     width: 40px;
-
     height: 40px;
 
     padding: 0;
-
     margin: 0;
 
     border: none;
-
     outline: none;
 
     background: transparent;
-
     color: #ffffff;
 
     font-size: 30px;
 
     cursor: pointer;
-
 }
 
-
 .nafi-mobile-toggle:focus {
-
     outline: none;
-
 }
 
 
@@ -927,38 +714,27 @@
 ===================================================== */
 
 .nafi-mobile-overlay {
-
     position: fixed;
 
     inset: 0;
-
     z-index: 1090;
 
     background: rgba(0, 0, 0, 0.60);
 
     opacity: 0;
-
     visibility: hidden;
 
     pointer-events: none;
 
     transition:
-
         opacity 0.3s ease,
-
         visibility 0.3s ease;
-
 }
 
-
 .nafi-mobile-overlay.mobile-open {
-
     opacity: 1;
-
     visibility: visible;
-
     pointer-events: auto;
-
 }
 
 
@@ -967,23 +743,18 @@
 ===================================================== */
 
 .nafi-mobile-menu {
-
     position: fixed;
 
     top: 0;
-
     left: 0;
 
     z-index: 1100;
 
     width: 310px;
-
     max-width: 85vw;
-
     height: 100vh;
 
     background: #080a0e;
-
     color: #ffffff;
 
     box-shadow:
@@ -991,19 +762,15 @@
 
     transform: translateX(-100%);
 
-    transition: transform 0.35s ease;
+    transition:
+        transform 0.35s ease;
 
     overflow-y: auto;
-
     overflow-x: hidden;
-
 }
 
-
 .nafi-mobile-menu.mobile-open {
-
     transform: translateX(0);
-
 }
 
 
@@ -1012,19 +779,15 @@
 ===================================================== */
 
 .mobile-menu-header {
-
     min-height: 78px;
 
     padding: 0 22px;
 
     display: flex;
-
     align-items: center;
-
     justify-content: space-between;
 
     border-bottom: 1px solid var(--nafi-border);
-
 }
 
 
@@ -1033,35 +796,31 @@
 ===================================================== */
 
 .mobile-logo {
-
     height: 100%;
 
     display: flex;
     flex-direction: row;
-    gap: 5px;
-    align-items: center;
 
+    gap: 5px;
+
+    align-items: center;
 }
 
-
 .mobile-logo-brand {
-
     width: auto;
-
     height: 30px;
-
     max-width: 70px;
 
     object-fit: contain;
-
 }
 
 .mobile-logo-title {
     flex: 1;
+
     max-width: 150px;
     height: 100%;
-    object-fit: contain;
 
+    object-fit: contain;
 }
 
 
@@ -1070,25 +829,19 @@
 ===================================================== */
 
 .mobile-menu-close {
-
     width: 40px;
-
     height: 40px;
 
     display: flex;
-
     align-items: center;
-
     justify-content: center;
 
     padding: 0;
 
     border: none;
-
     outline: none;
 
     background: transparent;
-
     color: #ffffff;
 
     font-size: 18px;
@@ -1096,20 +849,13 @@
     cursor: pointer;
 
     transition:
-
         color 0.25s ease,
-
         transform 0.25s ease;
-
 }
 
-
 .mobile-menu-close:hover {
-
     color: var(--nafi-blue);
-
     transform: rotate(90deg);
-
 }
 
 
@@ -1118,9 +864,7 @@
 ===================================================== */
 
 .mobile-menu-body {
-
     padding: 0 22px 30px;
-
 }
 
 
@@ -1129,13 +873,9 @@
 ===================================================== */
 
 .mobile-nav-list {
-
     list-style: none;
-
     padding: 0;
-
     margin: 0;
-
 }
 
 
@@ -1144,9 +884,7 @@
 ===================================================== */
 
 .mobile-nav-list > li {
-
     border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-
 }
 
 
@@ -1155,15 +893,12 @@
 ===================================================== */
 
 .mobile-nav-list > li > a {
-
     min-height: 58px;
 
     padding: 0 5px;
 
     display: flex;
-
     align-items: center;
-
     justify-content: space-between;
 
     color: #ffffff;
@@ -1171,35 +906,22 @@
     text-decoration: none;
 
     font-size: 14px;
-
     font-weight: 600;
-
     letter-spacing: 0.5px;
 
     transition:
-
         color 0.25s ease,
-
         padding-left 0.25s ease;
-
 }
-
 
 .mobile-nav-list > li > a:hover {
-
     color: var(--nafi-blue);
-
     padding-left: 12px;
-
 }
 
-
 .mobile-nav-list > li > a i {
-
     color: #777777;
-
     font-size: 12px;
-
 }
 
 
@@ -1208,37 +930,28 @@
 ===================================================== */
 
 .mobile-dropdown-trigger {
-
     width: 100%;
-
     min-height: 58px;
 
     padding: 0 5px;
 
     display: flex;
-
     align-items: center;
-
     justify-content: space-between;
 
     border: none;
-
     outline: none;
 
     background: transparent;
-
     color: #ffffff;
 
     font-family: inherit;
 
     font-size: 14px;
-
     font-weight: 600;
-
     letter-spacing: 0.5px;
 
     cursor: pointer;
-
 }
 
 
@@ -1247,21 +960,16 @@
 ===================================================== */
 
 .mobile-dropdown-trigger i {
-
     color: #777777;
-
     font-size: 11px;
 
-    transition: transform 0.3s ease;
-
+    transition:
+        transform 0.3s ease;
 }
-
 
 .mobile-nav-dropdown.dropdown-open
 .mobile-dropdown-trigger i {
-
     transform: rotate(180deg);
-
 }
 
 
@@ -1270,7 +978,6 @@
 ===================================================== */
 
 .mobile-dropdown {
-
     max-height: 0;
 
     overflow: hidden;
@@ -1278,11 +985,8 @@
     opacity: 0;
 
     transition:
-
         max-height 0.35s ease,
-
         opacity 0.25s ease;
-
 }
 
 
@@ -1292,11 +996,8 @@
 
 .mobile-nav-dropdown.dropdown-open
 .mobile-dropdown {
-
     max-height: 300px;
-
     opacity: 1;
-
 }
 
 
@@ -1305,13 +1006,11 @@
 ===================================================== */
 
 .mobile-dropdown a {
-
     min-height: 45px;
 
     padding: 0 10px 0 18px;
 
     display: flex;
-
     align-items: center;
 
     color: #999999;
@@ -1321,20 +1020,13 @@
     font-size: 13px;
 
     transition:
-
         color 0.25s ease,
-
         padding-left 0.25s ease;
-
 }
 
-
 .mobile-dropdown a:hover {
-
     color: #ffffff;
-
     padding-left: 25px;
-
 }
 
 
@@ -1343,13 +1035,11 @@
 ===================================================== */
 
 .mobile-actions {
-
     margin-top: 35px;
 
     padding-top: 20px;
 
     border-top: 1px solid var(--nafi-border);
-
 }
 
 
@@ -1358,7 +1048,6 @@
 ===================================================== */
 
 .mobile-actions a {
-
     position: relative;
 
     min-height: 48px;
@@ -1366,7 +1055,6 @@
     padding: 0 5px;
 
     display: flex;
-
     align-items: center;
 
     gap: 14px;
@@ -1378,31 +1066,21 @@
     font-size: 14px;
 
     transition:
-
         color 0.25s ease,
-
         padding-left 0.25s ease;
-
 }
-
 
 .mobile-actions a:hover {
-
     color: #ffffff;
-
     padding-left: 10px;
-
 }
 
-
 .mobile-actions a i {
-
     width: 22px;
 
     color: var(--nafi-blue);
 
     font-size: 18px;
-
 }
 
 
@@ -1411,31 +1089,24 @@
 ===================================================== */
 
 .mobile-cart-count {
-
     margin-left: auto;
 
     min-width: 20px;
-
     height: 20px;
 
     padding: 0 5px;
 
     display: flex;
-
     align-items: center;
-
     justify-content: center;
 
     border-radius: 10px;
 
     background: #168cff;
-
     color: #ffffff;
 
     font-size: 10px;
-
     font-weight: 700;
-
 }
 
 
@@ -1444,9 +1115,7 @@
 ===================================================== */
 
 body.nafi-menu-open {
-
     overflow: hidden;
-
 }
 
 
@@ -1457,47 +1126,29 @@ body.nafi-menu-open {
 @media (max-width: 1199px) {
 
     .nafi-menu {
-
         gap: 2px;
-
     }
 
-
     .nav-link_ {
-
         padding-left: 12px;
-
         padding-right: 12px;
 
         font-size: 11px;
-
     }
-
 
     .nav-link_::after {
-
         left: 12px;
-
         right: 12px;
-
     }
-
 
     .nafi-actions {
-
         gap: 15px;
-
     }
-
 
     .account-btn {
-
         padding-left: 9px;
-
         padding-right: 9px;
-
     }
-
 }
 
 
@@ -1510,19 +1161,16 @@ body.nafi-menu-open {
     /* NAVBAR */
 
     .nafi-navbar {
-
         height: 68px;
         display: flex;
-
     }
 
 
+    /* CONTAINER */
+
     .nafi-navbar-container {
-
         padding: 0 20px;
-
         justify-content: space-between;
-
     }
 
 
@@ -1537,58 +1185,44 @@ body.nafi-menu-open {
     /* LOGO */
 
     .nafi-logo {
-
         width: fit-content;
         height: 50px;
-
-
     }
 
 
     /* DESKTOP NAVIGATION HIDE */
 
     .nafi-navigation {
-
         display: none;
-
     }
 
 
     /* RIGHT ACTIONS */
 
     .nafi-actions {
-
         gap: 15px;
-
     }
 
 
     /* HIDE WISHLIST */
 
     .wishlist-action {
-
         display: none;
-
     }
 
 
     /* HIDE ACCOUNT */
 
     .navbar-account {
-
         display: none;
-
     }
 
 
     /* ICON SIZE */
 
     .nafi-action {
-
         font-size: 20px;
-
     }
-
 }
 
 
@@ -1597,14 +1231,13 @@ body.nafi-menu-open {
 ===================================================== */
 
 @media (max-width: 575px) {
-    
+
     .nafi-topbar {
         font-size: 9px;
         height: 30px;
     }
-    
-    .nafi-navbar-container {
 
+    .nafi-navbar-container {
         padding: 0 15px;
     }
 
@@ -1613,60 +1246,41 @@ body.nafi-menu-open {
         top: 5px;
         left: 10px;
     }
+
     .topbar-right {
         position: absolute;
         top: 5px;
         right: 10px;
     }
 
-
     .nafi-actions {
-
         gap: 11px;
     }
 
-
     .nafi-action {
-
         width: 26px;
-
         font-size: 19px;
-
     }
-
 
     .nafi-mobile-toggle {
         width: fit-content;
         height: fit-content;
         font-size: 32px;
-
     }
-
 
     .nafi-mobile-menu {
-
         width: 85vw;
-
     }
-
 
     .mobile-menu-header {
-
         padding-left: 18px;
-
         padding-right: 18px;
-
     }
-
 
     .mobile-menu-body {
-
         padding-left: 18px;
-
         padding-right: 18px;
-
     }
-
 }
 
 
@@ -1676,50 +1290,29 @@ body.nafi-menu-open {
 
 @media (max-width: 380px) {
 
-
-
     .nafi-navbar {
-
         height: 64px;
-
     }
-
 
     .nafi-logo {
-        height:45px;
-
+        height: 45px;
     }
-
 
     .brand_logo_ {
-
         max-width: 52px;
-
     }
-
 
     .nafi-actions {
-
         gap: 7px;
-
     }
-
 
     .nafi-action {
-
         width: 24px;
-
         font-size: 18px;
-
     }
-
 
     .nafi-mobile-toggle {
-
         width: 34px;
-
         font-size: 23px;
-
     }
-
 }

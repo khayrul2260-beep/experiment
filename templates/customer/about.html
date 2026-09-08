@@ -1,0 +1,597 @@
+{% extends "customer/master/base.html" %}
+{% load static %}
+
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'customer/css/about.css' %}">
+{% endblock  %}
+    
+
+{% block content %}
+
+{% if about %}
+
+<main class="nafi-about-page">
+
+    <!-- =====================================================
+         HERO
+    ====================================================== -->
+
+    <section class="about-hero">
+
+        {% if about.hero_image %}
+            <div class="about-hero-image">
+                <img
+                    src="{{ about.hero_image.url }}"
+                    alt="{{ about.hero_title }}"
+                >
+            </div>
+        {% endif %}
+
+        <div class="about-hero-overlay"></div>
+
+        <div class="about-container about-hero-content">
+
+            <span class="about-eyebrow">
+                {{ about.hero_eyebrow }}
+            </span>
+
+            <h1>
+                {{ about.hero_title }}
+            </h1>
+
+            {% if about.hero_description %}
+                <p>
+                    {{ about.hero_description }}
+                </p>
+            {% endif %}
+
+        </div>
+
+        <div class="about-scroll-indicator">
+            <span>SCROLL TO EXPLORE</span>
+            <i class="bi bi-arrow-down"></i>
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         WHO WE ARE
+    ====================================================== -->
+
+    <section class="about-section about-who">
+
+        <div class="about-container about-two-column">
+
+            <div class="about-text">
+
+                <span class="about-section-number">
+                    01 — IDENTITY
+                </span>
+
+                <h2>
+                    {{ about.who_title }}
+                </h2>
+
+                <div class="about-divider"></div>
+
+                <p>
+                    {{ about.who_content }}
+                </p>
+
+            </div>
+
+            {% if about.who_image %}
+                <div class="about-image">
+                    <img
+                        src="{{ about.who_image.url }}"
+                        alt="{{ about.who_title }}"
+                        loading="lazy"
+                    >
+                </div>
+            {% endif %}
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         BRAND ORIGIN
+    ====================================================== -->
+
+    <section class="about-section about-origin">
+
+        <div class="about-container about-centered">
+
+            <span class="about-section-number">
+                02 — ORIGIN
+            </span>
+
+            <h2>
+                {{ about.origin_title }}
+            </h2>
+
+            <div class="about-divider"></div>
+
+            <p class="about-large-text">
+                {{ about.origin_content }}
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         VISION
+    ====================================================== -->
+
+    <section class="about-section about-vision">
+
+        <div class="about-container">
+
+            <div class="about-vision-content">
+
+                <span class="about-section-number">
+                    03 — DIRECTION
+                </span>
+
+                <h2>
+                    {{ about.vision_title }}
+                </h2>
+
+                {% if about.vision_statement %}
+                    <h3>
+                        {{ about.vision_statement }}
+                    </h3>
+                {% endif %}
+
+                <div class="about-divider"></div>
+
+                <p>
+                    {{ about.vision_content }}
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         MODERN MAN
+    ====================================================== -->
+
+    <section class="about-section about-modern">
+
+        <div class="about-container about-centered">
+
+            <span class="about-section-number">
+                04 — THE CUSTOMER
+            </span>
+
+            <h2>
+                {{ about.modern_title }}
+            </h2>
+
+            <div class="about-divider"></div>
+
+            <p class="about-large-text">
+                {{ about.modern_content }}
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         NAFI AESTHETIC
+    ====================================================== -->
+
+    <section class="about-section about-aesthetic">
+
+        <div class="about-container about-two-column">
+
+            {% if about.aesthetic_image %}
+                <div class="about-image about-aesthetic-image">
+                    <img
+                        src="{{ about.aesthetic_image.url }}"
+                        alt="{{ about.aesthetic_title }}"
+                        loading="lazy"
+                    >
+                </div>
+            {% endif %}
+
+            <div class="about-text">
+
+                <span class="about-section-number">
+                    05 — DESIGN LANGUAGE
+                </span>
+
+                <h2>
+                    {{ about.aesthetic_title }}
+                </h2>
+
+                <div class="about-divider"></div>
+
+                <p>
+                    {{ about.aesthetic_content }}
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         BRAND VALUES
+    ====================================================== -->
+
+    <section class="about-section about-values">
+
+        <div class="about-container">
+
+            <div class="about-section-heading">
+
+                <span class="about-section-number">
+                    06 — WHAT WE STAND FOR
+                </span>
+
+                <h2>
+                    VALUES BEHIND THE GARMENT.
+                </h2>
+
+            </div>
+
+            <div class="about-values-grid">
+
+                {% for value in about.values.all %}
+
+                    {% if value.is_active %}
+
+                        <article class="about-value-card">
+
+                            <span class="about-value-number">
+                                {{ forloop.counter|stringformat:"02d" }}
+                            </span>
+
+                            {% if value.icon %}
+                                <i class="{{ value.icon }}"></i>
+                            {% endif %}
+
+                            <h3>
+                                {{ value.title }}
+                            </h3>
+
+                            <p>
+                                {{ value.description }}
+                            </p>
+
+                        </article>
+
+                    {% endif %}
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         QUALITY
+    ====================================================== -->
+
+    <section class="about-section about-quality">
+
+        <div class="about-container">
+
+            <div class="about-section-heading">
+
+                <span class="about-section-number">
+                    07 — QUALITY
+                </span>
+
+                <h2>
+                    {{ about.quality_title }}
+                </h2>
+
+                <p>
+                    {{ about.quality_intro }}
+                </p>
+
+            </div>
+
+
+            <div class="about-quality-grid">
+
+                {% for item in about.quality_items.all %}
+
+                    {% if item.is_active %}
+
+                        <article class="about-quality-card">
+
+                            {% if item.icon %}
+                                <i class="{{ item.icon }}"></i>
+                            {% endif %}
+
+                            <h3>
+                                {{ item.title }}
+                            </h3>
+
+                            <p>
+                                {{ item.description }}
+                            </p>
+
+                        </article>
+
+                    {% endif %}
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         JOURNEY
+    ====================================================== -->
+
+    <section class="about-section about-journey">
+
+        <div class="about-container">
+
+            <div class="about-section-heading">
+
+                <span class="about-section-number">
+                    08 — JOURNEY
+                </span>
+
+                <h2>
+                    THE NAFI JOURNEY.
+                </h2>
+
+            </div>
+
+
+            <div class="about-timeline">
+
+                {% for journey in about.journey_items.all %}
+
+                    {% if journey.is_active %}
+
+                        <article class="about-timeline-item">
+
+                            <div class="about-timeline-year">
+                                {{ journey.year }}
+                            </div>
+
+                            <div class="about-timeline-line">
+                                <span></span>
+                            </div>
+
+                            <div class="about-timeline-content">
+
+                                <h3>
+                                    {{ journey.title }}
+                                </h3>
+
+                                {% if journey.description %}
+                                    <p>
+                                        {{ journey.description }}
+                                    </p>
+                                {% endif %}
+
+                                {% if journey.image %}
+                                    <img
+                                        src="{{ journey.image.url }}"
+                                        alt="{{ journey.title }}"
+                                        loading="lazy"
+                                    >
+                                {% endif %}
+
+                            </div>
+
+                        </article>
+
+                    {% endif %}
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         TRANSPARENCY
+    ====================================================== -->
+
+    <section class="about-section about-transparency">
+
+        <div class="about-container about-centered">
+
+            <span class="about-section-number">
+                09 — TRUST
+            </span>
+
+            <h2>
+                {{ about.transparency_title }}
+            </h2>
+
+            <div class="about-divider"></div>
+
+            <p class="about-large-text">
+                {{ about.transparency_content }}
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         WHY NAFI
+    ====================================================== -->
+
+    <section class="about-section about-why">
+
+        <div class="about-container about-two-column">
+
+            <div class="about-text">
+
+                <span class="about-section-number">
+                    10 — WHY NAFI
+                </span>
+
+                <h2>
+                    {{ about.why_title }}
+                </h2>
+
+                <div class="about-divider"></div>
+
+            </div>
+
+            <div class="about-text">
+
+                <p class="about-large-text">
+                    {{ about.why_content }}
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         NAFI AT A GLANCE
+    ====================================================== -->
+
+    <section class="about-section about-profile">
+
+        <div class="about-container">
+
+            <div class="about-section-heading">
+
+                <span class="about-section-number">
+                    11 — PROFILE
+                </span>
+
+                <h2>
+                    {{ about.profile_title }}
+                </h2>
+
+            </div>
+
+
+            <div class="about-profile-grid">
+
+                <div class="about-profile-item">
+                    <span>CATEGORY</span>
+                    <strong>{{ about.profile_category }}</strong>
+                </div>
+
+                <div class="about-profile-item">
+                    <span>FOCUS</span>
+                    <strong>{{ about.profile_focus }}</strong>
+                </div>
+
+                <div class="about-profile-item">
+                    <span>STYLE</span>
+                    <strong>{{ about.profile_style }}</strong>
+                </div>
+
+                <div class="about-profile-item">
+                    <span>VALUES</span>
+                    <strong>{{ about.profile_values }}</strong>
+                </div>
+
+                <div class="about-profile-item">
+                    <span>PRODUCTS</span>
+                    <strong>{{ about.profile_products }}</strong>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         FINAL BRAND STATEMENT
+    ====================================================== -->
+
+    <section class="about-final">
+
+        {% if about.final_image %}
+            <div class="about-final-image">
+                <img
+                    src="{{ about.final_image.url }}"
+                    alt="{{ about.final_title }}"
+                    loading="lazy"
+                >
+            </div>
+        {% endif %}
+
+        <div class="about-final-overlay"></div>
+
+        <div class="about-container about-final-content">
+
+            <span class="about-eyebrow">
+                NAFI
+            </span>
+
+            <h2>
+                {{ about.final_title }}
+            </h2>
+
+            {% if about.final_content %}
+                <p>
+                    {{ about.final_content }}
+                </p>
+            {% endif %}
+
+            <strong>
+                {{ about.final_statement }}
+            </strong>
+
+            {% if about.cta_text %}
+                <a href="{% url 'home_page' %}" class="about-cta">
+                    {{ about.cta_text }}
+                    <i class="bi bi-arrow-right"></i>
+                </a>
+            {% endif %}
+
+        </div>
+
+    </section>
+
+</main>
+
+{% endif %}
+
+{% endblock %}
+
+
+
+{% block extra_js %}
+<script src="{% static 'customer/js/about.js' %}"></script>    
+{% endblock  %}
+    
+

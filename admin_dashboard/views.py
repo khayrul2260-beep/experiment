@@ -1641,3 +1641,596 @@ def logout_page(request):
     logout(request)
     return redirect("home_page")
 
+
+# =========================================================
+# ABOUT PAGE MANAGEMENT
+# =========================================================
+
+def about_management(request):
+    """
+    Main About Page management screen.
+    Content is managed from the custom admin dashboard.
+    """
+
+    about = AboutPage.objects.first()
+
+    if not about:
+        about = AboutPage.objects.create(
+            is_published=True
+        )
+
+    values = about.values.all()
+    quality_items = about.quality_items.all()
+    journey_items = about.journey_items.all()
+
+    context = {
+        "about": about,
+        'page_title': 'About',
+        "values": values,
+        "quality_items": quality_items,
+        "journey_items": journey_items,
+    }
+
+    return render(
+        request,
+        "admin_dashboard/about_management.html",
+        context,
+    )
+
+
+# =========================================================
+# UPDATE MAIN ABOUT PAGE
+# =========================================================
+
+def update_about_page(request):
+
+    if request.method != "POST":
+        return redirect("about_management")
+
+    about = get_object_or_404(
+        AboutPage,
+        id=request.POST.get("about_id")
+    )
+
+    # -----------------------------------------------------
+    # HERO
+    # -----------------------------------------------------
+
+    about.hero_eyebrow = request.POST.get(
+        "hero_eyebrow", ""
+    )
+
+    about.hero_title = request.POST.get(
+        "hero_title", ""
+    )
+
+    about.hero_description = request.POST.get(
+        "hero_description", ""
+    )
+
+    if request.FILES.get("hero_image"):
+        about.hero_image = request.FILES["hero_image"]
+
+
+    # -----------------------------------------------------
+    # WHO WE ARE
+    # -----------------------------------------------------
+
+    about.who_title = request.POST.get(
+        "who_title", ""
+    )
+
+    about.who_content = request.POST.get(
+        "who_content", ""
+    )
+
+    if request.FILES.get("who_image"):
+        about.who_image = request.FILES["who_image"]
+
+
+    # -----------------------------------------------------
+    # BRAND ORIGIN
+    # -----------------------------------------------------
+
+    about.origin_title = request.POST.get(
+        "origin_title", ""
+    )
+
+    about.origin_content = request.POST.get(
+        "origin_content", ""
+    )
+
+
+    # -----------------------------------------------------
+    # VISION
+    # -----------------------------------------------------
+
+    about.vision_title = request.POST.get(
+        "vision_title", ""
+    )
+
+    about.vision_statement = request.POST.get(
+        "vision_statement", ""
+    )
+
+    about.vision_content = request.POST.get(
+        "vision_content", ""
+    )
+
+
+    # -----------------------------------------------------
+    # MODERN MAN
+    # -----------------------------------------------------
+
+    about.modern_title = request.POST.get(
+        "modern_title", ""
+    )
+
+    about.modern_content = request.POST.get(
+        "modern_content", ""
+    )
+
+
+    # -----------------------------------------------------
+    # NAFI AESTHETIC
+    # -----------------------------------------------------
+
+    about.aesthetic_title = request.POST.get(
+        "aesthetic_title", ""
+    )
+
+    about.aesthetic_content = request.POST.get(
+        "aesthetic_content", ""
+    )
+
+    if request.FILES.get("aesthetic_image"):
+        about.aesthetic_image = request.FILES[
+            "aesthetic_image"
+        ]
+
+
+    # -----------------------------------------------------
+    # QUALITY
+    # -----------------------------------------------------
+
+    about.quality_title = request.POST.get(
+        "quality_title", ""
+    )
+
+    about.quality_intro = request.POST.get(
+        "quality_intro", ""
+    )
+
+
+    # -----------------------------------------------------
+    # TRANSPARENCY
+    # -----------------------------------------------------
+
+    about.transparency_title = request.POST.get(
+        "transparency_title", ""
+    )
+
+    about.transparency_content = request.POST.get(
+        "transparency_content", ""
+    )
+
+
+    # -----------------------------------------------------
+    # WHY NAFI
+    # -----------------------------------------------------
+
+    about.why_title = request.POST.get(
+        "why_title", ""
+    )
+
+    about.why_content = request.POST.get(
+        "why_content", ""
+    )
+
+
+    # -----------------------------------------------------
+    # NAFI AT A GLANCE
+    # -----------------------------------------------------
+
+    about.profile_title = request.POST.get(
+        "profile_title", ""
+    )
+
+    about.profile_category = request.POST.get(
+        "profile_category", ""
+    )
+
+    about.profile_focus = request.POST.get(
+        "profile_focus", ""
+    )
+
+    about.profile_style = request.POST.get(
+        "profile_style", ""
+    )
+
+    about.profile_values = request.POST.get(
+        "profile_values", ""
+    )
+
+    about.profile_products = request.POST.get(
+        "profile_products", ""
+    )
+
+
+    # -----------------------------------------------------
+    # FINAL BRAND STATEMENT
+    # -----------------------------------------------------
+
+    about.final_title = request.POST.get(
+        "final_title", ""
+    )
+
+    about.final_content = request.POST.get(
+        "final_content", ""
+    )
+
+    about.final_statement = request.POST.get(
+        "final_statement", ""
+    )
+
+    about.cta_text = request.POST.get(
+        "cta_text", ""
+    )
+
+    if request.FILES.get("final_image"):
+        about.final_image = request.FILES[
+            "final_image"
+        ]
+
+
+    # -----------------------------------------------------
+    # PUBLISH STATUS
+    # -----------------------------------------------------
+
+    about.is_published = (
+        request.POST.get("is_published") == "on"
+    )
+
+
+    about.save()
+
+    messages.success(
+        request,
+        "About page updated successfully."
+    )
+
+    return redirect("about_management")
+
+
+# =========================================================
+# ADD BRAND VALUE
+# =========================================================
+
+def add_about_value(request):
+
+    if request.method == "POST":
+
+        about = get_object_or_404(
+            AboutPage,
+            id=request.POST.get("about_id")
+        )
+
+        AboutValue.objects.create(
+            about_page=about,
+            title=request.POST.get("title", ""),
+            description=request.POST.get(
+                "description", ""
+            ),
+            icon=request.POST.get("icon", ""),
+            display_order=request.POST.get(
+                "display_order", 0
+            ) or 0,
+            is_active=True,
+        )
+
+        messages.success(
+            request,
+            "Brand value added successfully."
+        )
+
+    return redirect("about_management")
+
+
+# =========================================================
+# DELETE BRAND VALUE
+# =========================================================
+
+def delete_about_value(request, value_id):
+
+    if request.method == "POST":
+
+        value = get_object_or_404(
+            AboutValue,
+            id=value_id
+        )
+
+        value.delete()
+
+        messages.success(
+            request,
+            "Brand value deleted successfully."
+        )
+
+    return redirect("about_management")
+
+# =========================================================
+# UPDATE BRAND VALUE
+# =========================================================
+
+def update_about_value(request, value_id):
+
+    if request.method == "POST":
+
+        value = get_object_or_404(
+            AboutValue,
+            id=value_id
+        )
+
+        value.title = request.POST.get(
+            "title",
+            ""
+        )
+
+        value.description = request.POST.get(
+            "description",
+            ""
+        )
+
+        value.icon = request.POST.get(
+            "icon",
+            ""
+        )
+
+        value.display_order = request.POST.get(
+            "display_order",
+            0
+        ) or 0
+
+        value.is_active = (
+            request.POST.get("is_active") == "on"
+        )
+
+        value.save()
+
+        messages.success(
+            request,
+            "Brand value updated successfully."
+        )
+
+    return redirect("about_management")
+
+# =========================================================
+# ADD QUALITY COMMITMENT
+# =========================================================
+
+def add_about_quality(request):
+
+    if request.method == "POST":
+
+        about = get_object_or_404(
+            AboutPage,
+            id=request.POST.get("about_id")
+        )
+
+        AboutQuality.objects.create(
+            about_page=about,
+            title=request.POST.get("title", ""),
+            description=request.POST.get(
+                "description", ""
+            ),
+            icon=request.POST.get("icon", ""),
+            display_order=request.POST.get(
+                "display_order", 0
+            ) or 0,
+            is_active=True,
+        )
+
+        messages.success(
+            request,
+            "Quality commitment added successfully."
+        )
+
+    return redirect("about_management")
+
+
+# =========================================================
+# DELETE QUALITY COMMITMENT
+# =========================================================
+
+def delete_about_quality(request, quality_id):
+
+    if request.method == "POST":
+
+        quality = get_object_or_404(
+            AboutQuality,
+            id=quality_id
+        )
+
+        quality.delete()
+
+        messages.success(
+            request,
+            "Quality commitment deleted successfully."
+        )
+
+    return redirect("about_management")
+
+# =========================================================
+# UPDATE QUALITY COMMITMENT
+# =========================================================
+
+def update_about_quality(request, quality_id):
+
+    if request.method == "POST":
+
+        quality = get_object_or_404(
+            AboutQuality,
+            id=quality_id
+        )
+
+        quality.title = request.POST.get(
+            "title",
+            ""
+        )
+
+        quality.description = request.POST.get(
+            "description",
+            ""
+        )
+
+        quality.icon = request.POST.get(
+            "icon",
+            ""
+        )
+
+        quality.display_order = request.POST.get(
+            "display_order",
+            0
+        ) or 0
+
+        quality.is_active = (
+            request.POST.get("is_active") == "on"
+        )
+
+        quality.save()
+
+        messages.success(
+            request,
+            "Quality commitment updated successfully."
+        )
+
+    return redirect("about_management")
+# =========================================================
+# ADD JOURNEY ITEM
+# =========================================================
+
+def add_about_journey(request):
+
+    if request.method == "POST":
+
+        about = get_object_or_404(
+            AboutPage,
+            id=request.POST.get("about_id")
+        )
+
+        journey = AboutJourney.objects.create(
+            about_page=about,
+            year=request.POST.get("year", ""),
+            title=request.POST.get("title", ""),
+            description=request.POST.get(
+                "description", ""
+            ),
+            display_order=request.POST.get(
+                "display_order", 0
+            ) or 0,
+            is_active=True,
+        )
+
+        if request.FILES.get("image"):
+            journey.image = request.FILES["image"]
+            journey.save()
+
+        messages.success(
+            request,
+            "Journey item added successfully."
+        )
+
+    return redirect("about_management")
+
+
+# =========================================================
+# DELETE JOURNEY ITEM
+# =========================================================
+
+def delete_about_journey(request, journey_id):
+
+    if request.method == "POST":
+
+        journey = get_object_or_404(
+            AboutJourney,
+            id=journey_id
+        )
+
+        journey.delete()
+
+        messages.success(
+            request,
+            "Journey item deleted successfully."
+        )
+
+    return redirect("about_management")
+
+# =========================================================
+# UPDATE JOURNEY ITEM
+# =========================================================
+
+def update_about_journey(request, journey_id):
+
+    if request.method == "POST":
+
+        journey = get_object_or_404(
+            AboutJourney,
+            id=journey_id
+        )
+
+        # -------------------------------------------------
+        # BASIC INFORMATION
+        # -------------------------------------------------
+
+        journey.year = request.POST.get(
+            "year",
+            ""
+        )
+
+        journey.title = request.POST.get(
+            "title",
+            ""
+        )
+
+        journey.description = request.POST.get(
+            "description",
+            ""
+        )
+
+        # -------------------------------------------------
+        # DISPLAY ORDER
+        # -------------------------------------------------
+
+        journey.display_order = request.POST.get(
+            "display_order",
+            0
+        ) or 0
+
+        # -------------------------------------------------
+        # ACTIVE / INACTIVE
+        # -------------------------------------------------
+
+        journey.is_active = (
+            request.POST.get("is_active") == "on"
+        )
+
+        # -------------------------------------------------
+        # IMAGE
+        # -------------------------------------------------
+
+        if request.FILES.get("image"):
+
+            journey.image = request.FILES["image"]
+
+        # -------------------------------------------------
+        # SAVE
+        # -------------------------------------------------
+
+        journey.save()
+
+        messages.success(
+            request,
+            "Journey item updated successfully."
+        )
+
+    return redirect("about_management")

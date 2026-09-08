@@ -55,7 +55,7 @@
 
         <div class="nafi-logo">
 
-            <a href="/" class="logo_">
+            <a href="{% url 'about' %}" class="logo_">
 
                 <img
                     src="{% static 'customer/images/logo_brand.png' %}"
@@ -87,49 +87,13 @@
 
                     <a
                         href="/"
-                        class="nav-link_ active"
+                        class="nav-link_ {% if request.resolver_match.url_name == 'home_page' %}active{% endif %}"
                     >
                         HOME
                     </a>
 
                 </li>
 
-
-                <!-- SHOP -->
-
-                <li class="nav-item nav-dropdown">
-
-                    <button
-                        type="button"
-                        class="nav-link_ dropdown-trigger"
-                        aria-expanded="false"
-                    >
-                        <span>SHOP</span>
-                        <i class="bi bi-chevron-down"></i>
-                    </button>
-
-
-                    <div class="nafi-dropdown">
-
-                        <a href="#" class="dropdown-item">
-                            All Products
-                        </a>
-
-                        <a href="#" class="dropdown-item">
-                            T-Shirts
-                        </a>
-
-                        <a href="#" class="dropdown-item">
-                            Shirts
-                        </a>
-
-                        <a href="#" class="dropdown-item">
-                            Panjabi
-                        </a>
-
-                    </div>
-
-                </li>
 
 
                 <!-- CATEGORIES -->
@@ -142,11 +106,11 @@
                 
                     <button
                         type="button"
-                        class="nav-link_ dropdown-trigger"
+                        class="nav-link_ dropdown-trigger {% if request.resolver_match.url_name == 'category_products' %}active{% endif %}"
                         aria-expanded="false"
                     >
                 
-                        <span>CATEGORIES</span>
+                        <span>SHOP</span>
                 
                         <i class="bi bi-chevron-down"></i>
                 
@@ -156,6 +120,9 @@
                     <div class="nafi-dropdown">
                     
                         {% for category in navbar_categories %}
+                            <a href="#" class="dropdown-item">
+                                All Products
+                            </a>
                     
                             <a
                                 href="{% url 'category_products' category.slug %}"
@@ -195,8 +162,8 @@
                 <li class="nav-item">
 
                     <a
-                        href="#"
-                        class="nav-link_"
+                        href="{% url 'about' %}"
+                        class="nav-link_ {% if request.resolver_match.url_name == 'about' %}active{% endif %}"
                     >
                         ABOUT
                     </a>
