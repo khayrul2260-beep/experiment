@@ -11,7 +11,28 @@ urlpatterns = [
     path('coupons/', coupons_page, name='coupons_page'),
     path('reviews/', reviews_page, name='reviews_page'),
     path('reports/', reports_page, name='reports_page'),
+
+
     path('settings/', settings_page, name='settings_page'),
+    path('settings/home/', home_management, name='home_management'),
+    path('settings/home/update/', update_home_page, name='update_home_page'),
+    path("settings/home/visibility/update/", update_home_visibility, name="update_home_visibility"),
+    path("settings/home/second-hero/update/", update_second_hero, name="update_second_hero"),
+    path('settings/home/slide/add/', add_home_slide, name='add_home_slide'),
+    path('settings/home/slide/<int:slide_id>/update/', update_home_slide, name='update_home_slide'),
+    path('settings/home/slide/<int:slide_id>/delete/', delete_home_slide, name='delete_home_slide'),
+    path("settings/about/", about_management, name="about_management"),
+    path("settings/about/update/", update_about_page, name="update_about_page"),
+    path("settings/about/value/add/", add_about_value, name="add_about_value"),
+    path("settings/about/value/<int:value_id>/delete/", delete_about_value, name="delete_about_value"),
+    path("settings/about/quality/add/", add_about_quality, name="add_about_quality"),
+    path("settings/about/quality/<int:quality_id>/delete/", delete_about_quality, name="delete_about_quality"),
+    path("settings/about/journey/add/", add_about_journey, name="add_about_journey"),
+    path("settings/about/journey/<int:journey_id>/delete/", delete_about_journey, name="delete_about_journey"),
+    path("settings/about/value/<int:value_id>/update/", update_about_value, name="update_about_value"),
+    path("settings/about/quality/<int:quality_id>/update/", update_about_quality, name="update_about_quality"),
+    path("settings/about/journey/<int:journey_id>/update/", update_about_journey, name="update_about_journey"),
+
     path('admin_users/', admin_users_page, name='admin_users_page'),
     path('logout/', logout_page, name='logout_page'),
     path('hidden_sidebar/', hidden_sidebar_page, name='hidden_sidebar_page'),
@@ -23,24 +44,5 @@ urlpatterns = [
     path("category/edit/<int:id>/", edit_category, name="edit_category"),
 
 
-    path("about/", about_management, name="about_management"),
 
-    path("about/update/", update_about_page, name="update_about_page"),
-
-    path("about/value/add/", add_about_value, name="add_about_value"),
-
-    path("about/value/<int:value_id>/delete/", delete_about_value, name="delete_about_value"),
-
-    path("about/quality/add/", add_about_quality, name="add_about_quality"),
-
-    path("about/quality/<int:quality_id>/delete/", delete_about_quality, name="delete_about_quality"),
-
-    path("about/journey/add/", add_about_journey, name="add_about_journey"),
-
-    path("about/journey/<int:journey_id>/delete/", delete_about_journey, name="delete_about_journey"),
-
-    path("about/value/<int:value_id>/update/", update_about_value, name="update_about_value"),
-
-    path("about/quality/<int:quality_id>/update/", update_about_quality, name="update_about_quality"),
-    path("about/journey/<int:journey_id>/update/", update_about_journey, name="update_about_journey"),
 ]

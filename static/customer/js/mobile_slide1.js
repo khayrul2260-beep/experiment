@@ -1,94 +1,66 @@
 document.addEventListener("DOMContentLoaded", function () {
 
-    /* =========================================================
-       NFX VAULT HERO SLIDER
-       Independent Slider System
-    ========================================================= */
-
     const slider = document.getElementById("nfxVaultSlider");
 
     if (!slider) return;
 
 
-    /* =========================================================
-       SLIDES
-    ========================================================= */
-
     const slides = slider.querySelectorAll(
-        ".nfx-vault-panel"
+        ".mobile-hero-slide_"
     );
-
-
-    /* =========================================================
-       DOTS
-    ========================================================= */
 
     const dots = slider.querySelectorAll(
         ".nfx-vault-dots button"
     );
 
 
-    /* =========================================================
-       SAFETY CHECK
-    ========================================================= */
-
-    if (!slides.length) return;
+    if (slides.length === 0) return;
 
 
-    /* =========================================================
-       SETTINGS
-    ========================================================= */
+    let currentIndex = 0;
 
-    let currentSlide = 0;
+    let autoSlideTimer = null;
 
-    const slideInterval = 5000;
-
-    let autoSlideTimer;
+    const slideDuration = 5000;
 
 
-    /* =========================================================
+    /* =====================================================
        SHOW SLIDE
-    ========================================================= */
+    ===================================================== */
 
-    function showVaultSlide(index) {
-
-        /* Keep index within range */
-
-        if (index < 0) {
-            index = slides.length - 1;
-        }
+    function showSlide(index) {
 
         if (index >= slides.length) {
             index = 0;
         }
 
+        if (index < 0) {
+            index = slides.length - 1;
+        }
 
-        currentSlide = index;
+
+        currentIndex = index;
 
 
-        /* -----------------------------------------
-           Update slides
-        ----------------------------------------- */
+        /* Images */
 
         slides.forEach(function (slide, i) {
 
             slide.classList.toggle(
-                "is-active",
-                i === currentSlide
+                "active",
+                i === currentIndex
             );
 
         });
 
 
-        /* -----------------------------------------
-           Update dots
-        ----------------------------------------- */
+        /* Dots */
 
         dots.forEach(function (dot, i) {
 
             dot.classList.toggle(
                 "is-active",
-                i === currentSlide
+                i === currentIndex
             );
 
         });
@@ -96,68 +68,58 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-    /* =========================================================
-       NEXT SLIDE
-    ========================================================= */
+    /* =====================================================
+       NEXT
+    ===================================================== */
 
-    function goToNextVaultSlide() {
+    function nextSlide() {
 
-        const nextIndex =
-            (currentSlide + 1) % slides.length;
-
-        showVaultSlide(nextIndex);
+        showSlide(currentIndex + 1);
 
     }
 
 
-    /* =========================================================
+    /* =====================================================
        START AUTO SLIDER
-    ========================================================= */
+    ===================================================== */
 
-    function startVaultSlider() {
+    function startAutoSlide() {
 
         clearInterval(autoSlideTimer);
 
-        autoSlideTimer = setInterval(
-            goToNextVaultSlide,
-            slideInterval
-        );
+
+        autoSlideTimer = setInterval(function () {
+
+            nextSlide();
+
+        }, slideDuration);
 
     }
 
 
-    /* =========================================================
+    /* =====================================================
        DOT CLICK
-    ========================================================= */
+    ===================================================== */
 
     dots.forEach(function (dot, index) {
 
-        dot.addEventListener(
-            "click",
-            function () {
+        dot.addEventListener("click", function () {
 
-                showVaultSlide(index);
+            showSlide(index);
 
-                /*
-                   Restart timer so the next automatic
-                   slide happens 5 seconds after the click.
-                */
+            startAutoSlide();
 
-                startVaultSlider();
-
-            }
-        );
+        });
 
     });
 
 
-    /* =========================================================
-       INITIALIZE
-    ========================================================= */
+    /* =====================================================
+       INITIAL
+    ===================================================== */
 
-    showVaultSlide(0);
+    showSlide(0);
 
-    startVaultSlider();
-
+    startAutoSlide();
 
 });

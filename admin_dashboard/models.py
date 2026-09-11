@@ -28,9 +28,6 @@ def generate_product_code():
             return code
 
 
-
-
-
 class Category(models.Model):
 
     name = models.CharField(

@@ -1,14 +1,668 @@
 {% extends 'admin_dashboard/master/base.html' %}
-{% load static %} 
-{% block title %} 
-Settings  
-{% endblock %} 
-{% block css %}
-{% endblock %} {% block page_title %} Settings {% endblock %}
+{% load static %}
+
+{% block title %}
+Settings
+{% endblock %}
+
+{% block css %} <link rel="stylesheet" href="{% static 'admin_dashboard/css/settings.css' %}">
+{% endblock %}
+
+{% block page_title %}
+Settings
+{% endblock %}
 
 {% block content %}
-    
-    <h1>Settings page</h1>
+
+<div class="settings-page">
+
+<!-- =====================================================
+     SETTINGS HEADER
+====================================================== -->
+<div class="settings-header">
+
+    <div class="settings-header-content">
+
+        <div class="settings-header-label">
+            <span class="header-line"></span>
+            <span>CONTROL CENTER</span>
+        </div>
+
+        <h1>Website Settings</h1>
+
+        <p>
+            Manage and customize the content, appearance,
+            information and policies of your NAFI customer website.
+        </p>
+
+    </div>
+
+    <div class="settings-header-status">
+
+        <div class="status-dot"></div>
+
+        <div>
+            <span class="status-title">Website</span>
+            <span class="status-value">Active</span>
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     QUICK OVERVIEW
+====================================================== -->
+<div class="settings-overview">
+
+    <div class="overview-item">
+
+        <div class="overview-icon">
+            <i class="bi bi-window"></i>
+        </div>
+
+        <div class="overview-info">
+            <span class="overview-label">Website Sections</span>
+            <strong>05</strong>
+        </div>
+
+    </div>
+
+
+    <div class="overview-item">
+
+        <div class="overview-icon">
+            <i class="bi bi-file-earmark-text"></i>
+        </div>
+
+        <div class="overview-info">
+            <span class="overview-label">Information Pages</span>
+            <strong>06</strong>
+        </div>
+
+    </div>
+
+
+    <div class="overview-item">
+
+        <div class="overview-icon">
+            <i class="bi bi-sliders"></i>
+        </div>
+
+        <div class="overview-info">
+            <span class="overview-label">Manage From Here</span>
+            <strong>11</strong>
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     WEBSITE CONTENT
+====================================================== -->
+<section class="settings-section">
+
+    <div class="section-header">
+
+        <div class="section-title-wrapper">
+
+            <span class="section-eyebrow">
+                WEBSITE
+            </span>
+
+            <h2>Website Content</h2>
+
+        </div>
+
+        <p>
+            Control the main customer-facing areas of your
+            NAFI website.
+        </p>
+
+    </div>
+
+
+    <div class="settings-grid">
+
+
+        <!-- =================================================
+             HOME PAGE
+        ================================================== -->
+        <a href="{% url 'home_management' %}" class="settings-card">
+
+            <div class="card-top">
+
+                <div class="card-icon">
+                    <i class="bi bi-house"></i>
+                </div>
+
+                <span class="card-number">
+                    01
+                </span>
+
+            </div>
+
+
+            <div class="card-body">
+
+                <h3>Home Page</h3>
+
+                <p>
+                    Manage hero slides, homepage sections,
+                    headings, buttons and promotional content.
+                </p>
+
+            </div>
+
+
+            <div class="card-footer">
+
+                <span>
+                    Manage Home
+                </span>
+
+                <i class="bi bi-arrow-up-right"></i>
+
+            </div>
+
+        </a>
+
+
+        <!-- =================================================
+             ABOUT PAGE
+        ================================================== -->
+        <a href="{% url 'about_management' %}" class="settings-card">
+
+            <div class="card-top">
+
+                <div class="card-icon">
+                    <i class="bi bi-building"></i>
+                </div>
+
+                <span class="card-number">
+                    02
+                </span>
+
+            </div>
+
+
+            <div class="card-body">
+
+                <h3>About Page</h3>
+
+                <p>
+                    Manage NAFI's story, values, quality,
+                    journey and brand information.
+                </p>
+
+            </div>
+
+
+            <div class="card-footer">
+
+                <span>
+                    Manage About
+                </span>
+
+                <i class="bi bi-arrow-up-right"></i>
+
+            </div>
+
+        </a>
+
+
+        <!-- =================================================
+             CONTACT PAGE
+        ================================================== -->
+        <a href="#" class="settings-card">
+
+            <div class="card-top">
+
+                <div class="card-icon">
+                    <i class="bi bi-chat-square-text"></i>
+                </div>
+
+                <span class="card-number">
+                    03
+                </span>
+
+            </div>
+
+
+            <div class="card-body">
+
+                <h3>Contact Page</h3>
+
+                <p>
+                    Manage phone, email, WhatsApp, address,
+                    business hours and contact information.
+                </p>
+
+            </div>
+
+
+            <div class="card-footer">
+
+                <span>
+                    Manage Contact
+                </span>
+
+                <i class="bi bi-arrow-up-right"></i>
+
+            </div>
+
+        </a>
+
+
+        <!-- =================================================
+             NAVBAR
+        ================================================== -->
+        <a href="#" class="settings-card">
+
+            <div class="card-top">
+
+                <div class="card-icon">
+                    <i class="bi bi-list"></i>
+                </div>
+
+                <span class="card-number">
+                    04
+                </span>
+
+            </div>
+
+
+            <div class="card-body">
+
+                <h3>Navbar</h3>
+
+                <p>
+                    Manage navigation items, labels, links,
+                    visibility and display order.
+                </p>
+
+            </div>
+
+
+            <div class="card-footer">
+
+                <span>
+                    Manage Navbar
+                </span>
+
+                <i class="bi bi-arrow-up-right"></i>
+
+            </div>
+
+        </a>
+
+
+        <!-- =================================================
+             FOOTER
+        ================================================== -->
+        <a href="#" class="settings-card">
+
+            <div class="card-top">
+
+                <div class="card-icon">
+                    <i class="bi bi-layout-text-window"></i>
+                </div>
+
+                <span class="card-number">
+                    05
+                </span>
+
+            </div>
+
+
+            <div class="card-body">
+
+                <h3>Footer</h3>
+
+                <p>
+                    Manage footer description, links, social
+                    media, contact information and copyright.
+                </p>
+
+            </div>
+
+
+            <div class="card-footer">
+
+                <span>
+                    Manage Footer
+                </span>
+
+                <i class="bi bi-arrow-up-right"></i>
+
+            </div>
+
+        </a>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     POLICIES & INFORMATION
+====================================================== -->
+<section class="settings-section">
+
+    <div class="section-header">
+
+        <div class="section-title-wrapper">
+
+            <span class="section-eyebrow">
+                CUSTOMER INFORMATION
+            </span>
+
+            <h2>Policies & Information</h2>
+
+        </div>
+
+        <p>
+            Keep important customer information, policies
+            and support content up to date.
+        </p>
+
+    </div>
+
+
+    <div class="settings-grid">
+
+
+        <!-- =================================================
+             FAQ
+        ================================================== -->
+        <a href="#" class="settings-card">
+
+            <div class="card-top">
+
+                <div class="card-icon">
+                    <i class="bi bi-question-circle"></i>
+                </div>
+
+                <span class="card-number">
+                    06
+                </span>
+
+            </div>
+
+
+            <div class="card-body">
+
+                <h3>FAQ</h3>
+
+                <p>
+                    Manage frequently asked questions and
+                    helpful answers for customers.
+                </p>
+
+            </div>
+
+
+            <div class="card-footer">
+
+                <span>
+                    Manage FAQ
+                </span>
+
+                <i class="bi bi-arrow-up-right"></i>
+
+            </div>
+
+        </a>
+
+
+        <!-- =================================================
+             SHIPPING POLICY
+        ================================================== -->
+        <a href="#" class="settings-card">
+
+            <div class="card-top">
+
+                <div class="card-icon">
+                    <i class="bi bi-truck"></i>
+                </div>
+
+                <span class="card-number">
+                    07
+                </span>
+
+            </div>
+
+
+            <div class="card-body">
+
+                <h3>Shipping Policy</h3>
+
+                <p>
+                    Manage delivery areas, shipping charges,
+                    delivery times and related information.
+                </p>
+
+            </div>
+
+
+            <div class="card-footer">
+
+                <span>
+                    Manage Shipping
+                </span>
+
+                <i class="bi bi-arrow-up-right"></i>
+
+            </div>
+
+        </a>
+
+
+        <!-- =================================================
+             RETURN POLICY
+        ================================================== -->
+        <a href="#" class="settings-card">
+
+            <div class="card-top">
+
+                <div class="card-icon">
+                    <i class="bi bi-arrow-counterclockwise"></i>
+                </div>
+
+                <span class="card-number">
+                    08
+                </span>
+
+            </div>
+
+
+            <div class="card-body">
+
+                <h3>Return & Exchange</h3>
+
+                <p>
+                    Manage return, exchange, replacement and
+                    refund policies for customers.
+                </p>
+
+            </div>
+
+
+            <div class="card-footer">
+
+                <span>
+                    Manage Returns
+                </span>
+
+                <i class="bi bi-arrow-up-right"></i>
+
+            </div>
+
+        </a>
+
+
+        <!-- =================================================
+             PRIVACY POLICY
+        ================================================== -->
+        <a href="#" class="settings-card">
+
+            <div class="card-top">
+
+                <div class="card-icon">
+                    <i class="bi bi-shield-check"></i>
+                </div>
+
+                <span class="card-number">
+                    09
+                </span>
+
+            </div>
+
+
+            <div class="card-body">
+
+                <h3>Privacy Policy</h3>
+
+                <p>
+                    Manage customer privacy, personal data
+                    and information protection policies.
+                </p>
+
+            </div>
+
+
+            <div class="card-footer">
+
+                <span>
+                    Manage Privacy
+                </span>
+
+                <i class="bi bi-arrow-up-right"></i>
+
+            </div>
+
+        </a>
+
+
+        <!-- =================================================
+             TERMS & CONDITIONS
+        ================================================== -->
+        <a href="#" class="settings-card">
+
+            <div class="card-top">
+
+                <div class="card-icon">
+                    <i class="bi bi-file-earmark-text"></i>
+                </div>
+
+                <span class="card-number">
+                    10
+                </span>
+
+            </div>
+
+
+            <div class="card-body">
+
+                <h3>Terms & Conditions</h3>
+
+                <p>
+                    Manage the terms and conditions that apply
+                    to NAFI customers and website usage.
+                </p>
+
+            </div>
+
+
+            <div class="card-footer">
+
+                <span>
+                    Manage Terms
+                </span>
+
+                <i class="bi bi-arrow-up-right"></i>
+
+            </div>
+
+        </a>
+
+
+        <!-- =================================================
+             SIZE GUIDE
+        ================================================== -->
+        <a href="#" class="settings-card">
+
+            <div class="card-top">
+
+                <div class="card-icon">
+                    <i class="bi bi-rulers"></i>
+                </div>
+
+                <span class="card-number">
+                    11
+                </span>
+
+            </div>
+
+
+            <div class="card-body">
+
+                <h3>Size Guide</h3>
+
+                <p>
+                    Manage size measurements, fit information
+                    and customer sizing guidance.
+                </p>
+
+            </div>
+
+
+            <div class="card-footer">
+
+                <span>
+                    Manage Size Guide
+                </span>
+
+                <i class="bi bi-arrow-up-right"></i>
+
+            </div>
+
+        </a>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     FUTURE / SYSTEM NOTE
+====================================================== -->
+<div class="settings-note">
+
+    <div class="note-icon">
+        <i class="bi bi-info-circle"></i>
+    </div>
+
+    <div class="note-content">
+
+        <h4>Website Content Management</h4>
+
+        <p>
+            All customer-facing website content can be
+            managed from this central settings area.
+            Product, category, order and inventory data
+            remain in their dedicated management sections.
+        </p>
+
+    </div>
+
+</div>
+
+</div>
 
 {% endblock %}
+
     

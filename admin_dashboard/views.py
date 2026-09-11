@@ -7,6 +7,7 @@ from .models import *
 from django.db.models import Q
 from .forms import CategoryForm
 from django.db import transaction
+from experiment1.models import *
 
 
 
@@ -2234,3 +2235,382 @@ def update_about_journey(request, journey_id):
         )
 
     return redirect("about_management")
+
+
+
+# --------------------------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------------------
+# Setting section
+# --------------------------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------------------
+def home_management(request):
+    """
+    Home Page management screen.
+    """
+
+    home_page = HomePage.objects.first()
+
+    if not home_page:
+        home_page = HomePage.objects.create()
+
+    hero_slides = home_page.hero_slides.all().order_by(
+        "display_order",
+        "-created_at"
+    )
+
+    context = {
+        "page_title": "Home Page",
+        "home_page": home_page,
+        "hero_slides": hero_slides,
+    }
+
+    return render(
+        request,
+        "admin_dashboard/home_management.html",
+        context
+    )
+
+def update_home_page(request):
+    """
+    Update homepage text, section visibility,
+    and second hero image settings.
+    """
+
+    home_page = HomePage.objects.first()
+
+    if not home_page:
+        home_page = HomePage.objects.create()
+
+    if request.method == "POST":
+
+        # ==========================================
+        # HERO CONTENT
+        # ==========================================
+
+        home_page.hero_subtitle = request.POST.get(
+            "hero_subtitle",
+            ""
+        ).strip()
+
+        home_page.hero_title = request.POST.get(
+            "hero_title",
+            ""
+        ).strip()
+
+        home_page.hero_button_text = request.POST.get(
+            "hero_button_text",
+            ""
+        ).strip()
+
+        home_page.hero_button_link = request.POST.get(
+            "hero_button_link",
+            ""
+        ).strip()
+
+        # ==========================================
+        # SECTION VISIBILITY
+        # ==========================================
+
+        home_page.hero_is_active = (
+            request.POST.get("hero_is_active") == "on"
+        )
+
+        home_page.categories_is_active = (
+            request.POST.get("categories_is_active") == "on"
+        )
+
+        home_page.featured_is_active = (
+            request.POST.get("featured_is_active") == "on"
+        )
+
+        home_page.new_arrivals_is_active = (
+            request.POST.get("new_arrivals_is_active") == "on"
+        )
+
+        # ==========================================
+        # SECOND HERO VISIBILITY
+        # ==========================================
+
+        home_page.second_hero_is_active = (
+            request.POST.get("second_hero_is_active") == "on"
+        )
+
+        # ==========================================
+        # SECOND HERO IMAGE
+        # ==========================================
+
+        second_hero_image = request.FILES.get(
+            "second_hero_image"
+        )
+
+        if second_hero_image:
+            home_page.second_hero_image = second_hero_image
+
+        # ==========================================
+        # SAVE
+        # ==========================================
+        home_page.full_clean()
+        home_page.save()
+
+        messages.success(
+            request,
+            "Homepage settings updated successfully."
+        )
+
+    return redirect("home_management")
+
+def update_home_visibility(request):
+    """
+    Update homepage section visibility settings only.
+    """
+
+    home_page = HomePage.objects.first()
+
+    if not home_page:
+        home_page = HomePage.objects.create()
+
+    if request.method == "POST":
+
+        home_page.hero_is_active = (
+            request.POST.get("hero_is_active") == "on"
+        )
+
+        home_page.categories_is_active = (
+            request.POST.get("categories_is_active") == "on"
+        )
+
+        home_page.featured_is_active = (
+            request.POST.get("featured_is_active") == "on"
+        )
+
+        home_page.new_arrivals_is_active = (
+            request.POST.get("new_arrivals_is_active") == "on"
+        )
+
+        home_page.second_hero_is_active = (
+            request.POST.get("second_hero_is_active") == "on"
+        )
+
+        home_page.save()
+
+        messages.success(
+            request,
+            "Homepage section visibility updated successfully."
+        )
+
+    return redirect("home_management")
+
+
+def update_second_hero(request):
+    """
+    Update second hero image only.
+    """
+
+    home_page = HomePage.objects.first()
+
+    if not home_page:
+        home_page = HomePage.objects.create()
+
+    if request.method == "POST":
+
+        second_hero_image = request.FILES.get(
+            "second_hero_image"
+        )
+
+        if second_hero_image:
+            home_page.second_hero_image = second_hero_image
+
+        home_page.save()
+
+        messages.success(
+            request,
+            "Second hero updated successfully."
+        )
+
+    return redirect("home_management")
+
+
+def add_home_slide(request):
+    """
+    Add a new homepage hero slide.
+    """
+
+    home_page = HomePage.objects.first()
+
+    if not home_page:
+        home_page = HomePage.objects.create()
+
+    if request.method == "POST":
+
+        desktop_image = request.FILES.get("desktop_image")
+        mobile_image = request.FILES.get("mobile_image")
+
+        alt_text = request.POST.get(
+            "alt_text",
+            ""
+        ).strip()
+
+        display_order = request.POST.get(
+            "display_order",
+            "0"
+        )
+
+        try:
+            display_order = int(display_order)
+        except (TypeError, ValueError):
+            display_order = 0
+
+        # ==========================================
+        # DESKTOP IMAGE REQUIRED
+        # ==========================================
+
+        if not desktop_image:
+            messages.error(
+                request,
+                "Desktop hero image is required."
+            )
+
+            return redirect("home_management")
+
+        # ==========================================
+        # CREATE SLIDE
+        # ==========================================
+
+        try:
+
+            slide = HomeHeroSlide(
+                home_page=home_page,
+                desktop_image=desktop_image,
+                mobile_image=mobile_image,
+                alt_text=alt_text,
+                display_order=display_order,
+                is_active=True,
+            )
+
+            # Run model validation
+            slide.full_clean()
+
+            slide.save()
+
+            messages.success(
+                request,
+                "Hero slide added successfully."
+            )
+
+        except ValidationError as error:
+
+            messages.error(
+                request,
+                error.messages[0]
+            )
+
+    return redirect("home_management")
+
+
+
+def update_home_slide(request, slide_id):
+    """
+    Update an existing homepage hero slide.
+    """
+
+    slide = get_object_or_404(
+        HomeHeroSlide,
+        id=slide_id
+    )
+
+    if request.method == "POST":
+
+        desktop_image = request.FILES.get("desktop_image")
+        mobile_image = request.FILES.get("mobile_image")
+
+        # ==========================================
+        # TEXT DATA
+        # ==========================================
+
+        slide.alt_text = request.POST.get(
+            "alt_text",
+            ""
+        ).strip()
+
+        # ==========================================
+        # DISPLAY ORDER
+        # ==========================================
+
+        display_order = request.POST.get(
+            "display_order",
+            slide.display_order
+        )
+
+        try:
+            slide.display_order = int(display_order)
+        except (TypeError, ValueError):
+            slide.display_order = 0
+
+        # ==========================================
+        # ACTIVE / INACTIVE
+        # ==========================================
+
+        slide.is_active = (
+            request.POST.get("is_active") == "on"
+        )
+
+        # ==========================================
+        # REPLACE DESKTOP IMAGE
+        # ==========================================
+
+        if desktop_image:
+            slide.desktop_image = desktop_image
+
+        # ==========================================
+        # REPLACE MOBILE IMAGE
+        # ==========================================
+
+        if mobile_image:
+            slide.mobile_image = mobile_image
+
+        # ==========================================
+        # VALIDATE
+        # ==========================================
+
+        try:
+
+            slide.full_clean()
+
+            slide.save()
+
+            messages.success(
+                request,
+                "Hero slide updated successfully."
+            )
+
+        except ValidationError as error:
+
+            messages.error(
+                request,
+                error.messages[0]
+            )
+
+    return redirect("home_management")
+
+
+
+def delete_home_slide(request, slide_id):
+    """
+    Delete an existing homepage hero slide.
+    """
+
+    slide = get_object_or_404(
+        HomeHeroSlide,
+        id=slide_id
+    )
+
+    if request.method == "POST":
+
+        slide.delete()
+
+        messages.success(
+            request,
+            "Hero slide deleted successfully."
+        )
+
+    return redirect("home_management")

@@ -1,48 +1,43 @@
-from django.shortcuts import render, redirect
-from admin_dashboard.models import *
 from django.shortcuts import render, redirect, get_object_or_404
-
+from admin_dashboard.models import *
+from .models import *
 
 def home_page(request):
 
-    # =====================================================
-    # NEW ARRIVALS
-    # Latest products added to the store
-    # =====================================================
+    home_page = HomePage.objects.first()
+
+    if not home_page:
+        home_page = HomePage.objects.create()
+
+    hero_slides = home_page.hero_slides.filter(
+        is_active=True
+    ).order_by("display_order")
+
 
     new_arrivals = ProductsModel.objects.filter(
         is_available=True,
         stock__gt=0
-    ).order_by('-created_at')[:10]
-
-
-    # =====================================================
-    # FEATURED PRODUCTS
-    # Products manually marked as featured
-    # =====================================================
+    ).order_by("-created_at")[:10]
 
     featured_products = ProductsModel.objects.filter(
         is_available=True,
         is_featured=True,
         stock__gt=0
-    ).order_by('-created_at')[:10]
+    ).order_by("-created_at")[:10]
 
-    categories = Category.objects.all().order_by('created_at')
-
-    # =====================================================
-    # CONTEXT
-    # =====================================================
+    categories = Category.objects.all()
 
     context = {
-        'new_arrivals': new_arrivals,
-        'featured_products': featured_products,
-            'categories': categories,
+        "home_page": home_page,
+        "hero_slides": hero_slides,
+        "new_arrivals": new_arrivals,
+        "featured_products": featured_products,
+        "categories": categories,
     }
-
 
     return render(
         request,
-        'customer/home.html',
+        "customer/home.html",
         context
     )
 

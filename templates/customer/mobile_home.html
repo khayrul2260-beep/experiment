@@ -1,296 +1,335 @@
 {% load static %}
 
 <section class="mobile-nafi-page">
+
   <!-- =========================================
-         HERO
-    ========================================== -->
+       HERO
+  ========================================== -->
+
+  {% if home_page.hero_is_active and hero_slides %}
 
   <section class="mobile-nafi-hero">
+
     <div class="mobile-hero-slider" id="mobileHeroSlider">
-      <!-- SLIDE 01 -->
 
-      <div class="mobile-hero-slide active">
-        <img
-          src="{% static 'customer/images/shoppic1.png' %}"
-          alt="NAFI Premium Clothing"
-        />
+      <!-- DYNAMIC HERO SLIDES -->
+
+      {% for slide in hero_slides %}
+
+      <div class="mobile-hero-slide {% if forloop.first %}active{% endif %}">
+
+        <picture>
+          <img
+            src="{{ slide.desktop_image.url }}"
+            alt="{% if slide.alt_text %}{{ slide.alt_text }}{% else %}NAFI Premium Clothing{% endif %}"
+          />
+        </picture>
+
       </div>
 
-      <!-- SLIDE 02 -->
+      {% endfor %}
 
-      <div class="mobile-hero-slide">
-        <img
-          src="{% static 'customer/images/shoppic2.png' %}"
-          alt="NAFI Premium Clothing"
-        />
-      </div>
-
-      <!-- SLIDE 03 -->
-
-      <div class="mobile-hero-slide">
-        <img
-          src="{% static 'customer/images/shoppic11.png' %}"
-          alt="NAFI Premium Clothing"
-        />
-      </div>
-
-      <!-- SLIDE 04 -->
-
-      <div class="mobile-hero-slide">
-        <img
-          src="{% static 'customer/images/shoppic22.png' %}"
-          alt="NAFI Premium Clothing"
-        />
-      </div>
 
       <!-- IMAGE GRADIENT -->
 
       <div class="mobile-hero-image-gradient"></div>
 
+
       <!-- HERO CONTENT -->
 
       <div class="mobile-hero-content">
+
         <span class="nafi-hero-subtitle">
-            PREMIUM MEN'S FASHION
+          {{ home_page.hero_subtitle }}
         </span>
+
         <h1 class="nafi-hero-title">
-            STYLE THAT
-            <span>DEFINES YOU.</span>
+          {{ home_page.hero_title }}
         </h1>
 
         <div class="mobile-hero-line"></div>
 
-        <a href="#categories" class="mobile-hero-button">
-          <span> EXPLORE</span>
+        <a
+          href="{{ home_page.hero_button_link }}"
+          class="mobile-hero-button"
+        >
+          <span>
+            {{ home_page.hero_button_text }}
+          </span>
 
-          <span class="mobile-button-arrow"> → </span>
+          <span class="mobile-button-arrow">
+            →
+          </span>
+
         </a>
+
       </div>
+
 
       <!-- SLIDE INDICATORS -->
 
       <div class="mobile-slider-indicators">
-        <button class="active" data-slide="0" aria-label="Slide 1"></button>
 
-        <button data-slide="1" aria-label="Slide 2"></button>
+        {% for slide in hero_slides %}
 
-        <button data-slide="2" aria-label="Slide 3"></button>
-
-        <button data-slide="3" aria-label="Slide 4"></button>
-      </div>
-    </div>
-  </section>
-
-  <section class="nfx-vault-hero">
-    <div class="nfx-vault-slider" id="nfxVaultSlider">
-      <!-- SLIDE 01 -->
-      <div class="nfx-vault-panel is-active">
-        <img
-          src="{% static 'customer/images/shop_mobile1.png' %}"
-          alt="NAFI Premium Clothing"
-          class="nfx-vault-image"
-        />
-      </div>
-
-      <!-- SLIDE 02 -->
-      <div class="nfx-vault-panel">
-        <img
-          src="{% static 'customer/images/shop_mobile2.png' %}"
-          alt="NAFI Premium Clothing"
-          class="nfx-vault-image"
-        />
-      </div>
-
-      <!-- SLIDE 03 -->
-      <div class="nfx-vault-panel">
-        <img
-          src="{% static 'customer/images/shop_mobile3.png' %}"
-          alt="NAFI Premium Clothing"
-          class="nfx-vault-image"
-        />
-      </div>
-
-      <!-- SLIDE 04 -->
-      <div class="nfx-vault-panel">
-        <img
-          src="{% static 'customer/images/shop_mobile4.png' %}"
-          alt="NAFI Premium Clothing"
-          class="nfx-vault-image"
-        />
-      </div>
-
-      <!-- IMAGE GRADIENT -->
-      <div class="nfx-vault-shade"></div>
-
-      <!-- INDICATORS -->
-      <div class="nfx-vault-dots">
         <button
-          class="is-active"
-          data-vault-slide="0"
-          aria-label="Slide 1"
+          class="{% if forloop.first %}active{% endif %}"
+          data-slide="{{ forloop.counter0 }}"
+          aria-label="Slide {{ forloop.counter }}"
         ></button>
 
-        <button data-vault-slide="1" aria-label="Slide 2"></button>
+        {% endfor %}
 
-        <button data-vault-slide="2" aria-label="Slide 3"></button>
-
-        <button data-vault-slide="3" aria-label="Slide 4"></button>
       </div>
+
     </div>
+
   </section>
-  <!-- IMAGE GRADIENT -->
-  <div class="nfx-vault-shade"></div>
 
-  <!-- HERO CONTENT -->
-  <div class="nfx-vault-copy">
-    {% comment %} <span class="nafi-hero-subtitle">
-        PREMIUM MEN'S FASHION
-    </span>
-    <h1 class="nafi-hero-title">
-        STYLE THAT
-        <span>DEFINES YOU.</span>
-    </h1>
+  {% endif %}
 
-    <div class="nfx-vault-rule"></div> {% endcomment %}
-    <a href="#" class="nfx-vault-action">
-      <span> EXPLORE</span>
-      <span class="nfx-vault-arrow"> → </span>
-    </a>
-  </div>
 
-  <section class="second_hero_section">
-    <!-- =========================================
-         PREMIUM FEATURES
-    ========================================== -->
+
+  <!-- =========================================
+       SECOND HERO
+  ========================================== -->
+{% if home_page.second_hero_is_active and hero_slides %}
+
+<section class="nfx-vault-hero">
+
+    <div
+        class="nfx-vault-slider"
+        id="nfxVaultSlider"
+    >
+
+        <div class="nfx-vault-panel is-active">
+
+            {% for slide_ in hero_slides %}
+
+            <div
+                class="mobile-hero-slide_ {% if forloop.first %}active{% endif %}"
+            >
+
+                <picture>
+
+                    <img
+                        src="{{ slide_.mobile_image.url }}"
+                        alt="{% if slide_.alt_text %}{{ slide_.alt_text }}{% else %}NAFI Premium Clothing{% endif %}"
+                    />
+
+                </picture>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+
+        <div class="nfx-vault-shade"></div>
+
+
+        <div class="nfx-vault-dots">
+
+            {% for slide_ in hero_slides %}
+
+            <button
+                class="{% if forloop.first %}is-active{% endif %}"
+                data-vault-slide="{{ forloop.counter0 }}"
+                aria-label="Slide {{ forloop.counter }}"
+            ></button>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+
+
+
+</section>
+
+{% endif %}
+  <!-- =========================================
+       PREMIUM FEATURES
+  ========================================== -->
+
+  <section class="second_hero_section" style="--second-hero-image: url('{{ home_page.second_hero_image.url }}');">
+
+    <div class="nfx-vault-copy">
+
+        <a
+            href="{{ home_page.hero_button_link }}"
+            class="nfx-vault-action"
+        >
+
+            <span>
+                {{ home_page.hero_button_text }}
+            </span>
+
+            <span class="nfx-vault-arrow">
+                →
+            </span>
+
+        </a>
+
+    </div>
+
     <section class="mobile-feature-section">
+
       <div class="mobile-feature-card">
+
         <div class="mobile-feature-item">
+
           <div class="mobile-feature-icon">
+
             <svg viewBox="0 0 48 48">
+
               <path
                 d="M24 4l5 5 7-1 2 7 6 4-3 7 3 7-6 4-2 7-7-1-5 5-5-5-7 1-2-7-6-4 3-7-3-7 6-4 2-7 7 1 5-5Z"
               ></path>
+
               <path d="M17 24l5 5 10-11"></path>
+
             </svg>
+
           </div>
 
-          <h3>PREMIUM QUALITY</h3>
+          <h3>
+            PREMIUM QUALITY
+          </h3>
 
-          <p>Finest Materials</p>
+          <p>
+            Finest Materials
+          </p>
+
         </div>
+
 
         <div class="mobile-feature-divider"></div>
 
+
         <div class="mobile-feature-item">
+
           <div class="mobile-feature-icon">
+
             <svg viewBox="0 0 48 48">
+
               <path
                 d="M14 9l-9 8 6 8 5-4v20h16V21l5 4 6-8-9-8-6 4h-8l-6-4Z"
               ></path>
+
             </svg>
+
           </div>
 
-          <h3>TIMELESS DESIGN</h3>
+          <h3>
+            TIMELESS DESIGN
+          </h3>
 
-          <p>Modern & Minimal</p>
+          <p>
+            Modern & Minimal
+          </p>
+
         </div>
+
 
         <div class="mobile-feature-divider"></div>
 
+
         <div class="mobile-feature-item">
+
           <div class="mobile-feature-icon">
+
             <svg viewBox="0 0 48 48">
+
               <path
                 d="M24 4l16 6v11c0 10-6.5 18-16 23C14.5 39 8 31 8 21V10l16-6Z"
               ></path>
 
               <path d="M17 24l5 5 10-11"></path>
+
             </svg>
+
           </div>
 
-          <h3>BUILT TO LAST</h3>
+          <h3>
+            BUILT TO LAST
+          </h3>
 
-          <p>Durable & Reliable</p>
+          <p>
+            Durable & Reliable
+          </p>
+
         </div>
+
       </div>
+
     </section>
+
+
 
     <!-- =========================================
          CATEGORIES
     ========================================== -->
-    <section class="mobile-categories-section" id="categories">
-    
-        <div class="mobile-category-slider">
-        
-            <div class="mobile-category-grid">
-            
-                {% for category in categories %}
-            
-                    <a
-                        {% if category.is_active %}
-                            href="{% url 'category_products' category.slug %}"
-                        {% else %} 
-                            href="#" 
-                        {% endif %}
-            
-                        class="
-                            mobile-category-card
-                            {% if not category.is_active %}
-                                category-unavailable
-                            {% endif %}
-                        "
-                    >
-            
-                        {% if category.image %}
-            
-                            <img
-                                src="{{ category.image.url }}"
-                                alt="{{ category.name }}"
-                            >
-            
-                        {% endif %}
-            
-            
-                        <div class="mobile-category-overlay"></div>
-            
-            
-                        <div class="mobile-category-content">
-                        
-                            <h3>
-                                {{ category.name|upper }}
-                            </h3>
-                          
-                            <span>
-                                {% if category.is_active %}
-                                    Available
-                                    <b>→</b>
-                                {% else %}
-                                    Unavailable
-                                    <b>×</b>
-                                {% endif %}
-                            </span>
-                          
-                        </div>
-                      
-                      
-                        {% if not category.is_active %}
-                      
-                            <div class="category-unavailable-badge">
-                                COMMING SOON
-                            </div>
-                          
-                        {% endif %}
-                          
-                    </a>
-                  
-                {% endfor %}
-                  
-            </div>
-          
-        </div>
-      
-    </section>
-  </section>
 
+    {% if home_page.categories_is_active and categories %}
+
+    <section
+      class="mobile-categories-section"
+      id="categories"
+    >
+
+      <div class="mobile-category-slider">
+
+        <div class="mobile-category-grid">
+
+          {% for category in categories %}
+
+          <a
+            href="{% url 'category_products' category.slug %}"
+            class="mobile-category-card"
+          >
+
+            {% if category.image %}
+
+            <img
+              src="{{ category.image.url }}"
+              alt="{{ category.name }}"
+            >
+
+            {% endif %}
+
+
+            <div class="mobile-category-overlay"></div>
+
+
+            <div class="mobile-category-content">
+
+              <h3>
+                {{ category.name|upper }}
+              </h3>
+
+              <span>
+                Available
+                <b>→</b>
+              </span>
+
+            </div>
+
+          </a>
+
+          {% endfor %}
+
+        </div>
+
+      </div>
+
+    </section>
+
+    {% endif %}
+
+  </section>
 
 </section>

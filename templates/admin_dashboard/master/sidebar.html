@@ -92,20 +92,11 @@
         </a>
       </li>
 
-      <li
-        class="{% if request.resolver_match.url_name == 'about_management' %}active{% endif %}"
-      >
-        <a href="{% url 'about_management' %}">
-          <i class="bi bi-info-circle"></i>
-
-          <span>About</span>
-        </a>
-      </li>
 
       <li class="menu-title">SYSTEM</li>
 
       <li
-        class="{% if request.resolver_match.url_name == 'settings_page' %}active{% endif %}"
+        class="{% if request.resolver_match.url_name == 'settings_page' or request.resolver_match.url_name == 'about_management' or request.resolver_match.url_name == 'home_management' %}active{% endif %}"
       >
         <a href="{% url 'settings_page' %}">
           <i class="bi bi-gear"></i>
