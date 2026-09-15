@@ -1,5 +1,6 @@
 from django.urls import path
 from .views import *
+from .contact_views import *
 
 urlpatterns = [
     path("", dashboard_page, name="dashboard_page"),
@@ -32,6 +33,21 @@ urlpatterns = [
     path("settings/about/value/<int:value_id>/update/", update_about_value, name="update_about_value"),
     path("settings/about/quality/<int:quality_id>/update/", update_about_quality, name="update_about_quality"),
     path("settings/about/journey/<int:journey_id>/update/", update_about_journey, name="update_about_journey"),
+
+
+    path("settings/contact/", contact_management, name="contact_management"),
+    path("settings/contact/service/add/", add_contact_service, name="add_contact_service"),
+    path("settings/contact/service/<int:service_id>/update/", update_contact_service, name="update_contact_service"),
+    path("settings/contact/service/<int:service_id>/delete/", delete_contact_service, name="delete_contact_service"),
+    path("settings/contact/faq/add/", add_contact_faq, name="add_contact_faq"),
+    path("settings/contact/faq/<int:faq_id>/update/", update_contact_faq, name="update_contact_faq"),
+    path("settings/contact/faq/<int:faq_id>/delete/", delete_contact_faq, name="delete_contact_faq"),
+    path("settings/contact/social/add/",add_contact_social_link,name="add_contact_social_link"),
+    path("settings/contact/social/<int:social_id>/update/",update_contact_social_link,name="update_contact_social_link"),
+    path("settings/contact/social/<int:social_id>/delete/",delete_contact_social_link,name="delete_contact_social_link"),
+
+
+
 
     path('admin_users/', admin_users_page, name='admin_users_page'),
     path('logout/', logout_page, name='logout_page'),

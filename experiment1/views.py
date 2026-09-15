@@ -202,3 +202,168 @@ def about_page(request):
             "about": about,
         },
     )
+
+
+# =========================================================
+# CONTACT PAGE
+# =========================================================
+
+from django.shortcuts import render
+
+from admin_dashboard.models import (
+    ContactPage,
+    ContactService,
+    ContactFAQ,
+    ContactSocialLink,
+)
+
+
+def contact_page(request):
+
+    contact = ContactPage.objects.filter(
+        is_published=True
+    ).first()
+
+
+    # -----------------------------------------
+    # CONTACT PAGE NOT AVAILABLE
+    # -----------------------------------------
+
+    if not contact:
+
+        return render(
+            request,
+            "customer/contact.html",
+            {
+                "contact_page": None,
+                "services": [],
+                "faqs": [],
+                "social_links": [],
+                "sections": [],
+            }
+        )
+
+
+    # -----------------------------------------
+    # DYNAMIC SECTIONS
+    # -----------------------------------------
+
+    sections = []
+
+
+    if contact.main_is_active:
+
+        sections.append({
+            "name": "main",
+            "order": contact.main_order,
+        })
+
+
+    if contact.info_is_active:
+
+        sections.append({
+            "name": "info",
+            "order": contact.info_order,
+        })
+
+
+    if contact.help_is_active:
+
+        sections.append({
+            "name": "help",
+            "order": contact.help_order,
+        })
+
+
+    if contact.faq_is_active:
+
+        sections.append({
+            "name": "faq",
+            "order": contact.faq_order,
+        })
+
+
+    if contact.social_is_active:
+
+        sections.append({
+            "name": "social",
+            "order": contact.social_order,
+        })
+
+
+    if contact.final_is_active:
+
+        sections.append({
+            "name": "final",
+            "order": contact.final_order,
+        })
+
+
+    sections.sort(
+        key=lambda section: section["order"]
+    )
+
+
+    # -----------------------------------------
+    # SERVICES
+    # -----------------------------------------
+
+    services = ContactService.objects.filter(
+        contact_page=contact,
+        is_active=True,
+    ).order_by(
+        "display_order",
+        "id"
+    )
+
+
+    # -----------------------------------------
+    # FAQ
+    # -----------------------------------------
+
+    faqs = ContactFAQ.objects.filter(
+        contact_page=contact,
+        is_active=True,
+    ).order_by(
+        "display_order",
+        "id"
+    )
+
+
+    # -----------------------------------------
+    # SOCIAL LINKS
+    # -----------------------------------------
+
+    social_links = ContactSocialLink.objects.filter(
+        contact_page=contact,
+        is_active=True,
+    ).order_by(
+        "display_order",
+        "id"
+    )
+
+
+    # -----------------------------------------
+    # CONTEXT
+    # -----------------------------------------
+
+    context = {
+
+        "contact_page": contact,
+
+        "services": services,
+
+        "faqs": faqs,
+
+        "social_links": social_links,
+
+        "sections": sections,
+
+    }
+
+
+    return render(
+        request,
+        "customer/contact.html",
+        context
+    )

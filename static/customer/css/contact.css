@@ -1,0 +1,2105 @@
+/* =========================================================
+   NAFI — CONTACT PAGE
+   PREMIUM EDITORIAL / DARK LUXURY UI
+========================================================= */
+
+
+/* =========================================================
+   ROOT
+========================================================= */
+
+.nafi-contact-page {
+
+    --contact-black: #050505;
+    --contact-deep: #08090b;
+    --contact-surface: #0c0d0f;
+    --contact-surface-2: #101114;
+
+    --contact-white: #f5f5f5;
+    --contact-off-white: #d9d9d9;
+
+    --contact-muted: #777;
+    --contact-dark-muted: #4c4c4c;
+
+    --contact-blue: #5f96ff;
+    --contact-blue-soft: rgba(95, 150, 255, .10);
+
+    --contact-border: rgba(255, 255, 255, .085);
+    --contact-border-soft: rgba(255, 255, 255, .045);
+
+    width: 100%;
+    min-height: 100vh;
+
+    background: var(--contact-black);
+    color: var(--contact-white);
+
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   COMMON CONTAINER
+========================================================= */
+
+.contact-section-container {
+
+    width: min(
+        1280px,
+        calc(100% - 100px)
+    );
+
+    margin: 0 auto;
+}
+
+
+/* =========================================================
+   COMMON EYEBROW
+========================================================= */
+
+.contact-eyebrow {
+
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+
+    margin-bottom: 18px;
+
+    color: var(--contact-blue);
+
+    font-family: "Manrope", sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+
+    letter-spacing: 3px;
+    line-height: 1.4;
+
+    text-transform: uppercase;
+}
+
+
+/* small line before eyebrow */
+
+.contact-eyebrow::before {
+
+    content: "";
+
+    display: block;
+
+    width: 22px;
+    height: 1px;
+
+    background: var(--contact-blue);
+
+    opacity: .75;
+}
+
+
+/* =========================================================
+   COMMON SECTION HEADING
+========================================================= */
+
+.contact-section-heading {
+
+    max-width: 760px;
+
+    margin-bottom: 60px;
+}
+
+
+.contact-section-title {
+
+    margin: 0;
+
+    color: var(--contact-white);
+
+    font-family: "Manrope", sans-serif;
+
+    font-size: clamp(
+        38px,
+        4.5vw,
+        62px
+    );
+
+    font-weight: 600;
+
+    letter-spacing: -2.8px;
+    line-height: .98;
+}
+
+
+.contact-section-description {
+
+    max-width: 620px;
+
+    margin: 22px 0 0;
+
+    color: var(--contact-muted);
+
+    font-family: "Manrope", sans-serif;
+
+    font-size: 13px;
+
+    line-height: 1.9;
+}
+
+
+/* =========================================================
+   01 — GET IN TOUCH / HERO
+========================================================= */
+
+.contact-main-section {
+
+    width: 100%;
+
+    /*
+        75px = navbar height
+
+        minimum = 700px
+        ideal = viewport - navbar
+        maximum = 1500px
+    */
+
+    height: clamp(
+        700px,
+        calc(100vh - 75px),
+        1500px
+    );
+
+    min-height: 700px;
+    max-height: 1500px;
+
+    background: transparent;
+}
+
+
+.contact-main-content {
+
+    position: relative;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        minmax(0, 1fr);
+
+    width: 100%;
+    height: 100%;
+}
+
+
+/* =========================================================
+   HERO — FORM SIDE
+========================================================= */
+
+.contact-main-form {
+
+    position: relative;
+    z-index: 3;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    min-width: 0;
+
+    padding:
+        clamp(55px, 6vw, 100px)
+        clamp(45px, 7vw, 120px);
+
+    background:
+
+        radial-gradient(
+            circle at 10% 35%,
+            rgba(95, 150, 255, .045),
+            transparent 30%
+        ),
+
+        linear-gradient(
+            135deg,
+            #050505 0%,
+            #070809 55%,
+            #08090b 100%
+        );
+}
+
+
+/* subtle right edge glow */
+
+.contact-main-form::after {
+
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    right: -100px;
+
+    width: 180px;
+    height: 100%;
+
+    pointer-events: none;
+
+    opacity: .45;
+}
+
+
+/* =========================================================
+   HERO HEADING
+========================================================= */
+
+.contact-main-heading {
+
+    position: relative;
+    z-index: 2;
+
+    max-width: 600px;
+
+    margin-bottom: clamp(
+        35px,
+        4vh,
+        52px
+    );
+}
+
+
+.contact-main-title {
+
+    margin: 0;
+
+    max-width: 600px;
+
+    color: var(--contact-white);
+
+    font-family: "Manrope", sans-serif;
+
+    font-size: clamp(
+        42px,
+        4.5vw,
+        68px
+    );
+
+    font-weight: 600;
+
+    letter-spacing: -4px;
+    line-height: .91;
+
+    text-transform: uppercase;
+}
+
+
+.contact-main-description {
+
+    max-width: 500px;
+
+    margin: 25px 0 0;
+
+    color: #777;
+
+    font-family: "Manrope", sans-serif;
+
+    font-size: 13px;
+
+    line-height: 1.85;
+}
+
+
+/* =========================================================
+   CONTACT FORM
+========================================================= */
+
+.contact-customer-form {
+
+    position: relative;
+    z-index: 2;
+
+    width: 100%;
+    max-width: 650px;
+}
+
+
+.contact-input-row {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
+
+    gap: 30px;
+}
+
+
+.contact-input-group {
+
+    position: relative;
+
+    margin-bottom: 24px;
+}
+
+
+.contact-input-group label {
+
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: #5d5d5d;
+
+    font-family: "Manrope", sans-serif;
+
+    font-size: 8px;
+    font-weight: 700;
+
+    letter-spacing: 2px;
+
+    text-transform: uppercase;
+}
+
+
+.contact-input-group input,
+.contact-input-group textarea {
+
+    display: block;
+
+    width: 100%;
+
+    padding:
+        11px 0
+        12px;
+
+    border: 0;
+
+    border-bottom:
+        1px solid
+        rgba(
+            255,
+            255,
+            255,
+            .14
+        );
+
+    outline: none;
+
+    background: transparent;
+
+    color: var(--contact-white);
+
+    font-family: "Manrope", sans-serif;
+
+    font-size: 13px;
+    font-weight: 400;
+
+    border-radius: 0;
+
+    box-sizing: border-box;
+
+    transition:
+        border-color .3s ease,
+        color .3s ease;
+}
+
+
+.contact-input-group textarea {
+
+    min-height: 90px;
+
+    resize: vertical;
+
+    line-height: 1.7;
+}
+
+
+.contact-input-group input::placeholder,
+.contact-input-group textarea::placeholder {
+
+    color: #3d3d3d;
+
+    opacity: 1;
+}
+
+
+.contact-input-group input:hover,
+.contact-input-group textarea:hover {
+
+    border-bottom-color:
+        rgba(
+            255,
+            255,
+            255,
+            .27
+        );
+}
+
+
+.contact-input-group input:focus,
+.contact-input-group textarea:focus {
+
+    border-bottom-color:
+        var(--contact-blue);
+}
+
+
+/* =========================================================
+   SUBMIT BUTTON
+========================================================= */
+
+.contact-submit-btn {
+
+    position: relative;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 45px;
+
+    min-width: 215px;
+    min-height: 52px;
+
+    margin-top: 8px;
+
+    padding:
+        0 20px;
+
+    border:
+        1px solid
+        rgba(
+            255,
+            255,
+            255,
+            .17
+        );
+
+    background: transparent;
+
+    color: var(--contact-white);
+
+    font-family: "Manrope", sans-serif;
+
+    font-size: 9px;
+    font-weight: 700;
+
+    letter-spacing: 2px;
+
+    cursor: pointer;
+
+    text-transform: uppercase;
+
+    overflow: hidden;
+
+    transition:
+        color .3s ease,
+        border-color .3s ease,
+        transform .3s ease;
+}
+
+
+.contact-submit-btn::before {
+
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        var(--contact-blue);
+
+    transform:
+        translateX(-101%);
+
+    transition:
+        transform .4s
+        cubic-bezier(
+            .2,
+            .7,
+            .2,
+            1
+        );
+}
+
+
+.contact-submit-btn span {
+
+    position: relative;
+    z-index: 1;
+}
+
+
+.contact-submit-arrow {
+
+    color: var(--contact-blue);
+
+    font-size: 18px;
+
+    transition:
+        color .3s ease,
+        transform .3s ease;
+}
+
+
+.contact-submit-btn:hover {
+
+    border-color:
+        var(--contact-blue);
+
+    color: #050505;
+
+    transform:
+        translateY(-2px);
+}
+
+
+.contact-submit-btn:hover::before {
+
+    transform:
+        translateX(0);
+}
+
+
+.contact-submit-btn:hover
+.contact-submit-arrow {
+
+    color: #050505;
+
+    transform:
+        translateX(6px);
+}
+
+
+/* =========================================================
+   HERO IMAGE
+========================================================= */
+
+.contact-main-image {
+
+    position: relative;
+    z-index: 1;
+
+    width: 100%;
+    height: 100%;
+
+    overflow: hidden;
+
+    background: transparent;
+}
+
+
+.contact-main-image picture {
+
+    position: relative;
+    z-index: 1;
+
+    display: block;
+
+    width: 100%;
+    height: 100%;
+}
+
+
+.contact-main-image img {
+
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    object-position: center;
+
+    filter:
+        brightness(.76)
+        contrast(1.06);
+
+    transform:
+        scale(1.001);
+
+    transition:
+        transform 1.2s
+        cubic-bezier(
+            .2,
+            .7,
+            .2,
+            1
+        ),
+        filter .7s ease;
+}
+
+
+/* =========================================================
+   SEAMLESS BLACK IMAGE FADE
+========================================================= */
+
+.contact-main-image::after {
+
+    content: "";
+
+    position: absolute;
+
+    z-index: 2;
+
+    inset: 0;
+
+    pointer-events: none;
+
+    background:
+
+        linear-gradient(
+            90deg,
+
+            #08090b 0%,
+
+            #08090bf9 5%,
+
+            #08090be1 11%,
+
+            #08090bc4 18%,
+
+            #08090ba3 25%,
+
+            transparent 43%
+        ),
+
+        linear-gradient(
+            0deg,
+
+            #08090b2b,
+
+            transparent 34%
+        );
+}
+
+
+.contact-main-image:hover img {
+
+    transform:
+        scale(1.025);
+
+    filter:
+        brightness(.81)
+        contrast(1.06);
+}
+
+
+/* =========================================================
+   IMAGE PLACEHOLDER
+========================================================= */
+
+.contact-image-placeholder {
+
+    width: 100%;
+    height: 100%;
+
+    background:
+
+        radial-gradient(
+            circle at 65% 35%,
+            rgba(
+                95,
+                150,
+                255,
+                .09
+            ),
+            transparent 32%
+        ),
+
+        #09090983;
+}
+
+
+/* =========================================================
+   02 — CONTACT INFORMATION
+========================================================= */
+
+.contact-info-section {
+
+    position: relative;
+
+    padding:
+        140px 0;
+
+    background:
+        #080808;
+
+    border-top:
+        1px solid
+        var(--contact-border-soft);
+}
+
+
+.contact-info-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            3,
+            minmax(0, 1fr)
+        );
+
+    border-top:
+        1px solid
+        var(--contact-border);
+
+    border-left:
+        1px solid
+        var(--contact-border);
+}
+
+
+.contact-info-item {
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: space-between;
+
+    min-height: 165px;
+
+    padding: 30px;
+
+    border-right:
+        1px solid
+        var(--contact-border);
+
+    border-bottom:
+        1px solid
+        var(--contact-border);
+
+    color: inherit;
+
+    text-decoration: none;
+
+    transition:
+        background .35s ease,
+        border-color .35s ease;
+}
+
+
+.contact-info-item:hover {
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            .025
+        );
+
+    border-color:
+        rgba(
+            95,
+            150,
+            255,
+            .3
+        );
+}
+
+
+.contact-info-label {
+
+    color: #505050;
+
+    font-family: "Manrope", sans-serif;
+
+    font-size: 8px;
+    font-weight: 700;
+
+    letter-spacing: 2.2px;
+
+    text-transform: uppercase;
+}
+
+
+.contact-info-value {
+
+    margin-top: 35px;
+
+    color: #d2d2d2;
+
+    font-family: "Manrope", sans-serif;
+
+    font-size: 13px;
+
+    line-height: 1.7;
+
+    word-break: break-word;
+}
+
+
+.contact-info-item:hover
+.contact-info-value {
+
+    color:
+        var(--contact-white);
+}
+
+
+/* =========================================================
+   03 — HOW CAN WE HELP
+========================================================= */
+
+.contact-help-section {
+
+    padding:
+        145px 0;
+
+    background:
+        var(--contact-black);
+
+    border-top:
+        1px solid
+        var(--contact-border-soft);
+}
+
+
+.contact-service-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            3,
+            minmax(0, 1fr)
+        );
+
+    gap: 12px;
+}
+
+
+.contact-service-item {
+
+    position: relative;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: space-between;
+
+    min-height: 280px;
+
+    padding: 32px;
+
+    border:
+        1px solid
+        var(--contact-border);
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            .012
+        );
+
+    overflow: hidden;
+
+    transition:
+        border-color .35s ease,
+        background .35s ease,
+        transform .35s ease;
+}
+
+
+.contact-service-item::before {
+
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    width: 0;
+    height: 1px;
+
+    background:
+        var(--contact-blue);
+
+    transition:
+        width .5s
+        cubic-bezier(
+            .2,
+            .7,
+            .2,
+            1
+        );
+}
+
+
+.contact-service-item:hover {
+
+    border-color:
+        rgba(
+            95,
+            150,
+            255,
+            .28
+        );
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            .025
+        );
+
+    transform:
+        translateY(-5px);
+}
+
+
+.contact-service-item:hover::before {
+
+    width: 100%;
+}
+
+
+.contact-service-icon {
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 42px;
+    height: 42px;
+
+    border:
+        1px solid
+        rgba(
+            255,
+            255,
+            255,
+            .10
+        );
+
+    color:
+        var(--contact-blue);
+
+    font-size: 15px;
+}
+
+
+.contact-service-content {
+
+    margin-top: 45px;
+}
+
+
+.contact-service-content h3 {
+
+    margin: 0;
+
+    color: #eee;
+
+    font-family: "Manrope", sans-serif;
+
+    font-size: 17px;
+    font-weight: 600;
+
+    letter-spacing: -.3px;
+}
+
+
+.contact-service-content p {
+
+    margin: 12px 0 0;
+
+    color: #666;
+
+    font-family: "Manrope", sans-serif;
+
+    font-size: 11px;
+
+    line-height: 1.8;
+}
+
+
+.contact-service-arrow {
+
+    align-self: flex-end;
+
+    color:
+        var(--contact-blue);
+
+    font-size: 20px;
+
+    transition:
+        transform .3s ease;
+}
+
+
+.contact-service-item:hover
+.contact-service-arrow {
+
+    transform:
+        translateX(6px);
+}
+
+
+/* =========================================================
+   04 — FAQ
+========================================================= */
+
+.contact-faq-section {
+
+    padding:
+        145px 0;
+
+    background:
+        #080808;
+
+    border-top:
+        1px solid
+        var(--contact-border-soft);
+}
+
+
+.contact-faq-list {
+
+    width: 100%;
+
+    border-top:
+        1px solid
+        var(--contact-border);
+}
+
+
+.contact-faq-item {
+
+    border-bottom:
+        1px solid
+        var(--contact-border);
+
+    transition:
+        border-color .3s ease;
+}
+
+
+.contact-faq-item[open] {
+
+    border-bottom-color:
+        rgba(
+            95,
+            150,
+            255,
+            .28
+        );
+}
+
+
+.contact-faq-item summary {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 30px;
+
+    min-height: 88px;
+
+    padding: 0 5px;
+
+    list-style: none;
+
+    cursor: pointer;
+}
+
+
+.contact-faq-item summary::-webkit-details-marker {
+
+    display: none;
+}
+
+
+.contact-faq-question {
+
+    color: #d8d8d8;
+
+    font-family: "Manrope", sans-serif;
+
+    font-size: 14px;
+    font-weight: 500;
+
+    line-height: 1.6;
+}
+
+
+.contact-faq-plus {
+
+    flex: 0 0 auto;
+
+    color:
+        var(--contact-blue);
+
+    font-size: 24px;
+    font-weight: 300;
+
+    transition:
+        transform .3s ease;
+}
+
+
+.contact-faq-item[open]
+.contact-faq-plus {
+
+    transform:
+        rotate(45deg);
+}
+
+
+.contact-faq-answer {
+
+    max-width: 760px;
+
+    padding:
+        0
+        50px
+        30px
+        5px;
+}
+
+
+.contact-faq-answer p {
+
+    margin: 0;
+
+    color: #666;
+
+    font-family: "Manrope", sans-serif;
+
+    font-size: 12px;
+
+    line-height: 1.9;
+}
+
+
+/* =========================================================
+   05 — SOCIAL
+========================================================= */
+
+.contact-social-section {
+
+    padding:
+        145px 0;
+
+    background:
+        var(--contact-black);
+
+    border-top:
+        1px solid
+        var(--contact-border-soft);
+}
+
+
+.contact-social-list {
+
+    max-width: 1000px;
+
+    border-top:
+        1px solid
+        var(--contact-border);
+}
+
+
+.contact-social-item {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 30px;
+
+    min-height: 90px;
+
+    padding:
+        0 5px;
+
+    border-bottom:
+        1px solid
+        var(--contact-border);
+
+    color:
+        var(--contact-white);
+
+    text-decoration: none;
+
+    transition:
+        padding .35s ease,
+        border-color .3s ease;
+}
+
+
+.contact-social-item:hover {
+
+    padding-left: 15px;
+    padding-right: 15px;
+
+    border-bottom-color:
+        rgba(
+            95,
+            150,
+            255,
+            .35
+        );
+}
+
+
+.contact-social-left {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 18px;
+}
+
+
+.contact-social-icon {
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 38px;
+    height: 38px;
+
+    border:
+        1px solid
+        rgba(
+            255,
+            255,
+            255,
+            .10
+        );
+
+    color:
+        var(--contact-blue);
+
+    font-size: 14px;
+
+    transition:
+        background .3s ease,
+        border-color .3s ease;
+}
+
+
+.contact-social-item:hover
+.contact-social-icon {
+
+    border-color:
+        rgba(
+            95,
+            150,
+            255,
+            .45
+        );
+
+    background:
+        rgba(
+            95,
+            150,
+            255,
+            .07
+        );
+}
+
+
+.contact-social-platform {
+
+    color: #d5d5d5;
+
+    font-family: "Manrope", sans-serif;
+
+    font-size: 13px;
+    font-weight: 600;
+}
+
+
+.contact-social-arrow {
+
+    color: #555;
+
+    font-size: 19px;
+
+    transition:
+        color .3s ease,
+        transform .3s ease;
+}
+
+
+.contact-social-item:hover
+.contact-social-arrow {
+
+    color:
+        var(--contact-blue);
+
+    transform:
+        translate(
+            3px,
+            -3px
+        );
+}
+
+
+/* =========================================================
+   06 — FINAL CTA
+========================================================= */
+
+.contact-final-section {
+
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    min-height: 480px;
+
+    padding:
+        100px 30px;
+
+    overflow: hidden;
+
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(
+                52,
+                76,
+                120,
+                .13
+            ),
+            transparent 48%
+        ),
+        #070809;
+
+    border-top:
+        1px solid
+        var(--contact-border-soft);
+}
+
+
+.contact-final-section::before {
+
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    pointer-events: none;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(
+                255,
+                255,
+                255,
+                .02
+            ),
+            transparent
+        );
+}
+
+
+.contact-final-content {
+
+    position: relative;
+    z-index: 1;
+
+    width: 100%;
+
+    max-width: 850px;
+
+    text-align: center;
+}
+
+
+.contact-final-title {
+
+    margin: 0;
+
+    color:
+        var(--contact-white);
+
+    font-family: "Manrope", sans-serif;
+
+    font-size: clamp(
+        48px,
+        7vw,
+        92px
+    );
+
+    font-weight: 600;
+
+    letter-spacing: -5px;
+    line-height: .93;
+
+    text-transform: uppercase;
+}
+
+
+.contact-final-description {
+
+    max-width: 600px;
+
+    margin:
+        25px auto 35px;
+
+    color: #696969;
+
+    font-family: "Manrope", sans-serif;
+
+    font-size: 13px;
+
+    line-height: 1.8;
+}
+
+
+.contact-final-btn {
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 25px;
+
+    min-height: 52px;
+
+    padding:
+        0 25px;
+
+    border:
+        1px solid
+        rgba(
+            255,
+            255,
+            255,
+            .20
+        );
+
+    color:
+        var(--contact-white);
+
+    font-family: "Manrope", sans-serif;
+
+    font-size: 9px;
+    font-weight: 700;
+
+    letter-spacing: 2px;
+
+    text-decoration: none;
+
+    text-transform: uppercase;
+
+    transition:
+        background .3s ease,
+        border-color .3s ease,
+        transform .3s ease;
+}
+
+
+.contact-final-btn span:last-child {
+
+    color:
+        var(--contact-blue);
+
+    font-size: 17px;
+
+    transition:
+        transform .3s ease;
+}
+
+
+.contact-final-btn:hover {
+
+    border-color:
+        var(--contact-blue);
+
+    background:
+        rgba(
+            95,
+            150,
+            255,
+            .08
+        );
+
+    transform:
+        translateY(-3px);
+}
+
+
+.contact-final-btn:hover
+span:last-child {
+
+    transform:
+        translateX(5px);
+}
+
+
+/* =========================================================
+   SCROLL REVEAL
+========================================================= */
+
+.contact-main-form,
+.contact-section-heading,
+.contact-info-item,
+.contact-service-item,
+.contact-faq-item,
+.contact-social-item,
+.contact-final-content {
+
+    animation:
+        contactFadeUp
+        .8s
+        cubic-bezier(
+            .2,
+            .7,
+            .2,
+            1
+        )
+        both;
+}
+
+
+@keyframes contactFadeUp {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(24px);
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0);
+    }
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 1000px) {
+
+    .contact-section-container {
+
+        width:
+            calc(
+                100% - 60px
+            );
+    }
+
+
+    /* HERO */
+
+    .contact-main-section {
+
+        height: auto;
+        min-height: 0;
+        max-height: none;
+    }
+
+
+    .contact-main-content {
+
+        grid-template-columns: 1fr;
+
+        height: auto;
+    }
+
+
+    .contact-main-image {
+
+        order: -1;
+
+        height: 600px;
+    }
+
+
+    .contact-main-form {
+
+        min-height: 700px;
+
+        padding:
+            90px 60px;
+    }
+
+
+    .contact-main-image::after {
+
+        background:
+
+            linear-gradient(
+                0deg,
+
+                #050505 0%,
+
+                rgba(
+                    5,
+                    5,
+                    5,
+                    .90
+                ) 8%,
+
+                rgba(
+                    5,
+                    5,
+                    5,
+                    .40
+                ) 20%,
+
+                transparent 42%
+            );
+    }
+
+
+    /* INFO */
+
+    .contact-info-grid {
+
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
+
+    /* SERVICES */
+
+    .contact-service-grid {
+
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 767px) {
+
+    .nafi-contact-page {
+
+        --contact-border:
+            rgba(
+                255,
+                255,
+                255,
+                .075
+            );
+    }
+
+
+    .contact-section-container {
+
+        width:
+            calc(
+                100% - 36px
+            );
+    }
+
+
+    /* HERO */
+
+    .contact-main-section {
+
+        height: auto;
+
+        min-height: 0;
+
+        max-height: none;
+    }
+
+
+    .contact-main-content {
+
+        grid-template-columns: 1fr;
+
+        height: auto;
+    }
+
+
+    .contact-main-image {
+
+        order: -1;
+
+        height: 500px;
+    }
+
+
+    .contact-main-image::after {
+
+        background:
+
+            linear-gradient(
+                0deg,
+
+                #050505 0%,
+
+                rgba(
+                    5,
+                    5,
+                    5,
+                    .95
+                ) 7%,
+
+                rgba(
+                    5,
+                    5,
+                    5,
+                    .65
+                ) 17%,
+
+                rgba(
+                    5,
+                    5,
+                    5,
+                    .22
+                ) 30%,
+
+                transparent 46%
+            );
+    }
+
+
+    .contact-main-form {
+
+        min-height: 0;
+
+        padding:
+            70px 25px;
+    }
+
+
+    .contact-main-heading {
+
+        margin-bottom: 40px;
+    }
+
+
+    .contact-main-title {
+
+        font-size:
+            clamp(
+                43px,
+                13vw,
+                65px
+            );
+
+        letter-spacing:
+            -3px;
+    }
+
+
+    .contact-main-description {
+
+        margin-top: 20px;
+
+        font-size: 12px;
+    }
+
+
+    .contact-input-row {
+
+        grid-template-columns: 1fr;
+
+        gap: 0;
+    }
+
+
+    .contact-submit-btn {
+
+        width: 100%;
+    }
+
+
+    /* COMMON */
+
+    .contact-section-heading {
+
+        margin-bottom: 40px;
+    }
+
+
+    .contact-section-title {
+
+        font-size:
+            clamp(
+                34px,
+                10vw,
+                48px
+            );
+
+        letter-spacing:
+            -2px;
+    }
+
+
+    .contact-section-description {
+
+        font-size: 12px;
+    }
+
+
+    /* INFO */
+
+    .contact-info-section {
+
+        padding:
+            90px 0;
+    }
+
+
+    .contact-info-grid {
+
+        grid-template-columns: 1fr;
+    }
+
+
+    .contact-info-item {
+
+        min-height: 130px;
+
+        padding: 22px;
+    }
+
+
+    /* HELP */
+
+    .contact-help-section {
+
+        padding:
+            90px 0;
+    }
+
+
+    .contact-service-grid {
+
+        grid-template-columns: 1fr;
+
+        gap: 10px;
+    }
+
+
+    .contact-service-item {
+
+        min-height: 235px;
+
+        padding: 25px;
+    }
+
+
+    /* FAQ */
+
+    .contact-faq-section {
+
+        padding:
+            90px 0;
+    }
+
+
+    .contact-faq-item summary {
+
+        min-height: 75px;
+
+        gap: 20px;
+    }
+
+
+    .contact-faq-question {
+
+        font-size: 12px;
+    }
+
+
+    .contact-faq-answer {
+
+        padding:
+            0
+            25px
+            24px
+            0;
+    }
+
+
+    /* SOCIAL */
+
+    .contact-social-section {
+
+        padding:
+            90px 0;
+    }
+
+
+    .contact-social-item {
+
+        min-height: 75px;
+    }
+
+
+    /* FINAL */
+
+    .contact-final-section {
+
+        min-height: 400px;
+
+        padding:
+            80px 22px;
+    }
+
+
+    .contact-final-title {
+
+        font-size:
+            clamp(
+                43px,
+                12vw,
+                65px
+            );
+
+        letter-spacing:
+            -3px;
+    }
+
+
+    .contact-final-btn {
+
+        width: 100%;
+
+        box-sizing: border-box;
+    }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+
+    .contact-main-image {
+
+        height: 500px;
+    }
+
+
+    .contact-main-form {
+
+        padding:
+            55px 18px 65px;
+    }
+
+
+    .contact-main-title {
+
+        font-size: 42px;
+
+        letter-spacing:
+            -2.5px;
+    }
+
+
+    .contact-section-container {
+
+        width:
+            calc(
+                100% - 30px
+            );
+    }
+
+
+    .contact-eyebrow {
+
+        font-size: 9px;
+
+        letter-spacing:
+            2.5px;
+    }
+
+
+    .contact-info-value {
+
+        font-size: 12px;
+    }
+
+
+    .contact-service-content h3 {
+
+        font-size: 15px;
+    }
+
+
+    .contact-faq-plus {
+
+        font-size: 21px;
+    }
+
+
+    .contact-social-left {
+
+        gap: 12px;
+    }
+
+
+    .contact-social-icon {
+
+        width: 34px;
+        height: 34px;
+    }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .nafi-contact-page *,
+    .nafi-contact-page *::before,
+    .nafi-contact-page *::after {
+
+        animation-duration:
+            .01ms !important;
+
+        animation-iteration-count:
+            1 !important;
+
+        scroll-behavior:
+            auto !important;
+
+        transition-duration:
+            .01ms !important;
+    }
+}

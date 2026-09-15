@@ -1,0 +1,695 @@
+{% extends "customer/master/base.html" %}
+
+{% load static %}
+
+
+{% block title %}
+    Contact — NAFI
+{% endblock %}
+
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'customer/css/contact.css' %}">
+{% endblock %}
+    
+{% block content %}
+
+<main class="nafi-contact-page">
+
+
+    <!-- =================================================
+         CONTACT PAGE SECTIONS
+    ================================================== -->
+
+    {% for section in sections %}
+
+
+        <!-- =================================================
+             01 — GET IN TOUCH
+        ================================================== -->
+
+        {% if section.name == "main" %}
+
+            <section
+                class="contact-main-section"
+                id="contact-main"
+             >
+
+                <div class="contact-main-content">
+
+
+                    <!-- LEFT — FORM -->
+
+                    <div class="contact-main-form">
+
+
+                        <div class="contact-main-heading">
+
+                            {% if contact_page.hero_eyebrow %}
+
+                                <span class="contact-eyebrow">
+                                    {{ contact_page.hero_eyebrow }}
+                                </span>
+
+                            {% endif %}
+
+
+                            {% if contact_page.hero_title %}
+
+                                <h1 class="contact-main-title">
+                                    {{ contact_page.hero_title }}
+                                </h1>
+
+                            {% endif %}
+
+
+                            {% if contact_page.hero_description %}
+
+                                <p class="contact-main-description">
+                                    {{ contact_page.hero_description }}
+                                </p>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- CONTACT FORM -->
+
+                        <form
+                            method="POST"
+                            action=""
+                            class="contact-customer-form"
+                        >
+
+                            {% csrf_token %}
+
+
+                            <div class="contact-input-group">
+
+                                <label for="contact_name">
+                                    Name
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="contact_name"
+                                    name="name"
+                                    placeholder="Your name"
+                                    autocomplete="name"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <div class="contact-input-group">
+
+                                <label for="contact_email">
+                                    Email
+                                </label>
+
+                                <input
+                                    type="email"
+                                    id="contact_email"
+                                    name="email"
+                                    placeholder="Your email address"
+                                    autocomplete="email"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <div class="contact-input-row">
+
+                                <div class="contact-input-group">
+
+                                    <label for="contact_phone">
+                                        Phone
+                                    </label>
+
+                                    <input
+                                        type="tel"
+                                        id="contact_phone"
+                                        name="phone"
+                                        placeholder="Your phone number"
+                                        autocomplete="tel"
+                                    >
+
+                                </div>
+
+
+                                <div class="contact-input-group">
+
+                                    <label for="contact_subject">
+                                        Subject
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        id="contact_subject"
+                                        name="subject"
+                                        placeholder="How can we help?"
+                                    >
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="contact-input-group">
+
+                                <label for="contact_message">
+                                    Message
+                                </label>
+
+                                <textarea
+                                    id="contact_message"
+                                    name="message"
+                                    placeholder="Write your message..."
+                                    rows="5"
+                                    required
+                                ></textarea>
+
+                            </div>
+
+
+                            <button
+                                type="submit"
+                                class="contact-submit-btn"
+                            >
+
+                                <span>
+                                    {{ contact_page.form_button_text|default:"SEND MESSAGE" }}
+                                </span>
+
+                                <span class="contact-submit-arrow">
+                                    →
+                                </span>
+
+                            </button>
+
+                        </form>
+
+                    </div>
+
+
+                    <!-- RIGHT — IMAGE -->
+
+                    <div class="contact-main-image">
+
+                        <picture>
+
+                            {% if contact_page.mobile_image %}
+
+                                <source
+                                    media="(max-width: 767px)"
+                                    srcset="{{ contact_page.mobile_image.url }}"
+                                >
+
+                            {% endif %}
+
+
+                            {% if contact_page.desktop_image %}
+
+                                <img
+                                    src="{{ contact_page.desktop_image.url }}"
+                                    alt="{{ contact_page.image_alt|default:'NAFI Contact' }}"
+                                    loading="eager"
+                                >
+
+                            {% else %}
+
+                                <div class="contact-image-placeholder">
+                                </div>
+
+                            {% endif %}
+
+                        </picture>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        {% endif %}
+
+
+
+        <!-- =================================================
+             02 — CONTACT INFORMATION
+        ================================================== -->
+
+        {% if section.name == "info" %}
+
+            <section
+                class="contact-info-section"
+                id="contact-information"
+            >
+
+                <div class="contact-section-container">
+
+
+                    <div class="contact-section-heading">
+
+                        <span class="contact-eyebrow">
+                            NAFI CONTACT
+                        </span>
+
+                        <h2 class="contact-section-title">
+                            {{ contact_page.contact_info_title }}
+                        </h2>
+
+                    </div>
+
+
+                    <div class="contact-info-grid">
+
+
+                        {% if contact_page.email %}
+
+                            <a
+                                href="mailto:{{ contact_page.email }}"
+                                class="contact-info-item"
+                            >
+
+                                <span class="contact-info-label">
+                                    EMAIL
+                                </span>
+
+                                <span class="contact-info-value">
+                                    {{ contact_page.email }}
+                                </span>
+
+                            </a>
+
+                        {% endif %}
+
+
+                        {% if contact_page.phone %}
+
+                            <a
+                                href="tel:{{ contact_page.phone }}"
+                                class="contact-info-item"
+                            >
+
+                                <span class="contact-info-label">
+                                    PHONE
+                                </span>
+
+                                <span class="contact-info-value">
+                                    {{ contact_page.phone }}
+                                </span>
+
+                            </a>
+
+                        {% endif %}
+
+
+                        {% if contact_page.whatsapp %}
+
+                            <a
+                                href="https://wa.me/{{ contact_page.whatsapp }}"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="contact-info-item"
+                            >
+
+                                <span class="contact-info-label">
+                                    WHATSAPP
+                                </span>
+
+                                <span class="contact-info-value">
+                                    {{ contact_page.whatsapp }}
+                                </span>
+
+                            </a>
+
+                        {% endif %}
+
+
+                        {% if contact_page.address %}
+
+                            <div class="contact-info-item">
+
+                                <span class="contact-info-label">
+                                    ADDRESS
+                                </span>
+
+                                <span class="contact-info-value">
+                                    {{ contact_page.address }}
+                                </span>
+
+                            </div>
+
+                        {% endif %}
+
+
+                        {% if contact_page.support_hours %}
+
+                            <div class="contact-info-item">
+
+                                <span class="contact-info-label">
+                                    SUPPORT HOURS
+                                </span>
+
+                                <span class="contact-info-value">
+                                    {{ contact_page.support_hours }}
+                                </span>
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        {% endif %}
+
+
+
+        <!-- =================================================
+             03 — HOW CAN WE HELP
+        ================================================== -->
+
+        {% if section.name == "help" %}
+
+            <section
+                class="contact-help-section"
+                id="how-can-we-help"
+            >
+
+                <div class="contact-section-container">
+
+
+                    <div class="contact-section-heading">
+
+                        <span class="contact-eyebrow">
+                            SUPPORT
+                        </span>
+
+                        <h2 class="contact-section-title">
+                            {{ contact_page.help_title }}
+                        </h2>
+
+
+                        {% if contact_page.help_description %}
+
+                            <p class="contact-section-description">
+                                {{ contact_page.help_description }}
+                            </p>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    {% if services %}
+
+                        <div class="contact-service-grid">
+
+                            {% for service in services %}
+
+                                <div class="contact-service-item">
+
+
+                                    {% if service.icon %}
+
+                                        <div class="contact-service-icon">
+
+                                            <i class="{{ service.icon }}"></i>
+
+                                        </div>
+
+                                    {% endif %}
+
+
+                                    <div class="contact-service-content">
+
+                                        <h3>
+                                            {{ service.title }}
+                                        </h3>
+
+
+                                        {% if service.description %}
+
+                                            <p>
+                                                {{ service.description }}
+                                            </p>
+
+                                        {% endif %}
+
+                                    </div>
+
+
+                                    <span class="contact-service-arrow">
+                                        →
+                                    </span>
+
+                                </div>
+
+                            {% endfor %}
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </section>
+
+        {% endif %}
+
+
+
+        <!-- =================================================
+             04 — FAQ
+        ================================================== -->
+
+        {% if section.name == "faq" %}
+
+            <section
+                class="contact-faq-section"
+                id="faq"
+            >
+
+                <div class="contact-section-container">
+
+
+                    <div class="contact-section-heading">
+
+                        <span class="contact-eyebrow">
+                            SUPPORT
+                        </span>
+
+                        <h2 class="contact-section-title">
+                            {{ contact_page.faq_title }}
+                        </h2>
+
+                    </div>
+
+
+                    {% if faqs %}
+
+                        <div class="contact-faq-list">
+
+                            {% for faq in faqs %}
+
+                                <details class="contact-faq-item">
+
+                                    <summary>
+
+                                        <span class="contact-faq-question">
+                                            {{ faq.question }}
+                                        </span>
+
+                                        <span class="contact-faq-plus">
+                                            +
+                                        </span>
+
+                                    </summary>
+
+
+                                    <div class="contact-faq-answer">
+
+                                        <p>
+                                            {{ faq.answer|linebreaksbr }}
+                                        </p>
+
+                                    </div>
+
+                                </details>
+
+                            {% endfor %}
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </section>
+
+        {% endif %}
+
+
+
+        <!-- =================================================
+             05 — STAY CONNECTED
+        ================================================== -->
+
+        {% if section.name == "social" %}
+
+            <section
+                class="contact-social-section"
+                id="stay-connected"
+            >
+
+                <div class="contact-section-container">
+
+
+                    <div class="contact-section-heading">
+
+                        <span class="contact-eyebrow">
+                            NAFI COMMUNITY
+                        </span>
+
+                        <h2 class="contact-section-title">
+                            {{ contact_page.social_title }}
+                        </h2>
+
+
+                        {% if contact_page.social_description %}
+
+                            <p class="contact-section-description">
+                                {{ contact_page.social_description }}
+                            </p>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    {% if social_links %}
+
+                        <div class="contact-social-list">
+
+                            {% for social in social_links %}
+
+                                <a
+                                    href="{{ social.url }}"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    class="contact-social-item"
+                                >
+
+                                    <span class="contact-social-left">
+
+
+                                        {% if social.icon %}
+
+                                            <span class="contact-social-icon">
+
+                                                <i class="{{ social.icon }}"></i>
+
+                                            </span>
+
+                                        {% endif %}
+
+
+                                        <span class="contact-social-platform">
+                                            {{ social.platform }}
+                                        </span>
+
+                                    </span>
+
+
+                                    <span class="contact-social-arrow">
+                                        ↗
+                                    </span>
+
+                                </a>
+
+                            {% endfor %}
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </section>
+
+        {% endif %}
+
+
+
+        <!-- =================================================
+             06 — FINAL CTA
+        ================================================== -->
+
+        {% if section.name == "final" %}
+
+            <section
+                class="contact-final-section"
+                id="contact-final"
+            >
+
+                <div class="contact-final-content">
+
+
+                    {% if contact_page.final_title %}
+
+                        <h2 class="contact-final-title">
+                            {{ contact_page.final_title }}
+                        </h2>
+
+                    {% endif %}
+
+
+                    {% if contact_page.final_description %}
+
+                        <p class="contact-final-description">
+                            {{ contact_page.final_description }}
+                        </p>
+
+                    {% endif %}
+
+
+                    {% if contact_page.final_button_text %}
+
+                        <a
+                            href="{{ contact_page.final_button_link|default:'#contact-main' }}"
+                            class="contact-final-btn"
+                        >
+
+                            <span>
+                                {{ contact_page.final_button_text }}
+                            </span>
+
+                            <span>
+                                →
+                            </span>
+
+                        </a>
+
+                    {% endif %}
+
+                </div>
+
+            </section>
+
+        {% endif %}
+
+
+    {% endfor %}
+
+
+</main>
+
+{% endblock %}

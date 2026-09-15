@@ -1,0 +1,2620 @@
+{% extends 'admin_dashboard/master/base.html' %}
+{% load static %}
+
+{% block title %}
+    Contact Page | NAFI Admin Dashboard
+{% endblock %}
+
+{% block css %}
+<link
+    rel="stylesheet"
+    href="{% static 'admin_panel/css/contact_management.css' %}"
+>
+{% endblock %}
+
+
+{% block page_title %}
+    Contact Page
+{% endblock %}
+
+
+{% block content %}
+
+<div class="contact-management">
+
+
+    <!-- =====================================================
+         PAGE HEADER
+    ====================================================== -->
+
+    <div class="contact-page-header">
+
+        <div class="contact-page-header-left">
+
+            <p class="contact-page-eyebrow">
+                NAFI WEBSITE MANAGEMENT
+            </p>
+
+            <h1 class="contact-page-title">
+                Contact Page
+            </h1>
+
+            <p class="contact-page-subtitle">
+                Manage your public contact page, customer support
+                information, FAQs, social links and messages.
+            </p>
+
+        </div>
+
+
+        <div class="contact-page-status
+            {% if contact_page.is_published %}
+                published
+            {% endif %}
+        ">
+
+            <span class="contact-page-status-dot"></span>
+
+            {% if contact_page.is_published %}
+                Published
+            {% else %}
+                Draft
+            {% endif %}
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         DJANGO MESSAGES
+    ====================================================== -->
+
+    {% if messages %}
+
+        {% for message in messages %}
+
+            <div class="contact-alert {% if message.tags %}{{ message.tags }}{% endif %}">
+                {{ message }}
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+
+
+    <!-- =====================================================
+         MAIN CONTACT SETTINGS FORM
+         IMPORTANT:
+         Only the main settings are inside this form.
+         ALL MODAL FORMS ARE BELOW THIS FORM.
+    ====================================================== -->
+
+    <form
+        method="POST"
+        enctype="multipart/form-data"
+        class="contact-management-form"
+    >
+
+        {% csrf_token %}
+
+
+
+        <!-- =================================================
+             01 — PAGE STATUS
+        ================================================== -->
+
+        <section class="contact-management-card">
+
+            <div class="contact-card-header">
+
+                <div class="contact-card-heading">
+
+                    <div class="contact-card-number">
+                        01
+                    </div>
+
+                    <div>
+
+                        <h2 class="contact-card-title">
+                            Page Status
+                        </h2>
+
+                        <p class="contact-card-description">
+                            Control whether the contact page is published.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="contact-card-body">
+
+                <div class="contact-status-row">
+
+                    <div class="contact-status-info">
+
+                        <p class="contact-status-title">
+                            Publish Contact Page
+                        </p>
+
+                        <p class="contact-status-text">
+                            Enable this option to make the contact page live.
+                        </p>
+
+                    </div>
+
+
+                    <label class="contact-switch">
+
+                        <input
+                            type="checkbox"
+                            name="is_published"
+                            {% if contact_page.is_published %}checked{% endif %}
+                        >
+
+                        <span class="contact-switch-slider"></span>
+
+                    </label>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             02 — GET IN TOUCH
+        ================================================== -->
+
+        <section class="contact-management-card">
+
+            <div class="contact-card-header">
+
+                <div class="contact-card-heading">
+
+                    <div class="contact-card-number">
+                        02
+                    </div>
+
+                    <div>
+
+                        <h2 class="contact-card-title">
+                            Get In Touch
+                        </h2>
+
+                        <p class="contact-card-description">
+                            Main contact section content and visual.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <label class="contact-switch">
+
+                    <input
+                        type="checkbox"
+                        name="main_is_active"
+                        {% if contact_page.main_is_active %}checked{% endif %}
+                    >
+
+                    <span class="contact-switch-slider"></span>
+
+                </label>
+
+            </div>
+
+
+            <div class="contact-card-body">
+
+                <div class="contact-form-grid">
+
+
+                    <div class="contact-form-group">
+
+                        <label class="contact-form-label">
+                            Eyebrow
+                        </label>
+
+                        <input
+                            type="text"
+                            name="hero_eyebrow"
+                            class="contact-form-input"
+                            value="{{ contact_page.hero_eyebrow }}"
+                            placeholder="CONTACT NAFI"
+                        >
+
+                    </div>
+
+
+                    <div class="contact-form-group">
+
+                        <label class="contact-form-label">
+                            Button Text
+                        </label>
+
+                        <input
+                            type="text"
+                            name="form_button_text"
+                            class="contact-form-input"
+                            value="{{ contact_page.form_button_text }}"
+                            placeholder="SEND MESSAGE"
+                        >
+
+                    </div>
+
+
+                    <div class="contact-form-group full">
+
+                        <label class="contact-form-label">
+                            Main Heading
+                        </label>
+
+                        <input
+                            type="text"
+                            name="hero_title"
+                            class="contact-form-input"
+                            value="{{ contact_page.hero_title }}"
+                            placeholder="GET IN TOUCH"
+                        >
+
+                    </div>
+
+
+                    <div class="contact-form-group full">
+
+                        <label class="contact-form-label">
+                            Description
+                        </label>
+
+                        <textarea
+                            name="hero_description"
+                            class="contact-form-textarea"
+                            placeholder="Write your contact section description..."
+                        >{{ contact_page.hero_description }}</textarea>
+
+                    </div>
+
+                </div>
+
+
+                <div class="contact-divider"></div>
+
+
+                <!-- IMAGES -->
+
+                <div class="contact-section-toolbar">
+
+                    <div class="contact-section-toolbar-left">
+
+                        <h3 class="contact-section-mini-title">
+                            Contact Section Images
+                        </h3>
+
+                        <p class="contact-section-mini-description">
+                            Upload separate desktop and mobile images.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="contact-image-grid">
+
+
+                    <!-- DESKTOP -->
+
+                    <div class="contact-image-upload">
+
+                        <label class="contact-form-label">
+                            Desktop Image
+                        </label>
+
+                        <div class="contact-image-box">
+
+                            <div class="contact-image-preview">
+
+                                {% if contact_page.desktop_image %}
+
+                                    <img
+                                        src="{{ contact_page.desktop_image.url }}"
+                                        alt="{{ contact_page.image_alt }}"
+                                    >
+
+                                {% else %}
+
+                                    <div class="contact-image-placeholder">
+                                        No desktop image uploaded.
+                                    </div>
+
+                                {% endif %}
+
+                            </div>
+
+                            <input
+                                type="file"
+                                name="desktop_image"
+                                class="contact-image-file"
+                                accept="image/*"
+                            >
+
+                            <p class="contact-image-help">
+                                Recommended: premium product, fabric or packaging image.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- MOBILE -->
+
+                    <div class="contact-image-upload">
+
+                        <label class="contact-form-label">
+                            Mobile Image
+                        </label>
+
+                        <div class="contact-image-box">
+
+                            <div class="contact-image-preview">
+
+                                {% if contact_page.mobile_image %}
+
+                                    <img
+                                        src="{{ contact_page.mobile_image.url }}"
+                                        alt="{{ contact_page.image_alt }}"
+                                    >
+
+                                {% else %}
+
+                                    <div class="contact-image-placeholder">
+                                        No mobile image uploaded.
+                                    </div>
+
+                                {% endif %}
+
+                            </div>
+
+                            <input
+                                type="file"
+                                name="mobile_image"
+                                class="contact-image-file"
+                                accept="image/*"
+                            >
+
+                            <p class="contact-image-help">
+                                Use a vertical composition for mobile screens.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div style="margin-top: 20px;">
+
+                    <div class="contact-form-group">
+
+                        <label class="contact-form-label">
+                            Image Alt Text
+                        </label>
+
+                        <input
+                            type="text"
+                            name="image_alt"
+                            class="contact-form-input"
+                            value="{{ contact_page.image_alt }}"
+                            placeholder="NAFI premium fashion"
+                        >
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             03 — CONTACT INFORMATION
+        ================================================== -->
+
+        <section class="contact-management-card">
+
+            <div class="contact-card-header">
+
+                <div class="contact-card-heading">
+
+                    <div class="contact-card-number">
+                        03
+                    </div>
+
+                    <div>
+
+                        <h2 class="contact-card-title">
+                            Contact Information
+                        </h2>
+
+                        <p class="contact-card-description">
+                            Customer support and business contact details.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <label class="contact-switch">
+
+                    <input
+                        type="checkbox"
+                        name="info_is_active"
+                        {% if contact_page.info_is_active %}checked{% endif %}
+                    >
+
+                    <span class="contact-switch-slider"></span>
+
+                </label>
+
+            </div>
+
+
+            <div class="contact-card-body">
+
+                <div class="contact-form-grid">
+
+
+                    <div class="contact-form-group full">
+
+                        <label class="contact-form-label">
+                            Section Title
+                        </label>
+
+                        <input
+                            type="text"
+                            name="contact_info_title"
+                            class="contact-form-input"
+                            value="{{ contact_page.contact_info_title }}"
+                            placeholder="CONTACT INFORMATION"
+                        >
+
+                    </div>
+
+
+                    <div class="contact-form-group">
+
+                        <label class="contact-form-label">
+                            Email
+                        </label>
+
+                        <input
+                            type="email"
+                            name="email"
+                            class="contact-form-input"
+                            value="{{ contact_page.email }}"
+                            placeholder="hello@nafi.com"
+                        >
+
+                    </div>
+
+
+                    <div class="contact-form-group">
+
+                        <label class="contact-form-label">
+                            Phone
+                        </label>
+
+                        <input
+                            type="text"
+                            name="phone"
+                            class="contact-form-input"
+                            value="{{ contact_page.phone }}"
+                            placeholder="+880 1XXXXXXXXX"
+                        >
+
+                    </div>
+
+
+                    <div class="contact-form-group">
+
+                        <label class="contact-form-label">
+                            WhatsApp
+                        </label>
+
+                        <input
+                            type="text"
+                            name="whatsapp"
+                            class="contact-form-input"
+                            value="{{ contact_page.whatsapp }}"
+                            placeholder="+880 1XXXXXXXXX"
+                        >
+
+                    </div>
+
+
+                    <div class="contact-form-group">
+
+                        <label class="contact-form-label">
+                            Support Hours
+                        </label>
+
+                        <input
+                            type="text"
+                            name="support_hours"
+                            class="contact-form-input"
+                            value="{{ contact_page.support_hours }}"
+                            placeholder="10:00 AM — 8:00 PM"
+                        >
+
+                    </div>
+
+
+                    <div class="contact-form-group full">
+
+                        <label class="contact-form-label">
+                            Address
+                        </label>
+
+                        <textarea
+                            name="address"
+                            class="contact-form-textarea"
+                            placeholder="Business address..."
+                        >{{ contact_page.address }}</textarea>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             04 — HOW CAN WE HELP
+        ================================================== -->
+
+        <section class="contact-management-card">
+
+            <div class="contact-card-header">
+
+                <div class="contact-card-heading">
+
+                    <div class="contact-card-number">
+                        04
+                    </div>
+
+                    <div>
+
+                        <h2 class="contact-card-title">
+                            How Can We Help?
+                        </h2>
+
+                        <p class="contact-card-description">
+                            Manage customer support service cards.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <label class="contact-switch">
+
+                    <input
+                        type="checkbox"
+                        name="help_is_active"
+                        {% if contact_page.help_is_active %}checked{% endif %}
+                    >
+
+                    <span class="contact-switch-slider"></span>
+
+                </label>
+
+            </div>
+
+
+            <div class="contact-card-body">
+
+                <div class="contact-form-group">
+
+                    <label class="contact-form-label">
+                        Section Title
+                    </label>
+
+                    <input
+                        type="text"
+                        name="help_title"
+                        class="contact-form-input"
+                        value="{{ contact_page.help_title }}"
+                        placeholder="HOW CAN WE HELP?"
+                    >
+
+                </div>
+
+
+                <div style="margin-top: 20px;">
+
+                    <div class="contact-form-group">
+
+                        <label class="contact-form-label">
+                            Description
+                        </label>
+
+                        <textarea
+                            name="help_description"
+                            class="contact-form-textarea"
+                            placeholder="Tell customers how NAFI can help..."
+                        >{{ contact_page.help_description }}</textarea>
+
+                    </div>
+
+                </div>
+
+
+                <div class="contact-divider"></div>
+
+
+                <div class="contact-section-toolbar">
+
+                    <div class="contact-section-toolbar-left">
+
+                        <h3 class="contact-section-mini-title">
+                            Services
+                        </h3>
+
+                        <p class="contact-section-mini-description">
+                            Customer support service cards.
+                        </p>
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        class="contact-btn contact-btn-primary"
+                        onclick="openServiceModal()"
+                    >
+                        + Add Service
+                    </button>
+
+                </div>
+
+
+                {% if services %}
+
+                    <div class="contact-dynamic-list">
+
+                        {% for service in services %}
+
+                            <div class="contact-dynamic-item">
+
+                                <div class="contact-dynamic-item-main">
+
+                                    <p class="contact-dynamic-item-title">
+                                        {{ service.title }}
+                                    </p>
+
+                                    <p class="contact-dynamic-item-description">
+                                        {{ service.description }}
+                                    </p>
+
+                                </div>
+
+
+                                <div class="contact-dynamic-item-actions">
+
+                                    <button
+                                        type="button"
+                                        class="contact-btn contact-btn-primary"
+                                        onclick="openEditServiceModal(
+                                            '{{ service.id }}',
+                                            '{{ service.title|escapejs }}',
+                                            '{{ service.description|escapejs }}',
+                                            '{{ service.icon|escapejs }}',
+                                            '{{ service.display_order }}',
+                                            '{{ service.is_active|yesno:"true,false" }}'
+                                        )"
+                                    >
+                                        Edit
+                                    </button>
+
+
+                                    <button
+                                        type="button"
+                                        class="contact-btn contact-btn-danger"
+                                        onclick="deleteContactService(
+                                            '{{ service.id }}'
+                                        )"
+                                    >
+                                        Delete
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                {% else %}
+
+                    <div class="contact-empty-state">
+                        No services added yet.
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             05 — FAQ MANAGEMENT
+        ================================================== -->
+
+        <div class="contact-management-card">
+
+            <div class="contact-card-header">
+
+                <div class="contact-card-heading">
+
+                    <div class="contact-card-number">
+                        05
+                    </div>
+
+                    <div>
+
+                        <h2 class="contact-card-title">
+                            Frequently Asked Questions
+                        </h2>
+
+                        <p class="contact-card-description">
+                            Manage frequently asked questions shown on the
+                            NAFI contact page.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="contact-card-body">
+
+
+                <div class="contact-form-grid">
+
+                    <div class="contact-form-group">
+
+                        <label
+                            for="faq_title"
+                            class="contact-form-label"
+                        >
+                            FAQ Title
+                        </label>
+
+                        <input
+                            type="text"
+                            id="faq_title"
+                            name="faq_title"
+                            class="contact-form-input"
+                            value="{{ contact_page.faq_title }}"
+                            placeholder="FREQUENTLY ASKED QUESTIONS"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!--
+                    Keep FAQ active without changing the existing UI.
+                    Later, if you want a visible FAQ toggle,
+                    we can add it without affecting the design.
+                -->
+
+                <input
+                    type="hidden"
+                    name="faq_is_active"
+                    value="on"
+                >
+
+
+                <div class="contact-divider"></div>
+
+
+                <div class="contact-section-toolbar">
+
+                    <div class="contact-section-toolbar-left">
+
+                        <h3 class="contact-section-mini-title">
+                            FAQ Items
+                        </h3>
+
+                        <p class="contact-section-mini-description">
+                            Add, edit or remove frequently asked questions.
+                        </p>
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        class="contact-btn contact-btn-primary"
+                        onclick="openFAQModal()"
+                    >
+                        + Add FAQ
+                    </button>
+
+                </div>
+
+
+                {% if faqs %}
+
+                    <div class="contact-dynamic-list">
+
+                        {% for faq in faqs %}
+
+                            <div class="contact-dynamic-item">
+
+                                <div class="contact-dynamic-item-main">
+
+                                    <p class="contact-dynamic-item-title">
+                                        {{ faq.question }}
+                                    </p>
+
+                                    <p class="contact-dynamic-item-description">
+                                        {{ faq.answer }}
+                                    </p>
+
+                                </div>
+
+
+                                <div class="contact-dynamic-item-actions">
+
+                                    <button
+                                        type="button"
+                                        class="contact-btn contact-btn-primary"
+                                        onclick="openEditFAQModal(
+                                            '{{ faq.id }}',
+                                            '{{ faq.question|escapejs }}',
+                                            '{{ faq.answer|escapejs }}',
+                                            '{{ faq.display_order }}',
+                                            '{{ faq.is_active|yesno:"true,false" }}'
+                                        )"
+                                    >
+                                        Edit
+                                    </button>
+
+
+                                    <button
+                                        type="button"
+                                        class="contact-btn contact-btn-danger"
+                                        onclick="deleteContactFAQ(
+                                            '{{ faq.id }}'
+                                        )"
+                                    >
+                                        Delete
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                {% else %}
+
+                    <div class="contact-empty-state">
+                        No FAQ items added yet.
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             06 — STAY CONNECTED
+        ================================================== -->
+
+        <section class="contact-management-card">
+
+            <div class="contact-card-header">
+
+                <div class="contact-card-heading">
+
+                    <div class="contact-card-number">
+                        06
+                    </div>
+
+                    <div>
+
+                        <h2 class="contact-card-title">
+                            Stay Connected
+                        </h2>
+
+                        <p class="contact-card-description">
+                            Manage social media links.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <label class="contact-switch">
+
+                    <input
+                        type="checkbox"
+                        name="social_is_active"
+                        {% if contact_page.social_is_active %}checked{% endif %}
+                    >
+
+                    <span class="contact-switch-slider"></span>
+
+                </label>
+
+            </div>
+
+
+            <div class="contact-card-body">
+
+
+                <div class="contact-form-grid">
+
+                    <div class="contact-form-group full">
+
+                        <label class="contact-form-label">
+                            Section Title
+                        </label>
+
+                        <input
+                            type="text"
+                            name="social_title"
+                            class="contact-form-input"
+                            value="{{ contact_page.social_title }}"
+                            placeholder="STAY CONNECTED"
+                        >
+
+                    </div>
+
+
+                    <div class="contact-form-group full">
+
+                        <label class="contact-form-label">
+                            Description
+                        </label>
+
+                        <textarea
+                            name="social_description"
+                            class="contact-form-textarea"
+                            placeholder="Follow NAFI on social media..."
+                        >{{ contact_page.social_description }}</textarea>
+
+                    </div>
+
+                </div>
+
+
+                <div class="contact-divider"></div>
+
+
+                <div class="contact-section-toolbar">
+
+                    <div class="contact-section-toolbar-left">
+
+                        <h3 class="contact-section-mini-title">
+                            Social Links
+                        </h3>
+
+                        <p class="contact-section-mini-description">
+                            Your public social media profiles.
+                        </p>
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        class="contact-btn contact-btn-primary"
+                        onclick="openSocialModal()"
+                    >
+                        + Add Social Link
+                    </button>
+
+                </div>
+
+
+                {% if social_links %}
+
+                    <div class="contact-dynamic-list">
+
+                        {% for social in social_links %}
+
+                            <div class="contact-dynamic-item">
+
+                                <div class="contact-dynamic-item-main">
+
+                                    <p class="contact-dynamic-item-title">
+                                        {{ social.platform }}
+                                    </p>
+
+                                    <p class="contact-dynamic-item-description">
+                                        {{ social.url }}
+                                    </p>
+
+                                </div>
+
+
+                                <div class="contact-dynamic-item-actions">
+
+                                    <button
+                                        type="button"
+                                        class="contact-btn contact-btn-primary"
+                                        onclick="openEditSocialModal(
+                                            '{{ social.id }}',
+                                            '{{ social.platform|escapejs }}',
+                                            '{{ social.url|escapejs }}',
+                                            '{{ social.icon|escapejs }}',
+                                            '{{ social.display_order }}',
+                                            '{{ social.is_active|yesno:"true,false" }}'
+                                        )"
+                                    >
+                                        Edit
+                                    </button>
+
+
+                                    <button
+                                        type="button"
+                                        class="contact-btn contact-btn-danger"
+                                        onclick="deleteContactSocial(
+                                            '{{ social.id }}'
+                                        )"
+                                    >
+                                        Delete
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                {% else %}
+
+                    <div class="contact-empty-state">
+                        No social links added yet.
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             07 — FINAL CTA
+        ================================================== -->
+
+        <section class="contact-management-card">
+
+            <div class="contact-card-header">
+
+                <div class="contact-card-heading">
+
+                    <div class="contact-card-number">
+                        07
+                    </div>
+
+                    <div>
+
+                        <h2 class="contact-card-title">
+                            Final CTA
+                        </h2>
+
+                        <p class="contact-card-description">
+                            Final call-to-action section.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <label class="contact-switch">
+
+                    <input
+                        type="checkbox"
+                        name="final_is_active"
+                        {% if contact_page.final_is_active %}checked{% endif %}
+                    >
+
+                    <span class="contact-switch-slider"></span>
+
+                </label>
+
+            </div>
+
+
+            <div class="contact-card-body">
+
+                <div class="contact-form-grid">
+
+
+                    <div class="contact-form-group full">
+
+                        <label class="contact-form-label">
+                            CTA Title
+                        </label>
+
+                        <input
+                            type="text"
+                            name="final_title"
+                            class="contact-form-input"
+                            value="{{ contact_page.final_title }}"
+                            placeholder="READY TO TALK?"
+                        >
+
+                    </div>
+
+
+                    <div class="contact-form-group full">
+
+                        <label class="contact-form-label">
+                            Description
+                        </label>
+
+                        <textarea
+                            name="final_description"
+                            class="contact-form-textarea"
+                            placeholder="Write your final CTA description..."
+                        >{{ contact_page.final_description }}</textarea>
+
+                    </div>
+
+
+                    <div class="contact-form-group">
+
+                        <label class="contact-form-label">
+                            Button Text
+                        </label>
+
+                        <input
+                            type="text"
+                            name="final_button_text"
+                            class="contact-form-input"
+                            value="{{ contact_page.final_button_text }}"
+                            placeholder="CONTACT US"
+                        >
+
+                    </div>
+
+
+                    <div class="contact-form-group">
+
+                        <label class="contact-form-label">
+                            Button Link
+                        </label>
+
+                        <input
+                            type="text"
+                            name="final_button_link"
+                            class="contact-form-input"
+                            value="{{ contact_page.final_button_link }}"
+                            placeholder="/contact/"
+                        >
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             08 — SECTION ORDER
+        ================================================== -->
+
+        <section class="contact-management-card">
+
+            <div class="contact-card-header">
+
+                <div class="contact-card-heading">
+
+                    <div class="contact-card-number">
+                        08
+                    </div>
+
+                    <div>
+
+                        <h2 class="contact-card-title">
+                            Section Order
+                        </h2>
+
+                        <p class="contact-card-description">
+                            Control the display order of contact sections.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="contact-card-body">
+
+                <div class="contact-order-grid">
+
+
+                    <div class="contact-order-item">
+
+                        <span class="contact-order-name">
+                            Get In Touch
+                        </span>
+
+                        <input
+                            type="number"
+                            name="main_order"
+                            class="contact-order-input"
+                            min="1"
+                            value="{{ contact_page.main_order }}"
+                        >
+
+                    </div>
+
+
+                    <div class="contact-order-item">
+
+                        <span class="contact-order-name">
+                            Contact Info
+                        </span>
+
+                        <input
+                            type="number"
+                            name="info_order"
+                            class="contact-order-input"
+                            min="1"
+                            value="{{ contact_page.info_order }}"
+                        >
+
+                    </div>
+
+
+                    <div class="contact-order-item">
+
+                        <span class="contact-order-name">
+                            How Can We Help
+                        </span>
+
+                        <input
+                            type="number"
+                            name="help_order"
+                            class="contact-order-input"
+                            min="1"
+                            value="{{ contact_page.help_order }}"
+                        >
+
+                    </div>
+
+
+                    <div class="contact-order-item">
+
+                        <span class="contact-order-name">
+                            FAQ
+                        </span>
+
+                        <input
+                            type="number"
+                            name="faq_order"
+                            class="contact-order-input"
+                            min="1"
+                            value="{{ contact_page.faq_order }}"
+                        >
+
+                    </div>
+
+
+                    <div class="contact-order-item">
+
+                        <span class="contact-order-name">
+                            Stay Connected
+                        </span>
+
+                        <input
+                            type="number"
+                            name="social_order"
+                            class="contact-order-input"
+                            min="1"
+                            value="{{ contact_page.social_order }}"
+                        >
+
+                    </div>
+
+
+                    <div class="contact-order-item">
+
+                        <span class="contact-order-name">
+                            Final CTA
+                        </span>
+
+                        <input
+                            type="number"
+                            name="final_order"
+                            class="contact-order-input"
+                            min="1"
+                            value="{{ contact_page.final_order }}"
+                        >
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             SAVE BAR
+        ================================================== -->
+
+        <div class="contact-save-bar">
+
+            <div class="contact-save-info">
+
+                <p class="contact-save-title">
+                    Contact Page Settings
+                </p>
+
+                <p class="contact-save-text">
+                    Save your changes to update the contact page.
+                </p>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="contact-btn contact-btn-primary"
+            >
+                SAVE CHANGES
+            </button>
+
+        </div>
+
+
+    </form>
+    <!-- =====================================================
+         MAIN SETTINGS FORM ENDS HERE
+    ====================================================== -->
+
+
+
+    <!-- =========================================================
+         09 — CUSTOMER MESSAGES
+         OUTSIDE MAIN FORM
+    ========================================================= -->
+
+    <section class="contact-management-card">
+
+        <div class="contact-card-header">
+
+            <div class="contact-card-heading">
+
+                <div class="contact-card-number">
+                    09
+                </div>
+
+                <div>
+
+                    <h2 class="contact-card-title">
+                        Customer Messages
+                    </h2>
+
+                    <p class="contact-card-description">
+                        Messages submitted through the contact form.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="contact-card-body">
+
+            {% if messages_data %}
+
+                <div class="contact-messages-list">
+
+                    {% for message in messages_data %}
+
+                        <div class="contact-message-item">
+
+
+                            <div class="contact-message-avatar">
+
+                                {{ message.name|first|upper }}
+
+                            </div>
+
+
+                            <div class="contact-message-content">
+
+                                <div class="contact-message-top">
+
+                                    <p class="contact-message-name">
+                                        {{ message.name }}
+                                    </p>
+
+                                    <span class="contact-message-date">
+                                        {{ message.created_at|date:"d M Y, h:i A" }}
+                                    </span>
+
+                                </div>
+
+
+                                <p class="contact-message-email">
+
+                                    {{ message.email }}
+
+                                    {% if message.phone %}
+                                        · {{ message.phone }}
+                                    {% endif %}
+
+                                </p>
+
+
+                                {% if message.subject %}
+
+                                    <p class="contact-message-subject">
+                                        {{ message.subject }}
+                                    </p>
+
+                                {% endif %}
+
+
+                                <p class="contact-message-text">
+                                    {{ message.message|truncatechars:220 }}
+                                </p>
+
+
+                                {% if message.is_read %}
+
+                                    <span class="contact-message-status">
+                                        Read
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="contact-message-status new">
+                                        New
+                                    </span>
+
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <div class="contact-empty-state">
+                    No customer messages yet.
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =========================================================
+         MODALS
+         IMPORTANT:
+         ALL MODAL FORMS ARE OUTSIDE MAIN SETTINGS FORM.
+    ========================================================= -->
+
+
+
+    <!-- =========================================================
+         ADD FAQ MODAL
+    ========================================================== -->
+
+    <div
+        class="contact-modal-overlay"
+        id="faqModal"
+    >
+
+        <div class="contact-modal">
+
+            <div class="contact-modal-header">
+
+                <div>
+
+                    <span class="contact-modal-eyebrow">
+                        FAQ MANAGEMENT
+                    </span>
+
+                    <h3 class="contact-modal-title">
+                        Add FAQ
+                    </h3>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="contact-modal-close"
+                    onclick="closeFAQModal()"
+                >
+                    &times;
+                </button>
+
+            </div>
+
+
+            <form
+                method="POST"
+                action="{% url 'add_contact_faq' %}"
+            >
+
+                {% csrf_token %}
+
+
+                <div class="contact-form-group">
+
+                    <label
+                        class="contact-form-label"
+                        for="faq_question"
+                    >
+                        Question
+                    </label>
+
+                    <input
+                        type="text"
+                        id="faq_question"
+                        name="question"
+                        class="contact-form-input"
+                        placeholder="e.g. Do you offer nationwide delivery?"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="contact-form-group">
+
+                    <label
+                        class="contact-form-label"
+                        for="faq_answer"
+                    >
+                        Answer
+                    </label>
+
+                    <textarea
+                        id="faq_answer"
+                        name="answer"
+                        class="contact-form-textarea"
+                        rows="5"
+                        placeholder="Write the answer..."
+                        required
+                    ></textarea>
+
+                </div>
+
+
+                <div class="contact-form-grid">
+
+                    <div class="contact-form-group">
+
+                        <label
+                            class="contact-form-label"
+                            for="faq_order"
+                        >
+                            Display Order
+                        </label>
+
+                        <input
+                            type="number"
+                            id="faq_order"
+                            name="display_order"
+                            class="contact-form-input"
+                            value="1"
+                            min="1"
+                        >
+
+                    </div>
+
+
+                    <div class="contact-form-group">
+
+                        <label class="contact-form-label">
+                            Status
+                        </label>
+
+                        <label class="contact-toggle">
+
+                            <input
+                                type="checkbox"
+                                name="is_active"
+                                checked
+                            >
+
+                            <span>
+                                Active
+                            </span>
+
+                        </label>
+
+                    </div>
+
+                </div>
+
+
+                <div class="contact-modal-actions">
+
+                    <button
+                        type="button"
+                        class="contact-btn contact-btn-secondary"
+                        onclick="closeFAQModal()"
+                    >
+                        Cancel
+                    </button>
+
+
+                    <button
+                        type="submit"
+                        class="contact-btn contact-btn-primary"
+                    >
+                        Add FAQ
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =========================================================
+         EDIT FAQ MODAL
+    ========================================================== -->
+
+    <div
+        class="contact-modal-overlay"
+        id="editFAQModal"
+    >
+
+        <div class="contact-modal">
+
+            <div class="contact-modal-header">
+
+                <div>
+
+                    <span class="contact-modal-eyebrow">
+                        FAQ MANAGEMENT
+                    </span>
+
+                    <h3 class="contact-modal-title">
+                        Edit FAQ
+                    </h3>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="contact-modal-close"
+                    onclick="closeEditFAQModal()"
+                >
+                    &times;
+                </button>
+
+            </div>
+
+
+            <form
+                method="POST"
+                id="editFAQForm"
+            >
+
+                {% csrf_token %}
+
+
+                <div class="contact-form-group">
+
+                    <label
+                        class="contact-form-label"
+                        for="edit_faq_question"
+                    >
+                        Question
+                    </label>
+
+                    <input
+                        type="text"
+                        id="edit_faq_question"
+                        name="question"
+                        class="contact-form-input"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="contact-form-group">
+
+                    <label
+                        class="contact-form-label"
+                        for="edit_faq_answer"
+                    >
+                        Answer
+                    </label>
+
+                    <textarea
+                        id="edit_faq_answer"
+                        name="answer"
+                        class="contact-form-textarea"
+                        rows="5"
+                        required
+                    ></textarea>
+
+                </div>
+
+
+                <div class="contact-form-grid">
+
+                    <div class="contact-form-group">
+
+                        <label
+                            class="contact-form-label"
+                            for="edit_faq_order"
+                        >
+                            Display Order
+                        </label>
+
+                        <input
+                            type="number"
+                            id="edit_faq_order"
+                            name="display_order"
+                            class="contact-form-input"
+                            min="1"
+                        >
+
+                    </div>
+
+
+                    <div class="contact-form-group">
+
+                        <label class="contact-form-label">
+                            Status
+                        </label>
+
+                        <label class="contact-toggle">
+
+                            <input
+                                type="checkbox"
+                                id="edit_faq_active"
+                                name="is_active"
+                            >
+
+                            <span>
+                                Active
+                            </span>
+
+                        </label>
+
+                    </div>
+
+                </div>
+
+
+                <div class="contact-modal-actions">
+
+                    <button
+                        type="button"
+                        class="contact-btn contact-btn-secondary"
+                        onclick="closeEditFAQModal()"
+                    >
+                        Cancel
+                    </button>
+
+
+                    <button
+                        type="submit"
+                        class="contact-btn contact-btn-primary"
+                    >
+                        Save Changes
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =================================================
+         ADD SERVICE MODAL
+    ================================================== -->
+
+    <div
+        class="contact-modal-overlay"
+        id="serviceModal"
+    >
+
+        <div class="contact-modal">
+
+            <div class="contact-modal-header">
+
+                <div>
+
+                    <span class="contact-modal-eyebrow">
+                        CONTACT PAGE
+                    </span>
+
+                    <h3 class="contact-modal-title">
+                        Add Service
+                    </h3>
+
+                    <p class="contact-modal-description">
+                        Create a customer support service card.
+                    </p>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="contact-modal-close"
+                    onclick="closeServiceModal()"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <form
+                method="POST"
+                action="{% url 'add_contact_service' %}"
+            >
+
+                {% csrf_token %}
+
+
+                <div class="contact-modal-body">
+
+
+                    <div class="contact-form-group">
+
+                        <label class="contact-form-label">
+                            Service Title
+                        </label>
+
+                        <input
+                            type="text"
+                            name="title"
+                            class="contact-form-input"
+                            placeholder="Customer Support"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="contact-form-group">
+
+                        <label class="contact-form-label">
+                            Description
+                        </label>
+
+                        <textarea
+                            name="description"
+                            class="contact-form-textarea"
+                            placeholder="Describe how NAFI can help customers..."
+                        ></textarea>
+
+                    </div>
+
+
+                    <div class="contact-modal-grid">
+
+                        <div class="contact-form-group">
+
+                            <label class="contact-form-label">
+                                Bootstrap Icon
+                            </label>
+
+                            <input
+                                type="text"
+                                name="icon"
+                                class="contact-form-input"
+                                placeholder="bi-headset"
+                            >
+
+                            <p class="contact-image-help">
+                                Example: bi-headset, bi-box-seam
+                            </p>
+
+                        </div>
+
+
+                        <div class="contact-form-group">
+
+                            <label class="contact-form-label">
+                                Display Order
+                            </label>
+
+                            <input
+                                type="number"
+                                name="display_order"
+                                class="contact-form-input"
+                                value="1"
+                                min="1"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="contact-modal-status">
+
+                        <label class="contact-switch">
+
+                            <input
+                                type="checkbox"
+                                name="is_active"
+                                checked
+                            >
+
+                            <span class="contact-switch-slider"></span>
+
+                        </label>
+
+
+                        <div>
+
+                            <strong>
+                                Active Service
+                            </strong>
+
+                            <p>
+                                Show this service on the public Contact Page.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="contact-modal-footer">
+
+                    <button
+                        type="button"
+                        class="contact-btn"
+                        onclick="closeServiceModal()"
+                    >
+                        Cancel
+                    </button>
+
+
+                    <button
+                        type="submit"
+                        class="contact-btn contact-btn-primary"
+                    >
+                        Add Service
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =================================================
+         EDIT SERVICE MODAL
+    ================================================== -->
+
+    <div
+        class="contact-modal-overlay"
+        id="editServiceModal"
+    >
+
+        <div class="contact-modal">
+
+            <div class="contact-modal-header">
+
+                <div>
+
+                    <span class="contact-modal-eyebrow">
+                        CONTACT PAGE
+                    </span>
+
+                    <h3 class="contact-modal-title">
+                        Edit Service
+                    </h3>
+
+                    <p class="contact-modal-description">
+                        Update this customer support service.
+                    </p>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="contact-modal-close"
+                    onclick="closeEditServiceModal()"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <form
+                method="POST"
+                id="editServiceForm"
+            >
+
+                {% csrf_token %}
+
+
+                <div class="contact-modal-body">
+
+
+                    <div class="contact-form-group">
+
+                        <label class="contact-form-label">
+                            Service Title
+                        </label>
+
+                        <input
+                            type="text"
+                            name="title"
+                            id="edit_service_title"
+                            class="contact-form-input"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="contact-form-group">
+
+                        <label class="contact-form-label">
+                            Description
+                        </label>
+
+                        <textarea
+                            name="description"
+                            id="edit_service_description"
+                            class="contact-form-textarea"
+                        ></textarea>
+
+                    </div>
+
+
+                    <div class="contact-modal-grid">
+
+                        <div class="contact-form-group">
+
+                            <label class="contact-form-label">
+                                Bootstrap Icon
+                            </label>
+
+                            <input
+                                type="text"
+                                name="icon"
+                                id="edit_service_icon"
+                                class="contact-form-input"
+                            >
+
+                        </div>
+
+
+                        <div class="contact-form-group">
+
+                            <label class="contact-form-label">
+                                Display Order
+                            </label>
+
+                            <input
+                                type="number"
+                                name="display_order"
+                                id="edit_service_order"
+                                class="contact-form-input"
+                                min="1"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="contact-modal-status">
+
+                        <label class="contact-switch">
+
+                            <input
+                                type="checkbox"
+                                name="is_active"
+                                id="edit_service_active"
+                            >
+
+                            <span class="contact-switch-slider"></span>
+
+                        </label>
+
+
+                        <div>
+
+                            <strong>
+                                Active Service
+                            </strong>
+
+                            <p>
+                                Show this service on the public Contact Page.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="contact-modal-footer">
+
+                    <button
+                        type="button"
+                        class="contact-btn"
+                        onclick="closeEditServiceModal()"
+                    >
+                        Cancel
+                    </button>
+
+
+                    <button
+                        type="submit"
+                        class="contact-btn contact-btn-primary"
+                    >
+                        Save Changes
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =================================================
+         ADD SOCIAL LINK MODAL
+    ================================================== -->
+
+    <div
+        class="contact-modal-overlay"
+        id="socialModal"
+    >
+
+        <div class="contact-modal">
+
+            <div class="contact-modal-header">
+
+                <div>
+
+                    <span class="contact-modal-eyebrow">
+                        SOCIAL MANAGEMENT
+                    </span>
+
+                    <h3 class="contact-modal-title">
+                        Add Social Link
+                    </h3>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="contact-modal-close"
+                    onclick="closeSocialModal()"
+                >
+                    &times;
+                </button>
+
+            </div>
+
+
+            <form
+                method="POST"
+                action="{% url 'add_contact_social_link' %}"
+            >
+
+                {% csrf_token %}
+
+
+                <div class="contact-modal-body">
+
+                    <div class="contact-modal-grid">
+
+
+                        <div class="contact-form-group">
+
+                            <label class="contact-form-label">
+                                Platform
+                            </label>
+
+                            <input
+                                type="text"
+                                name="platform"
+                                class="contact-form-input"
+                                placeholder="Facebook"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="contact-form-group">
+
+                            <label class="contact-form-label">
+                                Icon Class
+                            </label>
+
+                            <input
+                                type="text"
+                                name="icon"
+                                class="contact-form-input"
+                                placeholder="bi bi-facebook"
+                            >
+
+                        </div>
+
+
+                        <div class="contact-form-group full">
+
+                            <label class="contact-form-label">
+                                Social Media URL
+                            </label>
+
+                            <input
+                                type="url"
+                                name="url"
+                                class="contact-form-input"
+                                placeholder="https://facebook.com/..."
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="contact-form-group">
+
+                            <label class="contact-form-label">
+                                Display Order
+                            </label>
+
+                            <input
+                                type="number"
+                                name="display_order"
+                                class="contact-form-input"
+                                value="1"
+                                min="1"
+                            >
+
+                        </div>
+
+
+                        <div class="contact-form-group">
+
+                            <label class="contact-form-label">
+                                Status
+                            </label>
+
+                            <label class="contact-checkbox-row">
+
+                                <input
+                                    type="checkbox"
+                                    name="is_active"
+                                    checked
+                                >
+
+                                <span>
+                                    Active
+                                </span>
+
+                            </label>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="contact-modal-status">
+                        Add a public social media profile for NAFI.
+                    </div>
+
+                </div>
+
+
+                <div class="contact-modal-footer">
+
+                    <button
+                        type="button"
+                        class="contact-btn"
+                        onclick="closeSocialModal()"
+                    >
+                        Cancel
+                    </button>
+
+
+                    <button
+                        type="submit"
+                        class="contact-btn contact-btn-primary"
+                    >
+                        Add Social Link
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =================================================
+         EDIT SOCIAL LINK MODAL
+    ================================================== -->
+
+    <div
+        class="contact-modal-overlay"
+        id="editSocialModal"
+    >
+
+        <div class="contact-modal">
+
+            <div class="contact-modal-header">
+
+                <div>
+
+                    <span class="contact-modal-eyebrow">
+                        SOCIAL MANAGEMENT
+                    </span>
+
+                    <h3 class="contact-modal-title">
+                        Edit Social Link
+                    </h3>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="contact-modal-close"
+                    onclick="closeEditSocialModal()"
+                >
+                    &times;
+                </button>
+
+            </div>
+
+
+            <form
+                method="POST"
+                id="editSocialForm"
+            >
+
+                {% csrf_token %}
+
+
+                <div class="contact-modal-body">
+
+                    <div class="contact-modal-grid">
+
+
+                        <div class="contact-form-group">
+
+                            <label class="contact-form-label">
+                                Platform
+                            </label>
+
+                            <input
+                                type="text"
+                                name="platform"
+                                id="edit_social_platform"
+                                class="contact-form-input"
+                                placeholder="Facebook"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="contact-form-group">
+
+                            <label class="contact-form-label">
+                                Icon Class
+                            </label>
+
+                            <input
+                                type="text"
+                                name="icon"
+                                id="edit_social_icon"
+                                class="contact-form-input"
+                                placeholder="bi bi-facebook"
+                            >
+
+                        </div>
+
+
+                        <div class="contact-form-group full">
+
+                            <label class="contact-form-label">
+                                Social Media URL
+                            </label>
+
+                            <input
+                                type="url"
+                                name="url"
+                                id="edit_social_url"
+                                class="contact-form-input"
+                                placeholder="https://facebook.com/..."
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="contact-form-group">
+
+                            <label class="contact-form-label">
+                                Display Order
+                            </label>
+
+                            <input
+                                type="number"
+                                name="display_order"
+                                id="edit_social_order"
+                                class="contact-form-input"
+                                min="1"
+                            >
+
+                        </div>
+
+
+                        <div class="contact-form-group">
+
+                            <label class="contact-form-label">
+                                Status
+                            </label>
+
+                            <label class="contact-checkbox-row">
+
+                                <input
+                                    type="checkbox"
+                                    name="is_active"
+                                    id="edit_social_active"
+                                >
+
+                                <span>
+                                    Active
+                                </span>
+
+                            </label>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="contact-modal-status">
+                        Update the social media profile information.
+                    </div>
+
+                </div>
+
+
+                <div class="contact-modal-footer">
+
+                    <button
+                        type="button"
+                        class="contact-btn"
+                        onclick="closeEditSocialModal()"
+                    >
+                        Cancel
+                    </button>
+
+
+                    <button
+                        type="submit"
+                        class="contact-btn contact-btn-primary"
+                    >
+                        Save Changes
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+
+{% endblock %}
+
+
+
+{% block js %}
+
+<script src="{% static 'admin_panel/js/contact_management.js' %}"></script>
+
+{% endblock %}

@@ -6,4 +6,5 @@ urlpatterns = [
     path("about/", about_page, name="about"),
     path('product/<slug:slug>/', product_detail_page, name='product_detail_page'),
     path('category/<slug:slug>/', category_products_page, name='category_products'),
+    path("contact/", contact_page, name="contact_page"),
 ]
