@@ -173,15 +173,16 @@
                     >
 
                         {% csrf_token %}
-
-                        <button
-                            type="submit"
-                            class="new-arrival-wishlist-btn"
-                            aria-label="Add {{ product.name }} to wishlist"
-                            title="Add to wishlist"
-                        >
-                            <i class="bi bi-heart"></i>
-                        </button>
+                            <button
+                                type="button"
+                                class="new-arrival-wishlist-btn {% if product.id in wishlist_product_ids %}active{% endif %}"
+                                data-product-id="{{ product.id }}"
+                                data-url="{% url 'add_to_wishlist' product.id %}"
+                                aria-label="Add {{ product.name }} to wishlist"
+                                title="Add to wishlist"
+                            >
+                                <i class="bi {% if product.id in wishlist_product_ids %}bi-heart-fill{% else %}bi-heart{% endif %}"></i>
+                            </button>
                     
                     </form>
                 
@@ -191,7 +192,7 @@
                     
                         <a
                             href="{% url 'customer_login' %}"
-                            class="new-arrival-wishlist-btn"
+                            class="new-arrival-wishlist-btn {% if product.id in wishlist_product_ids %}active{% endif %}"
                             aria-label="Login to add {{ product.name }} to wishlist"
                             title="Add to wishlist"
                         >

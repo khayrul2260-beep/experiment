@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from admin_dashboard.models import *
 from .models import *
+from django.http import JsonResponse
+
 
 def home_page(request):
 
@@ -130,9 +132,6 @@ def product_detail_page(request, slug):
         context
     )
 
-
-
-
 def category_products_page(request, slug):
 
     # ==================================================
@@ -176,8 +175,6 @@ def category_products_page(request, slug):
         context
     )
 
-
-
 def about_page(request):
     """
     Display the published NAFI About Page.
@@ -203,20 +200,9 @@ def about_page(request):
         },
     )
 
-
 # =========================================================
 # CONTACT PAGE
 # =========================================================
-
-from django.shortcuts import render
-
-from admin_dashboard.models import (
-    ContactPage,
-    ContactService,
-    ContactFAQ,
-    ContactSocialLink,
-)
-
 
 def contact_page(request):
 
@@ -368,11 +354,9 @@ def contact_page(request):
         context
     )
 
-
 # =========================================================
 # NAFI CART
 # =========================================================
-
 
 def add_to_cart(request, product_id):
 
@@ -381,7 +365,7 @@ def add_to_cart(request, product_id):
     # -----------------------------------------------------
 
     if not request.user.is_authenticated:
-        return redirect("login")
+        return redirect("customer_login")
 
 
     # -----------------------------------------------------
@@ -396,14 +380,14 @@ def add_to_cart(request, product_id):
 
 
     # -----------------------------------------------------
-    # GET SIZE
+    # GET SIZE ID
     # -----------------------------------------------------
 
     size_id = request.POST.get("size_id")
 
     if not size_id:
         return redirect(
-            "product_detail",
+            "product_detail_page",
             slug=product.slug
         )
 
@@ -428,6 +412,7 @@ def add_to_cart(request, product_id):
         quantity = int(
             request.POST.get("quantity", 1)
         )
+
     except (TypeError, ValueError):
         quantity = 1
 
@@ -442,7 +427,7 @@ def add_to_cart(request, product_id):
 
     if product_size.stock <= 0:
         return redirect(
-            "product_detail",
+            "product_detail_page",
             slug=product.slug
         )
 
@@ -466,7 +451,8 @@ def add_to_cart(request, product_id):
 
     cart_item, created = CartItem.objects.get_or_create(
         cart=cart,
-        product_size=product_size,
+        product=product,
+        size=product_size.size,
         defaults={
             "quantity": quantity
         }
@@ -487,6 +473,7 @@ def add_to_cart(request, product_id):
             new_quantity = product_size.stock
 
         cart_item.quantity = new_quantity
+
         cart_item.save()
 
 
@@ -496,16 +483,15 @@ def add_to_cart(request, product_id):
 
     return redirect("cart_page")
 
-
-
 # =========================================================
 # CART PAGE
 # =========================================================
 
+
 def cart_page(request):
 
     if not request.user.is_authenticated:
-        return redirect("login")
+        return redirect("customer_login")
 
 
     # -----------------------------------------------------
@@ -523,10 +509,7 @@ def cart_page(request):
 
     cart_items = (
         cart.items
-        .select_related(
-            "product_size",
-            "product_size__product"
-        )
+        .select_related("product")
         .order_by("-created_at")
     )
 
@@ -541,6 +524,10 @@ def cart_page(request):
     }
 
 
+    # -----------------------------------------------------
+    # RENDER
+    # -----------------------------------------------------
+
     return render(
         request,
         "customer/cart.html",
@@ -553,10 +540,11 @@ def cart_page(request):
 # UPDATE CART
 # =========================================================
 
+
 def update_cart(request, item_id):
 
     if not request.user.is_authenticated:
-        return redirect("login")
+        return redirect("customer_login")
 
 
     # -----------------------------------------------------
@@ -588,6 +576,7 @@ def update_cart(request, item_id):
         quantity = int(
             request.POST.get("quantity", 1)
         )
+
     except (TypeError, ValueError):
         quantity = 1
 
@@ -604,10 +593,14 @@ def update_cart(request, item_id):
 
 
     # -----------------------------------------------------
-    # CURRENT PRODUCT SIZE
+    # GET CURRENT PRODUCT SIZE
     # -----------------------------------------------------
 
-    product_size = cart_item.product_size
+    product_size = get_object_or_404(
+        ProductSize,
+        product=cart_item.product,
+        size=cart_item.size
+    )
 
 
     # -----------------------------------------------------
@@ -629,7 +622,7 @@ def update_cart(request, item_id):
 
 
     # -----------------------------------------------------
-    # UPDATE
+    # UPDATE QUANTITY
     # -----------------------------------------------------
 
     cart_item.quantity = quantity
@@ -637,18 +630,212 @@ def update_cart(request, item_id):
     cart_item.save()
 
 
+    # -----------------------------------------------------
+    # REDIRECT
+    # -----------------------------------------------------
+
     return redirect("cart_page")
 
 
+# =========================================================
+# UPDATE CART SIZE
+# =========================================================
+
+def update_cart_size(request, item_id):
+
+    if not request.user.is_authenticated:
+        return redirect("customer_login")
+
+
+    # -----------------------------------------------------
+    # GET USER CART
+    # -----------------------------------------------------
+
+    cart = get_object_or_404(
+        Cart,
+        user=request.user
+    )
+
+
+    # -----------------------------------------------------
+    # GET CART ITEM
+    # -----------------------------------------------------
+
+    cart_item = get_object_or_404(
+        CartItem,
+        id=item_id,
+        cart=cart
+    )
+
+
+    # -----------------------------------------------------
+    # GET NEW SIZE
+    # -----------------------------------------------------
+
+    size_id = request.POST.get("size_id")
+
+    if not size_id:
+        return redirect("cart_page")
+
+
+    # -----------------------------------------------------
+    # GET PRODUCT SIZE
+    # -----------------------------------------------------
+
+    product_size = get_object_or_404(
+        ProductSize,
+        id=size_id,
+        product=cart_item.product,
+        is_available=True
+    )
+
+
+    # -----------------------------------------------------
+    # CHECK STOCK
+    # -----------------------------------------------------
+
+    if product_size.stock <= 0:
+        return redirect("cart_page")
+
+
+    # -----------------------------------------------------
+    # CHECK SAME PRODUCT + SAME SIZE
+    # -----------------------------------------------------
+
+    existing_item = CartItem.objects.filter(
+        cart=cart,
+        product=cart_item.product,
+        size=product_size.size
+    ).exclude(
+        id=cart_item.id
+    ).first()
+
+
+    # -----------------------------------------------------
+    # IF SAME SIZE ALREADY EXISTS
+    # -----------------------------------------------------
+
+    if existing_item:
+
+        new_quantity = (
+            existing_item.quantity +
+            cart_item.quantity
+        )
+
+        if new_quantity > product_size.stock:
+            new_quantity = product_size.stock
+
+        existing_item.quantity = new_quantity
+        existing_item.save()
+
+        cart_item.delete()
+
+        return redirect("cart_page")
+
+
+    # -----------------------------------------------------
+    # UPDATE SIZE
+    # -----------------------------------------------------
+
+    if cart_item.quantity > product_size.stock:
+        cart_item.quantity = product_size.stock
+
+
+    cart_item.size = product_size.size
+
+    cart_item.save()
+
+
+    return redirect("cart_page")
+
+# =========================================================
+# ADD ANOTHER SIZE FROM CART
+# =========================================================
+
+def add_another_size(request, item_id):
+
+    if not request.user.is_authenticated:
+        return redirect("customer_login")
+
+    cart = get_object_or_404(
+        Cart,
+        user=request.user
+    )
+
+    cart_item = get_object_or_404(
+        CartItem,
+        id=item_id,
+        cart=cart
+    )
+
+    size_id = request.POST.get("size_id")
+
+    if not size_id:
+        return redirect("cart_page")
+
+    product_size = get_object_or_404(
+        ProductSize,
+        id=size_id,
+        product=cart_item.product,
+        is_available=True
+    )
+
+    if product_size.stock <= 0:
+        return redirect("cart_page")
+
+    quantity = request.POST.get("quantity", 1)
+
+    try:
+        quantity = int(quantity)
+    except (TypeError, ValueError):
+        quantity = 1
+
+    if quantity < 1:
+        quantity = 1
+
+    if quantity > product_size.stock:
+        quantity = product_size.stock
+
+    # Check whether this product + size
+    # already exists in cart
+    existing_item = CartItem.objects.filter(
+        cart=cart,
+        product=cart_item.product,
+        size=product_size.size
+    ).first()
+
+    if existing_item:
+
+        new_quantity = (
+            existing_item.quantity + quantity
+        )
+
+        if new_quantity > product_size.stock:
+            new_quantity = product_size.stock
+
+        existing_item.quantity = new_quantity
+        existing_item.save()
+
+    else:
+
+        CartItem.objects.create(
+            cart=cart,
+            product=cart_item.product,
+            size=product_size.size,
+            quantity=quantity
+        )
+
+    return redirect("cart_page")
 
 # =========================================================
 # REMOVE CART ITEM
 # =========================================================
 
+
 def remove_from_cart(request, item_id):
 
     if not request.user.is_authenticated:
-        return redirect("login")
+        return redirect("customer_login")
 
 
     # -----------------------------------------------------
@@ -662,7 +849,7 @@ def remove_from_cart(request, item_id):
 
 
     # -----------------------------------------------------
-    # DELETE ITEM
+    # GET CART ITEM
     # -----------------------------------------------------
 
     cart_item = get_object_or_404(
@@ -671,8 +858,17 @@ def remove_from_cart(request, item_id):
         cart=cart
     )
 
+
+    # -----------------------------------------------------
+    # DELETE ITEM
+    # -----------------------------------------------------
+
     cart_item.delete()
 
+
+    # -----------------------------------------------------
+    # REDIRECT
+    # -----------------------------------------------------
 
     return redirect("cart_page")
 
@@ -682,10 +878,11 @@ def remove_from_cart(request, item_id):
 # CLEAR CART
 # =========================================================
 
+
 def clear_cart(request):
 
     if not request.user.is_authenticated:
-        return redirect("login")
+        return redirect("customer_login")
 
 
     # -----------------------------------------------------
@@ -705,6 +902,10 @@ def clear_cart(request):
     cart.items.all().delete()
 
 
+    # -----------------------------------------------------
+    # REDIRECT
+    # -----------------------------------------------------
+
     return redirect("cart_page")
 
 
@@ -716,7 +917,10 @@ def clear_cart(request):
 def add_to_wishlist(request, product_id):
 
     if not request.user.is_authenticated:
-        return redirect("login")
+        return JsonResponse({
+            "success": False,
+            "message": "Login required"
+        }, status=401)
 
     product = get_object_or_404(
         ProductsModel,
@@ -728,31 +932,52 @@ def add_to_wishlist(request, product_id):
         user=request.user
     )
 
-    wishlist_item, created = WishlistItem.objects.get_or_create(
+    wishlist_item = WishlistItem.objects.filter(
         wishlist=wishlist,
         product=product
-    )
+    ).first()
 
-    # If already exists, remove it
-    if not created:
+    if wishlist_item:
         wishlist_item.delete()
-
-    return redirect(
-        request.META.get(
-            "HTTP_REFERER",
-            "home_page"
+        is_wishlisted = False
+    else:
+        WishlistItem.objects.create(
+            wishlist=wishlist,
+            product=product
         )
-    )
+        is_wishlisted = True
+
+    wishlist_count = wishlist.items.count()
+
+    return JsonResponse({
+        "success": True,
+        "is_wishlisted": is_wishlisted,
+        "wishlist_count": wishlist_count
+    })
+
+# =========================================================
+# WISHLIST PAGE
+# =========================================================
 
 
 def wishlist_page(request):
 
     if not request.user.is_authenticated:
-        return redirect("login")
+        return redirect("customer_login")
+
+
+    # -----------------------------------------------------
+    # GET / CREATE WISHLIST
+    # -----------------------------------------------------
 
     wishlist, created = Wishlist.objects.get_or_create(
         user=request.user
     )
+
+
+    # -----------------------------------------------------
+    # WISHLIST ITEMS
+    # -----------------------------------------------------
 
     wishlist_items = (
         wishlist.items
@@ -760,14 +985,23 @@ def wishlist_page(request):
         .order_by("-created_at")
     )
 
+
+    # -----------------------------------------------------
+    # CONTEXT
+    # -----------------------------------------------------
+
     context = {
         "wishlist": wishlist,
         "wishlist_items": wishlist_items,
     }
+
+
+    # -----------------------------------------------------
+    # RENDER
+    # -----------------------------------------------------
 
     return render(
         request,
         "customer/wishlist.html",
         context
     )
-

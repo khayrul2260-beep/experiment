@@ -1,0 +1,615 @@
+{% extends 'customer/master/base.html' %}
+{% load static %}
+
+{% block title %}
+    Your Cart | NAFI
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'customer/css/cart.css' %}">
+{% endblock %}
+
+
+{% block content %}
+
+<section class="nafi-cart-page">
+
+    <!-- =====================================================
+         CART HEADER
+    ====================================================== -->
+
+    <div class="cart-header">
+
+        <div class="cart-header-content">
+
+            <span class="cart-eyebrow">
+                NAFI COLLECTION
+            </span>
+
+            <h1>
+                Your Shopping Bag
+            </h1>
+
+            <p>
+                Review your selected pieces before checkout.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         CART CONTENT
+    ====================================================== -->
+
+    <div class="cart-container">
+
+        {% if cart_items %}
+
+        <div class="cart-layout">
+
+
+            <!-- =================================================
+                 LEFT — CART ITEMS
+            ================================================== -->
+
+            <div class="cart-items-section">
+
+                <div class="cart-section-top">
+
+                    <div>
+                        <span class="section-label">
+                            SELECTED ITEMS
+                        </span>
+
+                        <h2>
+                            Your Selection
+                        </h2>
+                    </div>
+
+                    <span class="cart-item-count">
+                        {{ cart_items|length }}
+                        {% if cart_items|length == 1 %}
+                            ITEM
+                        {% else %}
+                            ITEMS
+                        {% endif %}
+                    </span>
+
+                </div>
+
+
+                <!-- CART ITEMS -->
+
+                <div class="cart-items">
+
+                    {% for item in cart_items %}
+
+                    <article class="cart-item">
+
+                        <!-- PRODUCT IMAGE -->
+
+                        <div class="cart-product-image">
+
+                            {% if item.product.image %}
+
+                                <a
+                                    href="{% url 'product_detail_page' item.product.slug %}"
+                                    class="cart-product-image-link"
+                                >
+                                    <img
+                                        src="{{ item.product.image.url }}"
+                                        alt="{{ item.product.name }}"
+                                        class="cart-product-image"
+                                    >
+                                </a>
+
+                            {% else %}
+
+                                <div class="cart-no-image">
+                                    NAFI
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- PRODUCT INFORMATION -->
+
+                        <div class="cart-product-info">
+
+                            <span class="cart-product-category">
+                                {{ item.product.category.name }}
+                            </span>
+
+                            <h3 class="cart-product-name">
+                                {{ item.product.name }}
+                            </h3>
+
+                            <span class="cart-product-code">
+                                {{ item.product.product_code }}
+                            </span>
+
+
+                            <div class="cart-product-meta">
+
+                                <div class="meta-item">
+                                    <!-- SIZE SELECTOR -->
+
+                                    <div class="cart-size-selector">
+                                    
+                                        <span class="cart-size-label">
+                                            SIZE
+                                        </span>
+                                    
+                                        <form
+                                            method="POST"
+                                            action="{% url 'update_cart_size' item.id %}"
+                                            class="cart-size-form"
+                                        >
+                                    
+                                            {% csrf_token %}
+                                    
+                                            <select
+                                                name="size_id"
+                                                class="cart-size-select"
+                                                onchange="this.form.submit()"
+                                            >
+                                    
+                                                {% for product_size in item.product.sizes.all %}
+                                    
+                                                    {% if product_size.is_available and product_size.stock > 0 %}
+                                    
+                                                        <option
+                                                            value="{{ product_size.id }}"
+                                                            {% if product_size.size == item.size %}
+                                                                selected
+                                                            {% endif %}
+                                                        >
+                                                            {{ product_size.size }}
+                                                        </option>
+                                                    
+                                                    {% endif %}
+                                                    
+                                                {% endfor %}
+                                                    
+                                            </select>
+                                        
+                                        </form>
+                                    
+                                    </div>
+                                    <div class="add-another-size">
+                                    
+                                        <button
+                                            type="button"
+                                            class="add-another-size-btn"
+                                            onclick="toggleAnotherSize({{ item.id }})"
+                                        >
+                                            + ADD ANOTHER SIZE
+                                        </button>
+                                    
+                                        <form
+                                            method="POST"
+                                            action="{% url 'add_another_size' item.id %}"
+                                            class="another-size-form"
+                                            id="another-size-form-{{ item.id }}"
+                                        >
+                                    
+                                            {% csrf_token %}
+                                    
+                                            <select
+                                                name="size_id"
+                                                class="another-size-select"
+                                                required
+                                            >
+                                    
+                                                <option value="">
+                                                    SELECT SIZE
+                                                </option>
+                                            
+                                                {% for product_size in item.product.sizes.all %}
+                                            
+                                                    {% if product_size.is_available and product_size.stock > 0 %}
+                                            
+                                                        <option
+                                                            value="{{ product_size.id }}"
+                                                        >
+                                                            {{ product_size.size }}
+                                                        </option>
+                                                    
+                                                    {% endif %}
+                                                    
+                                                {% endfor %}
+                                                    
+                                            </select>
+                                        
+                                            <input
+                                                type="number"
+                                                name="quantity"
+                                                value="1"
+                                                min="1"
+                                                class="another-size-quantity"
+                                            >
+                                        
+                                            <button
+                                                type="submit"
+                                                class="another-size-submit"
+                                            >
+                                                ADD
+                                            </button>
+                                        
+                                        </form>
+                                    
+                                    </div>
+                                </div>
+
+                                <div class="meta-divider"></div>
+
+                                <div class="meta-item">
+                                    <span>UNIT PRICE</span>
+
+                                    <strong>
+                                        ৳{{ item.unit_price|floatformat:0 }}
+                                    </strong>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- MOBILE / DESKTOP PRICE -->
+
+                            <div class="cart-mobile-price">
+
+                                <span>
+                                    TOTAL
+                                </span>
+
+                                <strong>
+                                    ৳{{ item.total_price|floatformat:0 }}
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- QUANTITY -->
+
+                        <div class="cart-quantity-area">
+
+                            <span class="quantity-label">
+                                QUANTITY
+                            </span>
+
+                            <form
+                                method="POST"
+                                action="{% url 'update_cart' item.id %}"
+                                class="quantity-form"
+                            >
+
+                                {% csrf_token %}
+
+                                <button
+                                    type="submit"
+                                    name="quantity"
+                                    value="{{ item.quantity|add:'-1' }}"
+                                    class="quantity-btn"
+                                    aria-label="Decrease quantity"
+                                >
+                                    −
+                                </button>
+
+                                <span class="quantity-number">
+                                    {{ item.quantity }}
+                                </span>
+
+                                <button
+                                    type="submit"
+                                    name="quantity"
+                                    value="{{ item.quantity|add:'1' }}"
+                                    class="quantity-btn"
+                                    aria-label="Increase quantity"
+                                >
+                                    +
+                                </button>
+
+                            </form>
+
+                        </div>
+
+
+                        <!-- TOTAL -->
+
+                        <div class="cart-item-total">
+
+                            <span>
+                                TOTAL
+                            </span>
+
+                            <strong>
+                                ৳{{ item.total_price|floatformat:0 }}
+                            </strong>
+
+                        </div>
+
+
+                        <!-- REMOVE -->
+
+                        <form
+                            method="POST"
+                            action="{% url 'remove_from_cart' item.id %}"
+                            class="remove-item-form"
+                        >
+
+                            {% csrf_token %}
+
+                            <button
+                                type="submit"
+                                class="remove-item-btn"
+                                aria-label="Remove {{ item.product.name }}"
+                            >
+                                <i class="bi bi-x-lg"></i>
+                            </button>
+
+                        </form>
+
+                    </article>
+
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- CART ACTIONS -->
+
+                <div class="cart-actions">
+
+                    <a
+                        href="{% url 'home_page' %}"
+                        class="continue-shopping"
+                    >
+                        <i class="bi bi-arrow-left"></i>
+                        Continue Shopping
+                    </a>
+
+
+                    <form
+                        method="POST"
+                        action="{% url 'clear_cart' %}"
+                    >
+
+                        {% csrf_token %}
+
+                        <button
+                            type="submit"
+                            class="clear-cart-btn"
+                        >
+                            Clear Cart
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 RIGHT — ORDER SUMMARY
+            ================================================== -->
+
+            <aside class="cart-summary">
+
+                <div class="summary-inner">
+
+                    <span class="summary-eyebrow">
+                        ORDER SUMMARY
+                    </span>
+
+                    <h2>
+                        Your Order
+                    </h2>
+
+
+                    <div class="summary-line">
+
+                        <span>
+                            Subtotal
+                        </span>
+
+                        <strong>
+                            ৳{{ cart.subtotal|floatformat:0 }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="summary-line">
+
+                        <span>
+                            Delivery
+                        </span>
+
+                        <span class="delivery-note">
+                            Calculated at checkout
+                        </span>
+
+                    </div>
+
+
+                    <div class="summary-divider"></div>
+
+
+                    <div class="summary-total">
+
+                        <div>
+                            <span>
+                                TOTAL
+                            </span>
+
+                            <small>
+                                Including selected items
+                            </small>
+                        </div>
+
+                        <strong>
+                            ৳{{ cart.subtotal|floatformat:0 }}
+                        </strong>
+
+                    </div>
+
+
+                    <!-- CHECKOUT -->
+
+                    <a
+                        href="#"
+                        class="checkout-btn"
+                    >
+
+                        <span>
+                            Proceed to Checkout
+                        </span>
+
+                        <i class="bi bi-arrow-right"></i>
+
+                    </a>
+
+
+                    <div class="secure-checkout">
+
+                        <i class="bi bi-shield-check"></i>
+
+                        <span>
+                            Secure checkout
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </aside>
+
+        </div>
+
+
+        {% else %}
+
+        <!-- =================================================
+             EMPTY CART
+        ================================================== -->
+
+        <div class="empty-cart">
+
+            <div class="empty-cart-icon">
+
+                <i class="bi bi-bag"></i>
+
+            </div>
+
+            <span class="empty-cart-eyebrow">
+                NAFI COLLECTION
+            </span>
+
+            <h2>
+                Your Cart is Empty
+            </h2>
+
+            <p>
+                Discover our latest collection and find
+                something made for your style.
+            </p>
+
+            <a
+                href="#"
+                class="empty-cart-btn"
+            >
+                Explore Collection
+                <i class="bi bi-arrow-right"></i>
+            </a>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</section>
+
+{% endblock %}
+
+
+
+{% block extra_js %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const savedScroll =
+        sessionStorage.getItem("nafiCartScroll");
+
+    if (savedScroll !== null) {
+
+        window.scrollTo({
+            top: parseInt(savedScroll),
+            behavior: "instant"
+        });
+
+        sessionStorage.removeItem("nafiCartScroll");
+    }
+
+
+    const cartForms =
+        document.querySelectorAll(
+            ".quantity-form, .remove-item-form, .cart-actions form"
+        );
+
+
+    cartForms.forEach(function (form) {
+
+        form.addEventListener("submit", function () {
+
+            sessionStorage.setItem(
+                "nafiCartScroll",
+                window.scrollY
+            );
+
+        });
+
+    });
+
+});
+</script>
+<script>
+
+function toggleAnotherSize(itemId) {
+
+    const form =
+        document.getElementById(
+            "another-size-form-" + itemId
+        );
+
+    if (!form) {
+        return;
+    }
+
+    if (
+        form.style.display === "flex"
+    ) {
+
+        form.style.display = "none";
+
+    } else {
+
+        form.style.display = "flex";
+
+    }
+
+}
+
+</script>
+
+{% endblock %}
+    

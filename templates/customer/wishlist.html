@@ -1,0 +1,947 @@
+
+{% extends 'customer/master/base.html' %}
+{% load static %}
+
+
+{% block title %}
+    Wishlist | NAFI
+{% endblock %}
+
+
+{% block extra_css %}
+
+<link
+    rel="stylesheet"
+    href="{% static 'customer/css/wishlist.css' %}"
+>
+
+{% endblock %}
+
+
+
+{% block content %}
+
+<section class="nafi-wishlist-page">
+
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <div class="wishlist-header">
+
+        <span class="wishlist-eyebrow">
+            NAFI COLLECTION
+        </span>
+
+        <h1>
+            MY  WISHLIST
+        </h1>
+
+        <p>
+            Pieces you've chosen to keep close.
+        </p>
+
+    </div>
+
+
+
+    {% if wishlist_items %}
+
+
+        <!-- =================================================
+             WISHLIST GRID
+        ================================================== -->
+
+        <div class="wishlist-grid">
+
+
+            {% for item in wishlist_items %}
+
+
+                <!-- =================================================
+                     PRODUCT SIZE DATA
+                ================================================== -->
+
+                <div
+                    class="wishlist-product-data"
+                    id="wishlist-product-{{ item.product.id }}"
+                    data-product-id="{{ item.product.id }}"
+                    data-add-url="{% url 'add_to_cart' item.product.id %}"
+                >
+
+                    {% for product_size in item.product.sizes.all %}
+
+                        {% if product_size.is_available and product_size.stock > 0 %}
+
+                            <button
+                                type="button"
+                                class="wishlist-size-data"
+                                data-size-id="{{ product_size.id }}"
+                                data-size="{{ product_size.size }}"
+                                data-stock="{{ product_size.stock }}"
+                            >
+                                {{ product_size.size }}
+                            </button>
+
+                        {% endif %}
+
+                    {% endfor %}
+
+                </div>
+
+
+
+                <!-- =================================================
+                     WISHLIST CARD
+                ================================================== -->
+
+                <article class="wishlist-card">
+
+
+                    <!-- PRODUCT IMAGE -->
+
+                    <a
+                        href="{% url 'product_detail_page' item.product.slug %}"
+                        class="wishlist-image-link"
+                    >
+
+                        {% if item.product.image %}
+
+                            <img
+                                src="{{ item.product.image.url }}"
+                                alt="{{ item.product.name }}"
+                                class="wishlist-product-image"
+                            >
+
+                        {% else %}
+
+                            <div class="wishlist-no-image">
+                                NAFI
+                            </div>
+
+                        {% endif %}
+
+                    </a>
+
+
+
+                    <!-- PRODUCT INFORMATION -->
+
+                    <div class="wishlist-info">
+
+
+                        <!-- CATEGORY -->
+
+                        <span class="wishlist-category">
+
+                            {{ item.product.category.name }}
+
+                        </span>
+
+
+
+                        <!-- PRODUCT NAME -->
+
+                        <h2 class="wishlist-product-name">
+
+                            <a
+                                href="{% url 'product_detail_page' item.product.slug %}"
+                            >
+
+                                {{ item.product.name }}
+
+                            </a>
+
+                        </h2>
+
+
+
+                        <!-- PRICE -->
+
+                        <div class="wishlist-price">
+
+                            {% if item.product.discount_price %}
+
+                                <span class="wishlist-current-price">
+
+                                    ৳ {{ item.product.discount_price }}
+
+                                </span>
+
+                                <span class="wishlist-old-price">
+
+                                    ৳ {{ item.product.price }}
+
+                                </span>
+
+                            {% else %}
+
+                                <span class="wishlist-current-price">
+
+                                    ৳ {{ item.product.price }}
+
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+
+
+                        <!-- =================================================
+                             ACTIONS
+                        ================================================== -->
+
+                        <div class="wishlist-actions">
+
+
+                            <!-- VIEW PRODUCT -->
+
+                            <a
+                                href="{% url 'product_detail_page' item.product.slug %}"
+                                class="wishlist-view-btn"
+                            >
+
+                                VIEW PRODUCT
+
+                            </a>
+
+
+
+                            <!-- =================================================
+                                 ADD TO CART
+                            ================================================== -->
+
+                            {% with available_size=item.product.sizes.all %}
+
+                                {% if available_size %}
+
+                                    <button
+                                        type="button"
+                                        class="wishlist-cart-btn"
+                                        onclick="openWishlistCartModal({{ item.product.id }})"
+                                    >
+
+                                        ADD TO CART
+
+                                    </button>
+
+                                {% endif %}
+
+                            {% endwith %}
+
+
+
+                            <!-- REMOVE FROM WISHLIST -->
+
+                            <form
+                                method="POST"
+                                action="{% url 'add_to_wishlist' item.product.id %}"
+                                class="wishlist-remove-form"
+                            >
+
+                                {% csrf_token %}
+
+                                <button
+                                    type="submit"
+                                    class="wishlist-remove-btn"
+                                    aria-label="Remove from wishlist"
+                                >
+
+                                    <i class="bi bi-heart-fill"></i>
+
+                                </button>
+
+                            </form>
+
+
+                        </div>
+
+
+                    </div>
+
+
+                </article>
+
+
+            {% endfor %}
+
+
+
+            <!-- =====================================================
+                 WISHLIST ADD TO CART MODAL
+            ====================================================== -->
+
+            <div
+                class="wishlist-cart-modal"
+                id="wishlistCartModal"
+            >
+
+                <!-- OVERLAY -->
+
+                <div
+                    class="wishlist-cart-overlay"
+                    onclick="closeWishlistCartModal()"
+                ></div>
+
+
+
+                <!-- MODAL BOX -->
+
+                <div class="wishlist-cart-box">
+
+
+                    <!-- CLOSE -->
+
+                    <button
+                        type="button"
+                        class="wishlist-cart-close"
+                        onclick="closeWishlistCartModal()"
+                        aria-label="Close"
+                    >
+
+                        <i class="bi bi-x-lg"></i>
+
+                    </button>
+
+
+
+                    <!-- HEADER -->
+
+                    <span class="wishlist-modal-eyebrow">
+
+                        SELECT OPTIONS
+
+                    </span>
+
+                    <h3>
+
+                        ADD TO CART
+
+                    </h3>
+
+
+
+                    <!-- =================================================
+                         ADD TO CART FORM
+                    ================================================== -->
+
+                    <form
+                        method="POST"
+                        id="wishlistCartForm"
+                    >
+
+                        {% csrf_token %}
+
+
+
+                        <!-- =================================================
+                             IMPORTANT:
+                             THIS VALUE IS SENT TO add_to_cart()
+                        ================================================== -->
+
+                        <input
+                            type="hidden"
+                            name="size_id"
+                            id="wishlistSelectedSize"
+                            value=""
+                        >
+
+
+
+                        <!-- SIZE -->
+
+                        <div class="wishlist-modal-field">
+
+                            <label>
+
+                                SIZE
+
+                            </label>
+
+
+                            <div
+                                class="wishlist-modal-sizes"
+                                id="wishlistModalSizes"
+                            >
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- QUANTITY -->
+
+                        <div class="wishlist-modal-field">
+
+                            <label>
+
+                                QUANTITY
+
+                            </label>
+
+
+                            <div class="wishlist-modal-quantity">
+
+
+                                <button
+                                    type="button"
+                                    onclick="changeWishlistQuantity(-1)"
+                                >
+
+                                    −
+
+                                </button>
+
+
+                                <input
+                                    type="number"
+                                    name="quantity"
+                                    id="wishlistQuantity"
+                                    value="1"
+                                    min="1"
+                                >
+
+
+                                <button
+                                    type="button"
+                                    onclick="changeWishlistQuantity(1)"
+                                >
+
+                                    +
+
+                                </button>
+
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- SUBMIT -->
+
+                        <button
+                            type="submit"
+                            class="wishlist-modal-add-btn"
+                        >
+
+                            ADD TO CART
+
+                        </button>
+
+
+                    </form>
+
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+
+    {% else %}
+
+
+        <!-- =================================================
+             EMPTY WISHLIST
+        ================================================== -->
+
+        <div class="wishlist-empty">
+
+
+            <div class="wishlist-empty-icon">
+
+                <i class="bi bi-heart"></i>
+
+            </div>
+
+
+            <h2>
+
+                YOUR WISHLIST IS EMPTY
+
+            </h2>
+
+
+            <p>
+
+                Save pieces you love and find them here later.
+
+            </p>
+
+
+            <a
+                href="{% url 'home_page' %}"
+                class="wishlist-shop-btn"
+            >
+
+                EXPLORE COLLECTION
+
+                <i class="bi bi-arrow-right"></i>
+
+            </a>
+
+
+        </div>
+
+
+    {% endif %}
+
+
+</section>
+
+{% endblock %}
+
+
+
+{% block extra_js %}
+
+<script>
+
+
+/* =========================================================
+   GLOBAL VARIABLES
+========================================================= */
+
+let wishlistSelectedSize = null;
+
+let wishlistSelectedStock = 1;
+
+
+
+/* =========================================================
+   OPEN WISHLIST CART MODAL
+========================================================= */
+
+function openWishlistCartModal(productId) {
+
+
+    const productData = document.getElementById(
+        "wishlist-product-" + productId
+    );
+
+
+    if (!productData) {
+
+        console.error(
+            "Wishlist product data not found:",
+            productId
+        );
+
+        return;
+
+    }
+
+
+
+    const modal = document.getElementById(
+        "wishlistCartModal"
+    );
+
+
+    const form = document.getElementById(
+        "wishlistCartForm"
+    );
+
+
+    const sizeContainer = document.getElementById(
+        "wishlistModalSizes"
+    );
+
+
+    const quantityInput = document.getElementById(
+        "wishlistQuantity"
+    );
+
+
+    const selectedSizeInput = document.getElementById(
+        "wishlistSelectedSize"
+    );
+
+
+
+    /* =====================================================
+       SET ADD TO CART URL
+    ===================================================== */
+
+    form.action = productData.dataset.addUrl;
+
+
+
+    /* =====================================================
+       RESET
+    ===================================================== */
+
+    sizeContainer.innerHTML = "";
+
+    wishlistSelectedSize = null;
+
+    wishlistSelectedStock = 1;
+
+    selectedSizeInput.value = "";
+
+    quantityInput.value = 1;
+
+    quantityInput.removeAttribute("max");
+
+
+
+    /* =====================================================
+       GET AVAILABLE SIZES
+    ===================================================== */
+
+    const sizes = productData.querySelectorAll(
+        ".wishlist-size-data"
+    );
+
+
+
+    /* =====================================================
+       NO AVAILABLE SIZE
+    ===================================================== */
+
+    if (sizes.length === 0) {
+
+        sizeContainer.innerHTML =
+            '<span class="wishlist-no-size-message">' +
+            'Currently unavailable' +
+            '</span>';
+
+        modal.classList.add("active");
+
+        document.body.classList.add(
+            "wishlist-modal-open"
+        );
+
+        return;
+
+    }
+
+
+
+    /* =====================================================
+       CREATE SIZE BUTTONS
+    ===================================================== */
+
+    sizes.forEach(function (sizeData) {
+
+
+        const button =
+            document.createElement("button");
+
+
+        button.type = "button";
+
+
+        button.className =
+            "wishlist-modal-size-btn";
+
+
+        button.textContent =
+            sizeData.dataset.size;
+
+
+        button.dataset.sizeId =
+            sizeData.dataset.sizeId;
+
+
+        button.dataset.stock =
+            sizeData.dataset.stock;
+
+
+
+        /* =================================================
+           SIZE CLICK
+        ================================================= */
+
+        button.addEventListener(
+            "click",
+            function () {
+
+
+                /* Remove previous selection */
+
+                document
+                    .querySelectorAll(
+                        ".wishlist-modal-size-btn"
+                    )
+                    .forEach(
+                        function (btn) {
+
+                            btn.classList.remove(
+                                "selected"
+                            );
+
+                        }
+                    );
+
+
+
+                /* Add selected state */
+
+                button.classList.add(
+                    "selected"
+                );
+
+
+
+                /* Store selected size */
+
+                wishlistSelectedSize =
+                    button.dataset.sizeId;
+
+
+
+                /* IMPORTANT:
+                   Send size_id to Django */
+
+                selectedSizeInput.value =
+                    wishlistSelectedSize;
+
+
+
+                /* Store stock */
+
+                wishlistSelectedStock =
+                    parseInt(
+                        button.dataset.stock,
+                        10
+                    ) || 1;
+
+
+
+                /* Set quantity limit */
+
+                quantityInput.max =
+                    wishlistSelectedStock;
+
+
+
+                /* Reset quantity */
+
+                quantityInput.value = 1;
+
+            }
+        );
+
+
+
+        sizeContainer.appendChild(
+            button
+        );
+
+    });
+
+
+
+    /* =====================================================
+       OPEN MODAL
+    ===================================================== */
+
+    modal.classList.add(
+        "active"
+    );
+
+
+    document.body.classList.add(
+        "wishlist-modal-open"
+    );
+
+}
+
+
+
+/* =========================================================
+   CLOSE MODAL
+========================================================= */
+
+function closeWishlistCartModal() {
+
+
+    const modal =
+        document.getElementById(
+            "wishlistCartModal"
+        );
+
+
+    modal.classList.remove(
+        "active"
+    );
+
+
+    document.body.classList.remove(
+        "wishlist-modal-open"
+    );
+
+
+}
+
+
+
+/* =========================================================
+   QUANTITY CONTROL
+========================================================= */
+
+function changeWishlistQuantity(change) {
+
+
+    const input =
+        document.getElementById(
+            "wishlistQuantity"
+        );
+
+
+    let quantity =
+        parseInt(input.value, 10) || 1;
+
+
+    quantity += change;
+
+
+
+    /* Minimum */
+
+    if (quantity < 1) {
+
+        quantity = 1;
+
+    }
+
+
+
+    /* Maximum */
+
+    if (
+        wishlistSelectedStock &&
+        quantity > wishlistSelectedStock
+    ) {
+
+        quantity =
+            wishlistSelectedStock;
+
+    }
+
+
+
+    input.value =
+        quantity;
+
+}
+
+
+
+/* =========================================================
+   FORM VALIDATION
+========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+
+        const form =
+            document.getElementById(
+                "wishlistCartForm"
+            );
+
+
+        if (!form) {
+
+            return;
+
+        }
+
+
+
+        form.addEventListener(
+            "submit",
+            function (event) {
+
+
+                const selectedSizeInput =
+                    document.getElementById(
+                        "wishlistSelectedSize"
+                    );
+
+
+                const quantityInput =
+                    document.getElementById(
+                        "wishlistQuantity"
+                    );
+
+
+
+                /* =========================================
+                   SIZE REQUIRED
+                ========================================== */
+
+                if (
+                    !selectedSizeInput.value
+                ) {
+
+                    event.preventDefault();
+
+
+                    alert(
+                        "Please select a size."
+                    );
+
+
+                    return;
+
+                }
+
+
+
+                /* =========================================
+                   QUANTITY VALIDATION
+                ========================================== */
+
+                let quantity =
+                    parseInt(
+                        quantityInput.value,
+                        10
+                    ) || 1;
+
+
+
+                if (quantity < 1) {
+
+                    quantity = 1;
+
+                }
+
+
+
+                if (
+                    wishlistSelectedStock &&
+                    quantity > wishlistSelectedStock
+                ) {
+
+                    quantity =
+                        wishlistSelectedStock;
+
+                }
+
+
+
+                quantityInput.value =
+                    quantity;
+
+
+            }
+        );
+
+
+    }
+);
+
+</script>
+
+{% endblock %}

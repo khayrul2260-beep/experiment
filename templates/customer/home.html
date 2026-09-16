@@ -60,6 +60,60 @@
     <script src="{% static 'customer/js/mobile_slide1.js' %}"></script>
     <script src="{% static 'customer/js/mobile_home.js' %}"></script>
     <script src="{% static 'customer/js/category_products.js' %}"></script>
+<script>
+document.querySelectorAll(".new-arrival-wishlist-btn").forEach(button => {
+
+    button.addEventListener("click", async function () {
+
+        const url = this.dataset.url;
+        const icon = this.querySelector("i");
+
+        try {
+
+            const response = await fetch(url, {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": document.querySelector(
+                        "[name=csrfmiddlewaretoken]"
+                    ).value,
+                    "X-Requested-With": "XMLHttpRequest"
+                }
+            });
+
+            const data = await response.json();
+
+            if (!data.success) {
+                return;
+            }
+
+            if (data.is_wishlisted) {
+
+                this.classList.add("active");
+
+                icon.classList.remove("bi-heart");
+                icon.classList.add("bi-heart-fill");
+
+            } else {
+
+                this.classList.remove("active");
+
+                icon.classList.remove("bi-heart-fill");
+                icon.classList.add("bi-heart");
+            }
+
+        } catch (error) {
+
+            console.error(
+                "Wishlist error:",
+                error
+            );
+
+        }
+
+    });
+
+});
+</script>
 {% endblock  %}
     
   

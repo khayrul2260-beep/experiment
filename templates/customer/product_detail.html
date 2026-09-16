@@ -264,6 +264,7 @@
                                 type="button"
                                 class="size-btn"
                                 data-size="{{ size.size }}"
+                                data-size-id="{{ size.id }}"
                             >
                                 {{ size.size }}
                             </button>
@@ -661,50 +662,139 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     );
 
+/* =====================================================
+   ADD TO CART
+====================================================== */
 
-
-    /* =====================================================
-       ADD TO CART
-    ====================================================== */
-
-    const addToCartBtn =
-        document.getElementById(
-            "addToCartBtn"
-        );
-
-
-    addToCartBtn.addEventListener(
-        "click",
-        function () {
-
-
-            if (!selectedSize) {
-
-                sizeError.style.display =
-                    "block";
-
-                return;
-
-            }
-
-
-            console.log({
-
-                product:
-                    "{{ product.id }}",
-
-                size:
-                    selectedSize,
-
-                quantity:
-                    quantity
-
-            });
-
-        }
+const addToCartBtn =
+    document.getElementById(
+        "addToCartBtn"
     );
 
 
+addToCartBtn.addEventListener(
+    "click",
+    function () {
+
+        /* -----------------------------------------
+           SIZE VALIDATION
+        ----------------------------------------- */
+
+        if (!selectedSize) {
+
+            sizeError.style.display =
+                "block";
+
+            return;
+
+        }
+
+
+        /* -----------------------------------------
+           GET SELECTED SIZE BUTTON
+        ----------------------------------------- */
+
+        const selectedSizeButton =
+            document.querySelector(
+                ".size-btn.selected"
+            );
+
+
+        if (!selectedSizeButton) {
+            return;
+        }
+
+
+        /* -----------------------------------------
+           GET PRODUCT SIZE ID
+        ----------------------------------------- */
+
+        const sizeId =
+            selectedSizeButton.dataset.sizeId;
+
+
+        if (!sizeId) {
+            return;
+        }
+
+
+        /* -----------------------------------------
+           CREATE FORM
+        ----------------------------------------- */
+
+        const form =
+            document.createElement("form");
+
+        form.method = "POST";
+
+        form.action =
+            "{% url 'add_to_cart' product.id %}";
+
+
+        /* -----------------------------------------
+           CSRF TOKEN
+        ----------------------------------------- */
+
+        const csrfToken =
+            document.createElement("input");
+
+        csrfToken.type = "hidden";
+
+        csrfToken.name = "csrfmiddlewaretoken";
+
+        csrfToken.value =
+            "{{ csrf_token }}";
+
+
+        /* -----------------------------------------
+           SIZE ID
+        ----------------------------------------- */
+
+        const sizeInput =
+            document.createElement("input");
+
+        sizeInput.type = "hidden";
+
+        sizeInput.name = "size_id";
+
+        sizeInput.value = sizeId;
+
+
+        /* -----------------------------------------
+           QUANTITY
+        ----------------------------------------- */
+
+        const quantityInput =
+            document.createElement("input");
+
+        quantityInput.type = "hidden";
+
+        quantityInput.name = "quantity";
+
+        quantityInput.value = quantity;
+
+
+        /* -----------------------------------------
+           APPEND INPUTS
+        ----------------------------------------- */
+
+        form.appendChild(csrfToken);
+
+        form.appendChild(sizeInput);
+
+        form.appendChild(quantityInput);
+
+
+        /* -----------------------------------------
+           SUBMIT
+        ----------------------------------------- */
+
+        document.body.appendChild(form);
+
+        form.submit();
+
+    }
+);
 
     /* =====================================================
        BUY NOW

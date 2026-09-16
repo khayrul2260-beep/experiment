@@ -315,7 +315,7 @@
 
     position: absolute;
 
-    top: 0px;
+    top: 2px;
 
     z-index: 50;
 
@@ -328,14 +328,14 @@
 
 .new-arrival-cart-form {
 
-    left: 0px;
+    left: 2px;
 
 }
 
 
 .new-arrival-wishlist-form {
 
-    right: 0px;
+    right: 2px;
 
 }
 
@@ -346,9 +346,9 @@
 
 .new-arrival-cart-btn {
 
-    width: 30px;
+    width: 40px;
 
-    height: 30px;
+    height: 40px;
 
     display: flex;
 
@@ -356,11 +356,11 @@
 
     justify-content: center;
 
-    padding: 0 2px 2px 0;
+    padding: 0;
 
     border: none;
 
-    border-bottom-right-radius: 20%;
+    border-radius: 50%;
 
     background: #ffffff;
 
@@ -385,9 +385,9 @@
 
 .new-arrival-wishlist-btn {
 
-    width: 30px;
+    width: 40px;
 
-    height: 30px;
+    height: 40px;
 
     display: flex;
 
@@ -399,7 +399,7 @@
 
     border: none;
 
-    border-bottom-left-radius: 20%;
+    border-radius: 50%;
 
     background: #ffffff;
 
@@ -422,6 +422,8 @@
 }
 
 
+
+
 /* =====================================================
    ICON
 ===================================================== */
@@ -429,7 +431,7 @@
 .new-arrival-cart-btn i,
 .new-arrival-wishlist-btn i {
 
-    font-size: 20px;
+    font-size: 22px;
 
     line-height: 1;
 
@@ -476,11 +478,23 @@
    ACTION ACTIVE
 ===================================================== */
 
-.new-arrival-cart-btn:active,
+/* .new-arrival-cart-btn:active,
 .new-arrival-wishlist-btn:active {
 
     transform: scale(0.94);
 
+} */
+
+
+
+.new-arrival-wishlist-btn.active,
+.new-arrival-wishlist-btn.active i {
+    color: #d10000;
+}
+
+.new-arrival-wishlist-btn.active:hover,
+.new-arrival-wishlist-btn.active:hover i {
+    color: #d60303;
 }
 
 

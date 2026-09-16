@@ -211,19 +211,22 @@
             <!-- WISHLIST -->
 
             <a
-                href="#"
+                href="{% url 'wishlist_page' %}"
                 class="nafi-action wishlist-action"
                 title="Wishlist"
                 aria-label="Wishlist"
             >
                 <i class="bi bi-heart"></i>
+                    <span class="cart-count">
+                        {{ navbar_wishlist_count }}
+                    </span>
             </a>
 
 
             <!-- CART -->
 
             <a
-                href="#"
+                href="{% url 'cart_page' %}"
                 class="nafi-action cart-action"
                 title="Shopping Bag"
                 aria-label="Shopping Bag"
@@ -231,9 +234,10 @@
 
                 <i class="bi bi-bag"></i>
 
-                <span class="cart-count">
-                    0
-                </span>
+
+                    <span class="cart-count">
+                        {{ navbar_cart_count }}
+                    </span>
 
             </a>
 
