@@ -3,12 +3,14 @@
 ===================================================== */
 
 .nafi-new-arrivals {
+
     width: 100%;
+
     padding: 70px 30px;
 
     background-color: var(--background-color);
-}
 
+}
 
 
 /* =====================================================
@@ -16,33 +18,41 @@
 ===================================================== */
 
 .new-arrivals-header {
+
     display: flex;
 
     align-items: flex-end;
+
     justify-content: space-between;
 
     margin-bottom: 30px;
+
 }
 
 
 .new-arrivals-header h2 {
+
     margin: 0;
 
     font-size: 30px;
+
     font-weight: 700;
 
     letter-spacing: -0.5px;
 
     color: var(--large-text);
+
 }
 
 
 .new_arrivals {
+
     display: flex;
 
     flex-direction: column;
 
     justify-content: center;
+
     align-items: center;
 
     position: absolute;
@@ -50,19 +60,23 @@
     left: 50%;
 
     transform: translate(-50%, 0%);
+
 }
 
 
 .new-arrivals-header p {
+
     margin: 6px 0 0;
 
     font-size: 14px;
 
     color: #777;
+
 }
 
 
 .view-all-link {
+
     display: inline-flex;
 
     align-items: center;
@@ -74,14 +88,17 @@
     text-decoration: none;
 
     font-size: 14px;
+
     font-weight: 500;
+
 }
 
 
 .view-all-link:hover {
-    text-decoration: underline;
-}
 
+    text-decoration: underline;
+
+}
 
 
 /* =====================================================
@@ -89,19 +106,15 @@
 ===================================================== */
 
 .new-arrivals-grid {
-    display: grid;
 
-    /*
-       Laptop / Desktop
-       5 products per row
-    */
+    display: grid;
 
     grid-template-columns:
         repeat(5, minmax(0, 1fr));
 
     gap: 10px 1px;
-}
 
+}
 
 
 /* =====================================================
@@ -109,27 +122,10 @@
 ===================================================== */
 
 .new-arrival-product {
+
     min-width: 0;
+
 }
-
-
-
-/* =====================================================
-   PRODUCT IMAGE LINK
-===================================================== */
-
-.product-image-link {
-    display: block;
-
-    width: 100%;
-
-    text-decoration: none;
-
-    overflow: hidden;
-
-    background: #f5f5f5;
-}
-
 
 
 /* =====================================================
@@ -137,6 +133,7 @@
 ===================================================== */
 
 .new-arrival-image-wrapper {
+
     position: relative;
 
     width: 100%;
@@ -146,8 +143,29 @@
     overflow: hidden;
 
     background: #f5f5f5;
+
 }
 
+
+/* =====================================================
+   PRODUCT IMAGE LINK
+===================================================== */
+
+.product-image-link {
+
+    display: block;
+
+    width: 100%;
+
+    height: 100%;
+
+    text-decoration: none;
+
+    overflow: hidden;
+
+    background: #f5f5f5;
+
+}
 
 
 /* =====================================================
@@ -155,6 +173,7 @@
 ===================================================== */
 
 .new-arrival-image {
+
     position: absolute;
 
     inset: 0;
@@ -162,6 +181,7 @@
     display: block;
 
     width: 100%;
+
     height: 100%;
 
     object-fit: cover;
@@ -169,87 +189,74 @@
     transition:
         opacity 0.35s ease,
         transform 0.35s ease;
-}
 
+}
 
 
 /* =====================================================
    MAIN IMAGE
 ===================================================== */
 
-/*
-   Main image is hidden initially
-   when a secondary image exists.
-*/
-
 .main-product-image {
+
     opacity: 0;
 
     z-index: 1;
-}
 
+}
 
 
 /* =====================================================
    SECONDARY IMAGE
 ===================================================== */
 
-/*
-   Secondary image is the default image.
-*/
-
 .secondary-product-image {
+
     opacity: 1;
 
     z-index: 2;
+
 }
 
 
-
 /* =====================================================
-   HOVER
+   IMAGE HOVER
 ===================================================== */
-
-/*
-   When hovering the product image:
-   Secondary → Main
-*/
 
 .product-image-link:hover
 .main-product-image {
+
     opacity: 1;
 
     transform: scale(1.02);
+
 }
 
 
 .product-image-link:hover
 .secondary-product-image {
+
     opacity: 0;
 
     transform: scale(1.02);
-}
 
+}
 
 
 /* =====================================================
    MAIN IMAGE FALLBACK
 ===================================================== */
 
-/*
-   If there is NO secondary image,
-   main image should remain visible.
-*/
-
 .new-arrival-image-wrapper:not(
     :has(.secondary-product-image)
 )
 .main-product-image {
+
     opacity: 1;
 
     z-index: 1;
-}
 
+}
 
 
 /* =====================================================
@@ -261,11 +268,12 @@
 )
 .product-image-link:hover
 .main-product-image {
+
     opacity: 1;
 
     transform: scale(1.02);
-}
 
+}
 
 
 /* =====================================================
@@ -273,6 +281,7 @@
 ===================================================== */
 
 .product-no-image {
+
     width: 100%;
 
     aspect-ratio: 3 / 4;
@@ -280,6 +289,7 @@
     display: flex;
 
     align-items: center;
+
     justify-content: center;
 
     background: #f5f5f5;
@@ -287,8 +297,191 @@
     color: #999;
 
     font-size: 30px;
+
 }
 
+
+/* =====================================================
+   PREMIUM PRODUCT ACTIONS
+===================================================== */
+
+
+/* =====================================================
+   ACTION WRAPPERS
+===================================================== */
+
+.new-arrival-cart-form,
+.new-arrival-wishlist-form {
+
+    position: absolute;
+
+    top: 0px;
+
+    z-index: 50;
+
+    margin: 0;
+
+    padding: 0;
+
+}
+
+
+.new-arrival-cart-form {
+
+    left: 0px;
+
+}
+
+
+.new-arrival-wishlist-form {
+
+    right: 0px;
+
+}
+
+
+/* =====================================================
+   ACTION BUTTON / LINK
+===================================================== */
+
+.new-arrival-cart-btn {
+
+    width: 30px;
+
+    height: 30px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 0 2px 2px 0;
+
+    border: none;
+
+    border-bottom-right-radius: 20%;
+
+    background: #ffffff;
+
+    color: #030303;
+
+    font-size: 13px;
+
+    line-height: 1;
+
+    text-decoration: none;
+
+    cursor: pointer;
+
+    transition:
+        background 0.3s ease,
+        color 0.3s ease,
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+
+}
+
+
+.new-arrival-wishlist-btn {
+
+    width: 30px;
+
+    height: 30px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 0;
+
+    border: none;
+
+    border-bottom-left-radius: 20%;
+
+    background: #ffffff;
+
+    color: #030303;
+
+    font-size: 13px;
+
+    line-height: 1;
+
+    text-decoration: none;
+
+    cursor: pointer;
+
+    transition:
+        background 0.3s ease,
+        color 0.3s ease,
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+
+}
+
+
+/* =====================================================
+   ICON
+===================================================== */
+
+.new-arrival-cart-btn i,
+.new-arrival-wishlist-btn i {
+
+    font-size: 20px;
+
+    line-height: 1;
+
+    transition:
+        transform 0.3s ease;
+
+}
+
+
+/* =====================================================
+   ACTION HOVER
+===================================================== */
+
+.new-arrival-cart-btn:hover,
+.new-arrival-wishlist-btn:hover {
+
+    background: #050505;
+
+    color: #ffffff;
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 8px 22px rgba(0, 0, 0, 0.22);
+
+}
+
+
+.new-arrival-cart-btn:hover i {
+
+    transform: translateY(-1px);
+
+}
+
+
+.new-arrival-wishlist-btn:hover i {
+
+    transform: scale(1.08);
+
+}
+
+
+/* =====================================================
+   ACTION ACTIVE
+===================================================== */
+
+.new-arrival-cart-btn:active,
+.new-arrival-wishlist-btn:active {
+
+    transform: scale(0.94);
+
+}
 
 
 /* =====================================================
@@ -296,11 +489,14 @@
 ===================================================== */
 
 .new-arrival-info {
+
     padding-top: 10px;
+
 }
 
 
 .new-arrival-name {
+
     display: block;
 
     color: var(--large-text);
@@ -316,15 +512,99 @@
     overflow: hidden;
 
     text-overflow: ellipsis;
+
 }
 
 
 .new-arrival-name:hover {
+
     text-decoration: underline;
 
     color: var(--buy-button);
+
 }
 
+
+/* =====================================================
+   PRODUCT DESCRIPTION
+===================================================== */
+
+.new-arrival-description {
+
+    margin: 7px 0 0;
+
+    color: rgba(255, 255, 255, 0.46);
+
+    font-size: 11px;
+
+    font-weight: 400;
+
+    line-height: 1.55;
+
+    letter-spacing: 0.01em;
+
+}
+
+
+/* =====================================================
+   COLORS
+===================================================== */
+
+.new-arrival-colors {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    margin-top: 10px;
+
+}
+
+
+.new-arrival-colors-label {
+
+    color: rgba(255, 255, 255, 0.36);
+
+    font-size: 9px;
+
+    font-weight: 500;
+
+    letter-spacing: 0.1em;
+
+    text-transform: uppercase;
+
+}
+
+
+.new-arrival-color-list {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+}
+
+
+.new-arrival-color {
+
+    width: 13px;
+
+    height: 13px;
+
+    display: block;
+
+    border: 1px solid rgba(255, 255, 255, 0.28);
+
+    border-radius: 50%;
+
+    box-shadow:
+        0 0 0 1px rgba(0, 0, 0, 0.2);
+
+}
 
 
 /* =====================================================
@@ -332,6 +612,7 @@
 ===================================================== */
 
 .new-arrival-price {
+
     display: flex;
 
     align-items: center;
@@ -341,29 +622,35 @@
     margin-top: 5px;
 
     font-size: 14px;
+
 }
 
 
 .product-price {
+
     color: var(--large-text);
 
     font-weight: 500;
+
 }
 
 
 .product-old-price {
+
     color: var(--small-text);
 
     text-decoration: line-through;
+
 }
 
 
 .product-discount-price {
+
     color: var(--large-text);
 
     font-weight: 600;
-}
 
+}
 
 
 /* =====================================================
@@ -371,6 +658,7 @@
 ===================================================== */
 
 .new-arrivals-empty {
+
     grid-column: 1 / -1;
 
     text-align: center;
@@ -378,24 +666,28 @@
     padding: 60px 20px;
 
     color: #777;
+
 }
 
 
 .new-arrivals-empty i {
+
     display: block;
 
     margin-bottom: 10px;
 
     font-size: 30px;
+
 }
 
 
 .new-arrivals-empty p {
+
     margin: 0;
 
     font-size: 14px;
-}
 
+}
 
 
 /* =====================================================
@@ -405,12 +697,13 @@
 @media (max-width: 991px) {
 
     .new-arrivals-grid {
+
         grid-template-columns:
             repeat(4, minmax(0, 1fr));
+
     }
 
 }
-
 
 
 /* =====================================================
@@ -418,69 +711,133 @@
 ===================================================== */
 
 @media (max-width: 767px) {
+
     .nafi-new-arrivals {
+
         padding: 30px 8px;
+
     }
 
+
     .new-arrivals-header {
+
         align-items: center;
 
         margin-bottom: 20px;
+
     }
 
 
     .new-arrivals-header h2 {
+
         font-size: 22px;
+
     }
 
 
     .new-arrivals-header p {
+
         font-size: 11px;
+
     }
 
 
     .view-all-link {
+
         font-size: 11px;
+
     }
 
 
-
-    /* ================================================
-       MOBILE
+    /* =================================================
        3 PRODUCTS PER ROW
     ================================================= */
 
     .new-arrivals-grid {
+
         grid-template-columns:
             repeat(3, minmax(0, 1fr));
+
     }
 
 
-
-    /* ================================================
+    /* =================================================
        PRODUCT INFORMATION
     ================================================= */
 
     .new-arrival-info {
+
         padding-top: 7px;
+
     }
 
 
     .new-arrival-name {
+
         font-size: 12px;
+
     }
 
 
     .new-arrival-price {
+
         gap: 5px;
 
         margin-top: 3px;
 
         font-size: 12px;
+
     }
 
 }
 
+
+/* =====================================================
+   ACTIONS — MOBILE
+===================================================== */
+
+@media (max-width: 768px) {
+
+    .new-arrival-cart-form,
+    .new-arrival-wishlist-form {
+
+        top: 11px;
+
+    }
+
+
+    .new-arrival-cart-form {
+
+        left: 11px;
+
+    }
+
+
+    .new-arrival-wishlist-form {
+
+        right: 11px;
+
+    }
+
+
+    .new-arrival-cart-btn,
+    .new-arrival-wishlist-btn {
+
+        width: 31px;
+
+        height: 31px;
+
+    }
+
+
+    .new-arrival-cart-btn i,
+    .new-arrival-wishlist-btn i {
+
+        font-size: 12px;
+
+    }
+
+}
 
 
 /* =====================================================
@@ -490,12 +847,16 @@
 @media (max-width: 400px) {
 
     .new-arrival-name {
+
         font-size: 11px;
+
     }
 
 
     .new-arrival-price {
+
         font-size: 11px;
+
     }
 
 }

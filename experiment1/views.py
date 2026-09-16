@@ -367,3 +367,407 @@ def contact_page(request):
         "customer/contact.html",
         context
     )
+
+
+# =========================================================
+# NAFI CART
+# =========================================================
+
+
+def add_to_cart(request, product_id):
+
+    # -----------------------------------------------------
+    # LOGIN REQUIRED
+    # -----------------------------------------------------
+
+    if not request.user.is_authenticated:
+        return redirect("login")
+
+
+    # -----------------------------------------------------
+    # GET PRODUCT
+    # -----------------------------------------------------
+
+    product = get_object_or_404(
+        ProductsModel,
+        id=product_id,
+        is_available=True
+    )
+
+
+    # -----------------------------------------------------
+    # GET SIZE
+    # -----------------------------------------------------
+
+    size_id = request.POST.get("size_id")
+
+    if not size_id:
+        return redirect(
+            "product_detail",
+            slug=product.slug
+        )
+
+
+    # -----------------------------------------------------
+    # GET PRODUCT SIZE
+    # -----------------------------------------------------
+
+    product_size = get_object_or_404(
+        ProductSize,
+        id=size_id,
+        product=product,
+        is_available=True
+    )
+
+
+    # -----------------------------------------------------
+    # GET QUANTITY
+    # -----------------------------------------------------
+
+    try:
+        quantity = int(
+            request.POST.get("quantity", 1)
+        )
+    except (TypeError, ValueError):
+        quantity = 1
+
+
+    if quantity < 1:
+        quantity = 1
+
+
+    # -----------------------------------------------------
+    # STOCK VALIDATION
+    # -----------------------------------------------------
+
+    if product_size.stock <= 0:
+        return redirect(
+            "product_detail",
+            slug=product.slug
+        )
+
+
+    if quantity > product_size.stock:
+        quantity = product_size.stock
+
+
+    # -----------------------------------------------------
+    # GET / CREATE CART
+    # -----------------------------------------------------
+
+    cart, created = Cart.objects.get_or_create(
+        user=request.user
+    )
+
+
+    # -----------------------------------------------------
+    # GET / CREATE CART ITEM
+    # -----------------------------------------------------
+
+    cart_item, created = CartItem.objects.get_or_create(
+        cart=cart,
+        product_size=product_size,
+        defaults={
+            "quantity": quantity
+        }
+    )
+
+
+    # -----------------------------------------------------
+    # EXISTING ITEM
+    # -----------------------------------------------------
+
+    if not created:
+
+        new_quantity = (
+            cart_item.quantity + quantity
+        )
+
+        if new_quantity > product_size.stock:
+            new_quantity = product_size.stock
+
+        cart_item.quantity = new_quantity
+        cart_item.save()
+
+
+    # -----------------------------------------------------
+    # REDIRECT CART
+    # -----------------------------------------------------
+
+    return redirect("cart_page")
+
+
+
+# =========================================================
+# CART PAGE
+# =========================================================
+
+def cart_page(request):
+
+    if not request.user.is_authenticated:
+        return redirect("login")
+
+
+    # -----------------------------------------------------
+    # GET / CREATE CART
+    # -----------------------------------------------------
+
+    cart, created = Cart.objects.get_or_create(
+        user=request.user
+    )
+
+
+    # -----------------------------------------------------
+    # CART ITEMS
+    # -----------------------------------------------------
+
+    cart_items = (
+        cart.items
+        .select_related(
+            "product_size",
+            "product_size__product"
+        )
+        .order_by("-created_at")
+    )
+
+
+    # -----------------------------------------------------
+    # CONTEXT
+    # -----------------------------------------------------
+
+    context = {
+        "cart": cart,
+        "cart_items": cart_items,
+    }
+
+
+    return render(
+        request,
+        "customer/cart.html",
+        context
+    )
+
+
+
+# =========================================================
+# UPDATE CART
+# =========================================================
+
+def update_cart(request, item_id):
+
+    if not request.user.is_authenticated:
+        return redirect("login")
+
+
+    # -----------------------------------------------------
+    # GET CART
+    # -----------------------------------------------------
+
+    cart = get_object_or_404(
+        Cart,
+        user=request.user
+    )
+
+
+    # -----------------------------------------------------
+    # GET CART ITEM
+    # -----------------------------------------------------
+
+    cart_item = get_object_or_404(
+        CartItem,
+        id=item_id,
+        cart=cart
+    )
+
+
+    # -----------------------------------------------------
+    # GET QUANTITY
+    # -----------------------------------------------------
+
+    try:
+        quantity = int(
+            request.POST.get("quantity", 1)
+        )
+    except (TypeError, ValueError):
+        quantity = 1
+
+
+    # -----------------------------------------------------
+    # DELETE IF ZERO / NEGATIVE
+    # -----------------------------------------------------
+
+    if quantity <= 0:
+
+        cart_item.delete()
+
+        return redirect("cart_page")
+
+
+    # -----------------------------------------------------
+    # CURRENT PRODUCT SIZE
+    # -----------------------------------------------------
+
+    product_size = cart_item.product_size
+
+
+    # -----------------------------------------------------
+    # STOCK VALIDATION
+    # -----------------------------------------------------
+
+    if (
+        not product_size.is_available
+        or product_size.stock <= 0
+    ):
+
+        cart_item.delete()
+
+        return redirect("cart_page")
+
+
+    if quantity > product_size.stock:
+        quantity = product_size.stock
+
+
+    # -----------------------------------------------------
+    # UPDATE
+    # -----------------------------------------------------
+
+    cart_item.quantity = quantity
+
+    cart_item.save()
+
+
+    return redirect("cart_page")
+
+
+
+# =========================================================
+# REMOVE CART ITEM
+# =========================================================
+
+def remove_from_cart(request, item_id):
+
+    if not request.user.is_authenticated:
+        return redirect("login")
+
+
+    # -----------------------------------------------------
+    # GET CART
+    # -----------------------------------------------------
+
+    cart = get_object_or_404(
+        Cart,
+        user=request.user
+    )
+
+
+    # -----------------------------------------------------
+    # DELETE ITEM
+    # -----------------------------------------------------
+
+    cart_item = get_object_or_404(
+        CartItem,
+        id=item_id,
+        cart=cart
+    )
+
+    cart_item.delete()
+
+
+    return redirect("cart_page")
+
+
+
+# =========================================================
+# CLEAR CART
+# =========================================================
+
+def clear_cart(request):
+
+    if not request.user.is_authenticated:
+        return redirect("login")
+
+
+    # -----------------------------------------------------
+    # GET CART
+    # -----------------------------------------------------
+
+    cart = get_object_or_404(
+        Cart,
+        user=request.user
+    )
+
+
+    # -----------------------------------------------------
+    # DELETE ALL ITEMS
+    # -----------------------------------------------------
+
+    cart.items.all().delete()
+
+
+    return redirect("cart_page")
+
+
+
+# =========================================================
+# WISHLIST
+# =========================================================
+
+def add_to_wishlist(request, product_id):
+
+    if not request.user.is_authenticated:
+        return redirect("login")
+
+    product = get_object_or_404(
+        ProductsModel,
+        id=product_id,
+        is_available=True
+    )
+
+    wishlist, created = Wishlist.objects.get_or_create(
+        user=request.user
+    )
+
+    wishlist_item, created = WishlistItem.objects.get_or_create(
+        wishlist=wishlist,
+        product=product
+    )
+
+    # If already exists, remove it
+    if not created:
+        wishlist_item.delete()
+
+    return redirect(
+        request.META.get(
+            "HTTP_REFERER",
+            "home_page"
+        )
+    )
+
+
+def wishlist_page(request):
+
+    if not request.user.is_authenticated:
+        return redirect("login")
+
+    wishlist, created = Wishlist.objects.get_or_create(
+        user=request.user
+    )
+
+    wishlist_items = (
+        wishlist.items
+        .select_related("product")
+        .order_by("-created_at")
+    )
+
+    context = {
+        "wishlist": wishlist,
+        "wishlist_items": wishlist_items,
+    }
+
+    return render(
+        request,
+        "customer/wishlist.html",
+        context
+    )
+

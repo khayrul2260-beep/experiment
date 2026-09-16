@@ -7,4 +7,13 @@ urlpatterns = [
     path('product/<slug:slug>/', product_detail_page, name='product_detail_page'),
     path('category/<slug:slug>/', category_products_page, name='category_products'),
     path("contact/", contact_page, name="contact_page"),
+
+    path("cart/", cart_page, name="cart_page"),
+    path("cart/add/<int:product_id>/", add_to_cart, name="add_to_cart"),
+    path("cart/update/<int:item_id>/", update_cart, name="update_cart"),
+    path("cart/remove/<int:item_id>/", remove_from_cart, name="remove_from_cart"),
+    path("cart/clear/", clear_cart, name="clear_cart"),
+    
+    path("wishlist/", wishlist_page, name="wishlist_page"),
+    path("wishlist/toggle/<int:product_id>/", add_to_wishlist, name="add_to_wishlist"),
 ]
