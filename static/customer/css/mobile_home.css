@@ -615,12 +615,13 @@
     border-radius:
         14px;
 
-    background:
+    /* background:
         linear-gradient(
             145deg,
-            #1212143f,
-            #0b0b0d3f
-        );
+            #00000065,
+            #00000065
+        ); */
+    background: rgba(0, 0, 0, 0.623);
 
     box-shadow:
         0 15px 45px
@@ -2461,7 +2462,7 @@ and
     .mobile-feature-section {
 
         padding:
-            0 10px 6px;
+            0 5px 6px;
         z-index: 10;
 
     }
@@ -2898,7 +2899,8 @@ and
 
         letter-spacing:
             5px;
-
+        color: black;
+        background-color: rgba(255, 255, 255, 0.904);
     }
 
 

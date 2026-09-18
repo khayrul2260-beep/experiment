@@ -27,7 +27,7 @@
             </span>
 
             <h1>
-                Your Shopping Bag
+                YOUR SHOPPING BAG
             </h1>
 
             <p>
@@ -136,32 +136,33 @@
                             <div class="cart-product-meta">
 
                                 <div class="meta-item">
+
                                     <!-- SIZE SELECTOR -->
 
                                     <div class="cart-size-selector">
-                                    
+
                                         <span class="cart-size-label">
                                             SIZE
                                         </span>
-                                    
+
                                         <form
                                             method="POST"
-                                            action="{% url 'update_cart_size' item.id %}"
+                                            action="{% if is_guest_cart %}{% url 'guest_update_cart_size' item.key %}{% else %}{% url 'update_cart_size' item.id %}{% endif %}"
                                             class="cart-size-form"
                                         >
-                                    
+
                                             {% csrf_token %}
-                                    
+
                                             <select
                                                 name="size_id"
                                                 class="cart-size-select"
                                                 onchange="this.form.submit()"
                                             >
-                                    
+
                                                 {% for product_size in item.product.sizes.all %}
-                                    
+
                                                     {% if product_size.is_available and product_size.stock > 0 %}
-                                    
+
                                                         <option
                                                             value="{{ product_size.id }}"
                                                             {% if product_size.size == item.size %}
@@ -170,61 +171,67 @@
                                                         >
                                                             {{ product_size.size }}
                                                         </option>
-                                                    
+
                                                     {% endif %}
-                                                    
+
                                                 {% endfor %}
-                                                    
+
                                             </select>
-                                        
+
                                         </form>
-                                    
+
                                     </div>
+
+
+                                    <!-- ADD ANOTHER SIZE -->
+
                                     <div class="add-another-size">
-                                    
+
                                         <button
                                             type="button"
                                             class="add-another-size-btn"
-                                            onclick="toggleAnotherSize({{ item.id }})"
+                                            onclick="toggleAnotherSize('{% if is_guest_cart %}{{ item.key }}{% else %}{{ item.id }}{% endif %}')"
                                         >
                                             + ADD ANOTHER SIZE
                                         </button>
-                                    
+
+
                                         <form
                                             method="POST"
-                                            action="{% url 'add_another_size' item.id %}"
+                                            action="{% if is_guest_cart %}{% url 'guest_add_another_size' item.key %}{% else %}{% url 'add_another_size' item.id %}{% endif %}"
                                             class="another-size-form"
-                                            id="another-size-form-{{ item.id }}"
+                                            id="another-size-form-{% if is_guest_cart %}{{ item.key }}{% else %}{{ item.id }}{% endif %}"
                                         >
-                                    
+
                                             {% csrf_token %}
-                                    
+
                                             <select
                                                 name="size_id"
                                                 class="another-size-select"
                                                 required
                                             >
-                                    
+
                                                 <option value="">
                                                     SELECT SIZE
                                                 </option>
-                                            
+
                                                 {% for product_size in item.product.sizes.all %}
-                                            
+
                                                     {% if product_size.is_available and product_size.stock > 0 %}
-                                            
+
                                                         <option
                                                             value="{{ product_size.id }}"
                                                         >
                                                             {{ product_size.size }}
                                                         </option>
-                                                    
+
                                                     {% endif %}
-                                                    
+
                                                 {% endfor %}
-                                                    
+
                                             </select>
-                                        
+
+
                                             <input
                                                 type="number"
                                                 name="quantity"
@@ -232,23 +239,30 @@
                                                 min="1"
                                                 class="another-size-quantity"
                                             >
-                                        
+
+
                                             <button
                                                 type="submit"
                                                 class="another-size-submit"
                                             >
                                                 ADD
                                             </button>
-                                        
+
                                         </form>
-                                    
+
                                     </div>
+
                                 </div>
+
 
                                 <div class="meta-divider"></div>
 
+
                                 <div class="meta-item">
-                                    <span>UNIT PRICE</span>
+
+                                    <span>
+                                        UNIT PRICE
+                                    </span>
 
                                     <strong>
                                         ৳{{ item.unit_price|floatformat:0 }}
@@ -286,7 +300,7 @@
 
                             <form
                                 method="POST"
-                                action="{% url 'update_cart' item.id %}"
+                                action="{% if is_guest_cart %}{% url 'guest_update_cart' item.key %}{% else %}{% url 'update_cart' item.id %}{% endif %}"
                                 class="quantity-form"
                             >
 
@@ -302,9 +316,11 @@
                                     −
                                 </button>
 
+
                                 <span class="quantity-number">
                                     {{ item.quantity }}
                                 </span>
+
 
                                 <button
                                     type="submit"
@@ -340,7 +356,7 @@
 
                         <form
                             method="POST"
-                            action="{% url 'remove_from_cart' item.id %}"
+                            action="{% if is_guest_cart %}{% url 'guest_remove_from_cart' item.key %}{% else %}{% url 'remove_from_cart' item.id %}{% endif %}"
                             class="remove-item-form"
                         >
 
@@ -447,6 +463,7 @@
                     <div class="summary-total">
 
                         <div>
+
                             <span>
                                 TOTAL
                             </span>
@@ -454,6 +471,7 @@
                             <small>
                                 Including selected items
                             </small>
+
                         </div>
 
                         <strong>
@@ -524,7 +542,7 @@
             </p>
 
             <a
-                href="#"
+                href="{% url 'home_page' %}"
                 class="empty-cart-btn"
             >
                 Explore Collection
@@ -544,11 +562,14 @@
 
 
 {% block extra_js %}
+
 <script>
+
 document.addEventListener("DOMContentLoaded", function () {
 
     const savedScroll =
         sessionStorage.getItem("nafiCartScroll");
+
 
     if (savedScroll !== null) {
 
@@ -557,13 +578,16 @@ document.addEventListener("DOMContentLoaded", function () {
             behavior: "instant"
         });
 
-        sessionStorage.removeItem("nafiCartScroll");
+        sessionStorage.removeItem(
+            "nafiCartScroll"
+        );
+
     }
 
 
     const cartForms =
         document.querySelectorAll(
-            ".quantity-form, .remove-item-form, .cart-actions form"
+            ".quantity-form, .remove-item-form, .cart-actions form, .cart-size-form, .another-size-form"
         );
 
 
@@ -581,19 +605,26 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
 });
+
 </script>
+
+
 <script>
 
-function toggleAnotherSize(itemId) {
+function toggleAnotherSize(itemKey) {
 
     const form =
         document.getElementById(
-            "another-size-form-" + itemId
+            "another-size-form-" + itemKey
         );
 
+
     if (!form) {
+
         return;
+
     }
+
 
     if (
         form.style.display === "flex"
@@ -612,4 +643,3 @@ function toggleAnotherSize(itemId) {
 </script>
 
 {% endblock %}
-    

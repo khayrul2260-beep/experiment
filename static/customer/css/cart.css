@@ -113,7 +113,7 @@
     color: var(--cart-white);
 
     font-size: clamp(25px, 10vw, 50px);
-
+    font-family: "Oswald", sans-serif;
     font-weight: 600;
 
     letter-spacing: -0.045em;

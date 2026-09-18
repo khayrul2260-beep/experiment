@@ -10,6 +10,10 @@ urlpatterns = [
 
     path("cart/", cart_page, name="cart_page"),
     path("cart/add/<int:product_id>/", add_to_cart, name="add_to_cart"),
+    path("cart/guest/update/<str:item_key>/", guest_update_cart, name="guest_update_cart"),
+    path("cart/guest/update-size/<str:item_key>/", guest_update_cart_size, name="guest_update_cart_size"),
+    path("cart/guest/add-another-size/<str:item_key>/", guest_add_another_size, name="guest_add_another_size"),
+    path("cart/guest/remove/<str:item_key>/", guest_remove_from_cart, name="guest_remove_from_cart"),
     path("cart/update/<int:item_id>/", update_cart, name="update_cart"),
     path( "cart/update-size/<int:item_id>/", update_cart_size, name="update_cart_size" ),
     path("cart/add-another-size/<int:item_id>/", add_another_size, name="add_another_size"),

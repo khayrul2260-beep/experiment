@@ -6,7 +6,7 @@
 
     width: 100%;
 
-    padding: 70px 30px;
+    padding: 70px 15px;
 
     background-color: var(--background-color);
 
@@ -143,6 +143,48 @@
     overflow: hidden;
 
     background: #f5f5f5;
+
+}
+
+
+/* =====================================================
+   OUT OF STOCK OVERLAY
+===================================================== */
+
+.out-of-stock-overlay {
+
+    position: absolute;
+
+    inset: 0;
+
+    z-index: 10;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: rgba(0, 0, 0, 0.58);
+
+    pointer-events: none;
+
+}
+
+
+.out-of-stock-overlay span {
+
+    color: #ffffff;
+
+    font-size: 11px;
+
+    font-weight: 600;
+
+    letter-spacing: 0.18em;
+
+    text-transform: uppercase;
+
+    text-align: center;
 
 }
 
@@ -314,7 +356,7 @@
 .new-arrival-wishlist-form {
 
     position: absolute;
-
+    background-color: transparent;
     top: 2px;
 
     z-index: 50;
@@ -361,12 +403,12 @@
     border: none;
 
     border-radius: 50%;
+    background-color: transparent;
 
-    background: #ffffff;
-
-    color: #030303;
+    color: #000000;
 
     font-size: 13px;
+    font-weight: 800;
 
     line-height: 1;
 
@@ -374,11 +416,11 @@
 
     cursor: pointer;
 
-    transition:
+    /* transition:
         background 0.3s ease,
         color 0.3s ease,
         transform 0.3s ease,
-        box-shadow 0.3s ease;
+        box-shadow 0.3s ease; */
 
 }
 
@@ -400,10 +442,7 @@
     border: none;
 
     border-radius: 50%;
-
-    background: #ffffff;
-
-    color: #030303;
+    background-color: transparent;
 
     font-size: 13px;
 
@@ -448,14 +487,10 @@
 .new-arrival-cart-btn:hover,
 .new-arrival-wishlist-btn:hover {
 
-    background: #050505;
-
-    color: #ffffff;
 
     transform: translateY(-1px);
+    background-color: transparent;
 
-    box-shadow:
-        0 8px 22px rgba(0, 0, 0, 0.22);
 
 }
 
@@ -485,11 +520,23 @@
 
 } */
 
+.new-arrival-wishlist-btn,
+.new-arrival-wishlist-btn i {
+    color: #fdfdfd;
+    -webkit-text-stroke: 1px #000;
+}
+
+.new-arrival-wishlist-btn:hover,
+.new-arrival-wishlist-btn:hover i {
+    color: #fa0000;
+}
 
 
 .new-arrival-wishlist-btn.active,
 .new-arrival-wishlist-btn.active i {
     color: #d10000;
+    -webkit-text-stroke: 1px #920000;
+
 }
 
 .new-arrival-wishlist-btn.active:hover,
@@ -803,36 +850,11 @@
 
     }
 
-}
 
 
 /* =====================================================
    ACTIONS — MOBILE
 ===================================================== */
-
-@media (max-width: 768px) {
-
-    .new-arrival-cart-form,
-    .new-arrival-wishlist-form {
-
-        top: 11px;
-
-    }
-
-
-    .new-arrival-cart-form {
-
-        left: 11px;
-
-    }
-
-
-    .new-arrival-wishlist-form {
-
-        right: 11px;
-
-    }
-
 
     .new-arrival-cart-btn,
     .new-arrival-wishlist-btn {
@@ -847,13 +869,31 @@
     .new-arrival-cart-btn i,
     .new-arrival-wishlist-btn i {
 
-        font-size: 12px;
+        font-size: 20px;
 
     }
 
 }
 
+@media (max-width: 500px) {
 
+    .new-arrival-cart-btn,
+    .new-arrival-wishlist-btn {
+
+        width: 22px;
+
+        height: 22px;
+
+    }
+
+
+    .new-arrival-cart-btn i,
+    .new-arrival-wishlist-btn i {
+
+        font-size: 16px;
+
+    }
+}
 /* =====================================================
    SMALL MOBILE
 ===================================================== */
@@ -871,6 +911,10 @@
 
         font-size: 11px;
 
+    }
+
+    .out-of-stock-overlay span {
+        font-size: 9px;
     }
 
 }

@@ -217,9 +217,9 @@
                 aria-label="Wishlist"
             >
                 <i class="bi bi-heart"></i>
-                    <span class="cart-count">
-                        {{ navbar_wishlist_count }}
-                    </span>
+                <span class="cart-count navbar-wishlist-count">
+                    {{ navbar_wishlist_count }}
+                </span>
             </a>
 
 
@@ -514,28 +514,37 @@
 
             <!-- WISHLIST -->
 
-            <a href="#">
-
+            <a
+                href="{% url 'wishlist_page' %}"
+                class="nafi-action wishlist-action"
+                title="Wishlist"
+                aria-label="Wishlist"
+            >
                 <i class="bi bi-heart"></i>
-
-                <span>Wishlist</span>
-
+                <span class="cart-count navbar-wishlist-count">
+                    {{ navbar_wishlist_count }}
+                </span>
             </a>
 
 
             <!-- SHOPPING BAG -->
 
-            <a href="#">
+            <a
+                href="{% url 'cart_page' %}"
+                class="nafi-action cart-action"
+                title="Shopping Bag"
+                aria-label="Shopping Bag"
+            >
 
                 <i class="bi bi-bag"></i>
 
-                <span>Shopping Bag</span>
 
-                <span class="mobile-cart-count">
-                    0
-                </span>
+                    <span class="cart-count">
+                        {{ navbar_cart_count }}
+                    </span>
 
             </a>
+
 
         </div>
 

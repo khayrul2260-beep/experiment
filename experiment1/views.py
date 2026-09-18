@@ -2,6 +2,179 @@ from django.shortcuts import render, redirect, get_object_or_404
 from admin_dashboard.models import *
 from .models import *
 from django.http import JsonResponse
+from types import SimpleNamespace
+
+
+# =========================================================
+# GUEST CART HELPERS
+# =========================================================
+
+def _get_guest_cart(request):
+
+    return request.session.get(
+        "guest_cart",
+        {}
+    )
+
+
+def _save_guest_cart(request, guest_cart):
+
+    request.session["guest_cart"] = guest_cart
+
+    request.session.modified = True
+
+
+def _clear_guest_cart(request):
+
+    request.session.pop(
+        "guest_cart",
+        None
+    )
+
+    request.session.modified = True
+
+
+
+# =========================================================
+# BUILD GUEST CART ITEMS
+# =========================================================
+
+def _get_guest_cart_items(request):
+
+    guest_cart = _get_guest_cart(request)
+
+    cart_items = []
+
+    valid_cart = {}
+
+    for cart_key, data in guest_cart.items():
+
+        product = ProductsModel.objects.filter(
+            id=data.get("product_id"),
+            is_available=True
+        ).first()
+
+        if not product:
+            continue
+
+
+        product_size = ProductSize.objects.filter(
+            id=data.get("size_id"),
+            product=product,
+            is_available=True,
+            stock__gt=0
+        ).first()
+
+        if not product_size:
+            continue
+
+
+        quantity = int(
+            data.get(
+                "quantity",
+                1
+            )
+        )
+
+
+        if quantity > product_size.stock:
+
+            quantity = product_size.stock
+
+
+        if quantity < 1:
+            continue
+
+
+        valid_cart[cart_key] = {
+
+            "product_id": product.id,
+
+            "size_id": product_size.id,
+
+            "quantity": quantity,
+
+        }
+
+
+        unit_price = (
+            product.discount_price
+            if product.discount_price
+            else product.price
+        )
+
+
+        total_price = (
+            unit_price *
+            quantity
+        )
+
+
+        cart_item = SimpleNamespace(
+
+            key=cart_key,
+
+            product=product,
+
+            product_size=product_size,
+
+            size=product_size.size,
+
+            quantity=quantity,
+
+            unit_price=unit_price,
+
+            total_price=total_price,
+
+        )
+
+
+        cart_items.append(
+            cart_item
+        )
+
+
+    # Remove invalid/out-of-stock items
+    _save_guest_cart(
+        request,
+        valid_cart
+    )
+
+
+    return cart_items
+
+
+# =========================================================
+# GUEST CART SUMMARY
+# =========================================================
+
+def _get_guest_cart_summary(cart_items):
+
+    total_items = sum(
+        item.quantity
+        for item in cart_items
+    )
+
+
+    subtotal = sum(
+        item.total_price
+        for item in cart_items
+    )
+
+
+    return SimpleNamespace(
+
+        total_items=total_items,
+
+        subtotal=subtotal,
+
+    )
+
+
+# =========================================================
+# HOME MAIN
+# =========================================================    
+
 
 
 def home_page(request):
@@ -18,8 +191,7 @@ def home_page(request):
 
     new_arrivals = ProductsModel.objects.filter(
         is_available=True,
-        stock__gt=0
-    ).order_by("-created_at")[:10]
+    ).order_by("-created_at")[:15]
 
     featured_products = ProductsModel.objects.filter(
         is_available=True,
@@ -354,19 +526,397 @@ def contact_page(request):
         context
     )
 
+
+
+# =========================================================
+# GUEST UPDATE CART
+# =========================================================
+
+def guest_update_cart(request, item_key):
+
+    guest_cart = _get_guest_cart(request)
+
+
+    if item_key not in guest_cart:
+
+        return redirect("cart_page")
+
+
+    data = guest_cart[item_key]
+
+
+    product = ProductsModel.objects.filter(
+        id=data.get("product_id"),
+        is_available=True
+    ).first()
+
+
+    if not product:
+
+        guest_cart.pop(
+            item_key,
+            None
+        )
+
+        _save_guest_cart(
+            request,
+            guest_cart
+        )
+
+        return redirect("cart_page")
+
+
+    product_size = ProductSize.objects.filter(
+        id=data.get("size_id"),
+        product=product,
+        is_available=True
+    ).first()
+
+
+    if not product_size:
+
+        guest_cart.pop(
+            item_key,
+            None
+        )
+
+        _save_guest_cart(
+            request,
+            guest_cart
+        )
+
+        return redirect("cart_page")
+
+
+    try:
+
+        quantity = int(
+            request.POST.get(
+                "quantity",
+                1
+            )
+        )
+
+    except (TypeError, ValueError):
+
+        quantity = 1
+
+
+    if quantity <= 0:
+
+        guest_cart.pop(
+            item_key,
+            None
+        )
+
+    else:
+
+        if quantity > product_size.stock:
+
+            quantity = product_size.stock
+
+
+        guest_cart[item_key]["quantity"] = (
+            quantity
+        )
+
+
+    _save_guest_cart(
+        request,
+        guest_cart
+    )
+
+
+    return redirect("cart_page")
+
+# =========================================================
+# GUEST REMOVE
+# =========================================================
+
+def guest_remove_from_cart(request, item_key):
+
+    guest_cart = _get_guest_cart(request)
+
+
+    guest_cart.pop(
+        item_key,
+        None
+    )
+
+
+    _save_guest_cart(
+        request,
+        guest_cart
+    )
+
+
+    return redirect("cart_page")
+
+# =========================================================
+# GUEST REMOVE
+# =========================================================
+
+def guest_remove_from_cart(request, item_key):
+
+    guest_cart = _get_guest_cart(request)
+
+
+    guest_cart.pop(
+        item_key,
+        None
+    )
+
+
+    _save_guest_cart(
+        request,
+        guest_cart
+    )
+
+
+    return redirect("cart_page")
+
+def clear_cart(request):
+
+    if request.user.is_authenticated:
+
+        cart = get_object_or_404(
+            Cart,
+            user=request.user
+        )
+
+        cart.items.all().delete()
+
+        return redirect("cart_page")
+
+
+    # Guest
+    _clear_guest_cart(request)
+
+    return redirect("cart_page")
+
+def guest_add_another_size(request, item_key):
+
+    guest_cart = _get_guest_cart(request)
+
+    if item_key not in guest_cart:
+        return redirect("cart_page")
+
+    data = guest_cart[item_key]
+
+    product = ProductsModel.objects.filter(
+        id=data.get("product_id"),
+        is_available=True
+    ).first()
+
+    if not product:
+        return redirect("cart_page")
+
+    size_id = request.POST.get("size_id")
+
+    if not size_id:
+        return redirect("cart_page")
+
+    product_size = ProductSize.objects.filter(
+        id=size_id,
+        product=product,
+        is_available=True
+    ).first()
+
+    if not product_size:
+        return redirect("cart_page")
+
+    if product_size.stock <= 0:
+        return redirect("cart_page")
+
+    try:
+        quantity = int(
+            request.POST.get(
+                "quantity",
+                1
+            )
+        )
+    except (TypeError, ValueError):
+        quantity = 1
+
+    if quantity < 1:
+        quantity = 1
+
+    if quantity > product_size.stock:
+        quantity = product_size.stock
+
+    new_key = f"{product.id}_{product_size.id}"
+
+    # Same product + same size already exists
+    if new_key in guest_cart:
+
+        existing_quantity = int(
+            guest_cart[new_key].get(
+                "quantity",
+                1
+            )
+        )
+
+        new_quantity = (
+            existing_quantity +
+            quantity
+        )
+
+        if new_quantity > product_size.stock:
+            new_quantity = product_size.stock
+
+        guest_cart[new_key]["quantity"] = new_quantity
+
+    else:
+
+        guest_cart[new_key] = {
+            "product_id": product.id,
+            "size_id": product_size.id,
+            "quantity": quantity,
+        }
+
+    _save_guest_cart(request, guest_cart)
+
+    return redirect("cart_page")
+# =========================================================
+# GUEST UPDATE CART SIZE
+# =========================================================
+
+def guest_update_cart_size(request, item_key):
+
+    guest_cart = _get_guest_cart(request)
+
+
+    if item_key not in guest_cart:
+
+        return redirect("cart_page")
+
+
+    data = guest_cart[item_key]
+
+
+    product = ProductsModel.objects.filter(
+        id=data.get("product_id"),
+        is_available=True
+    ).first()
+
+
+    if not product:
+
+        return redirect("cart_page")
+
+
+    size_id = request.POST.get("size_id")
+
+
+    if not size_id:
+
+        return redirect("cart_page")
+
+
+    product_size = ProductSize.objects.filter(
+        id=size_id,
+        product=product,
+        is_available=True
+    ).first()
+
+
+    if not product_size:
+
+        return redirect("cart_page")
+
+
+    if product_size.stock <= 0:
+
+        return redirect("cart_page")
+
+
+    quantity = data.get(
+        "quantity",
+        1
+    )
+
+
+    if quantity > product_size.stock:
+
+        quantity = product_size.stock
+
+
+    new_key = (
+        f"{product.id}_{product_size.id}"
+    )
+
+
+    # Same product + same size already exists
+    if (
+        new_key != item_key
+        and new_key in guest_cart
+    ):
+
+        existing_quantity = (
+            guest_cart[new_key]["quantity"]
+        )
+
+
+        new_quantity = (
+            existing_quantity +
+            quantity
+        )
+
+
+        if new_quantity > product_size.stock:
+
+            new_quantity = product_size.stock
+
+
+        guest_cart[new_key]["quantity"] = (
+            new_quantity
+        )
+
+
+        guest_cart.pop(
+            item_key,
+            None
+        )
+
+
+    else:
+
+        guest_cart[new_key] = {
+
+            "product_id": product.id,
+
+            "size_id": product_size.id,
+
+            "quantity": quantity,
+
+        }
+
+
+        if new_key != item_key:
+
+            guest_cart.pop(
+                item_key,
+                None
+            )
+
+
+    _save_guest_cart(
+        request,
+        guest_cart
+    )
+
+
+    return redirect("cart_page")
+
+
 # =========================================================
 # NAFI CART
 # =========================================================
+# =========================================================
+# ADD TO CART
+# =========================================================
 
 def add_to_cart(request, product_id):
-
-    # -----------------------------------------------------
-    # LOGIN REQUIRED
-    # -----------------------------------------------------
-
-    if not request.user.is_authenticated:
-        return redirect("customer_login")
-
 
     # -----------------------------------------------------
     # GET PRODUCT
@@ -409,15 +959,21 @@ def add_to_cart(request, product_id):
     # -----------------------------------------------------
 
     try:
+
         quantity = int(
-            request.POST.get("quantity", 1)
+            request.POST.get(
+                "quantity",
+                1
+            )
         )
 
     except (TypeError, ValueError):
+
         quantity = 1
 
 
     if quantity < 1:
+
         quantity = 1
 
 
@@ -426,6 +982,7 @@ def add_to_cart(request, product_id):
     # -----------------------------------------------------
 
     if product_size.stock <= 0:
+
         return redirect(
             "product_detail_page",
             slug=product.slug
@@ -433,108 +990,197 @@ def add_to_cart(request, product_id):
 
 
     if quantity > product_size.stock:
+
         quantity = product_size.stock
 
 
-    # -----------------------------------------------------
-    # GET / CREATE CART
-    # -----------------------------------------------------
+    # =====================================================
+    # LOGGED-IN USER
+    # =====================================================
 
-    cart, created = Cart.objects.get_or_create(
-        user=request.user
-    )
+    if request.user.is_authenticated:
 
-
-    # -----------------------------------------------------
-    # GET / CREATE CART ITEM
-    # -----------------------------------------------------
-
-    cart_item, created = CartItem.objects.get_or_create(
-        cart=cart,
-        product=product,
-        size=product_size.size,
-        defaults={
-            "quantity": quantity
-        }
-    )
-
-
-    # -----------------------------------------------------
-    # EXISTING ITEM
-    # -----------------------------------------------------
-
-    if not created:
-
-        new_quantity = (
-            cart_item.quantity + quantity
+        cart, created = Cart.objects.get_or_create(
+            user=request.user
         )
 
+
+        cart_item, created = CartItem.objects.get_or_create(
+
+            cart=cart,
+
+            product=product,
+
+            size=product_size.size,
+
+            defaults={
+                "quantity": quantity
+            }
+
+        )
+
+
+        if not created:
+
+            new_quantity = (
+                cart_item.quantity +
+                quantity
+            )
+
+
+            if new_quantity > product_size.stock:
+
+                new_quantity = product_size.stock
+
+
+            cart_item.quantity = new_quantity
+
+            cart_item.save()
+
+
+        return redirect("cart_page")
+
+
+    # =====================================================
+    # GUEST USER
+    # =====================================================
+
+    guest_cart = _get_guest_cart(request)
+
+
+    # -----------------------------------------------------
+    # UNIQUE CART KEY
+    # -----------------------------------------------------
+
+    cart_key = f"{product.id}_{product_size.id}"
+
+
+    # -----------------------------------------------------
+    # EXISTING GUEST ITEM
+    # -----------------------------------------------------
+
+    if cart_key in guest_cart:
+
+        new_quantity = (
+            guest_cart[cart_key]["quantity"] +
+            quantity
+        )
+
+
         if new_quantity > product_size.stock:
+
             new_quantity = product_size.stock
 
-        cart_item.quantity = new_quantity
 
-        cart_item.save()
+        guest_cart[cart_key]["quantity"] = (
+            new_quantity
+        )
 
 
     # -----------------------------------------------------
-    # REDIRECT CART
+    # NEW GUEST ITEM
     # -----------------------------------------------------
+
+    else:
+
+        guest_cart[cart_key] = {
+
+            "product_id": product.id,
+
+            "size_id": product_size.id,
+
+            "quantity": quantity,
+
+        }
+
+
+    # -----------------------------------------------------
+    # SAVE SESSION
+    # -----------------------------------------------------
+
+    _save_guest_cart(
+        request,
+        guest_cart
+    )
+
 
     return redirect("cart_page")
+# =========================================================
+# CART PAGE
+# =========================================================
 
 # =========================================================
 # CART PAGE
 # =========================================================
 
-
 def cart_page(request):
 
-    if not request.user.is_authenticated:
-        return redirect("customer_login")
+    # =====================================================
+    # LOGGED-IN USER
+    # =====================================================
+
+    if request.user.is_authenticated:
+
+        cart, created = Cart.objects.get_or_create(
+            user=request.user
+        )
 
 
-    # -----------------------------------------------------
-    # GET / CREATE CART
-    # -----------------------------------------------------
+        cart_items = (
+            cart.items
+            .select_related("product")
+            .order_by("-created_at")
+        )
 
-    cart, created = Cart.objects.get_or_create(
-        user=request.user
+
+        context = {
+
+            "cart": cart,
+
+            "cart_items": cart_items,
+
+            "is_guest_cart": False,
+
+        }
+
+
+        return render(
+            request,
+            "customer/cart.html",
+            context
+        )
+
+
+    # =====================================================
+    # GUEST USER
+    # =====================================================
+
+    cart_items = _get_guest_cart_items(
+        request
     )
 
 
-    # -----------------------------------------------------
-    # CART ITEMS
-    # -----------------------------------------------------
-
-    cart_items = (
-        cart.items
-        .select_related("product")
-        .order_by("-created_at")
+    guest_cart = _get_guest_cart_summary(
+        cart_items
     )
 
-
-    # -----------------------------------------------------
-    # CONTEXT
-    # -----------------------------------------------------
 
     context = {
-        "cart": cart,
+
+        "cart": guest_cart,
+
         "cart_items": cart_items,
+
+        "is_guest_cart": True,
+
     }
 
-
-    # -----------------------------------------------------
-    # RENDER
-    # -----------------------------------------------------
 
     return render(
         request,
         "customer/cart.html",
         context
     )
-
-
 
 # =========================================================
 # UPDATE CART

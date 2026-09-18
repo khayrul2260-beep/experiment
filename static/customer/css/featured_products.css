@@ -433,7 +433,9 @@
 ===================================================== */
 
 @media (max-width: 991px) {
-
+    .nafi-featured {
+        padding: 40px 20px;
+    }
     .featured-grid {
         grid-template-columns:
             repeat(

@@ -154,6 +154,7 @@
   <!-- =========================================
        PREMIUM FEATURES
   ========================================== -->
+{% if home_page.second_hero_is_active %}
 
   <section class="second_hero_section" style="--second-hero-image: url('{{ home_page.second_hero_image.url }}');">
 
@@ -331,5 +332,9 @@
     {% endif %}
 
   </section>
+
+
+{% endif %}
+
 
 </section>

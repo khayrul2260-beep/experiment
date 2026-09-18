@@ -215,86 +215,74 @@ def add_product_page(request):
                 "add_product_page"
             )
 
-
         # ==========================================
         # SIZE-WISE STOCK
         # ==========================================
-
+        
         size_stock = {}
-
-        for size in ["M", "L", "XL", "XXL"]:
-
+        
+        for size in [
+            "M",
+            "L",
+            "XL",
+            "XXL"
+        ]:
+        
             # Check whether this size was selected
             size_selected = (
                 f"size_{size}" in request.POST
             )
-
-            # If size is not selected,
-            # skip it completely
+        
             if not size_selected:
                 continue
-
-
-            # Get stock for selected size
+            
+            
+            # Get stock value
             stock_value = request.POST.get(
                 f"stock_{size}",
                 "0"
             )
-
-
-            # Convert stock to integer
+        
+        
+            # Convert to integer
             try:
-
+            
                 stock_value = int(
                     stock_value or 0
                 )
-
-            except (ValueError, TypeError):
-
+        
+            except (
+                ValueError,
+                TypeError
+            ):
+        
                 stock_value = 0
-
-
-            # Selected size must have stock
-            if stock_value <= 0:
-
+        
+        
+            # Stock cannot be negative
+            if stock_value < 0:
+            
                 messages.error(
                     request,
-                    f"Please enter valid stock for size {size}."
+                    f"Stock cannot be negative for size {size}."
                 )
-
+        
                 return redirect(
                     "add_product_page"
                 )
-
-
-            # Store size and stock
+        
+        
+            # Store size even when stock is 0
             size_stock[size] = stock_value
-
-
-        # ==========================================
-        # SIZE VALIDATION
-        # ==========================================
-
-        if not size_stock:
-
-            messages.error(
-                request,
-                "Please select at least one size and enter its stock."
-            )
-
-            return redirect(
-                "add_product_page"
-            )
-
-
+        
+        
         # ==========================================
         # TOTAL STOCK
         # ==========================================
-
+        
         total_stock = sum(
             size_stock.values()
         )
-
 
         # ==========================================
         # CREATE PRODUCT + IMAGES + SIZES
@@ -371,16 +359,16 @@ def add_product_page(request):
             # ======================================
 
             for size, stock in size_stock.items():
-
+            
                 ProductSize.objects.create(
-
+                
                     product=product,
-
+            
                     size=size,
-
+            
                     stock=stock,
-
-                    is_available=True,
+            
+                    is_available=stock > 0,
                 )
 
 
@@ -666,104 +654,99 @@ def edit_product_page(request, id):
         delete_image_ids = request.POST.getlist(
             "delete_image_ids"
         )
-
-
+        
         # ======================================================
         # SIZE-WISE STOCK
         # ======================================================
-
+        
         size_stock = {}
-
-
+        
+        
         for size in [
             "M",
             "L",
             "XL",
             "XXL"
         ]:
-
+        
             # --------------------------------------------------
-            # Check selected size
+            # Check whether size is selected
             # --------------------------------------------------
-
+        
             size_selected = (
                 f"size_{size}" in request.POST
             )
-
-
+        
+        
+            # --------------------------------------------------
+            # If size is not selected
+            # --------------------------------------------------
+        
             if not size_selected:
                 continue
-
-
+            
+            
             # --------------------------------------------------
-            # Get stock
+            # Get stock value
             # --------------------------------------------------
-
+        
             stock_value = request.POST.get(
                 f"stock_{size}",
                 "0"
             )
-
-
+        
+        
             try:
-
+            
                 stock_value = int(
                     stock_value or 0
                 )
-
+        
             except (
                 ValueError,
                 TypeError
             ):
-
+        
                 stock_value = 0
-
-
+        
+        
             # --------------------------------------------------
-            # Validate stock
+            # Selected size with 0 stock
+            #
+            # This is allowed.
+            # It means this size is currently out of stock.
             # --------------------------------------------------
-
-            if stock_value <= 0:
-
+        
+            if stock_value < 0:
+            
                 messages.error(
                     request,
-                    f"Please enter valid stock for size {size}."
+                    f"Stock cannot be negative for size {size}."
                 )
-
+        
                 return redirect(
                     "edit_product_page",
                     id=product.id
                 )
-
-
+        
+        
+            # --------------------------------------------------
+            # Save selected size
+            # --------------------------------------------------
+        
             size_stock[size] = stock_value
-
-
-        # ======================================================
-        # SIZE VALIDATION
-        # ======================================================
-
-        if not size_stock:
-
-            messages.error(
-                request,
-                "Please select at least one size and enter its stock."
-            )
-
-            return redirect(
-                "edit_product_page",
-                id=product.id
-            )
-
-
+        
+        
         # ======================================================
         # TOTAL STOCK
+        #
+        # If no size is selected OR all selected sizes have
+        # 0 stock, product becomes Out of Stock.
         # ======================================================
-
+        
         total_stock = sum(
             size_stock.values()
         )
-
 
         # ======================================================
         # UPDATE BASIC PRODUCT DATA
@@ -1256,13 +1239,13 @@ def edit_product_page(request, id):
             # --------------------------------------------------
 
             if size in size_stock:
-
+            
                 ProductSize.objects.update_or_create(
                     product=product,
                     size=size,
                     defaults={
                         "stock": size_stock[size],
-                        "is_available": True,
+                        "is_available": size_stock[size] > 0,
                     }
                 )
 

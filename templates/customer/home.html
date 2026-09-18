@@ -45,9 +45,13 @@
 {% include 'customer/hero.html' %} {% endcomment %}
 {% include 'customer/mobile_home.html' %}
 
-{% include 'customer/featured_products.html' %}
+{% if home_page.featured_is_active %}
+    {% include 'customer/featured_products.html' %}
+{% endif %}
 
-{% include 'customer/new_arrivals.html' %}
+{% if home_page.new_arrivals_is_active %}
+    {% include 'customer/new_arrivals.html' %}
+{% endif %}
 
 {% endblock %}
 
@@ -81,26 +85,23 @@ document.querySelectorAll(".new-arrival-wishlist-btn").forEach(button => {
             });
 
             const data = await response.json();
+            document.querySelectorAll(".navbar-wishlist-count").forEach(element => {
+                element.textContent = data.wishlist_count;
+            });
 
             if (!data.success) {
                 return;
             }
 
             if (data.is_wishlisted) {
-
-                this.classList.add("active");
-
+                button.classList.add("active");
                 icon.classList.remove("bi-heart");
                 icon.classList.add("bi-heart-fill");
-
             } else {
-
-                this.classList.remove("active");
-
+                button.classList.remove("active");
                 icon.classList.remove("bi-heart-fill");
-                icon.classList.add("bi-heart");
+                icon.classList.add("bi-heart-fill");
             }
-
         } catch (error) {
 
             console.error(

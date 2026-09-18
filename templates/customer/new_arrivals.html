@@ -56,63 +56,44 @@
                 <!-- =============================================
                      MAIN PRODUCT LINK
                 ============================================== -->
-
                 <a
                     href="{% url 'product_detail_page' product.slug %}"
                     class="product-image-link"
                 >
-
+                                
                     {% if product.image %}
-
                         <img
                             src="{{ product.image.url }}"
                             alt="{{ product.name }}"
                             class="new-arrival-image main-product-image"
                             loading="lazy"
                         >
-
                     {% endif %}
-
-
-
-                    <!-- =========================================
-                         SECONDARY IMAGE
-                    ========================================== -->
-
+                                
                     {% for product_image in product.images.all %}
-
                         {% if product_image.image_type == "secondary" %}
-
                             <img
                                 src="{{ product_image.image.url }}"
                                 alt="{{ product.name }}"
                                 class="new-arrival-image secondary-product-image"
                                 loading="lazy"
                             >
-
                         {% endif %}
-
                     {% endfor %}
-
-
-
-                    <!-- =========================================
-                         NO IMAGE
-                    ========================================== -->
-
+                                
                     {% if not product.image %}
-
                         <div class="product-no-image">
-
                             <i class="bi bi-image"></i>
-
                         </div>
-
                     {% endif %}
-
+                    
+                    {% if product.stock <= 0 %}
+                        <div class="out-of-stock-overlay">
+                            <span>OUT OF STOCK</span>
+                        </div>
+                    {% endif %}
+                    
                 </a>
-
-
 
                 <!-- =============================================
                      CART — TOP LEFT
@@ -181,7 +162,7 @@
                                 aria-label="Add {{ product.name }} to wishlist"
                                 title="Add to wishlist"
                             >
-                                <i class="bi {% if product.id in wishlist_product_ids %}bi-heart-fill{% else %}bi-heart{% endif %}"></i>
+                                <i class="bi bi-heart-fill"></i>
                             </button>
                     
                     </form>
@@ -196,7 +177,7 @@
                             aria-label="Login to add {{ product.name }} to wishlist"
                             title="Add to wishlist"
                         >
-                            <i class="bi bi-heart"></i>
+                            <i class="bi bi-heart-fill"></i>
                         </a>
                     
                     </div>

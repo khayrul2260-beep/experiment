@@ -8,6 +8,117 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import update_session_auth_hash
+from experiment1.models import Cart, CartItem
+from admin_dashboard.models import *
+
+
+
+def merge_guest_cart_into_user_cart(request, user):
+
+    guest_cart = request.session.get(
+        "guest_cart",
+        {}
+    )
+
+
+    if not guest_cart:
+
+        return
+
+
+    cart, created = Cart.objects.get_or_create(
+        user=user
+    )
+
+
+    for data in guest_cart.values():
+
+        product = ProductsModel.objects.filter(
+            id=data.get("product_id"),
+            is_available=True
+        ).first()
+
+
+        if not product:
+
+            continue
+
+
+        product_size = ProductSize.objects.filter(
+            id=data.get("size_id"),
+            product=product,
+            is_available=True,
+            stock__gt=0
+        ).first()
+
+
+        if not product_size:
+
+            continue
+
+
+        quantity = int(
+            data.get(
+                "quantity",
+                1
+            )
+        )
+
+
+        if quantity <= 0:
+
+            continue
+
+
+        if quantity > product_size.stock:
+
+            quantity = product_size.stock
+
+
+        cart_item, created = CartItem.objects.get_or_create(
+
+            cart=cart,
+
+            product=product,
+
+            size=product_size.size,
+
+            defaults={
+                "quantity": quantity
+            }
+
+        )
+
+
+        if not created:
+
+            new_quantity = (
+                cart_item.quantity +
+                quantity
+            )
+
+
+            if new_quantity > product_size.stock:
+
+                new_quantity = product_size.stock
+
+
+            cart_item.quantity = (
+                new_quantity
+            )
+
+            cart_item.save()
+
+
+    request.session.pop(
+        "guest_cart",
+        None
+    )
+
+    request.session.modified = True
+
+
+
 
 
 User = get_user_model()
@@ -68,9 +179,14 @@ def customer_login(request):
             )
 
             if user is not None:
-
+            
                 login(request, user)
-
+            
+                merge_guest_cart_into_user_cart(
+                    request,
+                    user
+                )
+            
                 return redirect("customer_profile")
 
             messages.error(

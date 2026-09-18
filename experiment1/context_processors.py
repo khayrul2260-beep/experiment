@@ -12,23 +12,57 @@ def navbar_categories(request):
     }
 
 
-
 def navbar_cart_count(request):
 
     cart_count = 0
 
+
+    # =====================================================
+    # LOGGED-IN USER
+    # =====================================================
+
     if request.user.is_authenticated:
 
         try:
-            cart_count = request.user.cart.total_items
+
+            cart_count = (
+                request.user.cart.total_items
+            )
+
         except Cart.DoesNotExist:
+
             cart_count = 0
 
+
+    # =====================================================
+    # GUEST USER
+    # =====================================================
+
+    else:
+
+        guest_cart = request.session.get(
+            "guest_cart",
+            {}
+        )
+
+
+        cart_count = sum(
+
+            item.get(
+                "quantity",
+                0
+            )
+
+            for item in guest_cart.values()
+
+        )
+
+
     return {
+
         "navbar_cart_count": cart_count
+
     }
-
-
 
 def navbar_wishlist_count(request):
 
