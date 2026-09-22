@@ -196,6 +196,12 @@ def home_page(request):
         is_available=True
     ).order_by("-created_at")[:15]
 
+    for product in all_products:
+        product.is_out_of_stock = not product.sizes.filter(
+            is_available=True,
+            stock__gt=0
+        ).exists()
+
     featured_products = ProductsModel.objects.filter(
         is_available=True,
         is_featured=True,

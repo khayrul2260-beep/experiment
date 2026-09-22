@@ -412,7 +412,7 @@
                             {% endif %}
                           
                           
-                            {% if product.stock <= 0 %}
+                            {% if product.is_out_of_stock %}
                           
                             <div class="mobile-all-product-stock-overlay">
                                 <span>OUT OF STOCK</span>

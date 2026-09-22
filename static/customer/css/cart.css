@@ -142,11 +142,11 @@
 ========================================================= */
 
 .cart-container {
-    width: min(1380px, calc(100% - 48px));
-
+    width: 100%;
+    max-width: 1900px;
     margin: 0 auto;
 
-    padding-top: 30px;
+    padding: 30px 30px;
 }
 
 
