@@ -89,6 +89,10 @@ class HomePage(models.Model):
         default=True
     )
 
+    all_products_is_active = models.BooleanField(
+        default=True
+    )
+
     featured_is_active = models.BooleanField(
         default=True
     )

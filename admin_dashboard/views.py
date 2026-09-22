@@ -2361,6 +2361,8 @@ def update_home_visibility(request):
         home_page.categories_is_active = (
             request.POST.get("categories_is_active") == "on"
         )
+        
+        home_page.all_products_is_active = request.POST.get("all_products_is_active") == "on"
 
         home_page.featured_is_active = (
             request.POST.get("featured_is_active") == "on"

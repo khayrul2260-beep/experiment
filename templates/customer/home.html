@@ -65,53 +65,118 @@
     <script src="{% static 'customer/js/mobile_home.js' %}"></script>
     <script src="{% static 'customer/js/category_products.js' %}"></script>
 <script>
-document.querySelectorAll(".new-arrival-wishlist-btn").forEach(button => {
+document.addEventListener("click", async function (event) {
 
-    button.addEventListener("click", async function () {
+    const button = event.target.closest(
+        ".new-arrival-wishlist-btn, .mobile-all-product-wishlist-btn"
+    );
 
-        const url = this.dataset.url;
-        const icon = this.querySelector("i");
+    if (!button) {
+        return;
+    }
 
-        try {
+    /*
+       Login link হলে AJAX চালাব না
+    */
+    if (button.tagName === "A") {
+        return;
+    }
 
-            const response = await fetch(url, {
-                method: "POST",
-                headers: {
-                    "X-CSRFToken": document.querySelector(
-                        "[name=csrfmiddlewaretoken]"
-                    ).value,
-                    "X-Requested-With": "XMLHttpRequest"
-                }
-            });
+    event.preventDefault();
+    event.stopPropagation();
 
-            const data = await response.json();
-            document.querySelectorAll(".navbar-wishlist-count").forEach(element => {
-                element.textContent = data.wishlist_count;
-            });
+    const url = button.dataset.url;
+    const icon = button.querySelector("i");
 
-            if (!data.success) {
-                return;
+    if (!url) {
+        return;
+    }
+
+    /*
+       CSRF token
+    */
+    const csrfInput =
+        document.querySelector("[name=csrfmiddlewaretoken]");
+
+    if (!csrfInput) {
+        console.error("CSRF token not found.");
+        return;
+    }
+
+    try {
+
+        const response = await fetch(url, {
+            method: "POST",
+
+            headers: {
+                "X-CSRFToken": csrfInput.value,
+                "X-Requested-With": "XMLHttpRequest"
             }
+        });
 
-            if (data.is_wishlisted) {
-                button.classList.add("active");
+
+        const data = await response.json();
+
+
+        /*
+           Update navbar wishlist count
+        */
+        document
+            .querySelectorAll(".navbar-wishlist-count")
+            .forEach(element => {
+
+                element.textContent =
+                    data.wishlist_count;
+
+            });
+
+
+        /*
+           Wishlist failed
+        */
+        if (!data.success) {
+            return;
+        }
+
+
+        /*
+           Wishlist added
+        */
+        if (data.is_wishlisted) {
+
+            button.classList.add("active");
+
+            if (icon) {
                 icon.classList.remove("bi-heart");
                 icon.classList.add("bi-heart-fill");
-            } else {
-                button.classList.remove("active");
-                icon.classList.remove("bi-heart-fill");
-                icon.classList.add("bi-heart-fill");
             }
-        } catch (error) {
-
-            console.error(
-                "Wishlist error:",
-                error
-            );
 
         }
 
-    });
+        /*
+           Wishlist removed
+        */
+        else {
+
+            button.classList.remove("active");
+
+            if (icon) {
+                icon.classList.remove("bi-heart");
+                icon.classList.add("bi-heart-fill");
+            }
+
+        }
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Wishlist error:",
+            error
+        );
+
+    }
 
 });
 </script>

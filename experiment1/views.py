@@ -188,9 +188,12 @@ def home_page(request):
         is_active=True
     ).order_by("display_order")
 
-
     new_arrivals = ProductsModel.objects.filter(
         is_available=True,
+    ).order_by("-created_at")[:15]
+
+    all_products = ProductsModel.objects.filter(
+        is_available=True
     ).order_by("-created_at")[:15]
 
     featured_products = ProductsModel.objects.filter(
@@ -205,6 +208,7 @@ def home_page(request):
         "home_page": home_page,
         "hero_slides": hero_slides,
         "new_arrivals": new_arrivals,
+        "all_products": all_products,
         "featured_products": featured_products,
         "categories": categories,
     }

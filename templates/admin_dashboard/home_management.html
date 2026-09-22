@@ -496,6 +496,48 @@
                     </div>
 
 
+<!-- All Products -->
+
+<div class="visibility-item">
+
+    <div class="visibility-info">
+
+        <div class="visibility-icon">
+            <i class="bi bi-grid-3x3-gap"></i>
+        </div>
+
+        <div>
+
+            <strong>
+                All Products
+            </strong>
+
+            <span>
+                All available products showcase.
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <label class="nafi-switch">
+
+        <input
+            type="checkbox"
+            name="all_products_is_active"
+            {% if home_page.all_products_is_active %}
+                checked
+            {% endif %}
+        >
+
+        <span class="nafi-switch-slider"></span>
+
+    </label>
+
+</div>
+
+
                     <!-- Second Hero -->
 
                     <div class="visibility-item">
