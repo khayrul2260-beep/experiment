@@ -21,6 +21,7 @@ urlpatterns = [
     path("cart/clear/", clear_cart, name="clear_cart"),
 
     path("checkout/", checkout_page, name="checkout_page"),
+    path("order-confirmation/<str:order_number>/", order_confirmation_page, name="order_confirmation",),
     
     path("wishlist/", wishlist_page, name="wishlist_page"),
     path("wishlist/toggle/<int:product_id>/", add_to_wishlist, name="add_to_wishlist"),

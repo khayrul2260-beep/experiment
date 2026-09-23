@@ -2241,14 +2241,24 @@ def checkout_page(request):
         cart_items
     )
 
+    return redirect(
+        "order_confirmation",
+        order_number=order.order_number
+    )
+
+def order_confirmation_page(request, order_number):
+
+    order = get_object_or_404(
+        Order,
+        order_number=order_number
+    )
+
     context = {
-        "cart": cart,
-        "cart_items": cart_items,
-        "is_guest_checkout": True,
+        "order": order,
     }
 
     return render(
         request,
-        "customer/checkout.html",
+        "customer/order_confirmation.html",
         context
     )

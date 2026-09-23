@@ -1,0 +1,1110 @@
+/* =========================================================
+   NAFI ORDER CONFIRMATION
+   BLACK / WHITE — MINIMAL PREMIUM DESIGN
+========================================================= */
+
+.nafi-order-confirmation {
+    width: 100%;
+    min-height: 100vh;
+    padding: 80px 20px 110px;
+    background: #050505;
+    color: #ffffff;
+}
+
+
+/* =========================================================
+   CONFIRMATION HEADER
+========================================================= */
+
+.confirmation-header {
+    max-width: 900px;
+    margin: 0 auto 65px;
+    text-align: center;
+}
+
+.confirmation-check {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 24px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 50%;
+
+    background: #ffffff;
+    color: #050505;
+
+    font-size: 28px;
+}
+
+.confirmation-check i {
+    line-height: 1;
+}
+
+
+.confirmation-eyebrow {
+    display: block;
+    margin-bottom: 12px;
+
+    color: #aeb4bf;
+
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+}
+
+
+.confirmation-header h1 {
+    margin: 0;
+
+    color: #ffffff;
+
+    font-size: clamp(38px, 5vw, 66px);
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -2px;
+}
+
+
+.confirmation-header p {
+    max-width: 520px;
+    margin: 18px auto 0;
+
+    color: #9da3ad;
+
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+
+.confirmation-order-number {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 5px;
+
+    margin-top: 25px;
+    padding: 13px 20px;
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 8px;
+
+    background: #0d0d0d;
+}
+
+
+.confirmation-order-number span {
+    color: #777d87;
+
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 1.8px;
+}
+
+
+.confirmation-order-number strong {
+    color: #ffffff;
+
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+
+/* =========================================================
+   MAIN CONTAINER
+========================================================= */
+
+.confirmation-container {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+
+/* =========================================================
+   STATUS CARD
+========================================================= */
+
+.confirmation-status-card {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr auto 1fr;
+    align-items: center;
+
+    margin-bottom: 45px;
+    padding: 25px 30px;
+
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+
+    background: #0d0d0d;
+}
+
+
+.status-content {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+
+.status-label {
+    color: #737983;
+
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.7px;
+}
+
+
+.status-content strong {
+    color: #ffffff;
+
+    font-size: 13px;
+    font-weight: 600;
+}
+
+
+.status-divider {
+    width: 1px;
+    height: 32px;
+
+    margin: 0 30px;
+
+    background: rgba(255, 255, 255, 0.1);
+}
+
+
+/* =========================================================
+   MAIN TWO COLUMN LAYOUT
+========================================================= */
+
+.confirmation-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 400px;
+    gap: 45px;
+
+    align-items: start;
+}
+
+
+/* =========================================================
+   SECTION
+========================================================= */
+
+.confirmation-section {
+    margin-bottom: 48px;
+}
+
+
+.confirmation-section-heading {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+
+.confirmation-section-heading > span {
+    padding-top: 4px;
+
+    color: #626873;
+
+    font-size: 11px;
+    font-weight: 700;
+}
+
+
+.confirmation-section-heading small {
+    display: block;
+    margin-bottom: 5px;
+
+    color: #777d87;
+
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+
+.confirmation-section-heading h2 {
+    margin: 0;
+
+    color: #ffffff;
+
+    font-size: 25px;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   ORDER ITEMS
+========================================================= */
+
+.confirmation-items {
+    display: flex;
+    flex-direction: column;
+
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+
+.confirmation-item {
+    display: grid;
+    grid-template-columns: 78px minmax(0, 1fr) auto;
+
+    gap: 18px;
+    align-items: center;
+
+    padding: 20px 0;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+
+/* PRODUCT IMAGE */
+
+.confirmation-item-image {
+    width: 78px;
+    aspect-ratio: 3 / 4;
+
+    overflow: hidden;
+
+    border-radius: 8px;
+
+    background: #111111;
+}
+
+
+.confirmation-item-image img {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    object-fit: cover;
+}
+
+
+.confirmation-image-placeholder {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #70757e;
+
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+
+/* PRODUCT INFO */
+
+.confirmation-item-info {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 6px;
+}
+
+
+.confirmation-item-info strong {
+    color: #ffffff;
+
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+
+.confirmation-item-info span {
+    color: #858b95;
+
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.6px;
+}
+
+
+/* ITEM PRICE */
+
+.confirmation-item-price {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+
+    gap: 5px;
+}
+
+
+.confirmation-item-price strong {
+    color: #ffffff;
+
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+
+.confirmation-item-price span {
+    color: #737983;
+
+    font-size: 9px;
+    white-space: nowrap;
+}
+
+
+.confirmation-empty {
+    padding: 30px 0;
+
+    color: #777d87;
+
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   INFORMATION CARD
+========================================================= */
+
+.confirmation-info-card {
+    padding: 25px;
+
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 14px;
+
+    background: #0d0d0d;
+}
+
+
+.info-row {
+    display: flex;
+    flex-direction: column;
+
+    gap: 7px;
+
+    padding: 14px 0;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+
+.info-row:first-child {
+    padding-top: 0;
+}
+
+
+.info-row:last-child {
+    padding-bottom: 0;
+    border-bottom: 0;
+}
+
+
+.info-row span,
+.delivery-address > span,
+.delivery-location span,
+.delivery-note > span {
+    color: #707680;
+
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+}
+
+
+.info-row strong {
+    color: #ffffff;
+
+    font-size: 13px;
+    font-weight: 500;
+
+    word-break: break-word;
+}
+
+
+/* =========================================================
+   DELIVERY ADDRESS
+========================================================= */
+
+.delivery-address {
+    padding-bottom: 20px;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+
+.delivery-address > span {
+    display: block;
+    margin-bottom: 9px;
+}
+
+
+.delivery-address p {
+    margin: 0;
+
+    color: #e4e6ea;
+
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+
+/* LOCATION */
+
+.delivery-location {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    gap: 20px;
+
+    padding: 20px 0;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+
+.delivery-location > div {
+    display: flex;
+    flex-direction: column;
+
+    gap: 7px;
+}
+
+
+.delivery-location strong {
+    color: #ffffff;
+
+    font-size: 13px;
+    font-weight: 500;
+}
+
+
+/* DELIVERY NOTE */
+
+.delivery-note {
+    padding-top: 20px;
+}
+
+
+.delivery-note > span {
+    display: block;
+    margin-bottom: 9px;
+}
+
+
+.delivery-note p {
+    margin: 0;
+
+    color: #a3a8b0;
+
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+.confirmation-sidebar {
+    position: sticky;
+    top: 25px;
+}
+
+
+/* =========================================================
+   SUMMARY CARD
+========================================================= */
+
+.confirmation-summary-card {
+    padding: 30px;
+
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 18px;
+
+    background: #0d0d0d;
+}
+
+
+.summary-eyebrow {
+    display: block;
+    margin-bottom: 7px;
+
+    color: #777d87;
+
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+
+.confirmation-summary-card h2 {
+    margin: 0 0 28px;
+
+    color: #ffffff;
+
+    font-size: 26px;
+    font-weight: 700;
+}
+
+
+/* SUMMARY LINE */
+
+.summary-line {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin-bottom: 15px;
+}
+
+
+.summary-line span {
+    color: #9ca1aa;
+
+    font-size: 12px;
+}
+
+
+.summary-line strong {
+    color: #ffffff;
+
+    font-size: 13px;
+    font-weight: 600;
+}
+
+
+/* DIVIDER */
+
+.summary-divider {
+    width: 100%;
+    height: 1px;
+
+    margin: 23px 0;
+
+    background: rgba(255, 255, 255, 0.1);
+}
+
+
+/* TOTAL */
+
+.summary-total {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+}
+
+
+.summary-total div {
+    display: flex;
+    flex-direction: column;
+
+    gap: 4px;
+}
+
+
+.summary-total span {
+    color: #ffffff;
+
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+}
+
+
+.summary-total small {
+    color: #707680;
+
+    font-size: 9px;
+}
+
+
+.summary-total strong {
+    color: #ffffff;
+
+    font-size: 26px;
+    font-weight: 700;
+}
+
+
+/* PAYMENT INFORMATION */
+
+.summary-payment {
+    display: flex;
+    flex-direction: column;
+
+    gap: 6px;
+
+    margin-top: 24px;
+    padding-top: 18px;
+
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+
+.summary-payment span {
+    color: #707680;
+
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+}
+
+
+.summary-payment strong {
+    color: #eeeeee;
+
+    font-size: 11px;
+    font-weight: 500;
+}
+
+
+/* =========================================================
+   ACTIONS
+========================================================= */
+
+.confirmation-actions {
+    display: flex;
+    flex-direction: column;
+
+    gap: 10px;
+
+    margin-top: 15px;
+}
+
+
+/* PRIMARY BUTTON */
+
+.confirmation-primary-btn {
+    width: 100%;
+    min-height: 54px;
+
+    padding: 0 18px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    border: 1px solid transparent;
+    border-radius: 9px;
+
+    background: #ffffff;
+    color: #050505;
+
+    text-decoration: none;
+
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+
+    transition:
+        background-color 0.7s ease,
+        color 0.7s ease,
+        border-color 0.7s ease;
+}
+
+
+.confirmation-primary-btn i {
+    font-size: 17px;
+
+    transition: transform 0.5s ease;
+}
+
+
+.confirmation-primary-btn:hover {
+    background: #4d8dff;
+    color: #ffffff;
+
+    border-color: #4d8dff;
+}
+
+
+.confirmation-primary-btn:hover i {
+    transform: translateX(5px);
+}
+
+
+/* SECONDARY BUTTON */
+
+.confirmation-secondary-btn {
+    width: 100%;
+    min-height: 50px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 9px;
+
+    background: transparent;
+    color: #ffffff;
+
+    text-decoration: none;
+
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.4px;
+
+    transition:
+        background-color 0.5s ease,
+        border-color 0.5s ease,
+        color 0.5s ease;
+}
+
+
+.confirmation-secondary-btn:hover {
+    background: #ffffff;
+    color: #050505;
+
+    border-color: #ffffff;
+}
+
+
+/* =========================================================
+   SUPPORT
+========================================================= */
+
+.confirmation-support {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 12px;
+
+    margin-top: 20px;
+    padding: 18px;
+
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 12px;
+
+    background: #0a0a0a;
+}
+
+
+.confirmation-support > i {
+    flex: 0 0 auto;
+
+    margin-top: 2px;
+
+    color: #ffffff;
+
+    font-size: 14px;
+}
+
+
+.confirmation-support div {
+    display: flex;
+    flex-direction: column;
+
+    gap: 5px;
+}
+
+
+.confirmation-support strong {
+    color: #dfe2e7;
+
+    font-size: 10px;
+    font-weight: 600;
+}
+
+
+.confirmation-support span {
+    color: #737983;
+
+    font-size: 9px;
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 1000px) {
+
+    .confirmation-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .confirmation-sidebar {
+        position: static;
+    }
+
+    .confirmation-summary-card {
+        max-width: 100%;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+
+    .nafi-order-confirmation {
+        padding: 55px 12px 75px;
+    }
+
+
+    /* HEADER */
+
+    .confirmation-header {
+        margin-bottom: 42px;
+    }
+
+
+    .confirmation-check {
+        width: 55px;
+        height: 55px;
+
+        margin-bottom: 20px;
+
+        font-size: 23px;
+    }
+
+
+    .confirmation-eyebrow {
+        font-size: 8px;
+        letter-spacing: 2.5px;
+    }
+
+
+    .confirmation-header h1 {
+        font-size: 36px;
+        letter-spacing: -1.5px;
+    }
+
+
+    .confirmation-header p {
+        max-width: 330px;
+
+        margin-top: 15px;
+
+        font-size: 11px;
+        line-height: 1.7;
+    }
+
+
+    .confirmation-order-number {
+        margin-top: 20px;
+        padding: 11px 16px;
+    }
+
+
+    .confirmation-order-number strong {
+        font-size: 10px;
+    }
+
+
+    /* STATUS */
+
+    .confirmation-status-card {
+        grid-template-columns: 1fr;
+
+        gap: 18px;
+
+        margin-bottom: 38px;
+        padding: 20px;
+    }
+
+
+    .status-divider {
+        width: 100%;
+        height: 1px;
+
+        margin: 0;
+    }
+
+
+    /* SECTIONS */
+
+    .confirmation-section {
+        margin-bottom: 38px;
+    }
+
+
+    .confirmation-section-heading {
+        gap: 10px;
+
+        margin-bottom: 16px;
+    }
+
+
+    .confirmation-section-heading h2 {
+        font-size: 20px;
+    }
+
+
+    .confirmation-section-heading small {
+        font-size: 8px;
+    }
+
+
+    /* ITEMS */
+
+    .confirmation-item {
+        grid-template-columns: 58px minmax(0, 1fr);
+
+        gap: 12px;
+
+        padding: 15px 0;
+    }
+
+
+    .confirmation-item-image {
+        width: 58px;
+    }
+
+
+    .confirmation-item-info strong {
+        font-size: 11px;
+    }
+
+
+    .confirmation-item-info span {
+        font-size: 8px;
+    }
+
+
+    .confirmation-item-price {
+        grid-column: 2;
+
+        align-items: flex-start;
+
+        margin-top: -4px;
+    }
+
+
+    .confirmation-item-price strong {
+        font-size: 11px;
+    }
+
+
+    /* INFO */
+
+    .confirmation-info-card {
+        padding: 20px;
+    }
+
+
+    .info-row strong {
+        font-size: 12px;
+    }
+
+
+    .delivery-address p {
+        font-size: 12px;
+    }
+
+
+    .delivery-location {
+        gap: 15px;
+    }
+
+
+    .delivery-location strong {
+        font-size: 12px;
+    }
+
+
+    /* SUMMARY */
+
+    .confirmation-summary-card {
+        padding: 22px;
+        border-radius: 14px;
+    }
+
+
+    .confirmation-summary-card h2 {
+        font-size: 22px;
+        margin-bottom: 23px;
+    }
+
+
+    .summary-total strong {
+        font-size: 22px;
+    }
+
+
+    /* ACTIONS */
+
+    .confirmation-primary-btn {
+        min-height: 52px;
+    }
+
+
+    .confirmation-secondary-btn {
+        min-height: 48px;
+    }
+
+}
+
+
+/* =========================================================
+   VERY SMALL MOBILE
+========================================================= */
+
+@media (max-width: 400px) {
+
+    .nafi-order-confirmation {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+
+    .confirmation-header h1 {
+        font-size: 31px;
+    }
+
+
+    .confirmation-item {
+        grid-template-columns: 50px minmax(0, 1fr);
+    }
+
+
+    .confirmation-item-image {
+        width: 50px;
+    }
+
+
+    .confirmation-item-info strong {
+        font-size: 10px;
+    }
+
+
+    .confirmation-item-info span {
+        font-size: 7px;
+    }
+
+
+    .confirmation-summary-card {
+        padding: 18px;
+    }
+
+
+    .summary-line span {
+        font-size: 11px;
+    }
+
+
+    .summary-line strong {
+        font-size: 12px;
+    }
+
+}
