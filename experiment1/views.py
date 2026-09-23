@@ -1700,3 +1700,555 @@ def all_products_page(request):
         context
     )
 
+# =========================================================
+# CHECKOUT PAGE
+# =========================================================
+def checkout_page(request):
+
+    # =====================================================
+    # HANDLE CHECKOUT FORM SUBMISSION
+    # =====================================================
+
+    if request.method == "POST":
+
+        from decimal import Decimal
+        from django.db import transaction
+
+        # -------------------------------------------------
+        # CUSTOMER INFORMATION
+        # -------------------------------------------------
+
+        full_name = request.POST.get(
+            "full_name",
+            ""
+        ).strip()
+
+        phone = request.POST.get(
+            "phone",
+            ""
+        ).strip()
+
+        email = request.POST.get(
+            "email",
+            ""
+        ).strip()
+
+        # -------------------------------------------------
+        # SHIPPING INFORMATION
+        # -------------------------------------------------
+
+        address = request.POST.get(
+            "address",
+            ""
+        ).strip()
+
+        city = request.POST.get(
+            "city",
+            ""
+        ).strip()
+
+        area = request.POST.get(
+            "area",
+            ""
+        ).strip()
+
+        delivery_note = request.POST.get(
+            "delivery_note",
+            ""
+        ).strip()
+
+        # -------------------------------------------------
+        # PAYMENT
+        # -------------------------------------------------
+
+        payment_method = request.POST.get(
+            "payment_method",
+            "COD"
+        ).strip()
+
+        # =================================================
+        # BASIC VALIDATION
+        # =================================================
+
+        if not full_name:
+            error_message = "Please enter your full name."
+
+        elif not phone:
+            error_message = "Please enter your phone number."
+
+        elif not address:
+            error_message = "Please enter your full address."
+
+        elif not city:
+            error_message = "Please enter your city."
+
+        elif not area:
+            error_message = "Please enter your area."
+
+        elif payment_method not in ["COD", "Online"]:
+            error_message = "Invalid payment method."
+
+        else:
+            error_message = None
+
+        if error_message:
+
+            # ---------------------------------------------
+            # GET CART AGAIN
+            # ---------------------------------------------
+
+            if request.user.is_authenticated:
+
+                cart = Cart.objects.filter(
+                    user=request.user
+                ).first()
+
+                if not cart:
+                    return redirect("cart_page")
+
+                cart_items = cart.items.select_related(
+                    "product"
+                ).prefetch_related(
+                    "product__sizes"
+                )
+
+                if not cart_items.exists():
+                    return redirect("cart_page")
+
+                context = {
+                    "cart": cart,
+                    "cart_items": cart_items,
+                    "is_guest_checkout": False,
+                    "checkout_error": error_message,
+                }
+
+                return render(
+                    request,
+                    "customer/checkout.html",
+                    context
+                )
+
+            # ---------------------------------------------
+            # GUEST CART
+            # ---------------------------------------------
+
+            cart_items = _get_guest_cart_items(request)
+
+            if not cart_items:
+                return redirect("cart_page")
+
+            cart = _get_guest_cart_summary(
+                cart_items
+            )
+
+            context = {
+                "cart": cart,
+                "cart_items": cart_items,
+                "is_guest_checkout": True,
+                "checkout_error": error_message,
+            }
+
+            return render(
+                request,
+                "customer/checkout.html",
+                context
+            )
+
+        # =================================================
+        # GET CURRENT CART
+        # =================================================
+
+        if request.user.is_authenticated:
+
+            cart = Cart.objects.filter(
+                user=request.user
+            ).first()
+
+            if not cart:
+                return redirect("cart_page")
+
+            cart_items = list(
+                cart.items.select_related(
+                    "product"
+                ).prefetch_related(
+                    "product__sizes"
+                )
+            )
+
+            if not cart_items:
+                return redirect("cart_page")
+
+            customer = request.user
+
+        else:
+
+            cart_items = _get_guest_cart_items(
+                request
+            )
+
+            if not cart_items:
+                return redirect("cart_page")
+
+            cart = _get_guest_cart_summary(
+                cart_items
+            )
+
+            customer = None
+
+        # =================================================
+        # CREATE ORDER
+        # =================================================
+
+        try:
+
+            with transaction.atomic():
+
+                # -----------------------------------------
+                # PREPARE ORDER ITEMS
+                # -----------------------------------------
+
+                order_items_data = []
+
+                subtotal = Decimal("0.00")
+
+                for cart_item in cart_items:
+
+                    product = cart_item.product
+
+                    quantity = int(
+                        cart_item.quantity
+                    )
+
+                    # -------------------------------------
+                    # FIND PRODUCT SIZE
+                    # -------------------------------------
+
+                    if request.user.is_authenticated:
+
+                        product_size = product.sizes.select_for_update().filter(
+                            size=cart_item.size
+                        ).first()
+
+                    else:
+
+                        product_size = product.sizes.select_for_update().filter(
+                            pk=cart_item.product_size.pk
+                        ).first()
+
+                    # -------------------------------------
+                    # CHECK SIZE
+                    # -------------------------------------
+
+                    if not product_size:
+                        raise ValueError(
+                            f"{product.name} - selected size is no longer available."
+                        )
+
+                    # -------------------------------------
+                    # CHECK AVAILABILITY
+                    # -------------------------------------
+
+                    if not product_size.is_available:
+                        raise ValueError(
+                            f"{product.name} - {product_size.size} is currently unavailable."
+                        )
+
+                    # -------------------------------------
+                    # CHECK STOCK
+                    # -------------------------------------
+
+                    if product_size.stock < quantity:
+                        raise ValueError(
+                            f"{product.name} - only "
+                            f"{product_size.stock} piece(s) are available "
+                            f"in size {product_size.size}."
+                        )
+
+                    # -------------------------------------
+                    # PRICE
+                    # -------------------------------------
+
+                    unit_price = (
+                        product.discount_price
+                        if product.discount_price
+                        else product.price
+                    )
+
+                    unit_price = Decimal(
+                        str(unit_price)
+                    )
+
+                    item_total = (
+                        unit_price * quantity
+                    )
+
+                    subtotal += item_total
+
+                    # -------------------------------------
+                    # STORE ORDER ITEM DATA
+                    # -------------------------------------
+
+                    order_items_data.append({
+                        "product": product,
+                        "product_name": product.name,
+                        "product_code": product.product_code,
+                        "size": product_size.size,
+                        "quantity": quantity,
+                        "unit_price": unit_price,
+                        "total_price": item_total,
+                        "product_size": product_size,
+                    })
+
+                # =================================================
+                # DELIVERY + DISCOUNT
+                # =================================================
+
+                # Delivery charge will be implemented later.
+                delivery_charge = Decimal("0.00")
+
+                discount = Decimal("0.00")
+
+                total_amount = (
+                    subtotal
+                    + delivery_charge
+                    - discount
+                )
+
+                # =================================================
+                # CREATE ORDER
+                # =================================================
+
+                order = Order.objects.create(
+
+                    customer=customer,
+
+                    full_name=full_name,
+
+                    phone=phone,
+
+                    email=email,
+
+                    address=address,
+
+                    city=city,
+
+                    area=area,
+
+                    delivery_note=delivery_note,
+
+                    subtotal=subtotal,
+
+                    delivery_charge=delivery_charge,
+
+                    discount=discount,
+
+                    total_amount=total_amount,
+
+                    status="Pending",
+
+                    payment_method=payment_method,
+
+                    payment_status="Pending",
+                )
+
+                # =================================================
+                # CREATE ORDER ITEMS + REDUCE STOCK
+                # =================================================
+
+                for item_data in order_items_data:
+
+                    OrderItem.objects.create(
+
+                        order=order,
+
+                        product=item_data["product"],
+
+                        product_name=item_data["product_name"],
+
+                        product_code=item_data["product_code"],
+
+                        size=item_data["size"],
+
+                        quantity=item_data["quantity"],
+
+                        unit_price=item_data["unit_price"],
+
+                        total_price=item_data["total_price"],
+                    )
+
+                    # -----------------------------------------
+                    # REDUCE SIZE-SPECIFIC STOCK
+                    # -----------------------------------------
+
+                    product_size = item_data["product_size"]
+
+                    product_size.stock -= item_data["quantity"]
+
+                    product_size.save(
+                        update_fields=["stock"]
+                    )
+
+                    # Update product total stock
+                    total_stock = sum(
+                        size.stock
+                        for size in product.sizes.all()
+                    )
+
+                    product.stock = total_stock
+
+                    product.save(
+                        update_fields=["stock"]
+                    )
+
+                # =================================================
+                # CLEAR CART
+                # =================================================
+
+                if request.user.is_authenticated:
+
+                    cart.items.all().delete()
+
+                else:
+
+                    _clear_guest_cart(
+                        request
+                    )
+
+        except ValueError as e:
+
+            # =================================================
+            # STOCK / PRODUCT ERROR
+            # =================================================
+
+            error_message = str(e)
+
+            if request.user.is_authenticated:
+
+                cart = Cart.objects.filter(
+                    user=request.user
+                ).first()
+
+                if not cart:
+                    return redirect("cart_page")
+
+                cart_items = cart.items.select_related(
+                    "product"
+                ).prefetch_related(
+                    "product__sizes"
+                )
+
+                if not cart_items.exists():
+                    return redirect("cart_page")
+
+                context = {
+                    "cart": cart,
+                    "cart_items": cart_items,
+                    "is_guest_checkout": False,
+                    "checkout_error": error_message,
+                }
+
+                return render(
+                    request,
+                    "customer/checkout.html",
+                    context
+                )
+
+            cart_items = _get_guest_cart_items(
+                request
+            )
+
+            if not cart_items:
+                return redirect("cart_page")
+
+            cart = _get_guest_cart_summary(
+                cart_items
+            )
+
+            context = {
+                "cart": cart,
+                "cart_items": cart_items,
+                "is_guest_checkout": True,
+                "checkout_error": error_message,
+            }
+
+            return render(
+                request,
+                "customer/checkout.html",
+                context
+            )
+
+        # =================================================
+        # ORDER CREATED SUCCESSFULLY
+        # =================================================
+
+        context = {
+            "order_created": True,
+            "order": order,
+        }
+
+        return render(
+            request,
+            "customer/checkout.html",
+            context
+        )
+
+    # =====================================================
+    # LOGGED-IN USER
+    # =====================================================
+
+    if request.user.is_authenticated:
+
+        cart = Cart.objects.filter(
+            user=request.user
+        ).first()
+
+        if not cart:
+            return redirect("cart_page")
+
+        cart_items = cart.items.select_related(
+            "product"
+        ).prefetch_related(
+            "product__sizes"
+        )
+
+        if not cart_items.exists():
+            return redirect("cart_page")
+
+        context = {
+            "cart": cart,
+            "cart_items": cart_items,
+            "is_guest_checkout": False,
+        }
+
+        return render(
+            request,
+            "customer/checkout.html",
+            context
+        )
+
+    # =====================================================
+    # GUEST CHECKOUT
+    # =====================================================
+
+    cart_items = _get_guest_cart_items(
+        request
+    )
+
+    if not cart_items:
+        return redirect("cart_page")
+
+    cart = _get_guest_cart_summary(
+        cart_items
+    )
+
+    context = {
+        "cart": cart,
+        "cart_items": cart_items,
+        "is_guest_checkout": True,
+    }
+
+    return render(
+        request,
+        "customer/checkout.html",
+        context
+    )

@@ -19,6 +19,8 @@ urlpatterns = [
     path("cart/add-another-size/<int:item_id>/", add_another_size, name="add_another_size"),
     path("cart/remove/<int:item_id>/", remove_from_cart, name="remove_from_cart"),
     path("cart/clear/", clear_cart, name="clear_cart"),
+
+    path("checkout/", checkout_page, name="checkout_page"),
     
     path("wishlist/", wishlist_page, name="wishlist_page"),
     path("wishlist/toggle/<int:product_id>/", add_to_wishlist, name="add_to_wishlist"),

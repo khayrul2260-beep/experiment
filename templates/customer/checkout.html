@@ -1,0 +1,560 @@
+{% extends 'customer/master/base.html' %}
+{% load static %}
+
+{% block title %}
+Checkout | NAFI
+{% endblock %}
+
+{% block extra_css %}
+
+<link rel="stylesheet" href="{% static 'customer/css/checkout.css' %}">
+
+{% endblock %}
+
+{% block content %}
+
+<section class="nafi-checkout-page">
+
+<!-- =====================================================
+     HEADER
+====================================================== -->
+
+<div class="checkout-header">
+
+    <span class="checkout-eyebrow">
+        NAFI COLLECTION
+    </span>
+
+    <h1>
+        CHECKOUT
+    </h1>
+
+    <p>
+        Complete your information to place your order.
+    </p>
+
+</div>
+
+
+<!-- =====================================================
+     CHECKOUT FORM
+====================================================== -->
+
+<form
+    method="POST"
+    action="{% url 'checkout_page' %}"
+>
+
+    {% csrf_token %}
+
+
+    <!-- =====================================================
+         CHECKOUT CONTAINER
+    ====================================================== -->
+
+    <div class="checkout-container">
+
+        <div class="checkout-layout">
+
+
+            <!-- =================================================
+                 LEFT — CUSTOMER INFORMATION
+            ================================================== -->
+
+            <div class="checkout-form-section">
+
+
+                <!-- CUSTOMER INFORMATION -->
+
+                <div class="checkout-section-heading">
+
+                    <span>
+                        01
+                    </span>
+
+                    <div>
+
+                        <small>
+                            CUSTOMER INFORMATION
+                        </small>
+
+                        <h2>
+                            Your Details
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <div class="checkout-form-card">
+
+                    <div class="checkout-field-grid">
+
+
+                        <!-- FULL NAME -->
+
+                        <div class="checkout-field full-width">
+
+                            <label for="full_name">
+                                FULL NAME
+                            </label>
+
+                            <input
+                                type="text"
+                                id="full_name"
+                                name="full_name"
+                                placeholder="Enter your full name"
+                                value="{% if request.user.is_authenticated %}{{ request.user.get_full_name }}{% endif %}"
+                            >
+
+                        </div>
+
+
+                        <!-- PHONE -->
+
+                        <div class="checkout-field">
+
+                            <label for="phone">
+                                PHONE NUMBER
+                            </label>
+
+                            <input
+                                type="tel"
+                                id="phone"
+                                name="phone"
+                                placeholder="01XXXXXXXXX"
+                                value="{% if request.user.is_authenticated %}{{ request.user.phone }}{% endif %}"
+                            >
+
+                        </div>
+
+
+                        <!-- EMAIL -->
+
+                        <div class="checkout-field">
+
+                            <label for="email">
+                                EMAIL
+                            </label>
+
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                placeholder="your@email.com"
+                            >
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     SHIPPING ADDRESS
+                ================================================== -->
+
+                <div class="checkout-section-heading">
+
+                    <span>
+                        02
+                    </span>
+
+                    <div>
+
+                        <small>
+                            SHIPPING INFORMATION
+                        </small>
+
+                        <h2>
+                            Delivery Address
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <div class="checkout-form-card">
+
+                    <div class="checkout-field-grid">
+
+
+                        <!-- ADDRESS -->
+
+                        <div class="checkout-field full-width">
+
+                            <label for="address">
+                                FULL ADDRESS
+                            </label>
+
+                            <textarea
+                                id="address"
+                                name="address"
+                                rows="4"
+                                placeholder="House / Road / Area / Local Address"
+                            ></textarea>
+
+                        </div>
+
+
+                        <!-- CITY -->
+
+                        <div class="checkout-field">
+
+                            <label for="city">
+                                CITY
+                            </label>
+
+                            <input
+                                type="text"
+                                id="city"
+                                name="city"
+                                placeholder="City"
+                            >
+
+                        </div>
+
+
+                        <!-- AREA -->
+
+                        <div class="checkout-field">
+
+                            <label for="area">
+                                AREA
+                            </label>
+
+                            <input
+                                type="text"
+                                id="area"
+                                name="area"
+                                placeholder="Area / Thana"
+                            >
+
+                        </div>
+
+
+                        <!-- DELIVERY NOTE -->
+
+                        <div class="checkout-field full-width">
+
+                            <label for="delivery_note">
+
+                                DELIVERY NOTE
+
+                                <span>
+                                    OPTIONAL
+                                </span>
+
+                            </label>
+
+                            <textarea
+                                id="delivery_note"
+                                name="delivery_note"
+                                rows="3"
+                                placeholder="Any special instruction for delivery?"
+                            ></textarea>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     PAYMENT
+                ================================================== -->
+
+                <div class="checkout-section-heading">
+
+                    <span>
+                        03
+                    </span>
+
+                    <div>
+
+                        <small>
+                            PAYMENT
+                        </small>
+
+                        <h2>
+                            Payment Method
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <div class="checkout-payment-card">
+
+
+                    <!-- CASH ON DELIVERY -->
+
+                    <label class="payment-option">
+
+                        <input
+                            type="radio"
+                            name="payment_method"
+                            value="COD"
+                            checked
+                        >
+
+                        <span class="payment-radio"></span>
+
+                        <span class="payment-content">
+
+                            <strong>
+                                Cash on Delivery
+                            </strong>
+
+                            <small>
+                                Pay when your order is delivered.
+                            </small>
+
+                        </span>
+
+                    </label>
+
+
+                    <!-- ONLINE PAYMENT -->
+
+                    <label class="payment-option disabled">
+
+                        <input
+                            type="radio"
+                            name="payment_method"
+                            value="Online"
+                            disabled
+                        >
+
+                        <span class="payment-radio"></span>
+
+                        <span class="payment-content">
+
+                            <strong>
+                                Online Payment
+                            </strong>
+
+                            <small>
+                                Online payment will be available soon.
+                            </small>
+
+                        </span>
+
+                    </label>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 RIGHT — ORDER SUMMARY
+            ================================================== -->
+
+            <aside class="checkout-summary">
+
+                <div class="checkout-summary-inner">
+
+
+                    <span class="summary-eyebrow">
+                        YOUR ORDER
+                    </span>
+
+                    <h2>
+                        Order Summary
+                    </h2>
+
+
+                    <!-- ORDER ITEMS -->
+
+                    <div class="checkout-items">
+
+                        {% for item in cart_items %}
+
+                        <div class="checkout-item">
+
+
+                            <!-- PRODUCT IMAGE -->
+
+                            <div class="checkout-item-image">
+
+                                {% if item.product.image %}
+
+                                    <img
+                                        src="{{ item.product.image.url }}"
+                                        alt="{{ item.product.name }}"
+                                    >
+
+                                {% else %}
+
+                                    <span>
+                                        NAFI
+                                    </span>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <!-- PRODUCT INFO -->
+
+                            <div class="checkout-item-info">
+
+                                <strong>
+                                    {{ item.product.name }}
+                                </strong>
+
+                                <span>
+
+                                    SIZE:
+                                    {{ item.size }}
+
+                                    ×
+
+                                    {{ item.quantity }}
+
+                                </span>
+
+                            </div>
+
+
+                            <!-- ITEM PRICE -->
+
+                            <strong class="checkout-item-price">
+
+                                ৳{{ item.total_price|floatformat:0 }}
+
+                            </strong>
+
+                        </div>
+
+                        {% endfor %}
+
+                    </div>
+
+
+                    <div class="checkout-summary-divider"></div>
+
+
+                    <!-- SUBTOTAL -->
+
+                    <div class="checkout-summary-line">
+
+                        <span>
+                            Subtotal
+                        </span>
+
+                        <strong>
+                            ৳{{ cart.subtotal|floatformat:0 }}
+                        </strong>
+
+                    </div>
+
+
+                    <!-- DELIVERY -->
+
+                    <div class="checkout-summary-line">
+
+                        <span>
+                            Delivery
+                        </span>
+
+                        <span class="checkout-delivery-note">
+                            Calculated below
+                        </span>
+
+                    </div>
+
+
+                    <!-- DISCOUNT -->
+
+                    <div class="checkout-summary-line">
+
+                        <span>
+                            Discount
+                        </span>
+
+                        <strong>
+                            ৳0
+                        </strong>
+
+                    </div>
+
+
+                    <div class="checkout-summary-divider"></div>
+
+
+                    <!-- TOTAL -->
+
+                    <div class="checkout-total">
+
+                        <div>
+
+                            <span>
+                                TOTAL
+                            </span>
+
+                            <small>
+                                Final amount
+                            </small>
+
+                        </div>
+
+                        <strong>
+
+                            ৳{{ cart.subtotal|floatformat:0 }}
+
+                        </strong>
+
+                    </div>
+
+
+                    <!-- PLACE ORDER -->
+
+                    <button
+                        type="submit"
+                        class="place-order-btn"
+                    >
+
+                        <span>
+                            PLACE ORDER
+                        </span>
+
+                        <i class="bi bi-arrow-right"></i>
+
+                    </button>
+
+
+                    <!-- SECURE CHECKOUT -->
+
+                    <div class="checkout-secure">
+
+                        <i class="bi bi-shield-check"></i>
+
+                        <span>
+                            Secure NAFI checkout
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </aside>
+
+
+        </div>
+
+    </div>
+
+</form>
+
+
+</section>
+
+{% endblock %}
