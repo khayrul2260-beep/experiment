@@ -191,11 +191,18 @@ def home_page(request):
     new_arrivals = ProductsModel.objects.filter(
         is_available=True,
     ).order_by("-created_at")[:15]
-
+    
+    for product in new_arrivals:
+        product.is_out_of_stock = not product.sizes.filter(
+            is_available=True,
+            stock__gt=0
+        ).exists()
+    
+    
     all_products = ProductsModel.objects.filter(
         is_available=True
     ).order_by("-created_at")[:15]
-
+    
     for product in all_products:
         product.is_out_of_stock = not product.sizes.filter(
             is_available=True,
@@ -1771,30 +1778,56 @@ def checkout_page(request):
         # =================================================
 
         if not full_name:
-            error_message = "Please enter your full name."
+
+            error_message = (
+                "Please enter your full name."
+            )
 
         elif not phone:
-            error_message = "Please enter your phone number."
+
+            error_message = (
+                "Please enter your phone number."
+            )
 
         elif not address:
-            error_message = "Please enter your full address."
+
+            error_message = (
+                "Please enter your full address."
+            )
 
         elif not city:
-            error_message = "Please enter your city."
+
+            error_message = (
+                "Please enter your city."
+            )
 
         elif not area:
-            error_message = "Please enter your area."
 
-        elif payment_method not in ["COD", "Online"]:
-            error_message = "Invalid payment method."
+            error_message = (
+                "Please enter your area."
+            )
+
+        elif payment_method not in [
+            "COD",
+            "Online"
+        ]:
+
+            error_message = (
+                "Invalid payment method."
+            )
 
         else:
+
             error_message = None
+
+        # =================================================
+        # VALIDATION ERROR
+        # =================================================
 
         if error_message:
 
             # ---------------------------------------------
-            # GET CART AGAIN
+            # LOGGED-IN USER
             # ---------------------------------------------
 
             if request.user.is_authenticated:
@@ -1804,16 +1837,24 @@ def checkout_page(request):
                 ).first()
 
                 if not cart:
-                    return redirect("cart_page")
+                    return redirect(
+                        "cart_page"
+                    )
 
-                cart_items = cart.items.select_related(
-                    "product"
-                ).prefetch_related(
-                    "product__sizes"
+                cart_items = (
+                    cart.items
+                    .select_related(
+                        "product"
+                    )
+                    .prefetch_related(
+                        "product__sizes"
+                    )
                 )
 
                 if not cart_items.exists():
-                    return redirect("cart_page")
+                    return redirect(
+                        "cart_page"
+                    )
 
                 context = {
                     "cart": cart,
@@ -1829,13 +1870,17 @@ def checkout_page(request):
                 )
 
             # ---------------------------------------------
-            # GUEST CART
+            # GUEST USER
             # ---------------------------------------------
 
-            cart_items = _get_guest_cart_items(request)
+            cart_items = _get_guest_cart_items(
+                request
+            )
 
             if not cart_items:
-                return redirect("cart_page")
+                return redirect(
+                    "cart_page"
+                )
 
             cart = _get_guest_cart_summary(
                 cart_items
@@ -1865,18 +1910,24 @@ def checkout_page(request):
             ).first()
 
             if not cart:
-                return redirect("cart_page")
+                return redirect(
+                    "cart_page"
+                )
 
             cart_items = list(
-                cart.items.select_related(
+                cart.items
+                .select_related(
                     "product"
-                ).prefetch_related(
+                )
+                .prefetch_related(
                     "product__sizes"
                 )
             )
 
             if not cart_items:
-                return redirect("cart_page")
+                return redirect(
+                    "cart_page"
+                )
 
             customer = request.user
 
@@ -1887,7 +1938,9 @@ def checkout_page(request):
             )
 
             if not cart_items:
-                return redirect("cart_page")
+                return redirect(
+                    "cart_page"
+                )
 
             cart = _get_guest_cart_summary(
                 cart_items
@@ -1909,7 +1962,9 @@ def checkout_page(request):
 
                 order_items_data = []
 
-                subtotal = Decimal("0.00")
+                subtotal = Decimal(
+                    "0.00"
+                )
 
                 for cart_item in cart_items:
 
@@ -1925,23 +1980,35 @@ def checkout_page(request):
 
                     if request.user.is_authenticated:
 
-                        product_size = product.sizes.select_for_update().filter(
-                            size=cart_item.size
-                        ).first()
+                        product_size = (
+                            product.sizes
+                            .select_for_update()
+                            .filter(
+                                size=cart_item.size
+                            )
+                            .first()
+                        )
 
                     else:
 
-                        product_size = product.sizes.select_for_update().filter(
-                            pk=cart_item.product_size.pk
-                        ).first()
+                        product_size = (
+                            product.sizes
+                            .select_for_update()
+                            .filter(
+                                pk=cart_item.product_size.pk
+                            )
+                            .first()
+                        )
 
                     # -------------------------------------
                     # CHECK SIZE
                     # -------------------------------------
 
                     if not product_size:
+
                         raise ValueError(
-                            f"{product.name} - selected size is no longer available."
+                            f"{product.name} - "
+                            "selected size is no longer available."
                         )
 
                     # -------------------------------------
@@ -1949,8 +2016,10 @@ def checkout_page(request):
                     # -------------------------------------
 
                     if not product_size.is_available:
+
                         raise ValueError(
-                            f"{product.name} - {product_size.size} is currently unavailable."
+                            f"{product.name} - "
+                            f"{product_size.size} is currently unavailable."
                         )
 
                     # -------------------------------------
@@ -1958,10 +2027,12 @@ def checkout_page(request):
                     # -------------------------------------
 
                     if product_size.stock < quantity:
+
                         raise ValueError(
-                            f"{product.name} - only "
-                            f"{product_size.stock} piece(s) are available "
-                            f"in size {product_size.size}."
+                            f"{product.name} - "
+                            f"only {product_size.stock} piece(s) "
+                            f"are available in size "
+                            f"{product_size.size}."
                         )
 
                     # -------------------------------------
@@ -1989,13 +2060,21 @@ def checkout_page(request):
                     # -------------------------------------
 
                     order_items_data.append({
+
                         "product": product,
+
                         "product_name": product.name,
+
                         "product_code": product.product_code,
+
                         "size": product_size.size,
+
                         "quantity": quantity,
+
                         "unit_price": unit_price,
+
                         "total_price": item_total,
+
                         "product_size": product_size,
                     })
 
@@ -2004,9 +2083,13 @@ def checkout_page(request):
                 # =================================================
 
                 # Delivery charge will be implemented later.
-                delivery_charge = Decimal("0.00")
+                delivery_charge = Decimal(
+                    "0.00"
+                )
 
-                discount = Decimal("0.00")
+                discount = Decimal(
+                    "0.00"
+                )
 
                 total_amount = (
                     subtotal
@@ -2061,34 +2144,57 @@ def checkout_page(request):
 
                         order=order,
 
-                        product=item_data["product"],
+                        product=item_data[
+                            "product"
+                        ],
 
-                        product_name=item_data["product_name"],
+                        product_name=item_data[
+                            "product_name"
+                        ],
 
-                        product_code=item_data["product_code"],
+                        product_code=item_data[
+                            "product_code"
+                        ],
 
-                        size=item_data["size"],
+                        size=item_data[
+                            "size"
+                        ],
 
-                        quantity=item_data["quantity"],
+                        quantity=item_data[
+                            "quantity"
+                        ],
 
-                        unit_price=item_data["unit_price"],
+                        unit_price=item_data[
+                            "unit_price"
+                        ],
 
-                        total_price=item_data["total_price"],
+                        total_price=item_data[
+                            "total_price"
+                        ],
                     )
 
                     # -----------------------------------------
                     # REDUCE SIZE-SPECIFIC STOCK
                     # -----------------------------------------
 
-                    product_size = item_data["product_size"]
+                    product_size = item_data[
+                        "product_size"
+                    ]
 
-                    product_size.stock -= item_data["quantity"]
-
-                    product_size.save(
-                        update_fields=["stock"]
+                    product_size.stock -= (
+                        item_data["quantity"]
                     )
 
-                    # Update product total stock
+                    product_size.save(
+                        update_fields=[
+                            "stock"
+                        ]
+                    )
+
+                    # -----------------------------------------
+                    # UPDATE PRODUCT TOTAL STOCK
+                    # -----------------------------------------
+
                     total_stock = sum(
                         size.stock
                         for size in product.sizes.all()
@@ -2097,7 +2203,9 @@ def checkout_page(request):
                     product.stock = total_stock
 
                     product.save(
-                        update_fields=["stock"]
+                        update_fields=[
+                            "stock"
+                        ]
                     )
 
                 # =================================================
@@ -2122,6 +2230,10 @@ def checkout_page(request):
 
             error_message = str(e)
 
+            # ---------------------------------------------
+            # LOGGED-IN USER
+            # ---------------------------------------------
+
             if request.user.is_authenticated:
 
                 cart = Cart.objects.filter(
@@ -2129,16 +2241,24 @@ def checkout_page(request):
                 ).first()
 
                 if not cart:
-                    return redirect("cart_page")
+                    return redirect(
+                        "cart_page"
+                    )
 
-                cart_items = cart.items.select_related(
-                    "product"
-                ).prefetch_related(
-                    "product__sizes"
+                cart_items = (
+                    cart.items
+                    .select_related(
+                        "product"
+                    )
+                    .prefetch_related(
+                        "product__sizes"
+                    )
                 )
 
                 if not cart_items.exists():
-                    return redirect("cart_page")
+                    return redirect(
+                        "cart_page"
+                    )
 
                 context = {
                     "cart": cart,
@@ -2153,12 +2273,18 @@ def checkout_page(request):
                     context
                 )
 
+            # ---------------------------------------------
+            # GUEST USER
+            # ---------------------------------------------
+
             cart_items = _get_guest_cart_items(
                 request
             )
 
             if not cart_items:
-                return redirect("cart_page")
+                return redirect(
+                    "cart_page"
+                )
 
             cart = _get_guest_cart_summary(
                 cart_items
@@ -2181,15 +2307,9 @@ def checkout_page(request):
         # ORDER CREATED SUCCESSFULLY
         # =================================================
 
-        context = {
-            "order_created": True,
-            "order": order,
-        }
-
-        return render(
-            request,
-            "customer/checkout.html",
-            context
+        return redirect(
+            "order_confirmation",
+            order_number=order.order_number
         )
 
     # =====================================================
@@ -2203,16 +2323,24 @@ def checkout_page(request):
         ).first()
 
         if not cart:
-            return redirect("cart_page")
+            return redirect(
+                "cart_page"
+            )
 
-        cart_items = cart.items.select_related(
-            "product"
-        ).prefetch_related(
-            "product__sizes"
+        cart_items = (
+            cart.items
+            .select_related(
+                "product"
+            )
+            .prefetch_related(
+                "product__sizes"
+            )
         )
 
         if not cart_items.exists():
-            return redirect("cart_page")
+            return redirect(
+                "cart_page"
+            )
 
         context = {
             "cart": cart,
@@ -2235,15 +2363,24 @@ def checkout_page(request):
     )
 
     if not cart_items:
-        return redirect("cart_page")
+        return redirect(
+            "cart_page"
+        )
 
     cart = _get_guest_cart_summary(
         cart_items
     )
 
-    return redirect(
-        "order_confirmation",
-        order_number=order.order_number
+    context = {
+        "cart": cart,
+        "cart_items": cart_items,
+        "is_guest_checkout": True,
+    }
+
+    return render(
+        request,
+        "customer/checkout.html",
+        context
     )
 
 def order_confirmation_page(request, order_number):
@@ -2260,5 +2397,26 @@ def order_confirmation_page(request, order_number):
     return render(
         request,
         "customer/order_confirmation.html",
+        context
+    )
+
+def my_orders_page(request):
+    if not request.user.is_authenticated:
+        return redirect("customer_login")
+
+    orders = (
+        Order.objects
+        .filter(customer=request.user)
+        .prefetch_related("items")
+        .order_by("-created_at")
+    )
+
+    context = {
+        "orders": orders,
+    }
+
+    return render(
+        request,
+        "customer/my_orders.html",
         context
     )

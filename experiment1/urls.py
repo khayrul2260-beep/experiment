@@ -15,13 +15,14 @@ urlpatterns = [
     path("cart/guest/add-another-size/<str:item_key>/", guest_add_another_size, name="guest_add_another_size"),
     path("cart/guest/remove/<str:item_key>/", guest_remove_from_cart, name="guest_remove_from_cart"),
     path("cart/update/<int:item_id>/", update_cart, name="update_cart"),
-    path( "cart/update-size/<int:item_id>/", update_cart_size, name="update_cart_size" ),
+    path("cart/update-size/<int:item_id>/", update_cart_size, name="update_cart_size" ),
     path("cart/add-another-size/<int:item_id>/", add_another_size, name="add_another_size"),
     path("cart/remove/<int:item_id>/", remove_from_cart, name="remove_from_cart"),
     path("cart/clear/", clear_cart, name="clear_cart"),
 
     path("checkout/", checkout_page, name="checkout_page"),
-    path("order-confirmation/<str:order_number>/", order_confirmation_page, name="order_confirmation",),
+    path("order-confirmation/<str:order_number>/", order_confirmation_page, name="order_confirmation"),
+    path("my-orders/", my_orders_page, name="my_orders"),
     
     path("wishlist/", wishlist_page, name="wishlist_page"),
     path("wishlist/toggle/<int:product_id>/", add_to_wishlist, name="add_to_wishlist"),

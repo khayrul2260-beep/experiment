@@ -1,0 +1,361 @@
+{% extends "customer/master/base.html" %}
+{% load static %}
+
+
+{% block title %}
+    My Orders | NAFI
+{% endblock %}
+
+
+{% block extra_css %}
+
+<link
+    rel="stylesheet"
+    href="{% static 'customer/css/my_orders.css' %}"
+>
+
+{% endblock %}
+
+
+
+{% block content %}
+
+<section class="my-orders-page">
+
+    <div class="my-orders-container">
+
+
+        <!-- =========================================
+             PAGE HEADER
+        ========================================== -->
+
+        <div class="my-orders-header">
+
+            <div class="my-orders-heading">
+
+                <span class="my-orders-eyebrow">
+                    NAFI ACCOUNT
+                </span>
+
+                <h1>
+                    My Orders
+                </h1>
+
+                <p>
+                    View and manage your recent orders.
+                </p>
+
+            </div>
+
+
+            <div class="my-orders-count">
+
+                <span>
+                    ORDERS
+                </span>
+
+                <strong>
+                    {{ orders|length }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =========================================
+             ORDERS
+        ========================================== -->
+
+        {% if orders %}
+
+        <div class="orders-list">
+
+
+            {% for order in orders %}
+
+            <article class="order-card">
+
+
+                <!-- =================================
+                     ORDER TOP
+                ================================== -->
+
+                <div class="order-card-top">
+
+                    <div class="order-number-block">
+
+                        <span>
+                            ORDER NUMBER
+                        </span>
+
+                        <strong>
+                            {{ order.order_number }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="order-date-block">
+
+                        <span>
+                            ORDER DATE
+                        </span>
+
+                        <strong>
+                            {{ order.created_at|date:"d M Y" }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =================================
+                     ORDER DETAILS
+                ================================== -->
+
+                <div class="order-card-middle">
+
+
+                    <!-- STATUS -->
+
+                    <div class="order-detail">
+
+                        <span>
+                            ORDER STATUS
+                        </span>
+
+                        <strong class="order-status">
+                            {{ order.get_status_display }}
+                        </strong>
+
+                    </div>
+
+
+                    <!-- PAYMENT -->
+
+                    <div class="order-detail">
+
+                        <span>
+                            PAYMENT
+                        </span>
+
+                        <strong>
+                            {{ order.get_payment_method_display }}
+                        </strong>
+
+                    </div>
+
+
+                    <!-- PAYMENT STATUS -->
+
+                    <div class="order-detail">
+
+                        <span>
+                            PAYMENT STATUS
+                        </span>
+
+                        <strong>
+                            {{ order.payment_status }}
+                        </strong>
+
+                    </div>
+
+
+                    <!-- PRODUCTS -->
+
+                    <div class="order-detail">
+
+                        <span>
+                            PRODUCTS
+                        </span>
+
+                        <strong>
+                            {{ order.items.count }}
+                        </strong>
+
+                    </div>
+
+
+                    <!-- TOTAL -->
+
+                    <div class="order-detail order-total">
+
+                        <span>
+                            TOTAL
+                        </span>
+
+                        <strong>
+                            ৳{{ order.total_amount|floatformat:0 }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =================================
+                     ORDER ITEMS PREVIEW
+                ================================== -->
+
+                <div class="order-items-preview">
+
+                    {% for item in order.items.all %}
+
+                    <div class="order-item-preview">
+
+
+                        <div class="order-item-image">
+
+                            {% if item.product and item.product.image %}
+
+                                <img
+                                    src="{{ item.product.image.url }}"
+                                    alt="{{ item.product_name }}"
+                                >
+
+                            {% else %}
+
+                                <div class="order-item-placeholder">
+                                    NAFI
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <div class="order-item-info">
+
+                            <strong>
+                                {{ item.product_name }}
+                            </strong>
+
+                            <span>
+                                SIZE: {{ item.size }}
+                            </span>
+
+                            <span>
+                                QTY: {{ item.quantity }}
+                            </span>
+
+                        </div>
+
+
+                        <div class="order-item-price">
+
+                            <strong>
+                                ৳{{ item.total_price|floatformat:0 }}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+
+
+                <!-- =================================
+                     CARD FOOTER
+                ================================== -->
+
+                <div class="order-card-footer">
+
+                    <div class="order-footer-note">
+
+                        <i class="bi bi-box-seam"></i>
+
+                        <span>
+                            Your order information is securely stored.
+                        </span>
+
+                    </div>
+
+
+                    <a
+                        href="{% url 'order_confirmation' order.order_number %}"
+                        class="view-order-btn"
+                    >
+
+                        <span>
+                            VIEW ORDER
+                        </span>
+
+                        <i class="bi bi-arrow-right"></i>
+
+                    </a>
+
+                </div>
+
+
+            </article>
+
+            {% endfor %}
+
+
+        </div>
+
+
+        {% else %}
+
+
+        <!-- =========================================
+             EMPTY ORDERS
+        ========================================== -->
+
+        <div class="orders-empty">
+
+            <div class="orders-empty-icon">
+
+                <i class="bi bi-bag-x"></i>
+
+            </div>
+
+
+            <span class="orders-empty-eyebrow">
+                NO ORDERS YET
+            </span>
+
+
+            <h2>
+                Your order history is empty.
+            </h2>
+
+
+            <p>
+                Once you place an order, your orders will
+                appear here.
+            </p>
+
+
+            <a
+                href="{% url 'all_products_page' %}"
+                class="empty-orders-btn"
+            >
+
+                <span>
+                    START SHOPPING
+                </span>
+
+                <i class="bi bi-arrow-right"></i>
+
+            </a>
+
+        </div>
+
+
+        {% endif %}
+
+
+    </div>
+
+</section>
+
+{% endblock %}
