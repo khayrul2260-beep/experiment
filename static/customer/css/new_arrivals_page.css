@@ -1,0 +1,54 @@
+/* =========================================================
+   NAFI - NEW ARRIVALS PAGE
+   ========================================================= */
+
+.new-arrivals-page {
+    width: 100%;
+    min-height: 70vh;
+}
+
+
+/* =========================================================
+   PAGE HEADER
+   ========================================================= */
+
+.new-arrivals-page .new-arrivals-header {
+    position: relative;
+    min-height: 65px;
+    margin-bottom: 30px;
+}
+
+
+/* Keep the title perfectly centered */
+.new-arrivals-page .new_arrivals {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    transform: translateX(-50%);
+    text-align: center;
+    width: max-content;
+}
+
+
+/* =========================================================
+   RESPONSIVE HEADER
+   ========================================================= */
+
+@media (max-width: 767px) {
+
+    .new-arrivals-page .new-arrivals-header {
+        min-height: 55px;
+        margin-bottom: 22px;
+    }
+
+}
+
+
+@media (max-width: 500px) {
+
+    .new-arrivals-page .new-arrivals-header {
+        min-height: 48px;
+        margin-bottom: 18px;
+    }
+
+}

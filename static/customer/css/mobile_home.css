@@ -3553,16 +3553,16 @@ and
 
     .mobile-all-product-info {
         position: absolute;
-        left: 3px;
-        bottom: 2px;
+        left: 0px;
+        bottom: 0px;
 
-        z-index: 15;
+        z-index: 100;
+        background: rgb(31, 31, 31);
+        width: 100%;
+        height: fit-content;
 
-        width: calc(100% - 12px);
+        padding: 4px 3px;
 
-        padding: 0px;
-
-        background: transparent;
     }
 
 
@@ -3573,15 +3573,16 @@ and
     .mobile-all-product-name {
         margin: 0px;
 
-        font-size: 8px;
-        font-weight: 800;
+        font-size: 11px;
+        font-weight: 500;
         line-height: 1.25;
 
-        color: #91028a;
+        color: rgb(255, 255, 255);
 
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        text-align: center;
     }
 
 
@@ -3613,22 +3614,26 @@ and
     ================================================= */
 
     .mobile-all-product-price {
-        gap: 4px;
+        display: none;
+        gap: 0px;
+        flex-direction: column;
+        align-items: start;
     }
 
     .mobile-all-product-old-price {
-        font-size: 7px;
-        color: rgb(77, 1, 1);
+        font-size: 11px;
+        font-weight: 700;
+        color: rgb(46, 46, 46);
     }
 
     .mobile-all-product-discount-price {
-        font-size: 7px;
-        color: rgb(0, 160, 8);
+        font-size: 11px;
+        color: rgb(255, 255, 255);
     }
 
     .mobile-all-product-normal-price {
-        font-size: 7px;
-        color: black;
+        font-size: 11px;
+        color: rgb(255, 255, 255);
     }
 
 

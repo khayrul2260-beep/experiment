@@ -1,57 +1,80 @@
+{% extends "customer/master/base.html" %}
 {% load static %}
 
-<section class="nafi-new-arrivals">
+{% block title %}All Products | NAFI{% endblock %}
 
-<!-- =====================================================
-     SECTION HEADER
-====================================================== -->
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'customer/css/new_arrivals.css' %}">
 
-<div class="new-arrivals-header">
+<style>
+    .all-products-page .new-arrivals-header {
+        position: relative;
+        min-height: 65px;
+        margin-bottom: 30px;
+    }
 
-    <div class="new_arrivals">
+    .all-products-page .new_arrivals {
+        position: absolute;
+        left: 50%;
+        top: 0;
+        transform: translateX(-50%);
+        text-align: center;
+        width: max-content;
+    }
+    .all_products h2 {
+        margin: 0;
 
-        <h2>
-            New
-        </h2>
+        color: #f5f5f3;
+        font-family: "Oswald", sans-serif;
+        font-size: clamp(32px, 4vw, 64px);
+        font-weight: 700;
+        letter-spacing: 2px;
+    }
 
-        <p>
-            Discover our latest styles.
-        </p>
+    @media (max-width: 767px) {
+        .all-products-page .new-arrivals-header {
+            min-height: 55px;
+            margin-bottom: 22px;
+        }
+    }
 
+    @media (max-width: 500px) {
+        .all-products-page .new-arrivals-header {
+            min-height: 48px;
+            margin-bottom: 18px;
+        }
+    }
+</style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&display=swap" rel="stylesheet">
+
+{% endblock %}
+
+
+{% block content %}
+
+<section class="nafi-new-arrivals all-products-page">
+
+    <!-- Page Header -->
+    <div class="all-header">
+        <div class="all-products" style="position: absolute; left: 100px; font-family: 'Oswald', sans-serif; font-size: clamp(32px, 4vw, 64px); text-transform: uppercase;">
+            <h2>All Products</h2>
+            <p>Explore our complete collection.</p>
+        </div>
     </div>
 
 
-    <a
-        href="#"
-        class="view-all-link"
-    >
-        View All
+    {% if all_products %}
 
-        <i class="bi bi-arrow-right"></i>
+    <div class="new-arrivals-grid">
 
-    </a>
-
-</div>
-
-
-
-<!-- =====================================================
-     PRODUCT GRID
-====================================================== -->
-
-<div class="new-arrivals-grid">
-
-    {% for product in new_arrivals %}
+        {% for product in all_products %}
 
         <article class="new-arrival-product">
 
-
-            <!-- =================================================
-                 PRODUCT IMAGE
-            ================================================== -->
-
+            <!-- Product Image -->
             <div class="new-arrival-image-wrapper">
-
 
                 <!-- =============================================
                      MAIN PRODUCT LINK
@@ -187,139 +210,142 @@
             </div>
 
 
-
-            <!-- =================================================
-                 PRODUCT INFORMATION
-            ================================================== -->
-
+            <!-- Product Info -->
             <div class="new-arrival-info">
-
-
-                <!-- =============================================
-                     PRODUCT NAME
-                ============================================== -->
 
                 <a
                     href="{% url 'product_detail_page' product.slug %}"
                     class="new-arrival-name"
                 >
-
                     {{ product.name }}
-
                 </a>
 
-
-
-                <!-- =============================================
-                     SHORT DESCRIPTION
-                ============================================== -->
-{% comment %} 
-                {% if product.description %}
-
-                    <p class="new-arrival-description">
-
-                        {{ product.description|truncatechars:90 }}
-
-                    </p>
-
-                {% endif %} {% endcomment %}
-
-
-
-                <!-- =============================================
-                     AVAILABLE COLORS
-                ============================================== -->
-
                 {% if product.available_colors %}
-
                     <div class="new-arrival-colors">
-
-                        <span class="new-arrival-colors-label">
-                            Colors
-                        </span>
-
-
-                        <div class="new-arrival-color-list">
-
-                            {% for color in product.available_colors %}
-
-                                <span
-                                    class="new-arrival-color"
-                                    style="background-color: {{ color }};"
-                                    title="{{ color }}"
-                                ></span>
-
-                            {% endfor %}
-
-                        </div>
-
+                        {{ product.available_colors }}
                     </div>
-
                 {% endif %}
-
-
-
-                <!-- =============================================
-                     PRICE
-                ============================================== -->
 
                 <div class="new-arrival-price">
 
                     {% if product.discount_price %}
 
                         <span class="product-old-price">
-
                             ৳{{ product.price }}
-
                         </span>
 
-
                         <span class="product-discount-price">
-
                             ৳{{ product.discount_price }}
-
                         </span>
 
                     {% else %}
 
                         <span class="product-price">
-
                             ৳{{ product.price }}
-
                         </span>
 
                     {% endif %}
 
                 </div>
 
-
             </div>
-
 
         </article>
 
+        {% endfor %}
 
-    {% empty %}
+    </div>
 
+    {% else %}
 
-        <!-- =================================================
-             NO PRODUCTS
-        ================================================== -->
+    <div class="new-arrivals-empty">
+        <p>No products available at the moment.</p>
+    </div>
 
-        <div class="new-arrivals-empty">
-
-            <i class="bi bi-box-seam"></i>
-
-            <p>
-                No new arrivals available right now.
-            </p>
-
-        </div>
-
-
-    {% endfor %}
-
-</div>
-
+    {% endif %}
 
 </section>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script>
+document.addEventListener("click", async function (event) {
+
+    const button = event.target.closest(
+        ".new-arrival-wishlist-btn"
+    );
+
+    if (!button) return;
+
+    const url = button.dataset.url;
+
+    if (!url) return;
+
+    const icon = button.querySelector("i");
+
+    const csrfInput = document.querySelector(
+        "[name=csrfmiddlewaretoken]"
+    );
+
+    if (!csrfInput) return;
+
+    try {
+
+        const response = await fetch(url, {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": csrfInput.value,
+                "X-Requested-With": "XMLHttpRequest"
+            }
+        });
+
+        const data = await response.json();
+
+        document
+            .querySelectorAll(".navbar-wishlist-count")
+            .forEach(element => {
+                element.textContent = data.wishlist_count;
+            });
+
+        if (!data.success) return;
+
+        if (data.is_wishlisted) {
+
+            button.classList.add("active");
+
+            if (icon) {
+                icon.classList.remove("bi-heart");
+                icon.classList.add("bi-heart-fill");
+            }
+
+        } else {
+
+            button.classList.remove("active");
+
+            if (icon) {
+                icon.classList.remove("bi-heart-fill");
+                icon.classList.add("bi-heart");
+            }
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Wishlist request failed:",
+            error
+        );
+
+    }
+
+});
+</script>
+
+{% endblock %}
+
+
+
+

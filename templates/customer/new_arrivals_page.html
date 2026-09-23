@@ -1,66 +1,44 @@
+{% extends "customer/master/base.html" %}
 {% load static %}
 
-<section class="nafi-new-arrivals">
+{% block title %}New Arrivals | NAFI{% endblock %}
 
-<!-- =====================================================
-     SECTION HEADER
-====================================================== -->
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'customer/css/new_arrivals_page.css' %}">
+<link rel="stylesheet" href="{% static 'customer/css/new_arrivals.css' %}">
+{% endblock %}
 
-<div class="new-arrivals-header">
 
-    <div class="new_arrivals">
+{% block content %}
 
-        <h2>
-            New
-        </h2>
+<section class="nafi-new-arrivals new-arrivals-page">
 
-        <p>
-            Discover our latest styles.
-        </p>
-
+    <!-- Page Header -->
+    <div class="new-arrivals-header">
+        <div class="new_arrivals">
+            <h2>New Collection</h2>
+            <p>Discover our latest styles.</p>
+        </div>
     </div>
 
 
-    <a
-        href="#"
-        class="view-all-link"
-    >
-        View All
+    <!-- Products -->
+    {% if new_arrivals %}
 
-        <i class="bi bi-arrow-right"></i>
+    <div class="new-arrivals-grid">
 
-    </a>
-
-</div>
-
-
-
-<!-- =====================================================
-     PRODUCT GRID
-====================================================== -->
-
-<div class="new-arrivals-grid">
-
-    {% for product in new_arrivals %}
+        {% for product in new_arrivals %}
 
         <article class="new-arrival-product">
 
-
-            <!-- =================================================
-                 PRODUCT IMAGE
-            ================================================== -->
-
+            <!-- Product Image -->
             <div class="new-arrival-image-wrapper">
 
-
-                <!-- =============================================
-                     MAIN PRODUCT LINK
-                ============================================== -->
                 <a
                     href="{% url 'product_detail_page' product.slug %}"
                     class="product-image-link"
                 >
-                                
+
                     {% if product.image %}
                         <img
                             src="{{ product.image.url }}"
@@ -92,7 +70,7 @@
                             <span>OUT OF STOCK</span>
                         </div>
                     {% endif %}
-                    
+
                 </a>
 
                 <!-- =============================================
@@ -184,142 +162,159 @@
                 
                 {% endif %}
 
+
             </div>
 
 
-
-            <!-- =================================================
-                 PRODUCT INFORMATION
-            ================================================== -->
-
+            <!-- Product Information -->
             <div class="new-arrival-info">
-
-
-                <!-- =============================================
-                     PRODUCT NAME
-                ============================================== -->
 
                 <a
                     href="{% url 'product_detail_page' product.slug %}"
                     class="new-arrival-name"
                 >
-
                     {{ product.name }}
-
                 </a>
 
 
-
-                <!-- =============================================
-                     SHORT DESCRIPTION
-                ============================================== -->
-{% comment %} 
-                {% if product.description %}
-
-                    <p class="new-arrival-description">
-
-                        {{ product.description|truncatechars:90 }}
-
-                    </p>
-
-                {% endif %} {% endcomment %}
-
-
-
-                <!-- =============================================
-                     AVAILABLE COLORS
-                ============================================== -->
-
+                <!-- Available Colors -->
                 {% if product.available_colors %}
-
                     <div class="new-arrival-colors">
-
-                        <span class="new-arrival-colors-label">
-                            Colors
-                        </span>
-
-
-                        <div class="new-arrival-color-list">
-
-                            {% for color in product.available_colors %}
-
-                                <span
-                                    class="new-arrival-color"
-                                    style="background-color: {{ color }};"
-                                    title="{{ color }}"
-                                ></span>
-
-                            {% endfor %}
-
-                        </div>
-
+                        {{ product.available_colors }}
                     </div>
-
                 {% endif %}
 
 
-
-                <!-- =============================================
-                     PRICE
-                ============================================== -->
-
+                <!-- Price -->
                 <div class="new-arrival-price">
 
                     {% if product.discount_price %}
 
                         <span class="product-old-price">
-
                             ৳{{ product.price }}
-
                         </span>
 
-
                         <span class="product-discount-price">
-
                             ৳{{ product.discount_price }}
-
                         </span>
 
                     {% else %}
 
                         <span class="product-price">
-
                             ৳{{ product.price }}
-
                         </span>
 
                     {% endif %}
 
                 </div>
 
-
             </div>
-
 
         </article>
 
+        {% endfor %}
 
-    {% empty %}
+    </div>
 
+    {% else %}
 
-        <!-- =================================================
-             NO PRODUCTS
-        ================================================== -->
+    <!-- Empty State -->
+    <div class="new-arrivals-empty">
+        <p>No new arrivals available at the moment.</p>
+    </div>
 
-        <div class="new-arrivals-empty">
-
-            <i class="bi bi-box-seam"></i>
-
-            <p>
-                No new arrivals available right now.
-            </p>
-
-        </div>
-
-
-    {% endfor %}
-
-</div>
-
+    {% endif %}
 
 </section>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script>
+document.addEventListener("click", async function (event) {
+
+    const button = event.target.closest(
+        ".new-arrival-wishlist-btn"
+    );
+
+    if (!button) return;
+
+    const url = button.dataset.url;
+
+    /*
+     * Login link হলে AJAX চালাবে না
+     */
+    if (!url) return;
+
+    const icon = button.querySelector("i");
+
+    const csrfInput = document.querySelector(
+        "[name=csrfmiddlewaretoken]"
+    );
+
+    if (!csrfInput) return;
+
+    try {
+
+        const response = await fetch(url, {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": csrfInput.value,
+                "X-Requested-With": "XMLHttpRequest"
+            }
+        });
+
+        const data = await response.json();
+
+
+        /*
+         * Navbar wishlist count update
+         */
+        document
+            .querySelectorAll(".navbar-wishlist-count")
+            .forEach(element => {
+                element.textContent = data.wishlist_count;
+            });
+
+
+        if (!data.success) return;
+
+
+        /*
+         * Wishlist icon update
+         */
+        if (data.is_wishlisted) {
+
+            button.classList.add("active");
+
+            if (icon) {
+                icon.classList.remove("bi-heart");
+                icon.classList.add("bi-heart-fill");
+            }
+
+        } else {
+
+            button.classList.remove("active");
+
+            if (icon) {
+                icon.classList.remove("bi-heart-fill");
+                icon.classList.add("bi-heart");
+            }
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Wishlist request failed:",
+            error
+        );
+
+    }
+
+});
+</script>
+
+{% endblock %}

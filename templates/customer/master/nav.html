@@ -148,8 +148,8 @@
                 <li class="nav-item">
 
                     <a
-                        href="#"
-                        class="nav-link_ new-arrivals"
+                        href="{% url 'new_arrivals_page' %}"
+                        class="nav-link_ {% if request.resolver_match.url_name == 'new_arrivals_page' %}active{% endif %}"
                     >
                         NEW ARRIVALS
                     </a>

@@ -1,22 +1,21 @@
 {% load static %}
 
-<section class="nafi-featured">
-
+<section class="nafi-featured-products">
 
     <!-- =====================================================
          SECTION HEADER
     ====================================================== -->
 
-    <div class="featured-header">
+    <div class="featured-products-header">
 
-        <div class="featured">
+        <div class="featured_products">
 
             <h2>
-                Special Product
+                Special
             </h2>
 
             <p>
-                Selected styles from NAFI.
+                Discover our featured styles.
             </p>
 
         </div>
@@ -26,7 +25,6 @@
             href="#"
             class="featured-view-all"
         >
-
             View All
 
             <i class="bi bi-arrow-right"></i>
@@ -41,46 +39,40 @@
          PRODUCT GRID
     ====================================================== -->
 
-    <div class="featured-grid">
-
+    <div class="featured-products-grid">
 
         {% for product in featured_products %}
 
-            <article class="featured-product">
+            <article class="featured-product-card">
 
 
                 <!-- =================================================
                      PRODUCT IMAGE
                 ================================================== -->
 
-                <a
-                    href="{% url 'product_detail_page' product.slug %}"
-                    class="featured-image-link"
-                >
-
-                    <div class="featured-image-wrapper">
+                <div class="featured-product-image-wrapper">
 
 
-                        <!-- =========================================
-                             MAIN IMAGE
-                        ========================================== -->
+                    <!-- =============================================
+                         MAIN + SECONDARY PRODUCT IMAGES
+                    ============================================== -->
+
+                    <a
+                        href="{% url 'product_detail_page' product.slug %}"
+                        class="featured-product-image-link"
+                    >
 
                         {% if product.image %}
 
                             <img
                                 src="{{ product.image.url }}"
                                 alt="{{ product.name }}"
-                                class="featured-image main-featured-image"
+                                class="featured-product-image main-featured-product-image"
                                 loading="lazy"
                             >
 
                         {% endif %}
 
-
-
-                        <!-- =========================================
-                             SECONDARY IMAGE
-                        ========================================== -->
 
                         {% for product_image in product.images.all %}
 
@@ -89,7 +81,7 @@
                                 <img
                                     src="{{ product_image.image.url }}"
                                     alt="{{ product.name }}"
-                                    class="featured-image secondary-featured-image"
+                                    class="featured-product-image secondary-featured-product-image"
                                     loading="lazy"
                                 >
 
@@ -98,14 +90,13 @@
                         {% endfor %}
 
 
-
                         <!-- =========================================
                              NO IMAGE FALLBACK
                         ========================================== -->
 
                         {% if not product.image %}
 
-                            <div class="featured-no-image">
+                            <div class="featured-product-no-image">
 
                                 <i class="bi bi-image"></i>
 
@@ -114,9 +105,123 @@
                         {% endif %}
 
 
-                    </div>
+                        <!-- =========================================
+                             OUT OF STOCK OVERLAY
+                        ========================================== -->
 
-                </a>
+                        {% if product.stock <= 0 %}
+
+                            <div class="featured-out-of-stock-overlay">
+
+                                <span>
+                                    OUT OF STOCK
+                                </span>
+
+                            </div>
+
+                        {% endif %}
+
+                    </a>
+
+
+
+                    <!-- =================================================
+                         CART — TOP LEFT
+                    ================================================== -->
+
+                    {% with first_size=product.sizes.all|first %}
+
+                        {% if first_size and first_size.is_available and first_size.stock > 0 %}
+
+                            <form
+                                method="POST"
+                                action="{% url 'add_to_cart' product.id %}"
+                                class="featured-cart-form"
+                            >
+
+                                {% csrf_token %}
+
+                                <input
+                                    type="hidden"
+                                    name="size_id"
+                                    value="{{ first_size.id }}"
+                                >
+
+                                <input
+                                    type="hidden"
+                                    name="quantity"
+                                    value="1"
+                                >
+
+                                <button
+                                    type="submit"
+                                    class="featured-cart-btn"
+                                    aria-label="Add {{ product.name }} to cart"
+                                    title="Add to cart"
+                                >
+
+                                    <i class="bi bi-cart3"></i>
+
+                                </button>
+
+                            </form>
+
+                        {% endif %}
+
+                    {% endwith %}
+
+
+
+                    <!-- =================================================
+                         WISHLIST — TOP RIGHT
+                    ================================================== -->
+
+                    {% if user.is_authenticated %}
+
+                        <form
+                            method="POST"
+                            action="{% url 'add_to_wishlist' product.id %}"
+                            class="featured-wishlist-form"
+                        >
+
+                            {% csrf_token %}
+
+                            <button
+                                type="button"
+                                class="featured-wishlist-btn {% if product.id in wishlist_product_ids %}active{% endif %}"
+                                data-product-id="{{ product.id }}"
+                                data-url="{% url 'add_to_wishlist' product.id %}"
+                                aria-label="Add {{ product.name }} to wishlist"
+                                title="Add to wishlist"
+                            >
+
+                                <i class="bi bi-heart-fill"></i>
+
+                            </button>
+
+                        </form>
+
+                    {% else %}
+
+                        <div class="featured-wishlist-form">
+
+                            <a
+                                href="{% url 'customer_login' %}"
+                                class="featured-wishlist-btn {% if product.id in wishlist_product_ids %}active{% endif %}"
+                                aria-label="Login to add {{ product.name }} to wishlist"
+                                title="Add to wishlist"
+                            >
+
+                                <i class="bi bi-heart-fill"></i>
+
+                            </a>
+
+                        </div>
+
+                    {% endif %}
+
+
+                </div>
 
 
 
@@ -124,14 +229,16 @@
                      PRODUCT INFORMATION
                 ================================================== -->
 
-                <div class="featured-info">
+                <div class="featured-product-info">
 
 
-                    <!-- Product Name -->
+                    <!-- =============================================
+                         PRODUCT NAME
+                    ============================================== -->
 
                     <a
                         href="{% url 'product_detail_page' product.slug %}"
-                        class="featured-name"
+                        class="featured-product-name"
                     >
 
                         {{ product.name }}
@@ -140,33 +247,59 @@
 
 
 
-                    <!-- =================================================
-                         PRICE
-                    ================================================== -->
+                    <!-- =============================================
+                         AVAILABLE COLORS
+                    ============================================== -->
 
-                    <div class="featured-price">
+                    {% if product.available_colors %}
 
-                        {% if product.discount_price %}
+                        <div class="featured-product-colors">
 
-                            <span class="featured-old-price">
-
-                                ৳{{ product.price }}
-
+                            <span class="featured-product-colors-label">
+                                Colors
                             </span>
 
 
-                            <span class="featured-discount-price">
+                            <div class="featured-product-color-list">
 
+                                {% for color in product.available_colors %}
+
+                                    <span
+                                        class="featured-product-color"
+                                        style="background-color: {{ color }};"
+                                        title="{{ color }}"
+                                    ></span>
+
+                                {% endfor %}
+
+                            </div>
+
+                        </div>
+
+                    {% endif %}
+
+
+
+                    <!-- =============================================
+                         PRICE
+                    ============================================== -->
+
+                    <div class="featured-product-price">
+
+                        {% if product.discount_price %}
+
+                            <span class="featured-product-old-price">
+                                ৳{{ product.price }}
+                            </span>
+
+                            <span class="featured-product-discount-price">
                                 ৳{{ product.discount_price }}
-
                             </span>
 
                         {% else %}
 
-                            <span class="featured-normal-price">
-
+                            <span class="featured-product-normal-price">
                                 ৳{{ product.price }}
-
                             </span>
 
                         {% endif %}
@@ -187,7 +320,7 @@
                  EMPTY STATE
             ================================================== -->
 
-            <div class="featured-empty">
+            <div class="featured-products-empty">
 
                 <i class="bi bi-star"></i>
 
@@ -199,7 +332,6 @@
 
 
         {% endfor %}
-
 
     </div>
 

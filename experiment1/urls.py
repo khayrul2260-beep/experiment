@@ -22,4 +22,6 @@ urlpatterns = [
     
     path("wishlist/", wishlist_page, name="wishlist_page"),
     path("wishlist/toggle/<int:product_id>/", add_to_wishlist, name="add_to_wishlist"),
+    path("new-arrivals/", new_arrivals_page, name="new_arrivals_page"),
+    path("shop/", all_products_page, name="all_products_page"),
 ]

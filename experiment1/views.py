@@ -1661,3 +1661,42 @@ def wishlist_page(request):
         "customer/wishlist.html",
         context
     )
+
+def new_arrivals_page(request):
+    new_arrivals = ProductsModel.objects.filter(
+        is_available=True
+    ).order_by("-created_at")
+
+    for product in new_arrivals:
+        product.is_out_of_stock = not product.sizes.filter(
+            is_available=True,
+            stock__gt=0
+        ).exists()
+
+    context = {
+        "new_arrivals": new_arrivals,
+    }
+
+    return render(request, "customer/new_arrivals_page.html", context)
+
+def all_products_page(request):
+    all_products = ProductsModel.objects.filter(
+        is_available=True
+    ).order_by("-created_at")
+
+    for product in all_products:
+        product.is_out_of_stock = not product.sizes.filter(
+            is_available=True,
+            stock__gt=0
+        ).exists()
+
+    context = {
+        "all_products": all_products,
+    }
+
+    return render(
+        request,
+        "customer/all_products.html",
+        context
+    )
+

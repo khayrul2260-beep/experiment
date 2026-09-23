@@ -368,11 +368,11 @@
 
     .nafi-wishlist-page {
         padding:
-            70px 16px 80px;
+            10px 16px 80px;
     }
 
     .wishlist-header {
-        margin-bottom: 35px;
+        margin-bottom: 15px;
     }
 
     .wishlist-header h1 {
@@ -757,7 +757,7 @@ body.wishlist-modal-open {
 @media (max-width: 600px) {
 
     .wishlist-cart-box {
-        padding: 28px 22px;
+        padding: 10px 22px;
     }
 
     .wishlist-cart-box h3 {
