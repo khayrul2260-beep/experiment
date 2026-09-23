@@ -55,10 +55,20 @@ def products_page(request):
     # ==========================================
     # ALL PRODUCTS
     # ==========================================
-
-    product_data = ProductsModel.objects.all()
-
-
+    product_data = ProductsModel.objects.prefetch_related("sizes").all()
+    
+    for product in product_data:
+        total_stock = sum(
+            size.stock
+            for size in product.sizes.all()
+        )
+    
+        product.stock = total_stock
+    
+        if total_stock > 0:
+            product.status = "Stock"
+        else:
+            product.status = "Out of Stock"
     # ==========================================
     # SEARCH
     # Product Name OR Product Code
