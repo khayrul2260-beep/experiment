@@ -1,0 +1,946 @@
+{% extends 'admin_dashboard/master/base.html' %}
+{% load static %}
+
+{% block title %}
+Order Details | NAFI Admin
+{% endblock %}
+
+{% block css %} <link
+     rel="stylesheet"
+     href="{% static 'admin_panel/css/order_details.css' %}"
+ />
+{% endblock %}
+
+{% block page_title %}
+Order Details
+{% endblock %}
+
+{% block content %}
+
+<div class="admin-order-details">
+
+
+<!-- =====================================================
+     PAGE HEADER
+====================================================== -->
+
+<div class="order-details-header">
+
+    <div class="order-details-heading">
+
+        <div class="order-details-back">
+            <a href="{% url 'orders_page' %}">
+                <i class="bi bi-arrow-left"></i>
+                <span>ORDERS</span>
+            </a>
+        </div>
+
+        <span class="order-details-eyebrow">
+            ORDER MANAGEMENT
+        </span>
+
+        <h1>
+            {{ order.order_number }}
+        </h1>
+
+        <p>
+            Order placed on
+            {{ order.created_at|date:"d M Y, h:i A" }}
+        </p>
+
+    </div>
+
+
+    <div class="order-details-header-status">
+
+        {% if order.status == "Pending" %}
+            <span class="order-status status-pending">
+                <i class="bi bi-circle-fill"></i>
+                Pending
+            </span>
+
+        {% elif order.status == "Confirmed" %}
+            <span class="order-status status-confirmed">
+                <i class="bi bi-circle-fill"></i>
+                Confirmed
+            </span>
+
+        {% elif order.status == "Processing" %}
+            <span class="order-status status-processing">
+                <i class="bi bi-circle-fill"></i>
+                Processing
+            </span>
+
+        {% elif order.status == "Shipped" %}
+            <span class="order-status status-shipped">
+                <i class="bi bi-circle-fill"></i>
+                Shipped
+            </span>
+
+        {% elif order.status == "Delivered" %}
+            <span class="order-status status-delivered">
+                <i class="bi bi-circle-fill"></i>
+                Delivered
+            </span>
+
+        {% elif order.status == "Cancelled" %}
+            <span class="order-status status-cancelled">
+                <i class="bi bi-circle-fill"></i>
+                Cancelled
+            </span>
+        {% endif %}
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     ORDER META
+====================================================== -->
+
+<div class="order-meta-grid">
+
+    <div class="order-meta-card">
+
+        <span class="order-meta-label">
+            ORDER NUMBER
+        </span>
+
+        <strong>
+            {{ order.order_number }}
+        </strong>
+
+    </div>
+
+
+    <div class="order-meta-card">
+
+        <span class="order-meta-label">
+            ORDER DATE
+        </span>
+
+        <strong>
+            {{ order.created_at|date:"d M Y" }}
+        </strong>
+
+        <small>
+            {{ order.created_at|date:"h:i A" }}
+        </small>
+
+    </div>
+
+
+    <div class="order-meta-card">
+
+        <span class="order-meta-label">
+            PAYMENT
+        </span>
+
+        <strong>
+            {{ order.payment_method }}
+        </strong>
+
+        {% if order.payment_status == "Paid" %}
+            <small class="payment-paid">
+                PAID
+            </small>
+
+        {% elif order.payment_status == "Failed" %}
+            <small class="payment-failed">
+                FAILED
+            </small>
+
+        {% else %}
+            <small class="payment-pending">
+                PENDING
+            </small>
+        {% endif %}
+
+    </div>
+
+
+    <div class="order-meta-card">
+
+        <span class="order-meta-label">
+            TOTAL
+        </span>
+
+        <strong class="order-meta-total">
+            ৳{{ order.total_amount|floatformat:0 }}
+        </strong>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     MAIN CONTENT GRID
+====================================================== -->
+
+<div class="order-details-layout">
+
+
+    <!-- =================================================
+         LEFT COLUMN
+    ================================================== -->
+
+    <div class="order-details-main">
+
+
+        <!-- =============================================
+             01 CUSTOMER INFORMATION
+        ============================================== -->
+
+        <section class="order-details-section">
+
+            <div class="order-section-heading">
+
+                <span>01</span>
+
+                <div>
+                    <small>CUSTOMER</small>
+                    <h2>Customer Information</h2>
+                </div>
+
+            </div>
+
+
+            <div class="customer-information-grid">
+
+                <div class="customer-info-item">
+
+                    <span>FULL NAME</span>
+
+                    <strong>
+                        {{ order.full_name }}
+                    </strong>
+
+                </div>
+
+
+                <div class="customer-info-item">
+
+                    <span>PHONE</span>
+
+                    <strong>
+                        {{ order.phone }}
+                    </strong>
+
+                </div>
+
+
+                <div class="customer-info-item">
+
+                    <span>EMAIL</span>
+
+                    {% if order.email %}
+                        <strong>
+                            {{ order.email }}
+                        </strong>
+                    {% else %}
+                        <strong class="muted">
+                            Not provided
+                        </strong>
+                    {% endif %}
+
+                </div>
+
+
+                <div class="customer-info-item">
+
+                    <span>CUSTOMER ACCOUNT</span>
+
+                    {% if order.customer %}
+                        <strong>
+                            {{ order.customer }}
+                        </strong>
+                    {% else %}
+                        <strong class="muted">
+                            Guest / Deleted Account
+                        </strong>
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =============================================
+             02 ORDERED PRODUCTS
+        ============================================== -->
+
+        <section class="order-details-section">
+
+            <div class="order-section-heading">
+
+                <span>02</span>
+
+                <div>
+                    <small>PURCHASE</small>
+                    <h2>Ordered Products</h2>
+                </div>
+
+            </div>
+
+
+            <div class="admin-order-products">
+
+                {% for item in order.items.all %}
+
+                <div class="admin-order-product">
+
+                    <div class="admin-order-product-image">
+
+                        {% if item.product and item.product.image %}
+                            <img
+                                src="{{ item.product.image.url }}"
+                                alt="{{ item.product_name }}"
+                            >
+                        {% else %}
+                            <div class="admin-product-placeholder">
+                                <i class="bi bi-image"></i>
+                            </div>
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="admin-order-product-info">
+
+                        <span class="product-code">
+                            {{ item.product_code }}
+                        </span>
+
+                        <h3>
+                            {{ item.product_name }}
+                        </h3>
+
+                        <div class="product-meta">
+
+                            <span>
+                                SIZE
+                                <strong>{{ item.size }}</strong>
+                            </span>
+
+                            <span>
+                                QTY
+                                <strong>{{ item.quantity }}</strong>
+                            </span>
+
+                            <span>
+                                UNIT
+                                <strong>
+                                    ৳{{ item.unit_price|floatformat:0 }}
+                                </strong>
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="admin-order-product-total">
+
+                        <span>TOTAL</span>
+
+                        <strong>
+                            ৳{{ item.total_price|floatformat:0 }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+                {% empty %}
+
+                <div class="admin-order-empty">
+
+                    <i class="bi bi-box-seam"></i>
+
+                    <span>
+                        No products found for this order.
+                    </span>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </section>
+
+
+        <!-- =============================================
+             03 DELIVERY INFORMATION
+        ============================================== -->
+
+        <section class="order-details-section">
+
+            <div class="order-section-heading">
+
+                <span>03</span>
+
+                <div>
+                    <small>DELIVERY</small>
+                    <h2>Delivery Information</h2>
+                </div>
+
+            </div>
+
+
+            <div class="delivery-information">
+
+                <div class="delivery-info-row">
+
+                    <span>
+                        <i class="bi bi-person"></i>
+                        RECIPIENT
+                    </span>
+
+                    <strong>
+                        {{ order.full_name }}
+                    </strong>
+
+                </div>
+
+
+                <div class="delivery-info-row">
+
+                    <span>
+                        <i class="bi bi-telephone"></i>
+                        PHONE
+                    </span>
+
+                    <strong>
+                        {{ order.phone }}
+                    </strong>
+
+                </div>
+
+
+                <div class="delivery-info-row">
+
+                    <span>
+                        <i class="bi bi-geo-alt"></i>
+                        ADDRESS
+                    </span>
+
+                    <strong>
+                        {{ order.address }}
+                    </strong>
+
+                </div>
+
+
+                {% if order.area %}
+
+                <div class="delivery-info-row">
+
+                    <span>
+                        <i class="bi bi-pin-map"></i>
+                        AREA
+                    </span>
+
+                    <strong>
+                        {{ order.area }}
+                    </strong>
+
+                </div>
+
+                {% endif %}
+
+
+                {% if order.city %}
+
+                <div class="delivery-info-row">
+
+                    <span>
+                        <i class="bi bi-buildings"></i>
+                        CITY
+                    </span>
+
+                    <strong>
+                        {{ order.city }}
+                    </strong>
+
+                </div>
+
+                {% endif %}
+
+
+                {% if order.delivery_note %}
+
+                <div class="delivery-note">
+
+                    <span>
+                        DELIVERY NOTE
+                    </span>
+
+                    <p>
+                        {{ order.delivery_note }}
+                    </p>
+
+                </div>
+
+                {% endif %}
+
+            </div>
+
+        </section>
+
+
+        <!-- =============================================
+             04 RETURN / EXCHANGE
+        ============================================== -->
+
+        <section class="order-details-section">
+
+            <div class="order-section-heading">
+
+                <span>04</span>
+
+                <div>
+                    <small>CUSTOMER SERVICE</small>
+                    <h2>Return / Exchange</h2>
+                </div>
+
+            </div>
+
+
+            {% if return_requests %}
+
+                <div class="return-exchange-list">
+
+                    {% for request in return_requests %}
+
+                    <div class="return-exchange-card">
+
+                        <div class="return-exchange-card-top">
+
+                            <div class="return-exchange-type">
+
+                                <div class="return-exchange-icon">
+                                    <i class="bi bi-arrow-repeat"></i>
+                                </div>
+
+                                <div>
+
+                                    <span>
+                                        {{ request.request_type }}
+                                    </span>
+
+                                    <strong>
+                                        {{ request.order_item.product_name }}
+                                    </strong>
+
+                                </div>
+
+                            </div>
+
+
+                            <span
+                                class="request-status request-status-{{ request.status|lower }}"
+                            >
+                                {{ request.status }}
+                            </span>
+
+                        </div>
+
+
+                        <div class="return-exchange-details">
+
+                            <div>
+                                <span>QUANTITY</span>
+                                <strong>
+                                    {{ request.requested_quantity }}
+                                </strong>
+                            </div>
+
+                            <div>
+                                <span>REASON</span>
+                                <strong>
+                                    {{ request.reason }}
+                                </strong>
+                            </div>
+
+                            <div>
+                                <span>REQUESTED</span>
+                                <strong>
+                                    {{ request.created_at|date:"d M Y" }}
+                                </strong>
+                            </div>
+
+                        </div>
+
+
+                        {% if request.note %}
+
+                        <div class="return-exchange-note">
+
+                            <span>CUSTOMER NOTE</span>
+
+                            <p>
+                                {{ request.note }}
+                            </p>
+
+                        </div>
+
+                        {% endif %}
+
+
+                        <div class="return-exchange-actions">
+
+                            <button
+                                type="button"
+                                class="admin-action-btn approve"
+                                data-request-id="{{ request.id }}"
+                            >
+                                <i class="bi bi-check2"></i>
+                                APPROVE
+                            </button>
+
+                            <button
+                                type="button"
+                                class="admin-action-btn reject"
+                                data-request-id="{{ request.id }}"
+                            >
+                                <i class="bi bi-x-lg"></i>
+                                REJECT
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <div class="no-return-request">
+
+                    <div class="no-return-request-icon">
+                        <i class="bi bi-check2-circle"></i>
+                    </div>
+
+                    <div>
+                        <span>
+                            NO REQUESTS
+                        </span>
+
+                        <p>
+                            No return or exchange request has been submitted for this order.
+                        </p>
+                    </div>
+
+                </div>
+
+            {% endif %}
+
+        </section>
+
+    </div>
+
+
+    <!-- =================================================
+         RIGHT SIDEBAR
+    ================================================== -->
+
+    <aside class="order-details-sidebar">
+
+
+        <!-- =============================================
+             ORDER STATUS
+        ============================================== -->
+
+        <div class="order-sidebar-card">
+
+            <div class="order-sidebar-heading">
+
+                <span>ORDER STATUS</span>
+
+                <i class="bi bi-activity"></i>
+
+            </div>
+
+
+            <div class="current-order-status">
+
+                <small>
+                    CURRENT STATUS
+                </small>
+
+                <strong>
+                    {{ order.status }}
+                </strong>
+
+                <span>
+                    Last updated
+                    {{ order.updated_at|date:"d M Y, h:i A" }}
+                </span>
+
+            </div>
+
+
+            <div class="order-status-progress">
+
+                <div class="{% if order.status == 'Pending' or order.status == 'Confirmed' or order.status == 'Processing' or order.status == 'Shipped' or order.status == 'Delivered' %}active{% endif %}">
+                    <span></span>
+                    <small>Pending</small>
+                </div>
+
+                <div class="{% if order.status == 'Confirmed' or order.status == 'Processing' or order.status == 'Shipped' or order.status == 'Delivered' %}active{% endif %}">
+                    <span></span>
+                    <small>Confirmed</small>
+                </div>
+
+                <div class="{% if order.status == 'Processing' or order.status == 'Shipped' or order.status == 'Delivered' %}active{% endif %}">
+                    <span></span>
+                    <small>Processing</small>
+                </div>
+
+                <div class="{% if order.status == 'Shipped' or order.status == 'Delivered' %}active{% endif %}">
+                    <span></span>
+                    <small>Shipped</small>
+                </div>
+
+                <div class="{% if order.status == 'Delivered' %}active{% endif %}">
+                    <span></span>
+                    <small>Delivered</small>
+                </div>
+
+            </div>
+            
+        </div>
+
+<div class="admin-order-status-card">
+
+    <div class="admin-order-status-header">
+        <div>
+            <span>ORDER STATUS</span>
+            <h3>Update Status</h3>
+        </div>
+
+        <div class="admin-current-status">
+            {{ order.get_status_display }}
+        </div>
+    </div>
+
+    <form
+        method="POST"
+        action="{% url 'update_order_status' order.order_number %}"
+        class="admin-order-status-form"
+    >
+
+        {% csrf_token %}
+
+        <label for="orderStatus">
+            Change Order Status
+        </label>
+
+        <select
+            name="status"
+            id="orderStatus"
+            class="admin-order-status-select"
+        >
+
+            {% for value, label in order.STATUS_CHOICES %}
+
+                <option
+                    value="{{ value }}"
+                    {% if order.status == value %}
+                        selected
+                    {% endif %}
+                >
+                    {{ label }}
+                </option>
+
+            {% endfor %}
+
+        </select>
+
+        <button
+            type="submit"
+            class="admin-order-status-btn"
+        >
+            <span>UPDATE STATUS</span>
+            <i class="bi bi-arrow-right"></i>
+        </button>
+
+    </form>
+
+</div>
+        <!-- =============================================
+             PAYMENT
+        ============================================== -->
+
+        <div class="order-sidebar-card">
+
+            <div class="order-sidebar-heading">
+
+                <span>PAYMENT</span>
+
+                <i class="bi bi-credit-card"></i>
+
+            </div>
+
+
+            <div class="payment-information">
+
+                <div>
+                    <span>METHOD</span>
+                    <strong>
+                        {{ order.payment_method }}
+                    </strong>
+                </div>
+
+                <div>
+                    <span>STATUS</span>
+
+                    {% if order.payment_status == "Paid" %}
+                        <strong class="payment-paid">
+                            PAID
+                        </strong>
+
+                    {% elif order.payment_status == "Failed" %}
+                        <strong class="payment-failed">
+                            FAILED
+                        </strong>
+
+                    {% else %}
+                        <strong class="payment-pending">
+                            PENDING
+                        </strong>
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =============================================
+             ORDER SUMMARY
+        ============================================== -->
+
+        <div class="order-sidebar-card order-summary-card">
+
+            <div class="order-sidebar-heading">
+
+                <span>ORDER SUMMARY</span>
+
+                <i class="bi bi-receipt"></i>
+
+            </div>
+
+
+            <div class="order-summary-list">
+
+                <div>
+                    <span>SUBTOTAL</span>
+                    <strong>
+                        ৳{{ order.subtotal|floatformat:0 }}
+                    </strong>
+                </div>
+
+                <div>
+                    <span>DELIVERY</span>
+                    <strong>
+                        ৳{{ order.delivery_charge|floatformat:0 }}
+                    </strong>
+                </div>
+
+                <div>
+                    <span>DISCOUNT</span>
+                    <strong>
+                        − ৳{{ order.discount|floatformat:0 }}
+                    </strong>
+                </div>
+
+            </div>
+
+
+            <div class="order-summary-total">
+
+                <span>
+                    GRAND TOTAL
+                </span>
+
+                <strong>
+                    ৳{{ order.total_amount|floatformat:0 }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- =============================================
+             QUICK INFORMATION
+        ============================================== -->
+
+        <div class="order-sidebar-card">
+
+            <div class="order-sidebar-heading">
+
+                <span>QUICK INFO</span>
+
+                <i class="bi bi-info-circle"></i>
+
+            </div>
+
+
+            <div class="quick-info-list">
+
+                <div>
+                    <span>ITEMS</span>
+                    <strong>
+                        {{ order.items.all|length }}
+                    </strong>
+                </div>
+
+                <div>
+                    <span>ORDER ID</span>
+                    <strong>
+                        #{{ order.id }}
+                    </strong>
+                </div>
+
+                <div>
+                    <span>CREATED</span>
+                    <strong>
+                        {{ order.created_at|date:"d M Y" }}
+                    </strong>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =============================================
+             BACK BUTTON
+        ============================================== -->
+
+        <a
+            href="{% url 'orders_page' %}"
+            class="back-orders-btn"
+        >
+            <i class="bi bi-arrow-left"></i>
+            <span>BACK TO ORDERS</span>
+        </a>
+
+    </aside>
+
+</div>
+
+
+</div>
+
+{% endblock %}

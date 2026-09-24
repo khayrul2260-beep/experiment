@@ -451,7 +451,7 @@ Orders
                     <td>
 
                         <a
-                            href="#"
+                            href="{% url 'admin_order_details' order.order_number %}"
                             class="order-view-btn"
                             title="View Order"
                         >
@@ -648,7 +648,7 @@ Orders
 
 
             <a
-                href="#"
+                href="{% url 'admin_order_details' order.order_number %}"
                 class="order-view-btn"
             >
 

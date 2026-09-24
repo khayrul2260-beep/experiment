@@ -6,7 +6,11 @@ urlpatterns = [
     path("", dashboard_page, name="dashboard_page"),
     path('products/', products_page, name='products_page'),
     path('categories/', categories_page, name='categories_page'),
+
     path('orders/', orders_page, name='orders_page'),
+    path("orders/<str:order_number>/", order_details_page, name="admin_order_details"),
+    path("orders/<str:order_number>/update-status/", update_order_status, name="update_order_status"),
+
     path('customers/', customers_page, name='customers_page'),
     path('inventory/', inventory_page, name='inventory_page'),
     path('coupons/', coupons_page, name='coupons_page'),
@@ -58,7 +62,5 @@ urlpatterns = [
     path("categories/add/", add_category, name='add_category'),
     path("categories/delete/<int:id>/", delete_category, name="delete_category"),
     path("category/edit/<int:id>/", edit_category, name="edit_category"),
-
-
 
 ]
