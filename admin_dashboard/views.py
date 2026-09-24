@@ -1720,6 +1720,75 @@ def update_order_status(request, order_number):
         order_number=order.order_number
     )
 
+def update_payment_status(request, order_number):
+
+    if request.method != "POST":
+        return redirect(
+            "admin_order_details",
+            order_number=order_number
+        )
+
+    order = get_object_or_404(
+        Order,
+        order_number=order_number
+    )
+
+    new_payment_status = request.POST.get(
+        "payment_status"
+    )
+
+    valid_payment_statuses = [
+        choice[0]
+        for choice in Order.PAYMENT_STATUS_CHOICES
+    ]
+
+    if new_payment_status not in valid_payment_statuses:
+
+        messages.error(
+            request,
+            "Invalid payment status."
+        )
+
+        return redirect(
+            "admin_order_details",
+            order_number=order.order_number
+        )
+
+    if order.payment_status == new_payment_status:
+
+        messages.info(
+            request,
+            "Payment status is already set to this status."
+        )
+
+        return redirect(
+            "admin_order_details",
+            order_number=order.order_number
+        )
+
+    old_payment_status = order.payment_status
+
+    order.payment_status = new_payment_status
+
+    order.save(
+        update_fields=[
+            "payment_status",
+            "updated_at"
+        ]
+    )
+
+    messages.success(
+        request,
+        f"Payment status updated from "
+        f"{old_payment_status} to {new_payment_status}."
+    )
+
+    return redirect(
+        "admin_order_details",
+        order_number=order.order_number
+    )
+
+
 def inventory_page(request):
 
     return render(request, 'admin_dashboard/inventory.html', { "page_title": "Inventory" })  

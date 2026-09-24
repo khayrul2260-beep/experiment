@@ -778,52 +778,114 @@ Order Details
         <!-- =============================================
              PAYMENT
         ============================================== -->
-
+        <!-- =============================================
+             PAYMENT
+        ============================================== -->
+        
         <div class="order-sidebar-card">
-
+        
             <div class="order-sidebar-heading">
-
+            
                 <span>PAYMENT</span>
-
+            
                 <i class="bi bi-credit-card"></i>
-
+            
             </div>
-
-
+        
+        
             <div class="payment-information">
-
+            
                 <div>
+                
                     <span>METHOD</span>
+                
                     <strong>
                         {{ order.payment_method }}
                     </strong>
+                
                 </div>
-
+            
+            
                 <div>
+                
                     <span>STATUS</span>
-
+                
                     {% if order.payment_status == "Paid" %}
+                
                         <strong class="payment-paid">
                             PAID
                         </strong>
-
+                    
                     {% elif order.payment_status == "Failed" %}
+                    
                         <strong class="payment-failed">
                             FAILED
                         </strong>
-
+                    
                     {% else %}
+                    
                         <strong class="payment-pending">
                             PENDING
                         </strong>
+                    
                     {% endif %}
-
+                    
                 </div>
-
+            
             </div>
-
+        
+        
+            <!-- PAYMENT STATUS UPDATE -->
+        
+            <form
+                method="POST"
+                action="{% url 'update_payment_status' order.order_number %}"
+                class="admin-payment-status-form"
+            >
+        
+                {% csrf_token %}
+        
+        
+                <label for="paymentStatus">
+                    Update Payment Status
+                </label>
+            
+            
+                <select
+                    name="payment_status"
+                    id="paymentStatus"
+                    class="admin-payment-status-select"
+                >
+            
+                    {% for value, label in order.PAYMENT_STATUS_CHOICES %}
+            
+                        <option
+                            value="{{ value }}"
+                            {% if order.payment_status == value %}
+                                selected
+                            {% endif %}
+                        >
+                            {{ label }}
+                        </option>
+                    
+                    {% endfor %}
+                    
+                </select>
+            
+            
+                <button
+                    type="submit"
+                    class="admin-payment-status-btn"
+                >
+                    <span>UPDATE PAYMENT</span>
+            
+                    <i class="bi bi-arrow-right"></i>
+            
+                </button>
+            
+            </form>
+        
         </div>
-
 
         <!-- =============================================
              ORDER SUMMARY

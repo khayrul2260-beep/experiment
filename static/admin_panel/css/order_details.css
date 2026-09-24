@@ -1567,3 +1567,145 @@
 }
 
 
+
+/* =========================================================
+   PAYMENT STATUS UPDATE
+   ========================================================= */
+
+.admin-payment-status-form {
+    margin-top: 14px;
+    padding-top: 13px;
+    border-top: 1px solid rgba(148, 163, 184, 0.07);
+}
+
+.admin-payment-status-form label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 8px;
+    line-height: 1;
+    font-weight: 500;
+    color: #64748B;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.admin-payment-status-select {
+    width: 100%;
+    height: 32px;
+    padding: 0 9px;
+    border: 1px solid rgba(148, 163, 184, 0.12);
+    border-radius: 6px;
+    outline: none;
+    background: #101010;
+    color: #CBD5E1;
+    font-family: inherit;
+    font-size: 8px;
+    font-weight: 500;
+    cursor: pointer;
+
+    transition:
+        border-color 0.35s ease,
+        background-color 0.35s ease;
+}
+
+.admin-payment-status-select:hover {
+    border-color: rgba(37, 99, 235, 0.45);
+}
+
+.admin-payment-status-select:focus {
+    border-color: #2563EB;
+    background: #111111;
+}
+
+.admin-payment-status-select option {
+    background: #141414;
+    color: #F8FAFC;
+}
+
+
+.admin-payment-status-btn {
+    width: 100%;
+    height: 32px;
+    margin-top: 8px;
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+
+    border: 1px solid #2563EB;
+    border-radius: 6px;
+
+    background: #2563EB;
+    color: #FFFFFF;
+
+    font-family: inherit;
+    font-size: 8px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.35s ease,
+        border-color 0.35s ease,
+        transform 0.35s ease;
+}
+
+.admin-payment-status-btn i {
+    font-size: 10px;
+}
+
+.admin-payment-status-btn:hover {
+    background: #1D4ED8;
+    border-color: #1D4ED8;
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 576px) {
+
+    .admin-payment-status-form {
+        margin-top: 12px;
+        padding-top: 11px;
+    }
+
+    .admin-payment-status-form label {
+        font-size: 7px;
+    }
+
+    .admin-payment-status-select {
+        height: 30px;
+        font-size: 8px;
+    }
+
+    .admin-payment-status-btn {
+        height: 30px;
+        font-size: 7px;
+    }
+
+}
+
+
+@media (max-width: 400px) {
+
+    .admin-payment-status-form label {
+        font-size: 6px;
+    }
+
+    .admin-payment-status-select {
+        height: 29px;
+        font-size: 7px;
+    }
+
+    .admin-payment-status-btn {
+        height: 29px;
+        font-size: 7px;
+    }
+
+}
+

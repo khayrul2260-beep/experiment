@@ -12,6 +12,7 @@ urlpatterns = [
     path('orders/', orders_page, name='orders_page'),
     path("orders/<str:order_number>/", order_details_page, name="admin_order_details"),
     path("orders/<str:order_number>/update-status/", update_order_status, name="update_order_status"),
+    path("orders/<str:order_number>/update-payment-status/", update_payment_status, name="update_payment_status"),
 
     path('customers/', customers_page, name='customers_page'),
     path("customers/<str:customer_id>/", customer_details_page, name="customer_details"),
