@@ -1,14 +1,1160 @@
-{% extends 'admin_dashboard/master/base.html' %}
-{% load static %} 
-{% block title %} 
-Customers  
-{% endblock %} 
+{% extends "admin_dashboard/master/base.html" %}
+
+{% load static %}
+
 {% block css %}
-{% endblock %} {% block page_title %} Customers {% endblock %}
+<link
+    rel="stylesheet"
+    href="{% static 'admin_panel/css/customers.css' %}"
+>
+{% endblock %}
+
 
 {% block content %}
-    
-    <h1>Customers page</h1>
+
+<div class="customers-page">
+
+
+    <!-- =====================================================
+         PAGE HEADER
+    ====================================================== -->
+
+    <div class="customers-heading">
+
+        <div class="customers-heading-main">
+
+            <span class="customers-eyebrow">
+                CUSTOMER MANAGEMENT
+            </span>
+
+            <h1>
+                Customers
+            </h1>
+
+            <p>
+                Monitor registered and guest customers, purchases and activity.
+            </p>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         CUSTOMER OVERVIEW
+    ====================================================== -->
+
+    <div class="customers-overview">
+
+
+        <!-- TOTAL CUSTOMERS -->
+
+        <div class="customer-overview-card">
+
+            <div class="customer-overview-top">
+
+                <span>
+                    TOTAL CUSTOMERS
+                </span>
+
+                <i class="bi bi-people"></i>
+
+            </div>
+
+            <strong>
+                {{ customer_counts.total }}
+            </strong>
+
+            <small>
+                Registered + Guest
+            </small>
+
+        </div>
+
+
+
+        <!-- REGISTERED -->
+
+        <div class="customer-overview-card">
+
+            <div class="customer-overview-top">
+
+                <span>
+                    REGISTERED
+                </span>
+
+                <i class="bi bi-person-check"></i>
+
+            </div>
+
+            <strong>
+                {{ customer_counts.registered }}
+            </strong>
+
+            <small>
+                Account customers
+            </small>
+
+        </div>
+
+
+
+        <!-- GUEST -->
+
+        <div class="customer-overview-card">
+
+            <div class="customer-overview-top">
+
+                <span>
+                    GUEST CUSTOMERS
+                </span>
+
+                <i class="bi bi-person"></i>
+
+            </div>
+
+            <strong>
+                {{ customer_counts.guest }}
+            </strong>
+
+            <small>
+                Guest purchasers
+            </small>
+
+        </div>
+
+
+
+        <!-- ACTIVE -->
+
+        <div class="customer-overview-card">
+
+            <div class="customer-overview-top">
+
+                <span>
+                    ACTIVE
+                </span>
+
+                <i class="bi bi-person-check"></i>
+
+            </div>
+
+            <strong>
+                {{ customer_counts.active }}
+            </strong>
+
+            <small>
+                Active registered accounts
+            </small>
+
+        </div>
+
+
+
+        <!-- INACTIVE -->
+
+        <div class="customer-overview-card">
+
+            <div class="customer-overview-top">
+
+                <span>
+                    INACTIVE
+                </span>
+
+                <i class="bi bi-person-x"></i>
+
+            </div>
+
+            <strong>
+                {{ customer_counts.inactive }}
+            </strong>
+
+            <small>
+                Inactive registered accounts
+            </small>
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- =====================================================
+         CUSTOMER PURCHASE RANKING
+    ====================================================== -->
+
+    <div class="customers-panel">
+
+
+        <!-- PANEL HEADER -->
+
+        <div class="customers-panel-header">
+
+            <div>
+
+                <span class="customers-section-eyebrow">
+                    CUSTOMER PURCHASE ANALYTICS
+                </span>
+
+                <h2>
+                    Customer Purchase Ranking
+                </h2>
+
+            </div>
+
+
+            <div class="customers-count">
+
+                SORTED BY ITEMS
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             FILTERS
+        ================================================== -->
+
+        <div class="customers-filters">
+
+
+            <!-- SEARCH -->
+
+            <div class="customers-search">
+
+                <i class="bi bi-search"></i>
+
+                <input
+                    type="text"
+                    id="customerSearch"
+                    placeholder="Search customer..."
+                    autocomplete="off"
+                >
+
+            </div>
+
+
+
+            <!-- TYPE FILTER -->
+
+            <div class="customers-filter-select">
+
+                <select id="customerTypeFilter">
+
+                    <option value="all">
+                        All Customers
+                    </option>
+
+                    <option value="registered">
+                        Registered
+                    </option>
+
+                    <option value="guest">
+                        Guest
+                    </option>
+
+                </select>
+
+            </div>
+
+
+
+            <!-- STATUS FILTER -->
+
+            <div class="customers-filter-select">
+
+                <select id="customerStatusFilter">
+
+                    <option value="all">
+                        All Status
+                    </option>
+
+                    <option value="active">
+                        Active
+                    </option>
+
+                    <option value="inactive">
+                        Inactive
+                    </option>
+
+                    <option value="guest">
+                        Guest
+                    </option>
+
+                </select>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- =================================================
+             DESKTOP TABLE
+        ================================================== -->
+
+        <div class="customers-table-wrapper">
+
+            <table class="customers-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            #
+                        </th>
+
+                        <th>
+                            CUSTOMER
+                        </th>
+
+                        <th>
+                            TYPE
+                        </th>
+
+                        <th>
+                            ORDERS
+                        </th>
+
+                        <th>
+                            ITEMS
+                        </th>
+
+                        <th>
+                            TOTAL SPENT
+                        </th>
+
+                        <th>
+                            LAST ORDER
+                        </th>
+
+                        <th>
+                            STATUS
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="customersTableBody">
+
+
+                    {% for customer in customers %}
+
+                    <tr
+                        class="customer-row"
+                        data-name="{{ customer.name|lower }}"
+                        data-username="{{ customer.username|lower }}"
+                        data-email="{{ customer.email|lower }}"
+                        data-phone="{{ customer.phone|lower }}"
+                        data-type="{{ customer.type|lower }}"
+                        data-status="{% if customer.type == 'GUEST' %}guest{% elif customer.is_active %}active{% else %}inactive{% endif %}"
+                    >
+
+
+                        <!-- RANK -->
+
+                        <td>
+
+                            <span class="customer-rank">
+                                {{ forloop.counter|stringformat:"02d" }}
+                            </span>
+
+                        </td>
+
+
+
+                        <!-- CUSTOMER -->
+
+                        <td>
+
+                            <div class="customer-table-profile">
+
+
+                                {% if customer.profile_image %}
+
+                                <img
+                                    src="{{ customer.profile_image.url }}"
+                                    alt="{{ customer.name }}"
+                                    class="customer-avatar"
+                                >
+
+                                {% else %}
+
+                                <div class="customer-avatar-placeholder">
+
+                                    {{ customer.name|first|upper }}
+
+                                </div>
+
+                                {% endif %}
+
+
+
+                                <div class="customer-profile-info">
+
+                                    <strong>
+                                        {{ customer.name }}
+                                    </strong>
+
+
+                                    {% if customer.type == "REGISTERED" %}
+
+                                    <span>
+                                        @{{ customer.username }}
+                                    </span>
+
+                                    {% else %}
+
+                                    <span>
+                                        Guest Customer
+                                    </span>
+
+                                    {% endif %}
+
+                                </div>
+
+
+                            </div>
+
+                        </td>
+
+
+
+                        <!-- TYPE -->
+
+                        <td>
+
+                            {% if customer.type == "REGISTERED" %}
+
+                            <span class="customer-type registered">
+
+                                REGISTERED
+
+                            </span>
+
+                            {% else %}
+
+                            <span class="customer-type guest">
+
+                                GUEST
+
+                            </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+
+                        <!-- ORDERS -->
+
+                        <td>
+
+                            <span class="customer-order-count">
+
+                                {{ customer.total_orders }}
+
+                            </span>
+
+                        </td>
+
+
+
+                        <!-- ITEMS -->
+
+                        <td>
+
+                            <span class="customer-items-count">
+
+                                {{ customer.total_items }}
+
+                            </span>
+
+                        </td>
+
+
+
+                        <!-- TOTAL SPENT -->
+
+                        <td>
+
+                            <span class="customer-total-spent">
+
+                                ৳{{ customer.total_spent|floatformat:0 }}
+
+                            </span>
+
+                        </td>
+
+
+
+                        <!-- LAST ORDER -->
+
+                        <td>
+
+                            {% if customer.last_order %}
+
+                            <div class="customer-date">
+
+                                <strong>
+                                    {{ customer.last_order|date:"d M Y" }}
+                                </strong>
+
+                                <span>
+                                    {{ customer.last_order|date:"h:i A" }}
+                                </span>
+
+                            </div>
+
+                            {% else %}
+
+                            <span class="customer-no-order">
+                                No Order
+                            </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+
+                        <!-- STATUS -->
+
+                        <td>
+
+                            {% if customer.type == "GUEST" %}
+
+                            <span class="customer-status guest">
+
+                                GUEST
+
+                            </span>
+
+                            {% elif customer.is_active %}
+
+                            <span class="customer-status active">
+
+                                ACTIVE
+
+                            </span>
+
+                            {% else %}
+
+                            <span class="customer-status inactive">
+
+                                INACTIVE
+
+                            </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                    </tr>
+
+
+                    {% empty %}
+
+
+                    <tr>
+
+                        <td
+                            colspan="8"
+                            class="customers-empty"
+                        >
+
+                            <div class="customers-empty-content">
+
+                                <i class="bi bi-people"></i>
+
+                                <h3>
+                                    No Customers Found
+                                </h3>
+
+                                <p>
+                                    There are currently no customers in the system.
+                                </p>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+
+                    {% endfor %}
+
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+
+        <!-- =================================================
+             MOBILE CUSTOMER LIST
+        ================================================== -->
+
+        <div
+            class="customers-mobile-list"
+            id="customersMobileList"
+        >
+
+
+            {% for customer in customers %}
+
+            <div
+                class="customer-mobile-card"
+                data-name="{{ customer.name|lower }}"
+                data-username="{{ customer.username|lower }}"
+                data-email="{{ customer.email|lower }}"
+                data-phone="{{ customer.phone|lower }}"
+                data-type="{{ customer.type|lower }}"
+                data-status="{% if customer.type == 'GUEST' %}guest{% elif customer.is_active %}active{% else %}inactive{% endif %}"
+            >
+
+
+                <!-- MOBILE TOP -->
+
+                <div class="customer-mobile-top">
+
+
+                    <div class="customer-table-profile">
+
+
+                        {% if customer.profile_image %}
+
+                        <img
+                            src="{{ customer.profile_image.url }}"
+                            alt="{{ customer.name }}"
+                            class="customer-avatar"
+                        >
+
+                        {% else %}
+
+                        <div class="customer-avatar-placeholder">
+
+                            {{ customer.name|first|upper }}
+
+                        </div>
+
+                        {% endif %}
+
+
+                        <div class="customer-profile-info">
+
+                            <strong>
+                                {{ customer.name }}
+                            </strong>
+
+
+                            {% if customer.type == "REGISTERED" %}
+
+                            <span>
+                                @{{ customer.username }}
+                            </span>
+
+                            {% else %}
+
+                            <span>
+                                Guest Customer
+                            </span>
+
+                            {% endif %}
+
+                        </div>
+
+
+                    </div>
+
+
+
+                    <!-- STATUS -->
+
+                    {% if customer.type == "GUEST" %}
+
+                    <span class="customer-status guest">
+                        GUEST
+                    </span>
+
+                    {% elif customer.is_active %}
+
+                    <span class="customer-status active">
+                        ACTIVE
+                    </span>
+
+                    {% else %}
+
+                    <span class="customer-status inactive">
+                        INACTIVE
+                    </span>
+
+                    {% endif %}
+
+
+                </div>
+
+
+
+                <!-- MOBILE CUSTOMER INFO -->
+
+                <div class="customer-mobile-info">
+
+
+                    <!-- TYPE -->
+
+                    <div class="customer-mobile-info-item">
+
+                        <span>
+                            TYPE
+                        </span>
+
+                        <strong>
+
+                            {% if customer.type == "REGISTERED" %}
+                                REGISTERED
+                            {% else %}
+                                GUEST
+                            {% endif %}
+
+                        </strong>
+
+                    </div>
+
+
+
+                    <!-- ORDERS -->
+
+                    <div class="customer-mobile-info-item">
+
+                        <span>
+                            ORDERS
+                        </span>
+
+                        <strong>
+                            {{ customer.total_orders }}
+                        </strong>
+
+                    </div>
+
+
+
+                    <!-- ITEMS -->
+
+                    <div class="customer-mobile-info-item">
+
+                        <span>
+                            ITEMS PURCHASED
+                        </span>
+
+                        <strong>
+                            {{ customer.total_items }}
+                        </strong>
+
+                    </div>
+
+
+
+                    <!-- TOTAL SPENT -->
+
+                    <div class="customer-mobile-info-item">
+
+                        <span>
+                            TOTAL SPENT
+                        </span>
+
+                        <strong>
+                            ৳{{ customer.total_spent|floatformat:0 }}
+                        </strong>
+
+                    </div>
+
+
+
+                    <!-- EMAIL -->
+
+                    <div class="customer-mobile-info-item">
+
+                        <span>
+                            EMAIL
+                        </span>
+
+                        <strong>
+                            {{ customer.email|default:"—" }}
+                        </strong>
+
+                    </div>
+
+
+
+                    <!-- PHONE -->
+
+                    <div class="customer-mobile-info-item">
+
+                        <span>
+                            PHONE
+                        </span>
+
+                        <strong>
+                            {{ customer.phone|default:"—" }}
+                        </strong>
+
+                    </div>
+
+
+
+                    <!-- LAST ORDER -->
+
+                    <div class="customer-mobile-info-item">
+
+                        <span>
+                            LAST ORDER
+                        </span>
+
+                        <strong>
+
+                            {% if customer.last_order %}
+                                {{ customer.last_order|date:"d M Y" }}
+                            {% else %}
+                                No Order
+                            {% endif %}
+
+                        </strong>
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+            {% empty %}
+
+
+            <div class="customers-empty mobile-empty">
+
+                <div class="customers-empty-content">
+
+                    <i class="bi bi-people"></i>
+
+                    <h3>
+                        No Customers Found
+                    </h3>
+
+                    <p>
+                        There are currently no customers in the system.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            {% endfor %}
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
 
 {% endblock %}
-    
+
+
+{% block js %}
+<!-- =========================================================
+     CUSTOMER FILTER SCRIPT
+========================================================= -->
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const searchInput =
+            document.getElementById(
+                "customerSearch"
+            );
+
+
+        const typeFilter =
+            document.getElementById(
+                "customerTypeFilter"
+            );
+
+
+        const statusFilter =
+            document.getElementById(
+                "customerStatusFilter"
+            );
+
+
+        const tableRows =
+            document.querySelectorAll(
+                ".customer-row"
+            );
+
+
+        const mobileCards =
+            document.querySelectorAll(
+                ".customer-mobile-card"
+            );
+
+
+
+        function filterCustomers() {
+
+
+            const searchValue =
+                searchInput.value
+                    .toLowerCase()
+                    .trim();
+
+
+            const typeValue =
+                typeFilter.value
+                    .toLowerCase();
+
+
+            const statusValue =
+                statusFilter.value
+                    .toLowerCase();
+
+
+
+            /* =============================================
+               TABLE
+            ============================================= */
+
+            tableRows.forEach(
+                function (row) {
+
+
+                    const name =
+                        row.dataset.name || "";
+
+
+                    const username =
+                        row.dataset.username || "";
+
+
+                    const email =
+                        row.dataset.email || "";
+
+
+                    const phone =
+                        row.dataset.phone || "";
+
+
+                    const type =
+                        row.dataset.type || "";
+
+
+                    const status =
+                        row.dataset.status || "";
+
+
+
+                    const matchesSearch =
+
+                        name.includes(
+                            searchValue
+                        )
+
+                        ||
+
+                        username.includes(
+                            searchValue
+                        )
+
+                        ||
+
+                        email.includes(
+                            searchValue
+                        )
+
+                        ||
+
+                        phone.includes(
+                            searchValue
+                        );
+
+
+
+                    const matchesType =
+
+                        typeValue === "all"
+
+                        ||
+
+                        type === typeValue;
+
+
+
+                    const matchesStatus =
+
+                        statusValue === "all"
+
+                        ||
+
+                        status === statusValue;
+
+
+
+                    row.style.display =
+
+                        matchesSearch &&
+                        matchesType &&
+                        matchesStatus
+
+                            ? ""
+
+                            : "none";
+
+                }
+            );
+
+
+
+            /* =============================================
+               MOBILE
+            ============================================= */
+
+            mobileCards.forEach(
+                function (card) {
+
+
+                    const name =
+                        card.dataset.name || "";
+
+
+                    const username =
+                        card.dataset.username || "";
+
+
+                    const email =
+                        card.dataset.email || "";
+
+
+                    const phone =
+                        card.dataset.phone || "";
+
+
+                    const type =
+                        card.dataset.type || "";
+
+
+                    const status =
+                        card.dataset.status || "";
+
+
+
+                    const matchesSearch =
+
+                        name.includes(
+                            searchValue
+                        )
+
+                        ||
+
+                        username.includes(
+                            searchValue
+                        )
+
+                        ||
+
+                        email.includes(
+                            searchValue
+                        )
+
+                        ||
+
+                        phone.includes(
+                            searchValue
+                        );
+
+
+
+                    const matchesType =
+
+                        typeValue === "all"
+
+                        ||
+
+                        type === typeValue;
+
+
+
+                    const matchesStatus =
+
+                        statusValue === "all"
+
+                        ||
+
+                        status === statusValue;
+
+
+
+                    card.style.display =
+
+                        matchesSearch &&
+                        matchesType &&
+                        matchesStatus
+
+                            ? ""
+
+                            : "none";
+
+                }
+            );
+
+        }
+
+
+
+        /* =============================================
+           EVENTS
+        ============================================= */
+
+        searchInput.addEventListener(
+            "input",
+            filterCustomers
+        );
+
+
+        typeFilter.addEventListener(
+            "change",
+            filterCustomers
+        );
+
+
+        statusFilter.addEventListener(
+            "change",
+            filterCustomers
+        );
+
+
+    }
+);
+
+</script>
+
+
+{% endblock %}

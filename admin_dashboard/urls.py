@@ -1,6 +1,8 @@
 from django.urls import path
 from .views import *
 from .contact_views import *
+from .customer_views import *
+
 
 urlpatterns = [
     path("", dashboard_page, name="dashboard_page"),
