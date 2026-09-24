@@ -1,658 +1,863 @@
-"use strict";
+/* ============================================================
+   NAFI ADMIN DASHBOARD
+   chart.js
+   Chart.js 4.x compatible
+   ============================================================ */
 
-/* =========================================================
-   NAFI ADMIN — CHART.JS
-   Professional Chart Enhancements
-========================================================= */
+(function () {
 
-
-/* =========================================================
-   GLOBAL CHART DEFAULTS
-========================================================= */
-
-if (typeof Chart !== "undefined") {
-
-    Chart.defaults.font.family =
-        "Poppins, sans-serif";
-
-    Chart.defaults.color =
-        "#94A3B8";
-
-    Chart.defaults.animation.duration =
-        900;
-
-    Chart.defaults.animation.easing =
-        "easeOutQuart";
-}
+    "use strict";
 
 
-/* =========================================================
-   VERTICAL HOVER GUIDELINE
-========================================================= */
+    /* ========================================================
+       GLOBAL CHART STORAGE
+    ======================================================== */
 
-const nafiGuidelinePlugin = {
+    const NAFI_CHARTS = {};
 
-    id: "nafiGuideline",
 
-    afterDraw(chart) {
+    /* ========================================================
+       DOM READY
+    ======================================================== */
 
-        const tooltip = chart.tooltip;
+    document.addEventListener("DOMContentLoaded", function () {
 
-        if (
-            !tooltip ||
-            !tooltip._active ||
-            tooltip._active.length === 0
-        ) {
+        initializeRevenueChart();
+
+    });
+
+
+    /* ========================================================
+       REVENUE CHART
+    ======================================================== */
+
+    function initializeRevenueChart() {
+
+        const canvas =
+            document.getElementById(
+                "revenueChart"
+            );
+
+
+        if (!canvas) {
             return;
         }
+
 
         /*
-         * Only apply to line charts.
+         * Destroy an existing chart if the page/component
+         * is initialized again.
          */
-        if (chart.config.type !== "line") {
-            return;
-        }
 
-        const activePoint =
-            tooltip._active[0];
-
-        if (!activePoint || !activePoint.element) {
-            return;
-        }
-
-        const ctx = chart.ctx;
-
-        const x =
-            activePoint.element.x;
-
-        const top =
-            chart.chartArea.top;
-
-        const bottom =
-            chart.chartArea.bottom;
-
-        ctx.save();
-
-        ctx.beginPath();
-
-        ctx.moveTo(x, top);
-        ctx.lineTo(x, bottom);
-
-        ctx.setLineDash([
-            4,
-            5
-        ]);
-
-        ctx.lineWidth = 1;
-
-        ctx.strokeStyle =
-            "rgba(148, 163, 184, 0.28)";
-
-        ctx.stroke();
-
-        ctx.restore();
-    }
-};
+        destroyChart("revenueChart");
 
 
-/* =========================================================
-   ACTIVE DATA POINT
-========================================================= */
-
-const nafiActivePointPlugin = {
-
-    id: "nafiActivePoint",
-
-    afterDatasetsDraw(chart) {
-
-        if (chart.config.type !== "line") {
-            return;
-        }
-
-        const tooltip =
-            chart.tooltip;
-
-        if (
-            !tooltip ||
-            !tooltip._active ||
-            tooltip._active.length === 0
-        ) {
-            return;
-        }
-
-        const active =
-            tooltip._active[0];
-
-        if (!active || !active.element) {
-            return;
-        }
-
-        const point =
-            active.element;
-
-        const ctx =
-            chart.ctx;
-
-        ctx.save();
+        const labels =
+            parseChartData(
+                canvas.dataset.labels
+            );
 
 
-        /* -------------------------------------------------
-           Soft outer glow
-        ------------------------------------------------- */
+        const values =
+            parseChartData(
+                canvas.dataset.values
+            );
 
-        ctx.beginPath();
-
-        ctx.arc(
-            point.x,
-            point.y,
-            11,
-            0,
-            Math.PI * 2
-        );
-
-        ctx.fillStyle =
-            "rgba(37, 99, 235, 0.13)";
-
-        ctx.fill();
-
-
-        /* -------------------------------------------------
-           White outer ring
-        ------------------------------------------------- */
-
-        ctx.beginPath();
-
-        ctx.arc(
-            point.x,
-            point.y,
-            6,
-            0,
-            Math.PI * 2
-        );
-
-        ctx.fillStyle =
-            "#FFFFFF";
-
-        ctx.fill();
-
-
-        /* -------------------------------------------------
-           Blue center
-        ------------------------------------------------- */
-
-        ctx.beginPath();
-
-        ctx.arc(
-            point.x,
-            point.y,
-            3.2,
-            0,
-            Math.PI * 2
-        );
-
-        ctx.fillStyle =
-            "#2563EB";
-
-        ctx.fill();
-
-
-        ctx.restore();
-    }
-};
-
-
-/* =========================================================
-   SOFT LINE GLOW
-========================================================= */
-
-const nafiLineGlowPlugin = {
-
-    id: "nafiLineGlow",
-
-    beforeDatasetsDraw(chart) {
-
-        if (chart.config.type !== "line") {
-            return;
-        }
-
-        const ctx =
-            chart.ctx;
-
-        ctx.save();
 
         /*
-         * Very subtle glow.
-         *
-         * Kept intentionally low so the
-         * dashboard remains premium instead
-         * of looking neon.
+         * If Django has no revenue data, show an empty
+         * but valid chart instead of throwing an error.
          */
-        ctx.shadowColor =
-            "rgba(37, 99, 235, 0.20)";
 
-        ctx.shadowBlur = 10;
-
-        ctx.shadowOffsetX = 0;
-        ctx.shadowOffsetY = 0;
-    },
+        const safeLabels =
+            Array.isArray(labels)
+                ? labels
+                : [];
 
 
-    afterDatasetsDraw(chart) {
+        const safeValues =
+            Array.isArray(values)
+                ? values
+                : [];
 
-        if (chart.config.type !== "line") {
+
+        const context =
+            canvas.getContext("2d");
+
+
+        if (!context) {
             return;
         }
 
-        chart.ctx.restore();
-    }
-};
+
+        /* ====================================================
+           GRADIENT
+        ==================================================== */
+
+        const chartHeight =
+            canvas.parentElement
+                ? canvas.parentElement.clientHeight
+                : 250;
 
 
-/* =========================================================
-   EMPTY CHART MESSAGE
-========================================================= */
-
-const nafiEmptyChartPlugin = {
-
-    id: "nafiEmptyChart",
-
-    afterDraw(chart) {
-
-        if (
-            !chart.data ||
-            !chart.data.datasets ||
-            !chart.data.datasets.length
-        ) {
-            drawEmptyMessage(chart);
-            return;
-        }
-
-        const dataset =
-            chart.data.datasets[0];
-
-        if (
-            !dataset ||
-            !Array.isArray(dataset.data)
-        ) {
-            drawEmptyMessage(chart);
-            return;
-        }
-
-        const hasData =
-            dataset.data.some(
-                value =>
-                    Number(value) > 0
+        const gradient =
+            context.createLinearGradient(
+                0,
+                0,
+                0,
+                chartHeight
             );
 
-        if (!hasData) {
-            drawEmptyMessage(chart);
-        }
-    }
-};
 
-
-function drawEmptyMessage(chart) {
-
-    const {
-        ctx,
-        chartArea
-    } = chart;
-
-    if (!chartArea) return;
-
-    const centerX =
-        (chartArea.left +
-            chartArea.right) / 2;
-
-    const centerY =
-        (chartArea.top +
-            chartArea.bottom) / 2;
-
-    ctx.save();
-
-    ctx.textAlign =
-        "center";
-
-    ctx.textBaseline =
-        "middle";
-
-
-    /* Main message */
-
-    ctx.fillStyle =
-        "#CBD5E1";
-
-    ctx.font =
-        "500 12px Poppins";
-
-    ctx.fillText(
-        "No revenue data available",
-        centerX,
-        centerY - 8
-    );
-
-
-    /* Secondary message */
-
-    ctx.fillStyle =
-        "#64748B";
-
-    ctx.font =
-        "400 9px Poppins";
-
-    ctx.fillText(
-        "Revenue will appear here after completed orders",
-        centerX,
-        centerY + 15
-    );
-
-    ctx.restore();
-}
-
-
-/* =========================================================
-   DOUGHNUT CENTER TEXT HELPER
-========================================================= */
-
-const nafiDoughnutCenterPlugin = {
-
-    id: "nafiDoughnutCenter",
-
-    afterDraw(chart) {
-
-        if (
-            chart.config.type !== "doughnut"
-        ) {
-            return;
-        }
-
-        /*
-         * Only draw if custom center
-         * values have been supplied.
-         */
-        const centerTitle =
-            chart.options.plugins
-                ?.nafiDoughnutCenter
-                ?.title;
-
-        const centerValue =
-            chart.options.plugins
-                ?.nafiDoughnutCenter
-                ?.value;
-
-        const centerSubtitle =
-            chart.options.plugins
-                ?.nafiDoughnutCenter
-                ?.subtitle;
-
-        if (
-            centerTitle === undefined &&
-            centerValue === undefined &&
-            centerSubtitle === undefined
-        ) {
-            return;
-        }
-
-        const meta =
-            chart.getDatasetMeta(0);
-
-        if (
-            !meta ||
-            !meta.data ||
-            !meta.data.length
-        ) {
-            return;
-        }
-
-        const point =
-            meta.data[0];
-
-        const x =
-            point.x;
-
-        const y =
-            point.y;
-
-        const ctx =
-            chart.ctx;
-
-        ctx.save();
-
-        ctx.textAlign =
-            "center";
-
-        ctx.textBaseline =
-            "middle";
-
-
-        /* -------------------------------------------------
-           Title
-        ------------------------------------------------- */
-
-        if (centerTitle) {
-
-            ctx.fillStyle =
-                "#94A3B8";
-
-            ctx.font =
-                "500 10px Poppins";
-
-            ctx.fillText(
-                centerTitle,
-                x,
-                y - 23
-            );
-        }
-
-
-        /* -------------------------------------------------
-           Main value
-        ------------------------------------------------- */
-
-        if (centerValue) {
-
-            ctx.fillStyle =
-                "#F8FAFC";
-
-            ctx.font =
-                "600 20px Poppins";
-
-            ctx.fillText(
-                centerValue,
-                x,
-                y + 1
-            );
-        }
-
-
-        /* -------------------------------------------------
-           Subtitle
-        ------------------------------------------------- */
-
-        if (centerSubtitle) {
-
-            ctx.fillStyle =
-                "#64748B";
-
-            ctx.font =
-                "400 9px Poppins";
-
-            ctx.fillText(
-                centerSubtitle,
-                x,
-                y + 23
-            );
-        }
-
-        ctx.restore();
-    }
-};
-
-
-/* =========================================================
-   PROFESSIONAL TOOLTIP HELPERS
-========================================================= */
-
-function nafiCurrencyTooltipLabel(context) {
-
-    const value =
-        Number(context.raw) || 0;
-
-    return (
-        "Revenue: ৳" +
-        value.toLocaleString(
-            "en-US"
-        )
-    );
-}
-
-
-/* =========================================================
-   CHART UTILITIES
-========================================================= */
-
-function nafiFormatCurrency(value) {
-
-    const number =
-        Number(value) || 0;
-
-    if (number >= 1000000) {
-
-        return (
-            "৳" +
-            (number / 1000000)
-                .toFixed(1)
-                .replace(".0", "") +
-            "M"
+        gradient.addColorStop(
+            0,
+            "rgba(77, 141, 255, 0.20)"
         );
-    }
 
 
-    if (number >= 1000) {
-
-        return (
-            "৳" +
-            (number / 1000)
-                .toFixed(1)
-                .replace(".0", "") +
-            "K"
+        gradient.addColorStop(
+            0.65,
+            "rgba(77, 141, 255, 0.045)"
         );
-    }
 
 
-    return (
-        "৳" +
-        number.toLocaleString(
-            "en-US"
-        )
-    );
-}
+        gradient.addColorStop(
+            1,
+            "rgba(77, 141, 255, 0)"
+        );
 
 
-/* =========================================================
-   REGISTER PLUGINS
-========================================================= */
+        /* ====================================================
+           CHART CONFIGURATION
+        ==================================================== */
 
-if (typeof Chart !== "undefined") {
+        const config = {
 
-    Chart.register(
-        nafiGuidelinePlugin,
-        nafiActivePointPlugin,
-        nafiLineGlowPlugin,
-        nafiEmptyChartPlugin,
-        nafiDoughnutCenterPlugin
-    );
-}
+            type: "line",
+
+            data: {
+
+                labels: safeLabels,
+
+                datasets: [
+
+                    {
+
+                        label: "Revenue",
+
+                        data: safeValues,
+
+                        borderColor:
+                            "#4d8dff",
+
+                        backgroundColor:
+                            gradient,
+
+                        borderWidth: 2,
+
+                        fill: true,
+
+                        tension: 0.38,
+
+                        cubicInterpolationMode:
+                            "monotone",
+
+                        pointRadius: 0,
+
+                        pointHoverRadius: 5,
+
+                        pointHoverBorderWidth: 2,
+
+                        pointBackgroundColor:
+                            "#4d8dff",
+
+                        pointBorderColor:
+                            "#050505",
+
+                        pointHoverBackgroundColor:
+                            "#4d8dff",
+
+                        pointHoverBorderColor:
+                            "#f5f7fa",
+
+                    }
+
+                ]
+
+            },
 
 
-/* =========================================================
-   CHART INSTANCE CLEANUP
-========================================================= */
+            options: {
 
-function nafiDestroyChart(canvas) {
+                responsive: true,
 
-    if (
-        typeof Chart === "undefined" ||
-        !canvas
-    ) {
-        return;
-    }
+                maintainAspectRatio: false,
 
-    const existing =
-        Chart.getChart(canvas);
+                animation: {
 
-    if (existing) {
-        existing.destroy();
-    }
-}
+                    duration: 650,
+
+                    easing: "easeOutQuart"
+
+                },
 
 
-/* =========================================================
-   SAFE CHART RESIZE
-========================================================= */
+                interaction: {
 
-function nafiResizeCharts() {
+                    mode: "index",
 
-    if (typeof Chart === "undefined") {
-        return;
-    }
+                    intersect: false
 
-    Chart.instances &&
-        Object.values(
-            Chart.instances
-        ).forEach((chart) => {
+                },
 
-            if (chart) {
-                chart.resize();
+
+                layout: {
+
+                    padding: {
+
+                        top: 5,
+
+                        right: 8,
+
+                        bottom: 2,
+
+                        left: 0
+
+                    }
+
+                },
+
+
+                plugins: {
+
+                    legend: {
+
+                        display: false
+
+                    },
+
+
+                    title: {
+
+                        display: false
+
+                    },
+
+
+                    tooltip: {
+
+                        enabled: true,
+
+                        backgroundColor:
+                            "rgba(12, 12, 12, 0.96)",
+
+                        borderColor:
+                            "rgba(77, 141, 255, 0.28)",
+
+                        borderWidth: 1,
+
+                        titleColor:
+                            "#969ca7",
+
+                        bodyColor:
+                            "#f5f7fa",
+
+                        titleFont: {
+
+                            family:
+                                "Poppins, Inter, sans-serif",
+
+                            size: 8,
+
+                            weight: "500"
+
+                        },
+
+                        bodyFont: {
+
+                            family:
+                                "Poppins, Inter, sans-serif",
+
+                            size: 10,
+
+                            weight: "600"
+
+                        },
+
+                        padding: 9,
+
+                        cornerRadius: 7,
+
+                        displayColors: false,
+
+                        callbacks: {
+
+                            label: function (context) {
+
+                                const value =
+                                    Number(
+                                        context.raw || 0
+                                    );
+
+
+                                return (
+                                    "৳" +
+                                    formatNumber(value)
+                                );
+
+                            }
+
+                        }
+
+                    }
+
+                },
+
+
+                scales: {
+
+                    x: {
+
+                        grid: {
+
+                            display: false
+
+                        },
+
+                        border: {
+
+                            display: false
+
+                        },
+
+                        ticks: {
+
+                            color:
+                                "#777d87",
+
+                            font: {
+
+                                family:
+                                    "Poppins, Inter, sans-serif",
+
+                                size: 7,
+
+                                weight: "400"
+
+                            },
+
+                            padding: 7,
+
+                            maxRotation: 0,
+
+                            autoSkip: true,
+
+                            autoSkipPadding: 15
+
+                        }
+
+                    },
+
+
+                    y: {
+
+                        beginAtZero: true,
+
+                        border: {
+
+                            display: false,
+
+                            dash: [3, 4]
+
+                        },
+
+                        grid: {
+
+                            color:
+                                "rgba(255,255,255,0.045)",
+
+                            drawTicks: false,
+
+                            lineWidth: 1
+
+                        },
+
+                        ticks: {
+
+                            color:
+                                "#777d87",
+
+                            font: {
+
+                                family:
+                                    "Poppins, Inter, sans-serif",
+
+                                size: 7,
+
+                                weight: "400"
+
+                            },
+
+                            padding: 8,
+
+                            maxTicksLimit: 5,
+
+                            callback: function (value) {
+
+                                return formatAxisValue(
+                                    value
+                                );
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
             }
-        });
-}
+
+        };
 
 
-/* =========================================================
-   WINDOW RESIZE
-========================================================= */
+        /*
+         * Create chart.
+         */
 
-let nafiChartResizeTimer = null;
+        NAFI_CHARTS.revenueChart =
+            new Chart(
+                context,
+                config
+            );
 
-window.addEventListener(
-    "resize",
-    () => {
 
-        clearTimeout(
-            nafiChartResizeTimer
+        /*
+         * Store chart on canvas as well.
+         * Useful for debugging and controlled updates.
+         */
+
+        canvas._nafiChart =
+            NAFI_CHARTS.revenueChart;
+
+
+        /*
+         * Add vertical hover guideline.
+         */
+
+        attachHoverGuideline(
+            canvas,
+            NAFI_CHARTS.revenueChart
         );
 
-        nafiChartResizeTimer =
-            setTimeout(() => {
-
-                nafiResizeCharts();
-
-            }, 180);
     }
-);
 
 
-/* =========================================================
-   PUBLIC HELPERS
-========================================================= */
+    /* ========================================================
+       DATA PARSER
+    ======================================================== */
 
-window.NAFICharts = {
+    function parseChartData(value) {
 
-    formatCurrency:
-        nafiFormatCurrency,
-
-    currencyTooltip:
-        nafiCurrencyTooltipLabel,
-
-    destroy:
-        nafiDestroyChart,
-
-    resize:
-        nafiResizeCharts
-};
+        if (!value) {
+            return [];
+        }
 
 
-/* =========================================================
-   END OF CHART.JS
-========================================================= */
+        /*
+         * Normal JSON
+         */
+
+        try {
+
+            return JSON.parse(value);
+
+        } catch (error) {
+
+            /*
+             * Django's default Python list representation may
+             * use single quotes.
+             *
+             * Example:
+             *
+             * ['Jan', 'Feb', 'Mar']
+             *
+             * Convert the simple dashboard representation
+             * into valid JSON.
+             */
+
+            try {
+
+                const normalized =
+                    value
+                        .replace(
+                            /'/g,
+                            '"'
+                        );
+
+
+                return JSON.parse(
+                    normalized
+                );
+
+            } catch (secondError) {
+
+                console.warn(
+                    "NAFI Chart: Unable to parse chart data.",
+                    secondError
+                );
+
+                return [];
+
+            }
+
+        }
+
+    }
+
+
+    /* ========================================================
+       NUMBER FORMAT
+    ======================================================== */
+
+    function formatNumber(value) {
+
+        const number =
+            Number(value);
+
+
+        if (!Number.isFinite(number)) {
+
+            return "0";
+
+        }
+
+
+        return number.toLocaleString(
+            "en-BD",
+            {
+                maximumFractionDigits: 0
+            }
+        );
+
+    }
+
+
+    /* ========================================================
+       Y AXIS FORMAT
+    ======================================================== */
+
+    function formatAxisValue(value) {
+
+        const number =
+            Number(value);
+
+
+        if (!Number.isFinite(number)) {
+
+            return "৳0";
+
+        }
+
+
+        if (number >= 1000000) {
+
+            return (
+                "৳" +
+                (number / 1000000)
+                    .toFixed(
+                        number % 1000000 === 0
+                            ? 0
+                            : 1
+                    ) +
+                "M"
+            );
+
+        }
+
+
+        if (number >= 1000) {
+
+            return (
+                "৳" +
+                (number / 1000)
+                    .toFixed(
+                        number % 1000 === 0
+                            ? 0
+                            : 1
+                    ) +
+                "K"
+            );
+
+        }
+
+
+        return "৳" + number;
+
+    }
+
+
+    /* ========================================================
+       HOVER GUIDELINE PLUGIN
+    ======================================================== */
+
+    function attachHoverGuideline(
+        canvas,
+        chart
+    ) {
+
+        if (!chart) {
+            return;
+        }
+
+
+        const guidelinePlugin = {
+
+            id: "nafiHoverGuideline",
+
+
+            afterDraw: function (
+                currentChart
+            ) {
+
+                const tooltip =
+                    currentChart.tooltip;
+
+
+                if (
+                    !tooltip ||
+                    !tooltip.getActiveElements ||
+                    !tooltip.getActiveElements().length
+                ) {
+
+                    return;
+
+                }
+
+
+                const active =
+                    tooltip.getActiveElements()[0];
+
+
+                if (!active) {
+                    return;
+                }
+
+
+                const x =
+                    active.element.x;
+
+
+                const chartArea =
+                    currentChart.chartArea;
+
+
+                if (!chartArea) {
+                    return;
+                }
+
+
+                const ctx =
+                    currentChart.ctx;
+
+
+                ctx.save();
+
+
+                ctx.beginPath();
+
+
+                ctx.moveTo(
+                    x,
+                    chartArea.top
+                );
+
+
+                ctx.lineTo(
+                    x,
+                    chartArea.bottom
+                );
+
+
+                ctx.lineWidth = 1;
+
+
+                ctx.setLineDash([
+                    3,
+                    4
+                ]);
+
+
+                ctx.strokeStyle =
+                    "rgba(77, 141, 255, 0.22)";
+
+
+                ctx.stroke();
+
+
+                ctx.restore();
+
+            }
+
+        };
+
+
+        /*
+         * Register only once for this chart.
+         */
+
+        chart.config.plugins =
+            chart.config.plugins || [];
+
+
+        chart.config.plugins.push(
+            guidelinePlugin
+        );
+
+
+        chart.update(
+            "none"
+        );
+
+    }
+
+
+    /* ========================================================
+       DESTROY CHART
+    ======================================================== */
+
+    function destroyChart(
+        chartName
+    ) {
+
+        const chart =
+            NAFI_CHARTS[chartName];
+
+
+        if (!chart) {
+            return;
+        }
+
+
+        try {
+
+            chart.destroy();
+
+        } catch (error) {
+
+            console.warn(
+                "NAFI Chart destroy error:",
+                error
+            );
+
+        }
+
+
+        delete NAFI_CHARTS[chartName];
+
+    }
+
+
+    /* ========================================================
+       RESIZE CHART
+    ======================================================== */
+
+    function resizeCharts() {
+
+        Object.keys(
+            NAFI_CHARTS
+        ).forEach(function (key) {
+
+            const chart =
+                NAFI_CHARTS[key];
+
+
+            if (
+                chart &&
+                typeof chart.resize === "function"
+            ) {
+
+                chart.resize();
+
+            }
+
+        });
+
+    }
+
+
+    /* ========================================================
+       WINDOW RESIZE
+    ======================================================== */
+
+    let resizeTimer = null;
+
+
+    window.addEventListener(
+        "resize",
+        function () {
+
+            clearTimeout(
+                resizeTimer
+            );
+
+
+            resizeTimer =
+                setTimeout(
+                    function () {
+
+                        resizeCharts();
+
+                    },
+                    150
+                );
+
+        }
+    );
+
+
+    /* ========================================================
+       PUBLIC CHART API
+    ======================================================== */
+
+    window.NAFICharts = {
+
+        get: function (
+            chartName
+        ) {
+
+            return NAFI_CHARTS[
+                chartName
+            ] || null;
+
+        },
+
+
+        destroy: function (
+            chartName
+        ) {
+
+            destroyChart(
+                chartName
+            );
+
+        },
+
+
+        resize: function () {
+
+            resizeCharts();
+
+        },
+
+
+        revenue: function () {
+
+            return NAFI_CHARTS.revenueChart || null;
+
+        }
+
+    };
+
+
+})();

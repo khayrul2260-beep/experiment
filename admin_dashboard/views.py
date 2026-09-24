@@ -14,11 +14,30 @@ from django.contrib.auth import get_user_model
 from django.db.models import Count, Sum, Q
 from datetime import datetime, timedelta
 
-
 def dashboard_page(request):
 
     # ==========================================================
-    # BASIC DASHBOARD DATA
+    # BASIC
+    # ==========================================================
+
+    User = get_user_model()
+
+    now = timezone.localtime()
+    today = now.date()
+
+    # ==========================================================
+    # BASE REVENUE QUERY
+    # Only Delivered orders are counted as revenue
+    # ==========================================================
+
+    delivered_orders = Order.objects.filter(
+        status="Delivered"
+    )
+
+    # ==========================================================
+    # ==========================================================
+    # 1. PRODUCT / INVENTORY DATA
+    # ==========================================================
     # ==========================================================
 
     total_products = ProductsModel.objects.count()
@@ -27,17 +46,63 @@ def dashboard_page(request):
         is_available=True
     ).count()
 
-    out_of_stock_products = ProductsModel.objects.filter(
-        stock=0
-    ).count()
-
     featured_products = ProductsModel.objects.filter(
         is_featured=True
     ).count()
 
+    # ----------------------------------------------------------
+    # Total inventory
+    # Actual stock comes from ProductSize
+    # ----------------------------------------------------------
+
+    total_inventory = (
+        ProductSize.objects.aggregate(
+            total=Sum("stock")
+        )["total"] or 0
+    )
+
+    # ----------------------------------------------------------
+    # Product stock annotation
+    # ----------------------------------------------------------
+
+    products_with_stock = (
+        ProductsModel.objects
+        .annotate(
+            total_size_stock=Sum("sizes__stock")
+        )
+    )
+
+    # ----------------------------------------------------------
+    # Out of stock products
+    # ----------------------------------------------------------
+
+    out_of_stock_products = (
+        products_with_stock
+        .filter(
+            Q(total_size_stock__isnull=True) |
+            Q(total_size_stock=0)
+        )
+        .count()
+    )
+
+    # ----------------------------------------------------------
+    # Low stock products
+    # 1 to 5 units
+    # ----------------------------------------------------------
+
+    low_stock_products = (
+        products_with_stock
+        .filter(
+            total_size_stock__gt=0,
+            total_size_stock__lte=5
+        )
+        .count()
+    )
 
     # ==========================================================
-    # ORDER DATA
+    # ==========================================================
+    # 2. ORDER DATA
+    # ==========================================================
     # ==========================================================
 
     total_orders = Order.objects.count()
@@ -54,7 +119,7 @@ def dashboard_page(request):
         status="Shipped"
     ).count()
 
-    delivered_orders = Order.objects.filter(
+    delivered_orders_count = Order.objects.filter(
         status="Delivered"
     ).count()
 
@@ -62,21 +127,27 @@ def dashboard_page(request):
         status="Cancelled"
     ).count()
 
-
     # ==========================================================
-    # CUSTOMER DATA
+    # ==========================================================
+    # 3. CUSTOMER DATA
+    # ==========================================================
     # ==========================================================
 
-    User = get_user_model()
-
+    # Registered customers
     registered_customers = User.objects.filter(
         is_staff=False
     ).count()
 
+    # Guest customers
     guest_customers = (
         Order.objects
-        .filter(customer__isnull=True)
-        .values("phone", "email")
+        .filter(
+            customer__isnull=True
+        )
+        .values(
+            "phone",
+            "email"
+        )
         .distinct()
         .count()
     )
@@ -86,344 +157,209 @@ def dashboard_page(request):
         guest_customers
     )
 
-
     # ==========================================================
-    # REVENUE PERIOD
     # ==========================================================
-
-    revenue_period = request.GET.get(
-        "revenue_period",
-        "month"
-    ).lower()
-
-
+    # 4. TOTAL REVENUE
     # ==========================================================
-    # VALID PERIODS
     # ==========================================================
 
-    valid_periods = [
-        "today",
-        "week",
-        "month",
-        "year",
-    ]
+    total_revenue = (
+        delivered_orders
+        .aggregate(
+            total=Sum("total_amount")
+        )["total"] or 0
+    )
 
+    # ==========================================================
+    # ==========================================================
+    # 5. REVENUE ANALYTICS BASIC FILTER
+    # ==========================================================
+    # ==========================================================
+    #
+    # This will be used by the new dashboard analytics UI.
+    #
+    # Supported:
+    #
+    #   revenue_year
+    #   revenue_month
+    #   revenue_week
+    #   revenue_day
+    #
+    # Example:
+    #
+    #   2025
+    #   September
+    #   Week 3
+    #   Tuesday
+    #
+    # ==========================================================
 
-    # ----------------------------------------------------------
-    # Check whether selected value is a previous year
-    # ----------------------------------------------------------
+    current_year = now.year
 
-    current_year = timezone.localtime().year
+    revenue_year = request.GET.get(
+        "revenue_year",
+        str(current_year)
+    )
 
     try:
-        selected_year = int(revenue_period)
+        revenue_year = int(revenue_year)
     except (TypeError, ValueError):
-        selected_year = None
 
+        revenue_year = current_year
 
-    if (
-        revenue_period not in valid_periods
-        and selected_year is None
-    ):
-        revenue_period = "month"
+    # ----------------------------------------------------------
+    # Prevent invalid year
+    # ----------------------------------------------------------
 
+    available_order_years = (
+        delivered_orders
+        .dates(
+            "created_at",
+            "year",
+            order="DESC"
+        )
+    )
+
+    available_years = sorted(
+        {
+            current_year,
+            *[
+                year.year
+                for year in available_order_years
+            ],
+        },
+        reverse=True
+    )
+
+    if revenue_year not in available_years:
+        revenue_year = current_year
 
     # ==========================================================
-    # REVENUE DATA
+    # MONTH SELECTION
+    # ==========================================================
+
+    revenue_month = request.GET.get(
+        "revenue_month",
+        ""
+    )
+
+    try:
+        revenue_month = int(revenue_month)
+
+        if not 1 <= revenue_month <= 12:
+            revenue_month = None
+
+    except (TypeError, ValueError):
+
+        revenue_month = None
+
+    # ==========================================================
+    # WEEK SELECTION
+    # ==========================================================
+
+    revenue_week = request.GET.get(
+        "revenue_week",
+        ""
+    )
+
+    try:
+        revenue_week = int(revenue_week)
+
+        if revenue_week < 1:
+            revenue_week = None
+
+    except (TypeError, ValueError):
+
+        revenue_week = None
+
+    # ==========================================================
+    # DAY SELECTION
+    # ==========================================================
+
+    revenue_day = request.GET.get(
+        "revenue_day",
+        ""
+    ).strip()
+
+    # ==========================================================
+    # REVENUE ANALYTICS VARIABLES
     # ==========================================================
 
     revenue_labels = []
     revenue_values = []
 
-    selected_period_revenue = 0
+    selected_revenue = 0
 
-
-    # ==========================================================
-    # CURRENT TIME
-    # ==========================================================
-
-    now = timezone.localtime()
-
-    today = now.date()
-
+    revenue_level = "year"
 
     # ==========================================================
-    # BASE REVENUE QUERY
+    # YEAR LEVEL
     #
-    # Only Delivered orders count as revenue.
+    # Example:
+    #
+    # 2026
+    # ├── Jan
+    # ├── Feb
+    # ├── Mar
+    # └── ...
+    #
     # ==========================================================
 
-    delivered_orders = Order.objects.filter(
-        status="Delivered"
+    selected_year_start = today.replace(
+        year=revenue_year,
+        month=1,
+        day=1
     )
 
+    selected_year_end = selected_year_start.replace(
+        year=revenue_year + 1
+    )
+
+    year_start_datetime = timezone.make_aware(
+        datetime.combine(
+            selected_year_start,
+            datetime.min.time()
+        )
+    )
+
+    year_end_datetime = timezone.make_aware(
+        datetime.combine(
+            selected_year_end,
+            datetime.min.time()
+        )
+    )
+
+    year_orders = delivered_orders.filter(
+        created_at__gte=year_start_datetime,
+        created_at__lt=year_end_datetime
+    )
 
     # ==========================================================
-    # TODAY
+    # IF MONTH IS NOT SELECTED
+    # Show yearly monthly revenue
     # ==========================================================
 
-    if revenue_period == "today":
+    if revenue_month is None:
 
-        start_datetime = timezone.make_aware(
-            datetime.combine(
-                today,
-                datetime.min.time()
-            )
-        )
+        revenue_level = "year"
 
-        end_datetime = start_datetime + timedelta(
-            days=1
-        )
+        for month_number in range(1, 13):
 
-
-        today_orders = delivered_orders.filter(
-            created_at__gte=start_datetime,
-            created_at__lt=end_datetime
-        )
-
-
-        for hour in range(24):
-
-            hour_start = start_datetime + timedelta(
-                hours=hour
-            )
-
-            hour_end = hour_start + timedelta(
-                hours=1
-            )
-
-
-            revenue = (
-                today_orders
-                .filter(
-                    created_at__gte=hour_start,
-                    created_at__lt=hour_end
-                )
-                .aggregate(
-                    total=Sum("total_amount")
-                )["total"]
-                or 0
-            )
-
-
-            revenue_labels.append(
-                hour_start.strftime("%I %p").lstrip("0")
-            )
-
-            revenue_values.append(
-                float(revenue)
-            )
-
-
-    # ==========================================================
-    # THIS WEEK
-    # ==========================================================
-
-    elif revenue_period == "week":
-
-        week_start = (
-            today -
-            timedelta(days=today.weekday())
-        )
-
-        start_datetime = timezone.make_aware(
-            datetime.combine(
-                week_start,
-                datetime.min.time()
-            )
-        )
-
-        end_datetime = start_datetime + timedelta(
-            days=7
-        )
-
-
-        week_orders = delivered_orders.filter(
-            created_at__gte=start_datetime,
-            created_at__lt=end_datetime
-        )
-
-
-        for day in range(7):
-
-            day_start = start_datetime + timedelta(
-                days=day
-            )
-
-            day_end = day_start + timedelta(
-                days=1
-            )
-
-
-            revenue = (
-                week_orders
-                .filter(
-                    created_at__gte=day_start,
-                    created_at__lt=day_end
-                )
-                .aggregate(
-                    total=Sum("total_amount")
-                )["total"]
-                or 0
-            )
-
-
-            revenue_labels.append(
-                day_start.strftime("%a")
-            )
-
-            revenue_values.append(
-                float(revenue)
-            )
-
-
-    # ==========================================================
-    # THIS MONTH
-    # ==========================================================
-
-    elif revenue_period == "month":
-
-        month_start = today.replace(
-            day=1
-        )
-
-
-        if month_start.month == 12:
-
-            next_month = month_start.replace(
-                year=month_start.year + 1,
-                month=1
-            )
-
-        else:
-
-            next_month = month_start.replace(
-                month=month_start.month + 1
-            )
-
-
-        start_datetime = timezone.make_aware(
-            datetime.combine(
-                month_start,
-                datetime.min.time()
-            )
-        )
-
-        end_datetime = timezone.make_aware(
-            datetime.combine(
-                next_month,
-                datetime.min.time()
-            )
-        )
-
-
-        month_orders = delivered_orders.filter(
-            created_at__gte=start_datetime,
-            created_at__lt=end_datetime
-        )
-
-
-        current_day = month_start
-
-
-        while current_day < next_month:
-
-            day_start = timezone.make_aware(
-                datetime.combine(
-                    current_day,
-                    datetime.min.time()
-                )
-            )
-
-            day_end = day_start + timedelta(
-                days=1
-            )
-
-
-            revenue = (
-                month_orders
-                .filter(
-                    created_at__gte=day_start,
-                    created_at__lt=day_end
-                )
-                .aggregate(
-                    total=Sum("total_amount")
-                )["total"]
-                or 0
-            )
-
-
-            revenue_labels.append(
-                str(current_day.day)
-            )
-
-            revenue_values.append(
-                float(revenue)
-            )
-
-
-            current_day += timedelta(
-                days=1
-            )
-
-
-    # ==========================================================
-    # THIS YEAR
-    # ==========================================================
-
-    elif revenue_period == "year":
-
-        year_start = today.replace(
-            month=1,
-            day=1
-        )
-
-
-        next_year = year_start.replace(
-            year=year_start.year + 1
-        )
-
-
-        start_datetime = timezone.make_aware(
-            datetime.combine(
-                year_start,
-                datetime.min.time()
-            )
-        )
-
-        end_datetime = timezone.make_aware(
-            datetime.combine(
-                next_year,
-                datetime.min.time()
-            )
-        )
-
-
-        year_orders = delivered_orders.filter(
-            created_at__gte=start_datetime,
-            created_at__lt=end_datetime
-        )
-
-
-        for month in range(1, 13):
-
-            month_start = year_start.replace(
-                month=month,
+            month_start = selected_year_start.replace(
+                month=month_number,
                 day=1
             )
 
+            if month_number == 12:
 
-            if month == 12:
-
-                month_end = next_year
+                month_end = selected_year_end
 
             else:
 
-                month_end = year_start.replace(
-                    month=month + 1,
+                month_end = selected_year_start.replace(
+                    month=month_number + 1,
                     day=1
                 )
-
 
             month_start_datetime = timezone.make_aware(
                 datetime.combine(
@@ -438,7 +374,6 @@ def dashboard_page(request):
                     datetime.min.time()
                 )
             )
-
 
             revenue = (
                 year_orders
@@ -448,10 +383,8 @@ def dashboard_page(request):
                 )
                 .aggregate(
                     total=Sum("total_amount")
-                )["total"]
-                or 0
+                )["total"] or 0
             )
-
 
             revenue_labels.append(
                 month_start.strftime("%b")
@@ -461,142 +394,124 @@ def dashboard_page(request):
                 float(revenue)
             )
 
+        selected_revenue = sum(
+            revenue_values
+        )
 
     # ==========================================================
-    # PREVIOUS / SELECTED YEAR
+    # MONTH LEVEL
+    #
+    # Example:
+    #
+    # September
+    # ├── Week 1
+    # ├── Week 2
+    # ├── Week 3
+    # └── Week 4
+    #
     # ==========================================================
 
-    elif selected_year is not None:
+    else:
 
-        selected_year_start = today.replace(
-            year=selected_year,
-            month=1,
+        revenue_level = "month"
+
+        selected_month_start = selected_year_start.replace(
+            month=revenue_month,
             day=1
         )
 
+        if revenue_month == 12:
 
-        selected_year_end = selected_year_start.replace(
-            year=selected_year + 1
-        )
+            selected_month_end = selected_year_end
 
+        else:
 
-        start_datetime = timezone.make_aware(
-            datetime.combine(
-                selected_year_start,
-                datetime.min.time()
-            )
-        )
-
-        end_datetime = timezone.make_aware(
-            datetime.combine(
-                selected_year_end,
-                datetime.min.time()
-            )
-        )
-
-
-        selected_year_orders = delivered_orders.filter(
-            created_at__gte=start_datetime,
-            created_at__lt=end_datetime
-        )
-
-
-        for month in range(1, 13):
-
-            month_start = selected_year_start.replace(
-                month=month,
+            selected_month_end = selected_year_start.replace(
+                month=revenue_month + 1,
                 day=1
             )
 
+        month_start_datetime = timezone.make_aware(
+            datetime.combine(
+                selected_month_start,
+                datetime.min.time()
+            )
+        )
 
-            if month == 12:
+        month_end_datetime = timezone.make_aware(
+            datetime.combine(
+                selected_month_end,
+                datetime.min.time()
+            )
+        )
 
-                month_end = selected_year_end
+        month_orders = delivered_orders.filter(
+            created_at__gte=month_start_datetime,
+            created_at__lt=month_end_datetime
+        )
 
-            else:
+        # ------------------------------------------------------
+        # Create weeks inside selected month
+        # ------------------------------------------------------
 
-                month_end = selected_year_start.replace(
-                    month=month + 1,
-                    day=1
-                )
+        current_date = selected_month_start
 
+        week_number = 1
 
-            month_start_datetime = timezone.make_aware(
+        while current_date < selected_month_end:
+
+            week_start = current_date
+
+            week_end = min(
+                week_start + timedelta(days=7),
+                selected_month_end
+            )
+
+            week_start_datetime = timezone.make_aware(
                 datetime.combine(
-                    month_start,
+                    week_start,
                     datetime.min.time()
                 )
             )
 
-            month_end_datetime = timezone.make_aware(
+            week_end_datetime = timezone.make_aware(
                 datetime.combine(
-                    month_end,
+                    week_end,
                     datetime.min.time()
                 )
             )
-
 
             revenue = (
-                selected_year_orders
+                month_orders
                 .filter(
-                    created_at__gte=month_start_datetime,
-                    created_at__lt=month_end_datetime
+                    created_at__gte=week_start_datetime,
+                    created_at__lt=week_end_datetime
                 )
                 .aggregate(
                     total=Sum("total_amount")
-                )["total"]
-                or 0
+                )["total"] or 0
             )
 
-
             revenue_labels.append(
-                month_start.strftime("%b")
+                f"Week {week_number}"
             )
 
             revenue_values.append(
                 float(revenue)
             )
 
+            week_number += 1
 
-    # ==========================================================
-    # SELECTED PERIOD TOTAL
-    # ==========================================================
+            current_date = week_end
 
-    selected_period_revenue = sum(
-        revenue_values
-    )
-
-
-    # ==========================================================
-    # AVAILABLE YEARS
-    #
-    # Current year + all years that have orders.
-    # ==========================================================
-
-    order_years = (
-        delivered_orders
-        .dates(
-            "created_at",
-            "year",
-            order="DESC"
+        selected_revenue = sum(
+            revenue_values
         )
-    )
-
-
-    available_years = sorted(
-        {
-            current_year,
-            *[
-                year.year
-                for year in order_years
-            ],
-        },
-        reverse=True
-    )
-
 
     # ==========================================================
-    # RECENT ORDERS
+    # ==========================================================
+    # 6. RECENT ORDERS
+    # ==========================================================
     # ==========================================================
 
     recent_orders = (
@@ -606,7 +521,6 @@ def dashboard_page(request):
         .order_by("-created_at")[:8]
     )
 
-
     for order in recent_orders:
 
         order.item_quantity = sum(
@@ -614,9 +528,10 @@ def dashboard_page(request):
             for item in order.items.all()
         )
 
-
     # ==========================================================
-    # TOP SELLING PRODUCTS
+    # ==========================================================
+    # 7. TOP SELLING PRODUCTS
+    # ==========================================================
     # ==========================================================
 
     top_products = (
@@ -636,93 +551,98 @@ def dashboard_page(request):
         )[:5]
     )
 
-
     # ==========================================================
-    # LOW STOCK
     # ==========================================================
-
-    low_stock_products = ProductsModel.objects.filter(
-        stock__gt=0,
-        stock__lte=5
-    ).count()
-
-
+    # 8. DASHBOARD CONTEXT
     # ==========================================================
-    # TOTAL REVENUE
-    # ==========================================================
-
-    total_revenue = (
-        delivered_orders
-        .aggregate(
-            total=Sum("total_amount")
-        )["total"]
-        or 0
-    )
-
-
-    # ==========================================================
-    # CONTEXT
     # ==========================================================
 
     context = {
 
+        # ======================================================
+        # BASIC
+        # ======================================================
+
         "page_title": "Dashboard",
 
-        # ------------------------------------------
-        # Products
-        # ------------------------------------------
-
-        "total_products": total_products,
-        "active_products": active_products,
-        "out_of_stock_products": out_of_stock_products,
-        "featured_products": featured_products,
-
-        # ------------------------------------------
-        # Orders
-        # ------------------------------------------
-
-        "total_orders": total_orders,
-        "pending_orders": pending_orders,
-        "processing_orders": processing_orders,
-        "shipped_orders": shipped_orders,
-        "delivered_orders": delivered_orders,
-        "cancelled_orders": cancelled_orders,
-
-        # ------------------------------------------
-        # Customers
-        # ------------------------------------------
-
-        "registered_customers": registered_customers,
-        "guest_customers": guest_customers,
-        "total_customers": total_customers,
-
-        # ------------------------------------------
-        # Revenue
-        # ------------------------------------------
+        # ======================================================
+        # OVERVIEW
+        # ======================================================
 
         "total_revenue": total_revenue,
 
-        "revenue_period": revenue_period,
+        "total_orders": total_orders,
+
+        "total_customers": total_customers,
+
+        "registered_customers": registered_customers,
+
+        "guest_customers": guest_customers,
+
+        "total_products": total_products,
+
+        "active_products": active_products,
+
+        "featured_products": featured_products,
+
+        "total_inventory": total_inventory,
+
+        "out_of_stock_products": out_of_stock_products,
+
+        "low_stock_products": low_stock_products,
+
+        # ======================================================
+        # ORDER STATUS
+        # ======================================================
+
+        "pending_orders": pending_orders,
+
+        "processing_orders": processing_orders,
+
+        "shipped_orders": shipped_orders,
+
+        "delivered_orders": delivered_orders_count,
+
+        "cancelled_orders": cancelled_orders,
+
+        # ======================================================
+        # REVENUE ANALYTICS
+        # ======================================================
+
+        "revenue_year": revenue_year,
+
+        "revenue_month": revenue_month,
+
+        "revenue_week": revenue_week,
+
+        "revenue_day": revenue_day,
+
+        "revenue_level": revenue_level,
 
         "revenue_labels": revenue_labels,
 
         "revenue_values": revenue_values,
 
-        "selected_period_revenue": selected_period_revenue,
+        "selected_revenue": selected_revenue,
 
         "available_years": available_years,
 
-        # ------------------------------------------
-        # Dashboard Widgets
-        # ------------------------------------------
+        # ======================================================
+        # DASHBOARD WIDGETS
+        # ======================================================
 
         "recent_orders": recent_orders,
 
         "top_products": top_products,
 
-        "low_stock_products": low_stock_products,
-    }
+        # ======================================================
+        # CASH FLOW
+        # ======================================================
+        # No fake financial data.
+        # Will be implemented later.
 
+        "cash_flow_available": False,
+    }
 
     # ==========================================================
     # RENDER
@@ -733,6 +653,7 @@ def dashboard_page(request):
         "admin_dashboard/dashboard.html",
         context
     )
+
 
 def products_page(request):
 
