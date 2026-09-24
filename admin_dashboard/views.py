@@ -8,7 +8,7 @@ from django.db.models import Q
 from .forms import CategoryForm
 from django.db import transaction
 from experiment1.models import *
-
+from django.db.models import Count
 
 
 def dashboard_page(request):
@@ -1577,12 +1577,55 @@ def delete_category(request, id):
     return redirect("categories_page")
 
 
-
 def orders_page(request):
 
-    return render(request, 'admin_dashboard/orders.html', { "page_title": "Orders" })   
+    orders = (
+        Order.objects
+        .select_related("customer")
+        .prefetch_related(
+            "items",
+            "return_exchange_requests",
+        )
+        .order_by("-created_at")
+    )
 
+    order_counts = orders.aggregate(
+        total=Count("id"),
+        pending=Count(
+            "id",
+            filter=models.Q(status="Pending")
+        ),
+        confirmed=Count(
+            "id",
+            filter=models.Q(status="Confirmed")
+        ),
+        processing=Count(
+            "id",
+            filter=models.Q(status="Processing")
+        ),
+        shipped=Count(
+            "id",
+            filter=models.Q(status="Shipped")
+        ),
+        delivered=Count(
+            "id",
+            filter=models.Q(status="Delivered")
+        ),
+        cancelled=Count(
+            "id",
+            filter=models.Q(status="Cancelled")
+        ),
+    )
 
+    return render(
+        request,
+        "admin_dashboard/orders.html",
+        {
+            "page_title": "Orders",
+            "orders": orders,
+            "order_counts": order_counts,
+        }
+    )
 
 
 def customers_page(request):

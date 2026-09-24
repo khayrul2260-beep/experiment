@@ -1,14 +1,838 @@
 {% extends 'admin_dashboard/master/base.html' %}
-{% load static %} 
-{% block title %} 
-Orders  
-{% endblock %} 
-{% block css %}
-{% endblock %} {% block page_title %} Orders {% endblock %}
+{% load static %}
+
+{% block title %}
+Orders | NAFI Admin
+{% endblock %}
+
+{% block css %} <link
+     rel="stylesheet"
+     href="{% static 'admin_panel/css/orders.css' %}"
+ />
+{% endblock %}
+
+{% block page_title %}
+Orders
+{% endblock %}
 
 {% block content %}
-    
-    <h1>Orders page</h1>
+
+<div class="orders-page">
+
+
+<!-- =========================================
+     PAGE HEADER
+========================================== -->
+<div class="orders-page-header">
+
+    <div class="orders-heading">
+
+        <span class="orders-eyebrow">
+            ORDER MANAGEMENT
+        </span>
+
+        <h1>
+            Orders
+        </h1>
+
+        <p>
+            Manage customer orders, payments and fulfillment.
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================
+     ORDER OVERVIEW
+========================================== -->
+<div class="orders-overview">
+
+    <div class="orders-overview-card">
+
+        <div class="orders-overview-icon">
+            <i class="bi bi-bag-check"></i>
+        </div>
+
+        <div class="orders-overview-content">
+
+            <span>
+                TOTAL ORDERS
+            </span>
+
+            <strong>{{ order_counts.total }}</strong>
+
+        </div>
+
+    </div>
+
+
+    <div class="orders-overview-card">
+
+        <div class="orders-overview-icon">
+            <i class="bi bi-clock-history"></i>
+        </div>
+
+        <div class="orders-overview-content">
+
+            <span>
+                PENDING
+            </span>
+
+            <strong>{{ order_counts.pending }}</strong>
+
+        </div>
+
+    </div>
+
+
+    <div class="orders-overview-card">
+
+        <div class="orders-overview-icon">
+            <i class="bi bi-box-seam"></i>
+        </div>
+
+        <div class="orders-overview-content">
+
+            <span>
+                PROCESSING
+            </span>
+
+            <strong>{{ order_counts.processing }}</strong>
+
+        </div>
+
+    </div>
+
+
+    <div class="orders-overview-card">
+
+        <div class="orders-overview-icon">
+            <i class="bi bi-check2-circle"></i>
+        </div>
+
+        <div class="orders-overview-content">
+
+            <span>
+                DELIVERED
+            </span>
+
+            <strong>{{ order_counts.delivered }}</strong>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================
+     FILTER / SEARCH AREA
+========================================== -->
+<div class="orders-toolbar">
+
+    <div class="orders-search">
+
+        <i class="bi bi-search"></i>
+
+        <input
+            type="text"
+            id="orderSearch"
+            placeholder="Search order or customer..."
+            autocomplete="off"
+        />
+
+    </div>
+
+
+    <div class="orders-filter-group">
+
+        <select
+            id="orderStatusFilter"
+            class="orders-filter"
+        >
+            <option value="all">
+                All Status
+            </option>
+
+            <option value="Pending">
+                Pending
+            </option>
+
+            <option value="Confirmed">
+                Confirmed
+            </option>
+
+            <option value="Processing">
+                Processing
+            </option>
+
+            <option value="Shipped">
+                Shipped
+            </option>
+
+            <option value="Delivered">
+                Delivered
+            </option>
+
+            <option value="Cancelled">
+                Cancelled
+            </option>
+        </select>
+
+
+        <select
+            id="paymentFilter"
+            class="orders-filter"
+        >
+            <option value="all">
+                All Payments
+            </option>
+
+            <option value="COD">
+                Cash on Delivery
+            </option>
+
+            <option value="Online">
+                Online
+            </option>
+        </select>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================
+     ORDERS TABLE
+========================================== -->
+<div class="orders-table-card">
+
+    <div class="orders-table-wrapper">
+
+        <table class="orders-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        ORDER
+                    </th>
+
+                    <th>
+                        CUSTOMER
+                    </th>
+
+                    <th>
+                        ITEMS
+                    </th>
+
+                    <th>
+                        TOTAL
+                    </th>
+
+                    <th>
+                        PAYMENT
+                    </th>
+
+                    <th>
+                        STATUS
+                    </th>
+
+                    <th>
+                        DATE
+                    </th>
+
+                    <th>
+                        ACTION
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody id="ordersTableBody">
+
+                {% for order in orders %}
+
+                <tr
+                    class="order-row"
+                    data-status="{{ order.status }}"
+                    data-payment="{{ order.payment_method }}"
+                    data-search="{{ order.order_number }} {{ order.full_name }} {{ order.phone }}"
+                >
+
+                    <!-- ORDER -->
+                    <td>
+
+                        <div class="order-number-wrapper">
+
+                            <span class="order-number">
+                                {{ order.order_number }}
+                            </span>
+
+                            {% if order.return_exchange_requests.all %}
+
+                                {% with return_request=order.return_exchange_requests.first %}
+
+                                    {% if return_request %}
+
+                                        <span class="order-service-indicator">
+
+                                            <i class="bi bi-arrow-repeat"></i>
+
+                                            {{ return_request.request_type }}
+
+                                        </span>
+
+                                    {% endif %}
+
+                                {% endwith %}
+
+                            {% endif %}
+
+                        </div>
+
+                    </td>
+
+
+                    <!-- CUSTOMER -->
+                    <td>
+
+                        <div class="order-customer">
+
+                            <span class="order-customer-name">
+                                {{ order.full_name }}
+                            </span>
+
+                            <span class="order-customer-phone">
+                                {{ order.phone }}
+                            </span>
+
+                        </div>
+
+                    </td>
+
+
+                    <!-- ITEMS -->
+                    <td>
+
+                        <div class="order-items-count">
+
+                            <span>
+                                {{ order.items.all|length }}
+                            </span>
+
+                            <small>
+                                item{% if order.items.all|length != 1 %}s{% endif %}
+                            </small>
+
+                        </div>
+
+                    </td>
+
+
+                    <!-- TOTAL -->
+                    <td>
+
+                        <span class="order-total">
+                            ৳{{ order.total_amount|floatformat:0 }}
+                        </span>
+
+                    </td>
+
+
+                    <!-- PAYMENT -->
+                    <td>
+
+                        <div class="order-payment">
+
+                            <span class="order-payment-method">
+                                {{ order.payment_method }}
+                            </span>
+
+                            {% if order.payment_status == "Paid" %}
+
+                                <span class="payment-status paid">
+                                    PAID
+                                </span>
+
+                            {% elif order.payment_status == "Failed" %}
+
+                                <span class="payment-status failed">
+                                    FAILED
+                                </span>
+
+                            {% else %}
+
+                                <span class="payment-status pending">
+                                    PENDING
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+                    </td>
+
+
+                    <!-- STATUS -->
+                    <td>
+
+                        {% if order.status == "Pending" %}
+
+                            <span class="order-status status-pending">
+                                <i class="bi bi-circle-fill"></i>
+                                Pending
+                            </span>
+
+                        {% elif order.status == "Confirmed" %}
+
+                            <span class="order-status status-confirmed">
+                                <i class="bi bi-circle-fill"></i>
+                                Confirmed
+                            </span>
+
+                        {% elif order.status == "Processing" %}
+
+                            <span class="order-status status-processing">
+                                <i class="bi bi-circle-fill"></i>
+                                Processing
+                            </span>
+
+                        {% elif order.status == "Shipped" %}
+
+                            <span class="order-status status-shipped">
+                                <i class="bi bi-circle-fill"></i>
+                                Shipped
+                            </span>
+
+                        {% elif order.status == "Delivered" %}
+
+                            <span class="order-status status-delivered">
+                                <i class="bi bi-circle-fill"></i>
+                                Delivered
+                            </span>
+
+                        {% elif order.status == "Cancelled" %}
+
+                            <span class="order-status status-cancelled">
+                                <i class="bi bi-circle-fill"></i>
+                                Cancelled
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <!-- DATE -->
+                    <td>
+
+                        <div class="order-date">
+
+                            <span>
+                                {{ order.created_at|date:"d M Y" }}
+                            </span>
+
+                            <small>
+                                {{ order.created_at|date:"h:i A" }}
+                            </small>
+
+                        </div>
+
+                    </td>
+
+
+                    <!-- ACTION -->
+                    <td>
+
+                        <a
+                            href="#"
+                            class="order-view-btn"
+                            title="View Order"
+                        >
+
+                            <i class="bi bi-arrow-up-right"></i>
+
+                        </a>
+
+                    </td>
+
+                </tr>
+
+
+                {% empty %}
+
+                <tr class="orders-empty-row">
+
+                    <td colspan="8">
+
+                        <div class="orders-empty">
+
+                            <div class="orders-empty-icon">
+                                <i class="bi bi-bag-x"></i>
+                            </div>
+
+                            <h3>
+                                No Orders Found
+                            </h3>
+
+                            <p>
+                                Customer orders will appear here once they are placed.
+                            </p>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================
+     MOBILE ORDER CARDS
+========================================== -->
+<div class="orders-mobile-list">
+
+    {% for order in orders %}
+
+    <div
+        class="mobile-order-card"
+        data-status="{{ order.status }}"
+        data-payment="{{ order.payment_method }}"
+        data-search="{{ order.order_number }} {{ order.full_name }} {{ order.phone }}"
+    >
+
+        <div class="mobile-order-top">
+
+            <div>
+
+                <span class="mobile-order-label">
+                    ORDER
+                </span>
+
+                <strong>
+                    {{ order.order_number }}
+                </strong>
+
+            </div>
+
+
+            {% if order.status == "Pending" %}
+
+                <span class="order-status status-pending">
+                    <i class="bi bi-circle-fill"></i>
+                    Pending
+                </span>
+
+            {% elif order.status == "Confirmed" %}
+
+                <span class="order-status status-confirmed">
+                    <i class="bi bi-circle-fill"></i>
+                    Confirmed
+                </span>
+
+            {% elif order.status == "Processing" %}
+
+                <span class="order-status status-processing">
+                    <i class="bi bi-circle-fill"></i>
+                    Processing
+                </span>
+
+            {% elif order.status == "Shipped" %}
+
+                <span class="order-status status-shipped">
+                    <i class="bi bi-circle-fill"></i>
+                    Shipped
+                </span>
+
+            {% elif order.status == "Delivered" %}
+
+                <span class="order-status status-delivered">
+                    <i class="bi bi-circle-fill"></i>
+                    Delivered
+                </span>
+
+            {% elif order.status == "Cancelled" %}
+
+                <span class="order-status status-cancelled">
+                    <i class="bi bi-circle-fill"></i>
+                    Cancelled
+                </span>
+
+            {% endif %}
+
+        </div>
+
+
+        <div class="mobile-order-customer">
+
+            <span>
+                {{ order.full_name }}
+            </span>
+
+            <small>
+                {{ order.phone }}
+            </small>
+
+        </div>
+
+
+        <div class="mobile-order-info">
+
+            <div>
+
+                <span>
+                    ITEMS
+                </span>
+
+                <strong>
+                    {{ order.items.all|length }}
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    TOTAL
+                </span>
+
+                <strong>
+                    ৳{{ order.total_amount|floatformat:0 }}
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    PAYMENT
+                </span>
+
+                <strong>
+                    {{ order.payment_method }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="mobile-order-bottom">
+
+            <div class="mobile-order-date">
+
+                <i class="bi bi-calendar3"></i>
+
+                <span>
+                    {{ order.created_at|date:"d M Y" }}
+                </span>
+
+            </div>
+
+
+            <a
+                href="#"
+                class="order-view-btn"
+            >
+
+                <span>
+                    VIEW
+                </span>
+
+                <i class="bi bi-arrow-right"></i>
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    {% empty %}
+
+    <div class="orders-empty mobile-empty">
+
+        <div class="orders-empty-icon">
+            <i class="bi bi-bag-x"></i>
+        </div>
+
+        <h3>
+            No Orders Found
+        </h3>
+
+        <p>
+            Customer orders will appear here once they are placed.
+        </p>
+
+    </div>
+
+    {% endfor %}
+
+</div>
+
+
+</div>
 
 {% endblock %}
-    
+
+{% block js %}
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const searchInput = document.getElementById("orderSearch");
+    const statusFilter = document.getElementById("orderStatusFilter");
+    const paymentFilter = document.getElementById("paymentFilter");
+
+    const tableRows = document.querySelectorAll(".order-row");
+    const mobileCards = document.querySelectorAll(".mobile-order-card");
+
+
+    function filterOrders() {
+
+        const searchValue =
+            searchInput.value.toLowerCase().trim();
+
+        const selectedStatus =
+            statusFilter.value;
+
+        const selectedPayment =
+            paymentFilter.value;
+
+
+        tableRows.forEach(function (row) {
+
+            const searchText =
+                row.dataset.search.toLowerCase();
+
+            const status =
+                row.dataset.status;
+
+            const payment =
+                row.dataset.payment;
+
+
+            const matchesSearch =
+                searchText.includes(searchValue);
+
+            const matchesStatus =
+                selectedStatus === "all" ||
+                status === selectedStatus;
+
+            const matchesPayment =
+                selectedPayment === "all" ||
+                payment === selectedPayment;
+
+
+            if (
+                matchesSearch &&
+                matchesStatus &&
+                matchesPayment
+            ) {
+
+                row.style.display = "";
+
+            } else {
+
+                row.style.display = "none";
+
+            }
+
+        });
+
+
+        mobileCards.forEach(function (card) {
+
+            const searchText =
+                card.dataset.search.toLowerCase();
+
+            const status =
+                card.dataset.status;
+
+            const payment =
+                card.dataset.payment;
+
+
+            const matchesSearch =
+                searchText.includes(searchValue);
+
+            const matchesStatus =
+                selectedStatus === "all" ||
+                status === selectedStatus;
+
+            const matchesPayment =
+                selectedPayment === "all" ||
+                payment === selectedPayment;
+
+
+            if (
+                matchesSearch &&
+                matchesStatus &&
+                matchesPayment
+            ) {
+
+                card.style.display = "";
+
+            } else {
+
+                card.style.display = "none";
+
+            }
+
+        });
+
+    }
+
+
+    if (searchInput) {
+
+        searchInput.addEventListener(
+            "input",
+            filterOrders
+        );
+
+    }
+
+
+    if (statusFilter) {
+
+        statusFilter.addEventListener(
+            "change",
+            filterOrders
+        );
+
+    }
+
+
+    if (paymentFilter) {
+
+        paymentFilter.addEventListener(
+            "change",
+            filterOrders
+        );
+
+    }
+
+});
+
+</script>
+
+{% endblock %}
