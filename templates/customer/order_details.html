@@ -133,7 +133,93 @@
         </div>
 
 
-
+        <!-- Order Tracking -->
+        <section class="order-details-section order-tracking-section">
+        
+            <div class="order-section-heading">
+                <span>01</span>
+            
+                <div>
+                    <small>DELIVERY PROGRESS</small>
+                    <h2>Order Tracking</h2>
+                </div>
+            </div>
+        
+            {% if order.status == "Cancelled" %}
+        
+                <div class="order-tracking-cancelled">
+                
+                    <div class="order-tracking-cancelled-icon">
+                        <i class="bi bi-x-lg"></i>
+                    </div>
+                
+                    <div class="order-tracking-cancelled-content">
+                    
+                        <small>ORDER CANCELLED</small>
+                    
+                        <h3>
+                            Your order has been cancelled.
+                        </h3>
+                    
+                        <p>
+                            This order is no longer being processed.
+                            If you need any assistance, please contact
+                            NAFI support.
+                        </p>
+                    
+                    </div>
+                
+                </div>
+            
+            {% else %}
+            
+                <div class="order-timeline">
+                
+                    {% for step in tracking_steps %}
+                
+                        <div class="order-timeline-item {{ step.state }}">
+                        
+                            <div class="order-timeline-marker">
+                                <span>
+                                    {% if step.state == "completed" %}
+                                        <i class="bi bi-check"></i>
+                                    {% elif step.state == "current" %}
+                                        <i class="bi bi-dot"></i>
+                                    {% endif %}
+                                </span>
+                            </div>
+                        
+                            <div class="order-timeline-content">
+                            
+                                <div class="order-timeline-title-row">
+                                
+                                    <h3>
+                                        {{ step.title }}
+                                    </h3>
+                                
+                                    {% if step.state == "current" %}
+                                        <span class="order-timeline-current">
+                                            CURRENT
+                                        </span>
+                                    {% endif %}
+                                    
+                                </div>
+                            
+                                <p>
+                                    {{ step.description }}
+                                </p>
+                            
+                            </div>
+                        
+                        </div>
+                    
+                    {% endfor %}
+                    
+                </div>
+            
+            {% endif %}
+            
+        </section>
         <!-- =========================================
              MAIN CONTENT
         ========================================== -->
@@ -157,7 +243,7 @@
                     <div class="order-section-heading">
 
                         <span>
-                            01
+                            02
                         </span>
 
                         <div>
@@ -277,7 +363,7 @@
                     <div class="order-section-heading">
 
                         <span>
-                            02
+                            03
                         </span>
 
                         <div>
@@ -411,7 +497,7 @@
                     <div class="order-section-heading">
 
                         <span>
-                            03
+                            04
                         </span>
 
                         <div>

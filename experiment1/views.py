@@ -2425,20 +2425,10 @@ def my_orders_page(request):
 # =========================================================
 # ORDER DETAILS
 # =========================================================
-
 def order_details_page(request, order_number):
-
-    # -----------------------------------------------------
-    # LOGIN REQUIRED
-    # -----------------------------------------------------
 
     if not request.user.is_authenticated:
         return redirect("customer_login")
-
-
-    # -----------------------------------------------------
-    # GET ONLY THE CUSTOMER'S OWN ORDER
-    # -----------------------------------------------------
 
     order = get_object_or_404(
         Order.objects
@@ -2447,22 +2437,64 @@ def order_details_page(request, order_number):
         customer=request.user
     )
 
+    tracking_steps = [
+        {
+            "key": "Pending",
+            "title": "Order Placed",
+            "description": "Your order has been received successfully.",
+        },
+        {
+            "key": "Confirmed",
+            "title": "Order Confirmed",
+            "description": "Your order has been confirmed by NAFI.",
+        },
+        {
+            "key": "Processing",
+            "title": "Processing",
+            "description": "Your order is being prepared for shipment.",
+        },
+        {
+            "key": "Shipped",
+            "title": "Shipped",
+            "description": "Your order has been handed over for delivery.",
+        },
+        {
+            "key": "Delivered",
+            "title": "Delivered",
+            "description": "Your order has been delivered successfully.",
+        },
+    ]
 
-    # -----------------------------------------------------
-    # CONTEXT
-    # -----------------------------------------------------
+    if order.status != "Cancelled":
+
+        current_index = next(
+            (
+                index
+                for index, step in enumerate(tracking_steps)
+                if step["key"] == order.status
+            ),
+            0
+        )
+
+        for index, step in enumerate(tracking_steps):
+
+            if index < current_index:
+                step["state"] = "completed"
+
+            elif index == current_index:
+                step["state"] = "current"
+
+            else:
+                step["state"] = "upcoming"
 
     context = {
         "order": order,
+        "tracking_steps": tracking_steps,
     }
-
-
-    # -----------------------------------------------------
-    # RENDER
-    # -----------------------------------------------------
 
     return render(
         request,
         "customer/order_details.html",
         context
     )
+
