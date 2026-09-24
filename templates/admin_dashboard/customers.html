@@ -338,6 +338,10 @@
                             STATUS
                         </th>
 
+                        <th>
+                            ACTION
+                        </th>
+
                     </tr>
 
                 </thead>
@@ -556,6 +560,15 @@
 
                             {% endif %}
 
+                        </td>
+
+                        <td>
+                            <a
+                                href="{% url 'customer_details' customer.id %}"
+                                class="customer-details-btn"
+                            >
+                                Details
+                            </a>
                         </td>
 
 

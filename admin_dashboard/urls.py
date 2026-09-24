@@ -14,6 +14,9 @@ urlpatterns = [
     path("orders/<str:order_number>/update-status/", update_order_status, name="update_order_status"),
 
     path('customers/', customers_page, name='customers_page'),
+    path("customers/<str:customer_id>/", customer_details_page, name="customer_details"),
+
+
     path('inventory/', inventory_page, name='inventory_page'),
     path('coupons/', coupons_page, name='coupons_page'),
     path('reviews/', reviews_page, name='reviews_page'),

@@ -452,7 +452,7 @@
 }
 
 .customers-table th:nth-child(2) {
-    width: 27%;
+    width: 20%;
 }
 
 .customers-table th:nth-child(3) {
@@ -481,6 +481,9 @@
 
 .customers-table th:nth-child(8) {
     width: 12%;
+}
+.customers-table th:nth-child(9) {
+    width: 7%;
 }
 
 
@@ -1399,6 +1402,85 @@
     .customer-status::before {
         width: 4px;
         height: 4px;
+    }
+
+}
+
+
+
+/* =========================================================
+   CUSTOMER DETAILS BUTTON
+   ========================================================= */
+
+.customer-details-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 25px;
+    padding: 0 9px;
+    border: 1px solid rgba(148, 163, 184, 0.13);
+    border-radius: 5px;
+    background: #101010;
+    color: #CBD5E1;
+    text-decoration: none;
+    font-size: 8px;
+    font-weight: 500;
+    white-space: nowrap;
+
+    transition:
+        background-color 0.35s ease,
+        border-color 0.35s ease,
+        color 0.35s ease,
+        transform 0.35s ease;
+}
+
+.customer-details-btn:hover {
+    background: #2563EB;
+    border-color: #2563EB;
+    color: #FFFFFF;
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   MOBILE CUSTOMER ACTION
+   ========================================================= */
+
+.mobile-customer-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+    padding-top: 9px;
+    border-top: 1px solid rgba(148, 163, 184, 0.06);
+}
+
+.mobile-customer-actions .customer-details-btn {
+    min-height: 24px;
+    padding: 0 9px;
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 576px) {
+
+    .customer-details-btn {
+        min-height: 24px;
+        padding: 0 8px;
+        font-size: 8px;
+    }
+
+}
+
+
+@media (max-width: 400px) {
+
+    .customer-details-btn {
+        min-height: 23px;
+        padding: 0 7px;
+        font-size: 7px;
     }
 
 }

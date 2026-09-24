@@ -1,0 +1,684 @@
+{% extends "admin_dashboard/master/base.html" %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'admin_panel/css/customer_details.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="customer-details-page">
+
+    <!-- ================= HEADER ================= -->
+    <div class="page-header">
+
+        <div class="header-left">
+            <span class="page-eyebrow">CUSTOMER MANAGEMENT</span>
+
+            <h1>Customer Details</h1>
+
+            <p>
+                View customer information, purchase history and order activity.
+            </p>
+        </div>
+
+        <div class="header-right">
+            <a href="{% url 'customers_page' %}" class="back-btn">
+                <span>←</span>
+                Back to Customers
+            </a>
+        </div>
+
+    </div>
+
+
+    <!-- ================= CUSTOMER PROFILE ================= -->
+    <div class="customer-profile-card">
+
+        <div class="profile-main">
+
+            <div class="profile-avatar">
+
+                {% if customer.profile_image %}
+                    <img
+                        src="{{ customer.profile_image.url }}"
+                        alt="{{ customer.name }}"
+                    >
+                {% else %}
+                    <span>
+                        {{ customer.name|default:"C"|slice:":1"|upper }}
+                    </span>
+                {% endif %}
+
+            </div>
+
+
+            <div class="profile-info">
+
+                <div class="profile-name-row">
+
+                    <h2>
+                        {{ customer.name|default:"Unknown Customer" }}
+                    </h2>
+
+                    <span class="customer-type
+                        {% if customer.type == 'REGISTERED' %}
+                            registered
+                        {% else %}
+                            guest
+                        {% endif %}
+                    ">
+                        {{ customer.type }}
+                    </span>
+
+                </div>
+
+
+                <div class="profile-meta">
+
+                    {% if customer.username %}
+                        <span>
+                            @{{ customer.username }}
+                        </span>
+                    {% endif %}
+
+                    {% if customer.email %}
+                        <span>
+                            {{ customer.email }}
+                        </span>
+                    {% endif %}
+
+                    {% if customer.phone %}
+                        <span>
+                            {{ customer.phone }}
+                        </span>
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="profile-status">
+
+            <span class="status-dot
+                {% if customer.status == 'Active' %}
+                    active
+                {% elif customer.status == 'Inactive' %}
+                    inactive
+                {% else %}
+                    guest
+                {% endif %}
+            "></span>
+
+            <span>{{ customer.status }}</span>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= OVERVIEW ================= -->
+    <div class="overview-grid">
+
+        <div class="overview-card">
+
+            <span class="overview-label">
+                ORDERS
+            </span>
+
+            <strong>
+                {{ customer.total_orders }}
+            </strong>
+
+            <small>
+                Completed order activity
+            </small>
+
+        </div>
+
+
+        <div class="overview-card">
+
+            <span class="overview-label">
+                ITEMS PURCHASED
+            </span>
+
+            <strong>
+                {{ customer.total_items }}
+            </strong>
+
+            <small>
+                Total item quantity
+            </small>
+
+        </div>
+
+
+        <div class="overview-card">
+
+            <span class="overview-label">
+                TOTAL SPENT
+            </span>
+
+            <strong>
+                ৳{{ customer.total_spent|floatformat:0 }}
+            </strong>
+
+            <small>
+                From delivered orders
+            </small>
+
+        </div>
+
+
+        <div class="overview-card">
+
+            <span class="overview-label">
+                CUSTOMER SINCE
+            </span>
+
+            <strong class="date-value">
+                {{ customer.date_joined|date:"d M Y" }}
+            </strong>
+
+            <small>
+                {% if customer.type == "REGISTERED" %}
+                    Account registration
+                {% else %}
+                    First order
+                {% endif %}
+            </small>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= CUSTOMER INFORMATION ================= -->
+    <div class="details-grid">
+
+        <!-- CONTACT INFORMATION -->
+        <div class="details-card">
+
+            <div class="card-header">
+
+                <div>
+                    <span class="card-eyebrow">
+                        CUSTOMER
+                    </span>
+
+                    <h3>Contact Information</h3>
+                </div>
+
+            </div>
+
+
+            <div class="info-list">
+
+                <div class="info-row">
+
+                    <span class="info-label">
+                        Full Name
+                    </span>
+
+                    <span class="info-value">
+                        {{ customer.name|default:"—" }}
+                    </span>
+
+                </div>
+
+
+                {% if customer.username %}
+
+                <div class="info-row">
+
+                    <span class="info-label">
+                        Username
+                    </span>
+
+                    <span class="info-value">
+                        @{{ customer.username }}
+                    </span>
+
+                </div>
+
+                {% endif %}
+
+
+                <div class="info-row">
+
+                    <span class="info-label">
+                        Email
+                    </span>
+
+                    <span class="info-value">
+                        {{ customer.email|default:"—" }}
+                    </span>
+
+                </div>
+
+
+                <div class="info-row">
+
+                    <span class="info-label">
+                        Phone
+                    </span>
+
+                    <span class="info-value">
+                        {{ customer.phone|default:"—" }}
+                    </span>
+
+                </div>
+
+
+                <div class="info-row">
+
+                    <span class="info-label">
+                        Customer Type
+                    </span>
+
+                    <span class="info-value">
+                        {{ customer.type }}
+                    </span>
+
+                </div>
+
+
+                <div class="info-row">
+
+                    <span class="info-label">
+                        Status
+                    </span>
+
+                    <span class="info-value status-text
+                        {% if customer.status == 'Active' %}
+                            text-active
+                        {% elif customer.status == 'Inactive' %}
+                            text-inactive
+                        {% else %}
+                            text-guest
+                        {% endif %}
+                    ">
+                        {{ customer.status }}
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- PURCHASE SUMMARY -->
+        <div class="details-card">
+
+            <div class="card-header">
+
+                <div>
+                    <span class="card-eyebrow">
+                        PURCHASE
+                    </span>
+
+                    <h3>Purchase Summary</h3>
+                </div>
+
+            </div>
+
+
+            <div class="purchase-summary">
+
+                <div class="summary-item">
+
+                    <div class="summary-icon">
+                        #
+                    </div>
+
+                    <div>
+                        <span>Orders</span>
+                        <strong>{{ customer.total_orders }}</strong>
+                    </div>
+
+                </div>
+
+
+                <div class="summary-item">
+
+                    <div class="summary-icon">
+                        ×
+                    </div>
+
+                    <div>
+                        <span>Items</span>
+                        <strong>{{ customer.total_items }}</strong>
+                    </div>
+
+                </div>
+
+
+                <div class="summary-item">
+
+                    <div class="summary-icon">
+                        ৳
+                    </div>
+
+                    <div>
+                        <span>Delivered Value</span>
+                        <strong>
+                            ৳{{ customer.total_spent|floatformat:0 }}
+                        </strong>
+                    </div>
+
+                </div>
+
+
+                <div class="summary-item">
+
+                    <div class="summary-icon">
+                        ↗
+                    </div>
+
+                    <div>
+                        <span>Last Order</span>
+
+                        <strong>
+                            {% if customer.last_order %}
+                                {{ customer.last_order.created_at|date:"d M Y" }}
+                            {% else %}
+                                —
+                            {% endif %}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= ORDER HISTORY ================= -->
+    <div class="orders-card">
+
+        <div class="orders-header">
+
+            <div>
+                <span class="card-eyebrow">
+                    ORDER ACTIVITY
+                </span>
+
+                <h3>Order History</h3>
+
+                <p>
+                    Customer's non-cancelled orders and purchased items.
+                </p>
+            </div>
+
+            <div class="order-count">
+                {{ customer.total_orders }} Orders
+            </div>
+
+        </div>
+
+
+        {% if customer.orders %}
+
+        <!-- DESKTOP TABLE -->
+        <div class="orders-table-wrapper">
+
+            <table class="orders-table">
+
+                <thead>
+
+                    <tr>
+                        <th>ORDER</th>
+                        <th>ITEMS</th>
+                        <th>TOTAL</th>
+                        <th>PAYMENT</th>
+                        <th>STATUS</th>
+                        <th>DATE</th>
+                        <th></th>
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for order in customer.orders %}
+
+                    <tr>
+
+                        <td>
+
+                            <div class="order-number">
+                                {{ order.order_number }}
+                            </div>
+
+                        </td>
+
+
+                        <td>
+
+                            <div class="item-count">
+
+                                {% for item in order.items.all %}
+                                    {{ item.quantity }}{% if not forloop.last %} + {% endif %}
+                                {% endfor %}
+
+                            </div>
+
+                        </td>
+
+
+                        <td>
+
+                            <strong class="order-total">
+                                ৳{{ order.total_amount|floatformat:0 }}
+                            </strong>
+
+                        </td>
+
+
+                        <td>
+
+                            <div class="payment-info">
+
+                                <span>
+                                    {{ order.payment_method }}
+                                </span>
+
+                                <small class="
+                                    {% if order.payment_status == 'Paid' %}
+                                        paid
+                                    {% elif order.payment_status == 'Failed' %}
+                                        failed
+                                    {% else %}
+                                        pending
+                                    {% endif %}
+                                ">
+                                    {{ order.payment_status }}
+                                </small>
+
+                            </div>
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="order-status
+                                status-{{ order.status|lower }}
+                            ">
+                                {{ order.status }}
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <div class="order-date">
+                                {{ order.created_at|date:"d M Y" }}
+                            </div>
+
+                            <small>
+                                {{ order.created_at|date:"h:i A" }}
+                            </small>
+
+                        </td>
+
+
+                        <td>
+
+                            <a
+                                href="{% url 'admin_order_details' order.order_number %}"
+                                class="view-order-btn"
+                            >
+                                View
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- MOBILE ORDERS -->
+        <div class="mobile-orders">
+
+            {% for order in customer.orders %}
+
+            <div class="mobile-order-card">
+
+                <div class="mobile-order-top">
+
+                    <div>
+
+                        <span class="mobile-order-label">
+                            ORDER
+                        </span>
+
+                        <strong>
+                            {{ order.order_number }}
+                        </strong>
+
+                    </div>
+
+                    <span class="order-status
+                        status-{{ order.status|lower }}
+                    ">
+                        {{ order.status }}
+                    </span>
+
+                </div>
+
+
+                <div class="mobile-order-info">
+
+                    <div>
+
+                        <span>Items</span>
+
+                        <strong>
+                            {% for item in order.items.all %}
+                                {{ item.quantity }}{% if not forloop.last %} + {% endif %}
+                            {% endfor %}
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>Total</span>
+
+                        <strong>
+                            ৳{{ order.total_amount|floatformat:0 }}
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>Payment</span>
+
+                        <strong>
+                            {{ order.payment_method }}
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>Date</span>
+
+                        <strong>
+                            {{ order.created_at|date:"d M Y" }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="mobile-order-bottom">
+
+                    <small>
+                        Payment:
+                        {{ order.payment_status }}
+                    </small>
+
+                    <a
+                        href="{% url 'admin_order_details' order.order_number %}"
+                        class="view-order-btn"
+                    >
+                        View Order
+                    </a>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+
+        {% else %}
+
+        <!-- EMPTY STATE -->
+        <div class="empty-orders">
+
+            <div class="empty-icon">
+                —
+            </div>
+
+            <h4>No Order History</h4>
+
+            <p>
+                This customer has not placed any valid orders yet.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}

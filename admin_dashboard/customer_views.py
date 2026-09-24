@@ -3,7 +3,6 @@ from django.contrib import messages
 from .models import *
 from experiment1.models import *
 from django.contrib.auth import get_user_model
-from django.db.models import Count
 
 
 
@@ -346,3 +345,179 @@ def customers_page(request):
     )
 
 
+def customer_details_page(request, customer_id):
+
+    # =========================================================
+    # REGISTERED CUSTOMER
+    # =========================================================
+
+    if customer_id.isdigit():
+
+        customer = get_object_or_404(
+            User,
+            id=int(customer_id),
+            is_staff=False
+        )
+
+        orders = (
+            Order.objects
+            .filter(customer=customer)
+            .prefetch_related("items")
+            .order_by("-created_at")
+        )
+
+        valid_orders = [
+            order
+            for order in orders
+            if order.status != "Cancelled"
+        ]
+
+        total_orders = len(valid_orders)
+
+        total_items = sum(
+            item.quantity
+            for order in valid_orders
+            for item in order.items.all()
+        )
+
+        total_spent = sum(
+            order.total_amount
+            for order in valid_orders
+            if order.status == "Delivered"
+        )
+
+        last_order = orders.first()
+
+        context = {
+            "page_title": "Customer Details",
+            "customer": {
+                "id": customer.id,
+                "name": (
+                    customer.get_full_name()
+                    or customer.username
+                ),
+                "username": customer.username,
+                "email": customer.email,
+                "phone": "",
+                "profile_image": customer.profile_image,
+                "type": "REGISTERED",
+                "status": (
+                    "Active"
+                    if customer.is_active
+                    else "Inactive"
+                ),
+                "date_joined": customer.date_joined,
+                "total_orders": total_orders,
+                "total_items": total_items,
+                "total_spent": total_spent,
+                "last_order": last_order,
+                "orders": valid_orders,
+            },
+        }
+
+        return render(
+            request,
+            "admin_dashboard/customer_details.html",
+            context
+        )
+
+
+    # =========================================================
+    # GUEST CUSTOMER
+    # =========================================================
+
+    guest_orders = (
+        Order.objects
+        .filter(customer__isnull=True)
+        .prefetch_related("items")
+        .order_by("-created_at")
+    )
+
+    matched_orders = []
+
+    for order in guest_orders:
+
+        phone = "".join(
+            character
+            for character in (order.phone or "")
+            if character.isdigit()
+        )
+
+        email = (
+            (order.email or "")
+            .strip()
+            .lower()
+        )
+
+        if phone:
+            guest_key = f"phone:{phone}"
+
+        elif email:
+            guest_key = f"email:{email}"
+
+        else:
+            guest_key = f"order:{order.id}"
+
+        if guest_key == customer_id:
+            matched_orders.append(order)
+
+
+    if not matched_orders:
+        return redirect("customers_page")
+
+
+    first_order = min(
+        matched_orders,
+        key=lambda order: order.created_at
+    )
+
+    last_order = max(
+        matched_orders,
+        key=lambda order: order.created_at
+    )
+
+    valid_orders = [
+        order
+        for order in matched_orders
+        if order.status != "Cancelled"
+    ]
+
+    total_orders = len(valid_orders)
+
+    total_items = sum(
+        item.quantity
+        for order in valid_orders
+        for item in order.items.all()
+    )
+
+    total_spent = sum(
+        order.total_amount
+        for order in valid_orders
+        if order.status == "Delivered"
+    )
+
+    context = {
+        "page_title": "Customer Details",
+        "customer": {
+            "id": customer_id,
+            "name": first_order.full_name,
+            "username": "",
+            "email": first_order.email,
+            "phone": first_order.phone,
+            "profile_image": None,
+            "type": "GUEST",
+            "status": "Guest",
+            "date_joined": first_order.created_at,
+            "total_orders": total_orders,
+            "total_items": total_items,
+            "total_spent": total_spent,
+            "last_order": last_order,
+            "orders": valid_orders,
+        },
+    }
+
+    return render(
+        request,
+        "admin_dashboard/customer_details.html",
+        context
+    )
