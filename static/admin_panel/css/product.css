@@ -1,63 +1,769 @@
-.edit {
-  color: hsl(175, 96%, 78%);
-}
-.edit:hover {
-  color: var(--info);
-  text-decoration: underline;
-}
-.edit:active {
-  transform: scale(0.9);
-}
+/* =========================================================
+   NAFI ADMIN — PRODUCT PAGE
+   Minimal / Professional / Order Page Style
+========================================================= */
 
 
-/* ========================================
-   Delete Button
-======================================== */
-.delete {
-  color: rgb(238, 75, 75);
-  padding-left: 5px;
-}
-.delete:hover {
-  text-decoration: underline;
-  cursor: pointer;
-  color: red;
+/* =========================================================
+   PAGE
+========================================================= */
+
+.statistics-section,
+.recent-orders {
+    width: 100%;
+    max-width: 1600px;
+    margin: 0 auto;
 }
 
 
+/* =========================================================
+   STATISTICS
+========================================================= */
 
-.delete-product-btn {
-    display: inline-flex;
+.statistics-section {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+
+    margin-bottom: 16px;
+}
+
+
+/* =========================================================
+   STAT CARD
+========================================================= */
+
+.stat-card {
+    min-width: 0;
+
+    display: flex;
     align-items: center;
-    gap: 7px;
 
-    padding: 11px 16px;
+    gap: 12px;
 
-    background: transparent;
+    padding: 15px;
 
-    border: 1px solid rgba(239, 68, 68, 0.45);
-    border-radius: var(--border-radius);
+    background: #0d0d0d;
 
-    color: var(--danger);
+    border: 1px solid #1e293b;
+    border-radius: 7px;
+
+    transition:
+        background-color 0.35s ease,
+        border-color 0.35s ease,
+        transform 0.35s ease;
+}
+
+.stat-card:hover {
+    background: #111111;
+    border-color: #334155;
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   STAT ICON
+========================================================= */
+
+.stat-icon {
+    flex: 0 0 34px;
+
+    width: 34px;
+    height: 34px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #161616;
+
+    border: 1px solid #252525;
+    border-radius: 6px;
+
+    color: #94a3b8;
+
+    font-size: 13px;
+}
+
+
+/*
+   Override old inline colors
+   so the page remains grayscale.
+*/
+
+.stat-card .stat-icon[style] {
+    color: #94a3b8 !important;
+}
+
+
+/* =========================================================
+   STAT CONTENT
+========================================================= */
+
+.stat-content {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 2px;
+}
+
+.stat-content h5 {
+    margin: 0;
+
+    font-size: 8px;
+    line-height: 1.2;
+
+    font-weight: 600;
+
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+
+    color: #64748b;
+}
+
+.stat-content h2 {
+    margin: 0;
+
+    font-size: 17px;
+    line-height: 1.2;
+
+    font-weight: 600;
+
+    color: #f8fafc;
+}
+
+.stat-content span {
+    display: block;
+
+    margin-top: 1px;
+
+    font-size: 8px;
+    line-height: 1.3;
+
+    color: #475569;
+}
+
+
+/* =========================================================
+   PRODUCT SECTION
+========================================================= */
+
+.recent-orders {
+    background: #0b0b0b;
+
+    border: 1px solid #1e293b;
+    border-radius: 7px;
+
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   SECTION HEADER
+========================================================= */
+
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 16px;
+
+    padding: 15px;
+
+    background: #0b0b0b;
+
+    border-bottom: 1px solid #1e293b;
+}
+
+
+/* =========================================================
+   LEFT HEADER
+========================================================= */
+
+.search_h3 {
+    min-width: 0;
+
+    display: flex;
+    align-items: center;
+
+    gap: 18px;
+}
+
+.search_h3 h3 {
+    margin: 0;
+
+    font-size: 13px;
+    line-height: 1.3;
+
+    font-weight: 600;
+
+    color: #f8fafc;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   FILTER
+========================================================= */
+
+.product_filter {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+}
+
+
+/* =========================================================
+   STOCK FILTER
+========================================================= */
+
+.stock-filter {
+    width: 115px;
+    height: 36px;
+
+    padding: 0 9px;
+
+    background: #0d0d0d;
+
+    border: 1px solid #1e293b;
+    border-radius: 6px;
+
+    color: #94a3b8;
 
     font-family: inherit;
-    font-size: 12px;
+    font-size: 9px;
+    font-weight: 400;
+
+    outline: none;
 
     cursor: pointer;
 
-    transition: var(--transition);
+    transition:
+        border-color 0.35s ease,
+        color 0.35s ease,
+        background-color 0.35s ease;
+}
+
+.stock-filter:hover,
+.stock-filter:focus {
+    background: #101010;
+
+    border-color: #334155;
+
+    color: #f8fafc;
+}
+
+.stock-filter option {
+    background: #111111;
+
+    color: #f8fafc;
 }
 
 
-.delete-product-btn:hover {
-    background: rgba(239, 68, 68, 0.10);
+/* =========================================================
+   SEARCH
+========================================================= */
 
-    border-color: var(--danger);
+.search-wrapper {
+    position: relative;
+
+    width: 230px;
+    height: 36px;
+}
+
+.search-wrapper i {
+    position: absolute;
+
+    left: 11px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    color: #64748b;
+
+    font-size: 11px;
+
+    pointer-events: none;
+}
+
+.search-wrapper input {
+    width: 100%;
+    height: 100%;
+
+    padding: 0 10px 0 32px;
+
+    background: #0d0d0d;
+
+    border: 1px solid #1e293b;
+    border-radius: 6px;
+
+    color: #f8fafc;
+
+    font-family: inherit;
+    font-size: 9px;
+    font-weight: 400;
+
+    outline: none;
+
+    transition:
+        border-color 0.35s ease,
+        background-color 0.35s ease;
+}
+
+.search-wrapper input::placeholder {
+    color: #475569;
+}
+
+.search-wrapper input:focus {
+    background: #101010;
+
+    border-color: #334155;
 }
 
 
-/* ========================================
-   Delete Overlay
-======================================== */
+/* =========================================================
+   RIGHT HEADER
+========================================================= */
+
+.add_view {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+}
+
+
+/* =========================================================
+   ADD PRODUCT
+========================================================= */
+
+.add-product-btn {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 6px;
+
+    height: 32px;
+
+    padding: 0 10px;
+
+    background: #f8fafc;
+
+    border: 1px solid #f8fafc;
+    border-radius: 5px;
+
+    color: #050505;
+
+    font-family: inherit;
+    font-size: 9px;
+    font-weight: 600;
+
+    white-space: nowrap;
+
+    transition:
+        background-color 0.35s ease,
+        color 0.35s ease,
+        border-color 0.35s ease,
+        transform 0.3s ease;
+}
+
+.add-product-btn i {
+    font-size: 9px;
+}
+
+.add-product-btn:hover {
+    background: #d9d9d9;
+
+    border-color: #d9d9d9;
+
+    color: #050505;
+
+    transform: translateY(-1px);
+}
+
+.add-product-btn:active {
+    transform: scale(0.98);
+}
+
+
+/* =========================================================
+   VIEW ALL
+========================================================= */
+
+.add_view > a:not(.add-product-btn) {
+    display: inline-flex;
+    align-items: center;
+
+    height: 32px;
+
+    color: #64748b;
+
+    font-size: 8px;
+    font-weight: 500;
+
+    transition:
+        color 0.35s ease;
+}
+
+.add_view > a:not(.add-product-btn):hover {
+    color: #f8fafc;
+}
+
+
+/* =========================================================
+   TABLE WRAPPER
+========================================================= */
+
+.recent-orders {
+    overflow: hidden;
+}
+
+.recent-orders > table {
+    width: 100%;
+
+    min-width: 1050px;
+
+    border-collapse: collapse;
+
+    table-layout: auto;
+}
+
+
+/* =========================================================
+   TABLE HEADER
+========================================================= */
+
+.recent-orders > table thead {
+    background: #111111;
+}
+
+.recent-orders > table th {
+    padding: 10px 12px;
+
+    border-bottom: 1px solid #1e293b;
+
+    text-align: left;
+
+    white-space: nowrap;
+
+    font-size: 8px;
+    line-height: 1.2;
+
+    font-weight: 600;
+
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+
+    color: #64748b;
+}
+
+
+/* =========================================================
+   TABLE BODY
+========================================================= */
+
+.recent-orders > table tbody tr {
+    background: #0b0b0b;
+
+    border-bottom: 1px solid rgba(51, 65, 85, 0.40);
+
+    transition:
+        background-color 0.3s ease;
+}
+
+.recent-orders > table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.recent-orders > table tbody tr:hover {
+    background: #101010;
+}
+
+.recent-orders > table td {
+    padding: 11px 12px;
+
+    vertical-align: middle;
+
+    border-right: none;
+
+    font-size: 9px;
+    line-height: 1.3;
+
+    color: #cbd5e1;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   PRODUCT CODE
+========================================================= */
+
+.recent-orders > table td:first-child {
+    font-size: 9px;
+
+    font-weight: 600;
+
+    color: #e2e8f0;
+
+    letter-spacing: 0.01em;
+}
+
+
+/* =========================================================
+   PRODUCT IMAGE
+========================================================= */
+
+.recent-orders > table td:nth-child(2) {
+    width: 58px;
+}
+
+.recent-orders > table td:nth-child(2) img {
+    width: 34px !important;
+    height: 34px !important;
+
+    object-fit: cover;
+
+    border-radius: 5px;
+
+    border: 1px solid #252525;
+
+    background: #141414;
+}
+
+.recent-orders > table td:nth-child(2) span {
+    font-size: 7px;
+
+    color: #475569;
+}
+
+
+/* =========================================================
+   PRODUCT NAME
+========================================================= */
+
+.recent-orders > table td:nth-child(3) {
+    min-width: 150px;
+
+    font-size: 9px;
+
+    font-weight: 500;
+
+    color: #e2e8f0;
+}
+
+
+/* =========================================================
+   PRICE
+========================================================= */
+
+.recent-orders > table td:nth-child(4),
+.recent-orders > table td:nth-child(5) {
+    font-size: 9px;
+
+    font-weight: 500;
+
+    color: #cbd5e1;
+}
+
+
+/* =========================================================
+   DISCOUNT PRICE
+========================================================= */
+
+.recent-orders > table td:nth-child(5) {
+    color: #94a3b8;
+}
+
+
+/* =========================================================
+   STOCK
+========================================================= */
+
+.recent-orders > table td:nth-child(6) {
+    font-size: 9px;
+
+    font-weight: 500;
+
+    color: #cbd5e1;
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.stock,
+.out-stock {
+    display: inline-flex;
+    align-items: center;
+
+    width: fit-content;
+
+    padding: 4px 7px;
+
+    border-radius: 4px;
+
+    font-size: 7px;
+    line-height: 1;
+
+    font-weight: 600;
+
+    letter-spacing: 0.04em;
+
+    text-transform: uppercase;
+}
+
+
+/* In Stock */
+
+.stock {
+    color: #cbd5e1;
+
+    background: rgba(148, 163, 184, 0.08);
+
+    border: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+
+/* Out of Stock */
+
+.out-stock {
+    color: #94a3b8;
+
+    background: rgba(71, 85, 105, 0.12);
+
+    border: 1px solid rgba(71, 85, 105, 0.18);
+}
+
+
+/* =========================================================
+   DATE
+========================================================= */
+
+.recent-orders > table td:nth-child(8) {
+    color: #64748b;
+
+    font-size: 8px;
+}
+
+
+/* =========================================================
+   ACTIONS
+========================================================= */
+
+.recent-orders > table td:last-child {
+    min-width: 115px;
+}
+
+.edit,
+.delete {
+    display: inline-flex;
+    align-items: center;
+
+    height: 27px;
+
+    padding: 0 8px;
+
+    border-radius: 4px;
+
+    font-family: inherit;
+    font-size: 8px;
+    font-weight: 500;
+
+    transition:
+        background-color 0.3s ease,
+        border-color 0.3s ease,
+        color 0.3s ease,
+        transform 0.25s ease;
+}
+
+
+/* Edit */
+
+.edit {
+    color: #cbd5e1;
+
+    background: #141414;
+
+    border: 1px solid #252525;
+}
+
+.edit:hover {
+    color: #ffffff;
+
+    background: #1b1b1b;
+
+    border-color: #334155;
+
+    text-decoration: none;
+
+    transform: translateY(-1px);
+}
+
+.edit:active {
+    transform: scale(0.97);
+}
+
+
+/* Delete */
+
+.delete {
+    margin-left: 4px;
+
+    padding-left: 8px;
+    padding-right: 8px;
+
+    color: #94a3b8;
+
+    background: transparent;
+
+    border: 1px solid transparent;
+
+    cursor: pointer;
+}
+
+.delete:hover {
+    color: #f8fafc;
+
+    background: #171717;
+
+    border-color: #252525;
+
+    text-decoration: none;
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   EMPTY TABLE
+========================================================= */
+
+.recent-orders > table tbody:empty::after {
+    content: "No products found.";
+
+    display: block;
+
+    padding: 45px 20px;
+
+    text-align: center;
+
+    font-size: 9px;
+
+    color: #475569;
+}
+
+
+/* =========================================================
+   DELETE MODAL
+========================================================= */
 
 .delete-overlay {
     position: fixed;
@@ -67,323 +773,443 @@
     z-index: 9999;
 
     display: none;
+
     align-items: center;
     justify-content: center;
 
     padding: 20px;
 
-    background: rgba(0, 0, 0, 0.70);
+    background: rgba(0, 0, 0, 0.78);
 
     backdrop-filter: blur(5px);
 }
-
 
 .delete-overlay.active {
     display: flex;
 }
 
 
+/* =========================================================
+   MODAL
+========================================================= */
 
 .delete-modal {
     width: 100%;
-    max-width: 430px;
+    max-width: 380px;
 
-    padding: 30px;
+    padding: 24px;
 
-    background: var(--card-color);
+    background: #0d0d0d;
 
-    border: 1px solid var(--border-color-special);
-    border-radius: var(--border-radius);
+    border: 1px solid #1e293b;
+    border-radius: 7px;
 
     text-align: center;
 
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
+
+    animation: productModalIn 0.25s ease;
+}
+
+@keyframes productModalIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }
 
 
+/* =========================================================
+   DELETE ICON
+========================================================= */
+
 .delete-icon {
-    width: 52px;
-    height: 52px;
+    width: 40px;
+    height: 40px;
 
     display: flex;
     align-items: center;
     justify-content: center;
 
-    margin: 0 auto 15px;
+    margin: 0 auto 12px;
 
-    background: rgba(239, 68, 68, 0.10);
+    background: #151515;
 
-    border-radius: 50%;
+    border: 1px solid #252525;
 
-    color: var(--danger);
+    border-radius: 6px;
 
-    font-size: 21px;
+    color: #94a3b8;
+
+    font-size: 14px;
 }
 
+
+/* =========================================================
+   MODAL TEXT
+========================================================= */
 
 .delete-modal h3 {
-    margin: 0 0 10px;
+    margin: 0 0 7px;
 
-    font-size: 18px;
+    font-size: 14px;
+    line-height: 1.3;
+
     font-weight: 600;
 
-    color: var(--text-color);
+    color: #f8fafc;
 }
-
 
 .delete-modal p {
     margin: 0;
 
-    font-size: 13px;
+    font-size: 9px;
     line-height: 1.6;
 
-    color: var(--text-light);
+    color: #64748b;
 }
-
 
 .delete-modal p strong {
-    color: var(--text-color);
+    color: #e2e8f0;
 }
 
 
-/* ========================================
-   Modal Buttons
-======================================== */
+/* =========================================================
+   MODAL BUTTONS
+========================================================= */
 
 .modal-buttons {
     display: flex;
+    align-items: center;
     justify-content: center;
 
-    gap: 10px;
+    gap: 7px;
 
-    margin-top: 25px;
+    margin-top: 20px;
 }
-
 
 .modal-cancel-btn,
 .modal-delete-btn {
-    min-width: 100px;
+    min-width: 88px;
 
-    padding: 10px 16px;
+    height: 31px;
 
-    border-radius: var(--border-radius);
+    padding: 0 12px;
+
+    border-radius: 5px;
 
     font-family: inherit;
-    font-size: 12px;
+    font-size: 8px;
+    font-weight: 500;
 
     cursor: pointer;
 
     text-decoration: none;
 
-    transition: var(--transition);
+    transition:
+        background-color 0.3s ease,
+        border-color 0.3s ease,
+        color 0.3s ease;
 }
 
+
+/* Cancel */
 
 .modal-cancel-btn {
-    background: transparent;
+    background: #141414;
 
-    border: 1px solid var(--border-color-special);
+    border: 1px solid #252525;
 
-    color: var(--text-light);
+    color: #94a3b8;
 }
-
 
 .modal-cancel-btn:hover {
-    border-color: var(--text-light);
-    color: var(--text-color);
+    background: #1a1a1a;
+
+    border-color: #334155;
+
+    color: #f8fafc;
 }
 
+
+/* Delete */
 
 .modal-delete-btn {
-    background: var(--danger);
+    background: #f8fafc;
 
-    border: 1px solid var(--danger);
+    border: 1px solid #f8fafc;
 
-    color: #ffffff;
+    color: #050505;
 }
-
 
 .modal-delete-btn:hover {
-    background: #dc2626;
+    background: #d9d9d9;
 
-    color: #ffffff;
+    border-color: #d9d9d9;
+
+    color: #050505;
 }
 
 
-.modal-buttons {
-  margin-top: 25px;
+/* =========================================================
+   RESPONSIVE — 1200px
+========================================================= */
 
-  display: flex;
+@media (max-width: 1200px) {
 
-  justify-content: center;
+    .statistics-section {
+        gap: 10px;
+    }
 
-  gap: 15px;
-}
+    .stat-card {
+        padding: 13px;
+    }
 
-@keyframes popup {
-  from {
-    opacity: 0;
+    .search_h3 {
+        gap: 12px;
+    }
 
-    transform: scale(0.8);
-  }
+    .search-wrapper {
+        width: 210px;
+    }
 
-  to {
-    opacity: 1;
+    .recent-orders {
+        overflow-x: auto;
+    }
 
-    transform: scale(1);
-  }
-}
-
-.stock {
-  color: #28a745;
-}
-
-.out-stock {
-  color: #dc3545;
-}
-
-/* ============================================
-   Add product button
-   ============================================ */
-
-.add-product-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-
-  padding: 0px;
-  text-decoration: none;
-
-  border-radius: 8px;
-
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.add_view a {
-  transition: all 0.3s ease;
-}
-.add_view a:hover {
-  transform: translateY(-2px);
-}
-
-.add_view a:active {
-  transform: scale(0.98);
-}
-
-.add_view {
-  display: flex;
-  flex-direction: column;
-  align-items: end;
-  gap: 10px;
-}
-
-.add_view .add-product-btn {
-  font-size: 14px;
-}
-
-/* ============================================
-   Product search
-   ============================================ */
-
-.search-wrapper {
-    position: relative;
-    width: 280px;
+    .recent-orders > table {
+        min-width: 1050px;
+    }
 }
 
 
-.search-wrapper i {
-    position: absolute;
+/* =========================================================
+   RESPONSIVE — 992px
+========================================================= */
 
-    left: 14px;
-    top: 50%;
+@media (max-width: 992px) {
 
-    transform: translateY(-50%);
+    .statistics-section {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
 
-    color: var(--text-light);
+    .section-header {
+        align-items: flex-start;
 
-    font-size: 14px;
+        flex-direction: column;
+    }
 
-    pointer-events: none;
+    .search_h3 {
+        width: 100%;
+
+        justify-content: space-between;
+    }
+
+    .add_view {
+        width: 100%;
+
+        justify-content: flex-end;
+    }
+
 }
 
 
-.search-wrapper input {
-    width: 100%;
-    height: 42px;
+/* =========================================================
+   RESPONSIVE — 768px
+========================================================= */
 
-    padding: 0 15px 0 40px;
+@media (max-width: 768px) {
 
-    color: var(--text-color);
+    .statistics-section {
+        gap: 8px;
+    }
 
-    background: transparent;
+    .stat-card {
+        gap: 9px;
 
-    border-bottom: 1px solid var(--border-color-special);
+        padding: 12px;
+    }
 
-    outline: none;
+    .stat-icon {
+        flex-basis: 31px;
 
-    box-sizing: border-box;
+        width: 31px;
+        height: 31px;
 
-    font-family: inherit;
-    font-size: 13px;
+        font-size: 12px;
+    }
 
-    transition: var(--transition);
+    .stat-content h2 {
+        font-size: 15px;
+    }
+
+    .section-header {
+        padding: 13px;
+    }
+
+    .search_h3 {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 10px;
+    }
+
+    .product_filter {
+        width: 100%;
+    }
+
+    .stock-filter {
+        flex: 0 0 110px;
+    }
+
+    .search-wrapper {
+        flex: 1;
+
+        width: auto;
+    }
+
 }
 
 
-.search-wrapper input::placeholder {
-    color: var(--text-light);
+/* =========================================================
+   RESPONSIVE — 576px
+========================================================= */
+
+@media (max-width: 576px) {
+
+    .statistics-section {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+
+        gap: 7px;
+
+        margin-bottom: 12px;
+    }
+
+    .stat-card {
+        padding: 10px;
+    }
+
+    .stat-icon {
+        display: none;
+    }
+
+    .stat-content h5 {
+        font-size: 7px;
+    }
+
+    .stat-content h2 {
+        font-size: 14px;
+    }
+
+    .stat-content span {
+        font-size: 7px;
+    }
+
+    .section-header {
+        padding: 11px;
+    }
+
+    .search_h3 h3 {
+        font-size: 12px;
+    }
+
+    .product_filter {
+        gap: 6px;
+    }
+
+    .stock-filter {
+        height: 34px;
+
+        flex: 0 0 100px;
+
+        font-size: 8px;
+    }
+
+    .search-wrapper {
+        height: 34px;
+    }
+
+    .search-wrapper input {
+        font-size: 8px;
+    }
+
+    .add_view {
+        gap: 8px;
+    }
+
+    .add-product-btn {
+        height: 30px;
+
+        padding: 0 9px;
+
+        font-size: 8px;
+    }
+
+    .add_view > a:not(.add-product-btn) {
+        font-size: 7px;
+    }
+
 }
 
 
-.search-wrapper input:focus {
-    border-color: rgb(2, 107, 255);
+/* =========================================================
+   RESPONSIVE — 400px
+========================================================= */
+
+@media (max-width: 400px) {
+
+    .statistics-section {
+        gap: 6px;
+    }
+
+    .stat-card {
+        padding: 9px;
+    }
+
+    .stat-content h5 {
+        font-size: 6px;
+    }
+
+    .stat-content h2 {
+        font-size: 13px;
+    }
+
+    .stat-content span {
+        font-size: 6px;
+    }
+
+    .product_filter {
+        width: 100%;
+    }
+
+    .stock-filter {
+        flex: 0 0 92px;
+
+        padding: 0 6px;
+    }
+
+    .search-wrapper input {
+        padding-left: 28px;
+    }
+
+    .search-wrapper i {
+        left: 9px;
+    }
+
+    .add_view {
+        justify-content: space-between;
+    }
+
+    .add-product-btn {
+        flex: 1;
+
+        justify-content: center;
+    }
+
 }
-
-
-.product_filter{
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
-}
-
-.stock-filter {
-    width: 110px;
-    height: 42px;
-
-    padding: 5px;
-
-    background: transparent;
-    color: #ffffff;
-
-    border: 1px solid rgba(61, 61, 61, 0.598);
-    border-radius: 8px;
-
-    font-size: 14px;
-    font-weight: 500;
-
-    outline: none;
-    cursor: pointer;
-
-    backdrop-filter: blur(8px);
-
-    transition: all 0.25s ease;
-}
-
-.stock-filter:hover {
-    background: rgba(255, 255, 255, 0.12);
-    border-color: rgba(255, 255, 255, 0.35);
-}
-
-.stock-filter:focus {
-    border-color: rgba(255, 255, 255, 0.5);
-
-    box-shadow:
-        0 0 0 3px rgba(255, 255, 255, 0.08);
-}
-
-.stock-filter option {
-    background: #1f2937;
-    color: #ffffff;
-}
-
