@@ -1,0 +1,993 @@
+/* =========================================================
+   NAFI — ORDER DETAILS
+   Premium Dark / Minimal / Responsive
+========================================================= */
+
+
+/* =========================================================
+   PAGE
+========================================================= */
+
+.order-details-page {
+    width: 100%;
+    min-height: 100vh;
+
+    padding: 110px 0 100px;
+
+    background: #050505;
+    color: #ffffff;
+}
+
+
+.order-details-container {
+    width: min(1400px, calc(100% - 48px));
+
+    margin: 0 auto;
+}
+
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.order-details-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+
+    gap: 40px;
+
+    padding-bottom: 45px;
+
+    border-bottom: 1px solid #202020;
+}
+
+
+.order-details-heading {
+    max-width: 750px;
+}
+
+
+.order-details-eyebrow {
+    display: block;
+
+    margin-bottom: 12px;
+
+    font-family: "Barlow Condensed", sans-serif;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    letter-spacing: 2.5px;
+
+    color: #777777;
+}
+
+
+.order-details-heading h1 {
+    margin: 0;
+
+    font-family: "Barlow Condensed", sans-serif;
+
+    font-size: clamp(48px, 6vw, 86px);
+    font-weight: 600;
+
+    line-height: 0.9;
+
+    letter-spacing: -1px;
+
+    color: #ffffff;
+}
+
+
+.order-details-heading p {
+    margin: 20px 0 0;
+
+    font-family: "Barlow Condensed", sans-serif;
+
+    font-size: 17px;
+
+    letter-spacing: 0.4px;
+
+    color: #777777;
+}
+
+
+.order-details-number {
+    display: flex;
+    flex-direction: column;
+
+    align-items: flex-end;
+
+    flex-shrink: 0;
+}
+
+
+.order-details-number span {
+    font-family: "Barlow Condensed", sans-serif;
+
+    font-size: 11px;
+    font-weight: 600;
+
+    letter-spacing: 1.8px;
+
+    color: #666666;
+}
+
+
+.order-details-number strong {
+    margin-top: 5px;
+
+    font-family: "Barlow Condensed", sans-serif;
+
+    font-size: 18px;
+    font-weight: 500;
+
+    letter-spacing: 0.7px;
+
+    color: #ffffff;
+}
+
+
+
+/* =========================================================
+   STATUS CARD
+========================================================= */
+
+.order-status-card {
+    display: grid;
+
+    grid-template-columns:
+        1fr
+        1px
+        1fr
+        1px
+        1fr
+        1px
+        1fr;
+
+    align-items: center;
+
+    margin-top: 30px;
+
+    padding: 24px 28px;
+
+    background: #0c0c0c;
+
+    border: 1px solid #1c1c1c;
+}
+
+
+.order-status-item {
+    display: flex;
+    flex-direction: column;
+
+    gap: 7px;
+
+    min-width: 0;
+}
+
+
+.order-status-item span {
+    font-family: "Barlow Condensed", sans-serif;
+
+    font-size: 10px;
+    font-weight: 600;
+
+    letter-spacing: 1.6px;
+
+    color: #5f5f5f;
+}
+
+
+.order-status-item strong {
+    font-family: "Barlow Condensed", sans-serif;
+
+    font-size: 18px;
+    font-weight: 500;
+
+    letter-spacing: 0.4px;
+
+    color: #ffffff;
+}
+
+
+.order-status-divider {
+    width: 1px;
+    height: 35px;
+
+    background: #242424;
+}
+
+
+
+/* =========================================================
+   MAIN LAYOUT
+========================================================= */
+
+.order-details-layout {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        360px;
+
+    gap: 30px;
+
+    margin-top: 30px;
+}
+
+
+.order-details-main {
+    min-width: 0;
+}
+
+
+
+/* =========================================================
+   SECTION
+========================================================= */
+
+.order-details-section {
+    margin-bottom: 30px;
+
+    background: #0c0c0c;
+
+    border: 1px solid #1c1c1c;
+}
+
+
+.order-section-heading {
+    display: flex;
+    align-items: center;
+
+    gap: 18px;
+
+    padding: 25px 28px;
+
+    border-bottom: 1px solid #1c1c1c;
+}
+
+
+.order-section-heading > span {
+    font-family: "Barlow Condensed", sans-serif;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    letter-spacing: 1px;
+
+    color: #555555;
+}
+
+
+.order-section-heading small {
+    display: block;
+
+    margin-bottom: 3px;
+
+    font-family: "Barlow Condensed", sans-serif;
+
+    font-size: 10px;
+    font-weight: 600;
+
+    letter-spacing: 1.8px;
+
+    color: #666666;
+}
+
+
+.order-section-heading h2 {
+    margin: 0;
+
+    font-family: "Barlow Condensed", sans-serif;
+
+    font-size: 28px;
+    font-weight: 500;
+
+    letter-spacing: 0.2px;
+
+    color: #ffffff;
+}
+
+
+
+/* =========================================================
+   ORDER ITEMS
+========================================================= */
+
+.order-details-items {
+    padding: 0 28px;
+}
+
+
+.order-details-item {
+    display: grid;
+
+    grid-template-columns:
+        90px
+        minmax(0, 1fr)
+        130px;
+
+    align-items: center;
+
+    gap: 22px;
+
+    padding: 22px 0;
+
+    border-bottom: 1px solid #181818;
+}
+
+
+.order-details-item:last-child {
+    border-bottom: none;
+}
+
+
+.order-details-item-image {
+    width: 90px;
+
+    aspect-ratio: 3 / 4;
+
+    overflow: hidden;
+
+    background: #141414;
+
+    border: 1px solid #222222;
+}
+
+
+.order-details-item-image img {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+}
+
+
+.order-details-image-placeholder {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    height: 100%;
+
+    font-family: "Barlow Condensed", sans-serif;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    letter-spacing: 2px;
+
+    color: #555555;
+}
+
+
+.order-details-item-info {
+    display: flex;
+    flex-direction: column;
+
+    gap: 5px;
+
+    min-width: 0;
+}
+
+
+.order-details-item-info h3 {
+    margin: 0 0 4px;
+
+    overflow: hidden;
+
+    font-family: "Barlow Condensed", sans-serif;
+
+    font-size: 23px;
+    font-weight: 500;
+
+    letter-spacing: 0.3px;
+
+    color: #ffffff;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+
+.order-details-item-info span {
+    font-family: "Barlow Condensed", sans-serif;
+
+    font-size: 12px;
+
+    letter-spacing: 1px;
+
+    color: #666666;
+}
+
+
+.order-details-item-price {
+    display: flex;
+    flex-direction: column;
+
+    align-items: flex-end;
+
+    gap: 3px;
+}
+
+
+.order-details-item-price span {
+    font-family: "Barlow Condensed", sans-serif;
+
+    font-size: 10px;
+    font-weight: 600;
+
+    letter-spacing: 1.5px;
+
+    color: #555555;
+}
+
+
+.order-details-item-price strong {
+    font-family: "Barlow Condensed", sans-serif;
+
+    font-size: 20px;
+    font-weight: 500;
+
+    color: #cccccc;
+}
+
+
+.order-details-item-price small {
+    font-family: "Barlow Condensed", sans-serif;
+
+    font-size: 12px;
+
+    color: #666666;
+}
+
+
+.order-details-item-price b {
+    margin-top: 4px;
+
+    font-family: "Barlow Condensed", sans-serif;
+
+    font-size: 22px;
+    font-weight: 600;
+
+    color: #ffffff;
+}
+
+
+
+/* =========================================================
+   INFORMATION CARD
+========================================================= */
+
+.order-info-card {
+    padding: 0 28px;
+}
+
+
+.order-info-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 30px;
+
+    padding: 18px 0;
+
+    border-bottom: 1px solid #181818;
+}
+
+
+.order-info-row:last-child {
+    border-bottom: none;
+}
+
+
+.order-info-row span {
+    flex-shrink: 0;
+
+    font-family: "Barlow Condensed", sans-serif;
+
+    font-size: 10px;
+    font-weight: 600;
+
+    letter-spacing: 1.6px;
+
+    color: #5f5f5f;
+}
+
+
+.order-info-row strong {
+    max-width: 65%;
+
+    text-align: right;
+
+    font-family: "Barlow Condensed", sans-serif;
+
+    font-size: 16px;
+    font-weight: 500;
+
+    line-height: 1.3;
+
+    color: #dddddd;
+}
+
+
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+.order-details-sidebar {
+    align-self: start;
+
+    position: sticky;
+
+    top: 100px;
+}
+
+
+.order-summary-card {
+    padding: 28px;
+
+    background: #0c0c0c;
+
+    border: 1px solid #1c1c1c;
+}
+
+
+.order-summary-heading {
+    padding-bottom: 22px;
+
+    border-bottom: 1px solid #202020;
+}
+
+
+.order-summary-heading span {
+    display: block;
+
+    margin-bottom: 5px;
+
+    font-family: "Barlow Condensed", sans-serif;
+
+    font-size: 10px;
+    font-weight: 600;
+
+    letter-spacing: 1.8px;
+
+    color: #666666;
+}
+
+
+.order-summary-heading h2 {
+    margin: 0;
+
+    font-family: "Barlow Condensed", sans-serif;
+
+    font-size: 32px;
+    font-weight: 500;
+
+    color: #ffffff;
+}
+
+
+.order-summary-row {
+    display: flex;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    padding: 15px 0;
+}
+
+
+.order-summary-row span {
+    font-family: "Barlow Condensed", sans-serif;
+
+    font-size: 12px;
+    letter-spacing: 1px;
+
+    color: #666666;
+}
+
+
+.order-summary-row strong {
+    font-family: "Barlow Condensed", sans-serif;
+
+    font-size: 16px;
+    font-weight: 500;
+
+    color: #cccccc;
+}
+
+
+.order-summary-divider {
+    height: 1px;
+
+    margin: 5px 0 8px;
+
+    background: #252525;
+}
+
+
+.order-summary-total {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    padding-top: 10px;
+}
+
+
+.order-summary-total span {
+    font-family: "Barlow Condensed", sans-serif;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    letter-spacing: 1.3px;
+
+    color: #777777;
+}
+
+
+.order-summary-total strong {
+    font-family: "Barlow Condensed", sans-serif;
+
+    font-size: 28px;
+    font-weight: 600;
+
+    color: #ffffff;
+}
+
+
+
+/* =========================================================
+   ACTIONS
+========================================================= */
+
+.order-details-actions {
+    display: flex;
+    flex-direction: column;
+
+    gap: 10px;
+
+    margin-top: 15px;
+}
+
+
+.order-details-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    width: 100%;
+
+    padding: 15px 18px;
+
+    text-decoration: none;
+
+    font-family: "Barlow Condensed", sans-serif;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    letter-spacing: 1.2px;
+
+    border: 1px solid #303030;
+
+    transition:
+        background-color 0.7s ease,
+        color 0.7s ease,
+        border-color 0.7s ease;
+}
+
+
+.order-details-btn.secondary {
+    background: transparent;
+
+    color: #cccccc;
+}
+
+
+.order-details-btn.primary {
+    background: #ffffff;
+
+    color: #050505;
+
+    border-color: #ffffff;
+}
+
+
+.order-details-btn:hover {
+    background: #4d8dff;
+
+    color: #ffffff;
+
+    border-color: #4d8dff;
+}
+
+
+.order-details-btn i {
+    font-size: 15px;
+}
+
+
+
+/* =========================================================
+   EMPTY
+========================================================= */
+
+.order-details-empty {
+    padding: 40px 0;
+
+    text-align: center;
+
+    font-family: "Barlow Condensed", sans-serif;
+
+    font-size: 15px;
+
+    color: #666666;
+}
+
+
+
+/* =========================================================
+   RESPONSIVE — 1000px
+========================================================= */
+
+@media (max-width: 1000px) {
+
+    .order-details-layout {
+        grid-template-columns: 1fr;
+    }
+
+
+    .order-details-sidebar {
+        position: static;
+    }
+
+
+    .order-summary-card {
+        max-width: none;
+    }
+
+}
+
+
+
+/* =========================================================
+   RESPONSIVE — 800px
+========================================================= */
+
+@media (max-width: 800px) {
+
+    .order-details-page {
+        padding: 90px 0 70px;
+    }
+
+
+    .order-details-container {
+        width: min(100% - 30px, 700px);
+    }
+
+
+    .order-details-header {
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 25px;
+    }
+
+
+    .order-details-number {
+        align-items: flex-start;
+    }
+
+
+    .order-status-card {
+        grid-template-columns: 1fr 1fr;
+
+        gap: 20px;
+    }
+
+
+    .order-status-divider {
+        display: none;
+    }
+
+
+    .order-details-item {
+        grid-template-columns:
+            75px
+            minmax(0, 1fr)
+            auto;
+
+        gap: 15px;
+    }
+
+
+    .order-details-item-image {
+        width: 75px;
+    }
+
+}
+
+
+
+/* =========================================================
+   RESPONSIVE — 600px
+========================================================= */
+
+@media (max-width: 600px) {
+
+    .order-details-page {
+        padding: 80px 0 60px;
+    }
+
+
+    .order-details-container {
+        width: calc(100% - 20px);
+    }
+
+
+    .order-details-heading h1 {
+        font-size: clamp(42px, 14vw, 64px);
+    }
+
+
+    .order-details-heading p {
+        font-size: 15px;
+    }
+
+
+    .order-status-card {
+        grid-template-columns: 1fr;
+
+        gap: 16px;
+
+        padding: 20px;
+    }
+
+
+    .order-status-item {
+        padding-bottom: 14px;
+
+        border-bottom: 1px solid #1b1b1b;
+    }
+
+
+    .order-status-item:last-child {
+        padding-bottom: 0;
+
+        border-bottom: none;
+    }
+
+
+    .order-details-section {
+        margin-bottom: 20px;
+    }
+
+
+    .order-section-heading {
+        padding: 20px;
+    }
+
+
+    .order-section-heading h2 {
+        font-size: 25px;
+    }
+
+
+    .order-details-items {
+        padding: 0 20px;
+    }
+
+
+    .order-details-item {
+        grid-template-columns: 65px minmax(0, 1fr);
+
+        gap: 14px;
+    }
+
+
+    .order-details-item-image {
+        width: 65px;
+    }
+
+
+    .order-details-item-price {
+        grid-column: 2;
+
+        align-items: flex-start;
+
+        padding-top: 2px;
+    }
+
+
+    .order-details-item-info h3 {
+        font-size: 20px;
+    }
+
+
+    .order-info-card {
+        padding: 0 20px;
+    }
+
+
+    .order-info-row {
+        flex-direction: column;
+
+        gap: 7px;
+    }
+
+
+    .order-info-row strong {
+        max-width: 100%;
+
+        text-align: left;
+
+        font-size: 15px;
+    }
+
+
+    .order-summary-card {
+        padding: 22px 20px;
+    }
+
+}
+
+
+
+/* =========================================================
+   RESPONSIVE — 400px
+========================================================= */
+
+@media (max-width: 400px) {
+
+    .order-details-container {
+        width: calc(100% - 16px);
+    }
+
+
+    .order-details-item {
+        grid-template-columns: 58px minmax(0, 1fr);
+
+        gap: 12px;
+    }
+
+
+    .order-details-item-image {
+        width: 58px;
+    }
+
+
+    .order-details-item-info h3 {
+        font-size: 18px;
+    }
+
+
+    .order-details-item-info span {
+        font-size: 11px;
+    }
+
+
+    .order-details-item-price strong {
+        font-size: 18px;
+    }
+
+
+    .order-details-item-price b {
+        font-size: 20px;
+    }
+
+}

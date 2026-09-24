@@ -191,18 +191,18 @@ def home_page(request):
     new_arrivals = ProductsModel.objects.filter(
         is_available=True,
     ).order_by("-created_at")[:15]
-    
+
     for product in new_arrivals:
         product.is_out_of_stock = not product.sizes.filter(
             is_available=True,
             stock__gt=0
         ).exists()
-    
-    
+
+
     all_products = ProductsModel.objects.filter(
         is_available=True
     ).order_by("-created_at")[:15]
-    
+
     for product in all_products:
         product.is_out_of_stock = not product.sizes.filter(
             is_available=True,
@@ -2418,5 +2418,51 @@ def my_orders_page(request):
     return render(
         request,
         "customer/my_orders.html",
+        context
+    )
+
+
+# =========================================================
+# ORDER DETAILS
+# =========================================================
+
+def order_details_page(request, order_number):
+
+    # -----------------------------------------------------
+    # LOGIN REQUIRED
+    # -----------------------------------------------------
+
+    if not request.user.is_authenticated:
+        return redirect("customer_login")
+
+
+    # -----------------------------------------------------
+    # GET ONLY THE CUSTOMER'S OWN ORDER
+    # -----------------------------------------------------
+
+    order = get_object_or_404(
+        Order.objects
+        .prefetch_related("items__product"),
+        order_number=order_number,
+        customer=request.user
+    )
+
+
+    # -----------------------------------------------------
+    # CONTEXT
+    # -----------------------------------------------------
+
+    context = {
+        "order": order,
+    }
+
+
+    # -----------------------------------------------------
+    # RENDER
+    # -----------------------------------------------------
+
+    return render(
+        request,
+        "customer/order_details.html",
         context
     )

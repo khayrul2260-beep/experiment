@@ -1,0 +1,590 @@
+{% extends "customer/master/base.html" %}
+{% load static %}
+
+
+{% block title %}
+    Order Details | NAFI
+{% endblock %}
+
+
+{% block extra_css %}
+
+<link
+    rel="stylesheet"
+    href="{% static 'customer/css/order_details.css' %}"
+>
+
+{% endblock %}
+
+
+
+{% block content %}
+
+<section class="order-details-page">
+
+    <div class="order-details-container">
+
+
+        <!-- =========================================
+             PAGE HEADER
+        ========================================== -->
+
+        <div class="order-details-header">
+
+            <div class="order-details-heading">
+
+                <span class="order-details-eyebrow">
+                    NAFI ACCOUNT
+                </span>
+
+                <h1>
+                    ORDER DETAILS
+                </h1>
+
+                <p>
+                    Review your order information and delivery details.
+                </p>
+
+            </div>
+
+
+            <div class="order-details-number">
+
+                <span>
+                    ORDER NUMBER
+                </span>
+
+                <strong>
+                    {{ order.order_number }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =========================================
+             ORDER STATUS
+        ========================================== -->
+
+        <div class="order-status-card">
+
+            <div class="order-status-item">
+
+                <span>
+                    ORDER STATUS
+                </span>
+
+                <strong>
+                    {{ order.get_status_display }}
+                </strong>
+
+            </div>
+
+
+            <div class="order-status-divider"></div>
+
+
+            <div class="order-status-item">
+
+                <span>
+                    PAYMENT
+                </span>
+
+                <strong>
+                    {{ order.get_payment_method_display }}
+                </strong>
+
+            </div>
+
+
+            <div class="order-status-divider"></div>
+
+
+            <div class="order-status-item">
+
+                <span>
+                    PAYMENT STATUS
+                </span>
+
+                <strong>
+                    {{ order.payment_status }}
+                </strong>
+
+            </div>
+
+
+            <div class="order-status-divider"></div>
+
+
+            <div class="order-status-item">
+
+                <span>
+                    ORDER DATE
+                </span>
+
+                <strong>
+                    {{ order.created_at|date:"d M Y" }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =========================================
+             MAIN CONTENT
+        ========================================== -->
+
+        <div class="order-details-layout">
+
+
+            <!-- =====================================
+                 LEFT CONTENT
+            ====================================== -->
+
+            <main class="order-details-main">
+
+
+                <!-- =================================
+                     ORDER ITEMS
+                ================================== -->
+
+                <section class="order-details-section">
+
+                    <div class="order-section-heading">
+
+                        <span>
+                            01
+                        </span>
+
+                        <div>
+
+                            <small>
+                                YOUR PURCHASE
+                            </small>
+
+                            <h2>
+                                Order Items
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="order-details-items">
+
+                        {% for item in order.items.all %}
+
+                        <article class="order-details-item">
+
+
+                            <!-- PRODUCT IMAGE -->
+
+                            <div class="order-details-item-image">
+
+                                {% if item.product and item.product.image %}
+
+                                    <img
+                                        src="{{ item.product.image.url }}"
+                                        alt="{{ item.product_name }}"
+                                    >
+
+                                {% else %}
+
+                                    <div class="order-details-image-placeholder">
+                                        NAFI
+                                    </div>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <!-- PRODUCT INFORMATION -->
+
+                            <div class="order-details-item-info">
+
+                                <h3>
+                                    {{ item.product_name }}
+                                </h3>
+
+                                <span>
+                                    PRODUCT CODE:
+                                    {{ item.product_code }}
+                                </span>
+
+                                <span>
+                                    SIZE:
+                                    {{ item.size }}
+                                </span>
+
+                                <span>
+                                    QUANTITY:
+                                    {{ item.quantity }}
+                                </span>
+
+                            </div>
+
+
+                            <!-- PRICE -->
+
+                            <div class="order-details-item-price">
+
+                                <span>
+                                    UNIT PRICE
+                                </span>
+
+                                <strong>
+                                    ৳{{ item.unit_price|floatformat:0 }}
+                                </strong>
+
+                                <small>
+                                    × {{ item.quantity }}
+                                </small>
+
+                                <b>
+                                    ৳{{ item.total_price|floatformat:0 }}
+                                </b>
+
+                            </div>
+
+                        </article>
+
+                        {% empty %}
+
+                        <div class="order-details-empty">
+                            No items found for this order.
+                        </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                </section>
+
+
+
+                <!-- =================================
+                     DELIVERY INFORMATION
+                ================================== -->
+
+                <section class="order-details-section">
+
+                    <div class="order-section-heading">
+
+                        <span>
+                            02
+                        </span>
+
+                        <div>
+
+                            <small>
+                                DELIVERY
+                            </small>
+
+                            <h2>
+                                Delivery Information
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="order-info-card">
+
+
+                        <div class="order-info-row">
+
+                            <span>
+                                FULL NAME
+                            </span>
+
+                            <strong>
+                                {{ order.full_name }}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="order-info-row">
+
+                            <span>
+                                PHONE
+                            </span>
+
+                            <strong>
+                                {{ order.phone }}
+                            </strong>
+
+                        </div>
+
+
+                        {% if order.email %}
+
+                        <div class="order-info-row">
+
+                            <span>
+                                EMAIL
+                            </span>
+
+                            <strong>
+                                {{ order.email }}
+                            </strong>
+
+                        </div>
+
+                        {% endif %}
+
+
+                        <div class="order-info-row">
+
+                            <span>
+                                ADDRESS
+                            </span>
+
+                            <strong>
+                                {{ order.address }}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="order-info-row">
+
+                            <span>
+                                AREA
+                            </span>
+
+                            <strong>
+                                {{ order.area }}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="order-info-row">
+
+                            <span>
+                                CITY
+                            </span>
+
+                            <strong>
+                                {{ order.city }}
+                            </strong>
+
+                        </div>
+
+
+                        {% if order.delivery_note %}
+
+                        <div class="order-info-row">
+
+                            <span>
+                                DELIVERY NOTE
+                            </span>
+
+                            <strong>
+                                {{ order.delivery_note }}
+                            </strong>
+
+                        </div>
+
+                        {% endif %}
+
+                    </div>
+
+                </section>
+
+
+
+                <!-- =================================
+                     PAYMENT INFORMATION
+                ================================== -->
+
+                <section class="order-details-section">
+
+                    <div class="order-section-heading">
+
+                        <span>
+                            03
+                        </span>
+
+                        <div>
+
+                            <small>
+                                PAYMENT
+                            </small>
+
+                            <h2>
+                                Payment Information
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="order-info-card">
+
+                        <div class="order-info-row">
+
+                            <span>
+                                PAYMENT METHOD
+                            </span>
+
+                            <strong>
+                                {{ order.get_payment_method_display }}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="order-info-row">
+
+                            <span>
+                                PAYMENT STATUS
+                            </span>
+
+                            <strong>
+                                {{ order.payment_status }}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+            </main>
+
+
+
+            <!-- =====================================
+                 RIGHT SIDEBAR
+            ====================================== -->
+
+            <aside class="order-details-sidebar">
+
+
+                <!-- ORDER SUMMARY -->
+
+                <section class="order-summary-card">
+
+                    <div class="order-summary-heading">
+
+                        <span>
+                            ORDER SUMMARY
+                        </span>
+
+                        <h2>
+                            Total
+                        </h2>
+
+                    </div>
+
+
+                    <div class="order-summary-row">
+
+                        <span>
+                            SUBTOTAL
+                        </span>
+
+                        <strong>
+                            ৳{{ order.subtotal|floatformat:0 }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="order-summary-row">
+
+                        <span>
+                            DELIVERY
+                        </span>
+
+                        <strong>
+                            ৳{{ order.delivery_charge|floatformat:0 }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="order-summary-row">
+
+                        <span>
+                            DISCOUNT
+                        </span>
+
+                        <strong>
+                            - ৳{{ order.discount|floatformat:0 }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="order-summary-divider"></div>
+
+
+                    <div class="order-summary-total">
+
+                        <span>
+                            GRAND TOTAL
+                        </span>
+
+                        <strong>
+                            ৳{{ order.total_amount|floatformat:0 }}
+                        </strong>
+
+                    </div>
+
+                </section>
+
+
+
+                <!-- ACTIONS -->
+
+                <div class="order-details-actions">
+
+                    <a
+                        href="{% url 'my_orders' %}"
+                        class="order-details-btn secondary"
+                    >
+                        <span>
+                            BACK TO MY ORDERS
+                        </span>
+
+                        <i class="bi bi-arrow-left"></i>
+
+                    </a>
+
+
+                    <a
+                        href="{% url 'all_products_page' %}"
+                        class="order-details-btn primary"
+                    >
+                        <span>
+                            CONTINUE SHOPPING
+                        </span>
+
+                        <i class="bi bi-arrow-right"></i>
+
+                    </a>
+
+                </div>
+
+
+            </aside>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}
