@@ -53,8 +53,6 @@ urlpatterns = [
     path("settings/contact/social/<int:social_id>/delete/",delete_contact_social_link,name="delete_contact_social_link"),
 
 
-
-
     path('admin_users/', admin_users_page, name='admin_users_page'),
     path('logout/', logout_page, name='logout_page'),
     path('hidden_sidebar/', hidden_sidebar_page, name='hidden_sidebar_page'),

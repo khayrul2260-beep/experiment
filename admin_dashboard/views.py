@@ -1579,6 +1579,174 @@ def delete_category(request, id):
 
     return redirect("categories_page")
 
+
+def orders_page(request):
+
+    orders = (
+        Order.objects
+        .select_related("customer")
+        .prefetch_related(
+            "items",
+            "return_exchange_requests",
+        )
+        .order_by("-created_at")
+    )
+
+    order_counts = orders.aggregate(
+        total=Count("id"),
+        pending=Count(
+            "id",
+            filter=models.Q(status="Pending")
+        ),
+        confirmed=Count(
+            "id",
+            filter=models.Q(status="Confirmed")
+        ),
+        processing=Count(
+            "id",
+            filter=models.Q(status="Processing")
+        ),
+        shipped=Count(
+            "id",
+            filter=models.Q(status="Shipped")
+        ),
+        delivered=Count(
+            "id",
+            filter=models.Q(status="Delivered")
+        ),
+        cancelled=Count(
+            "id",
+            filter=models.Q(status="Cancelled")
+        ),
+    )
+
+    return render(
+        request,
+        "admin_dashboard/orders.html",
+        {
+            "page_title": "Orders",
+            "orders": orders,
+            "order_counts": order_counts,
+        }
+    )
+
+
+def order_details_page(request, order_number):
+
+    order = get_object_or_404(
+        Order.objects
+        .select_related("customer")
+        .prefetch_related(
+            "items",
+            "return_exchange_requests",
+        ),
+        order_number=order_number,
+    )
+
+    return_requests = order.return_exchange_requests.all()
+
+    context = {
+        "page_title": "Order Details",
+        "order": order,
+        "return_requests": return_requests,
+    }
+
+    return render(
+        request,
+        "admin_dashboard/order_details.html",
+        context
+    )
+
+def update_order_status(request, order_number):
+
+    if request.method != "POST":
+        return redirect(
+            "admin_order_details",
+            order_number=order_number
+        )
+
+    order = get_object_or_404(
+        Order,
+        order_number=order_number
+    )
+
+    new_status = request.POST.get("status")
+
+    valid_statuses = [
+        choice[0]
+        for choice in Order.STATUS_CHOICES
+    ]
+
+    if new_status not in valid_statuses:
+        messages.error(
+            request,
+            "Invalid order status."
+        )
+
+        return redirect(
+            "admin_order_details",
+            order_number=order.order_number
+        )
+
+    if order.status == new_status:
+        messages.info(
+            request,
+            "Order status is already set to this status."
+        )
+
+        return redirect(
+            "admin_order_details",
+            order_number=order.order_number
+        )
+
+    old_status = order.status
+
+    order.status = new_status
+
+    order.save(
+        update_fields=[
+            "status",
+            "updated_at"
+        ]
+    )
+
+    messages.success(
+        request,
+        f"Order status updated from {old_status} to {new_status}."
+    )
+
+    return redirect(
+        "admin_order_details",
+        order_number=order.order_number
+    )
+
+def inventory_page(request):
+
+    return render(request, 'admin_dashboard/inventory.html', { "page_title": "Inventory" })  
+
+
+
+
+def coupons_page(request):
+
+    return render(request, 'admin_dashboard/coupons.html', { "page_title": "Coupons" })   
+
+
+
+def reviews_page(request):
+
+    return render(request, 'admin_dashboard/reviews.html', { "page_title": "Reviews" })    
+
+
+
+
+def reports_page(request):
+
+    return render(request, 'admin_dashboard/reports.html', { "page_title": "Reports" })
+
+
+
+
 def settings_page(request):
 
     return render(request, 'admin_dashboard/settings.html', { "page_title": "Settings" })
