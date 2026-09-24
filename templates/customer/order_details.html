@@ -632,11 +632,77 @@
                 </section>
 
 
-
                 <!-- ACTIONS -->
 
                 <div class="order-details-actions">
+                
+                    {% if order.status == "Pending" or order.status == "Confirmed" %}
+                
+                        <button
+                            type="button"
+                            class="order-details-btn cancel-order-btn"
+                            data-bs-toggle="modal"
+                            data-bs-target="#cancelOrderModal"
+                        >
+                            <span>
+                                CANCEL ORDER
+                            </span>
+                        
+                            <i class="bi bi-x-lg"></i>
+                        
+                        </button>
+                    
+                    {% endif %}
 
+{% if order.status == "Delivered" %}
+
+    {% with return_request=order.return_exchange_requests.first %}
+
+        {% if return_request %}
+
+            <div class="return-exchange-status-card">
+
+                <div class="return-exchange-status-icon">
+                    <i class="bi bi-arrow-repeat"></i>
+                </div>
+
+                <div class="return-exchange-status-content">
+
+                    <span>RETURN / EXCHANGE REQUEST</span>
+
+                    <h3>
+                        {{ return_request.request_type }}
+                        Request Submitted
+                    </h3>
+
+                    <p>
+                        Current status ·
+                        <strong>{{ return_request.status|upper }}</strong>
+                    </p>
+
+                </div>
+
+            </div>
+
+        {% else %}
+
+            <button
+                type="button"
+                class="order-details-btn return-exchange-btn"
+                data-bs-toggle="modal"
+                data-bs-target="#returnExchangeModal"
+            >
+                <span>RETURN / EXCHANGE</span>
+                <i class="bi bi-arrow-repeat"></i>
+            </button>
+
+        {% endif %}
+
+    {% endwith %}
+
+{% endif %}
+                    
+                    
                     <a
                         href="{% url 'my_orders' %}"
                         class="order-details-btn secondary"
@@ -644,12 +710,12 @@
                         <span>
                             BACK TO MY ORDERS
                         </span>
-
+                    
                         <i class="bi bi-arrow-left"></i>
-
+                    
                     </a>
-
-
+                
+                
                     <a
                         href="{% url 'all_products_page' %}"
                         class="order-details-btn primary"
@@ -657,20 +723,372 @@
                         <span>
                             CONTINUE SHOPPING
                         </span>
-
+                    
                         <i class="bi bi-arrow-right"></i>
-
+                    
                     </a>
-
+                
                 </div>
-
 
             </aside>
 
         </div>
 
-    </div>
+        <!-- =========================================
+             CANCEL ORDER MODAL
+        ========================================== -->
+        
+        <div
+            class="modal fade"
+            id="cancelOrderModal"
+            tabindex="-1"
+            aria-labelledby="cancelOrderModalLabel"
+            aria-hidden="true"
+        >
+        
+            <div class="modal-dialog modal-dialog-centered">
+            
+                <div class="modal-content nafi-cancel-modal">
+                
+                    <div class="modal-header">
+                    
+                        <div>
+                        
+                            <span class="nafi-cancel-modal-eyebrow">
+                                ORDER ACTION
+                            </span>
+                        
+                            <h2 id="cancelOrderModalLabel">
+                                Cancel Order?
+                            </h2>
+                        
+                        </div>
+                    
+                        <button
+                            type="button"
+                            class="btn-close nafi-modal-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"
+                        ></button>
+                    
+                    </div>
+                
+                
+                    <div class="modal-body">
+                    
+                        <p>
+                            Are you sure you want to cancel this order?
+                        </p>
+                    
+                        <div class="nafi-cancel-order-number">
+                        
+                            <span>
+                                ORDER NUMBER
+                            </span>
+                        
+                            <strong>
+                                {{ order.order_number }}
+                            </strong>
+                        
+                        </div>
+                    
+                        <small>
+                            This action will return the ordered quantity
+                            to the available product stock.
+                        </small>
+                    
+                    </div>
+                
+                
+                    <div class="modal-footer">
+                    
+                        <button
+                            type="button"
+                            class="nafi-modal-keep-btn"
+                            data-bs-dismiss="modal"
+                        >
+                            KEEP ORDER
+                        </button>
+                    
+                    
+                        <form
+                            method="POST"
+                            action="{% url 'cancel_order' order.order_number %}"
+                        >
+                    
+                            {% csrf_token %}
+                    
+                            <button
+                                type="submit"
+                                class="nafi-modal-confirm-btn"
+                            >
+                                CANCEL ORDER
+                            </button>
+                        
+                        </form>
+                    
+                    </div>
+                
+                </div>
+            
+            </div>
+        
+        </div>
+<!-- =====================================================
+     RETURN / EXCHANGE MODAL
+===================================================== -->
 
+{% if order.status == "Delivered" %}
+
+<div
+    class="modal fade"
+    id="returnExchangeModal"
+    tabindex="-1"
+    aria-labelledby="returnExchangeModalLabel"
+    aria-hidden="true"
+ >
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content nafi-return-modal">
+
+            <!-- HEADER -->
+            <div class="modal-header">
+
+                <div>
+
+                    <span class="nafi-return-modal-eyebrow">
+                        ORDER SERVICE
+                    </span>
+
+                    <h2 id="returnExchangeModalLabel">
+                        Return / Exchange
+                    </h2>
+
+                </div>
+
+                <button
+                    type="button"
+                    class="btn-close nafi-modal-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                ></button>
+
+            </div>
+
+
+            <!-- BODY -->
+            <div class="modal-body">
+
+                <p class="nafi-return-intro">
+                    Select the product and tell us why you
+                    would like to return or exchange it.
+                </p>
+
+
+                <!-- FORM -->
+                <form
+                    method="POST"
+                    action="{% url 'request_return_exchange' order.order_number %}"
+                >
+
+                    {% csrf_token %}
+
+
+                    <!-- PRODUCT -->
+                    <div class="nafi-return-field">
+
+                        <label for="returnOrderItem">
+                            SELECT PRODUCT
+                        </label>
+
+                        <select
+                            id="returnOrderItem"
+                            name="order_item_id"
+                            required
+                        >
+
+                            <option value="" selected disabled>
+                                Select a product
+                            </option>
+
+                            {% for item in order.items.all %}
+
+                                <option value="{{ item.id }}">
+                                    {{ item.product_name }}
+                                    — {{ item.size }}
+                                    — Qty {{ item.quantity }}
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- REQUEST TYPE -->
+                    <div class="nafi-return-field">
+
+                        <label>
+                            REQUEST TYPE
+                        </label>
+
+                        <div class="nafi-request-type">
+
+                            <label class="nafi-request-option">
+
+                                <input
+                                    type="radio"
+                                    name="request_type"
+                                    value="Return"
+                                    required
+                                >
+
+                                <span>
+                                    Return
+                                </span>
+
+                            </label>
+
+
+                            <label class="nafi-request-option">
+
+                                <input
+                                    type="radio"
+                                    name="request_type"
+                                    value="Exchange"
+                                >
+
+                                <span>
+                                    Exchange
+                                </span>
+
+                            </label>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- QUANTITY -->
+                    <div class="nafi-return-field">
+
+                        <label for="returnQuantity">
+                            QUANTITY
+                        </label>
+
+                        <input
+                            type="number"
+                            id="returnQuantity"
+                            name="requested_quantity"
+                            value="1"
+                            min="1"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- REASON -->
+                    <div class="nafi-return-field">
+
+                        <label for="returnReason">
+                            REASON
+                        </label>
+
+                        <select
+                            id="returnReason"
+                            name="reason"
+                            required
+                        >
+
+                            <option value="" selected disabled>
+                                Select a reason
+                            </option>
+
+                            <option value="Wrong Size">
+                                Wrong Size
+                            </option>
+
+                            <option value="Wrong Product">
+                                Wrong Product
+                            </option>
+
+                            <option value="Damaged Product">
+                                Damaged Product
+                            </option>
+
+                            <option value="Defective Product">
+                                Defective Product
+                            </option>
+
+                            <option value="Different From Description">
+                                Different From Description
+                            </option>
+
+                            <option value="Quality Issue">
+                                Quality Issue
+                            </option>
+
+                            <option value="Other">
+                                Other
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- NOTE -->
+                    <div class="nafi-return-field">
+
+                        <label for="returnNote">
+                            ADDITIONAL NOTE
+                        </label>
+
+                        <textarea
+                            id="returnNote"
+                            name="note"
+                            rows="4"
+                            placeholder="Tell us anything else we should know..."
+                        ></textarea>
+
+                    </div>
+
+
+                    <!-- FOOTER -->
+                    <div class="nafi-return-modal-footer">
+
+                        <button
+                            type="button"
+                            class="nafi-modal-keep-btn"
+                            data-bs-dismiss="modal"
+                        >
+                            CANCEL
+                        </button>
+
+                        <button
+                            type="submit"
+                            class="nafi-modal-confirm-btn"
+                        >
+                            SUBMIT REQUEST
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+{% endif %}
+
+    </div>
+    
 </section>
 
 {% endblock %}

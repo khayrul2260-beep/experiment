@@ -522,3 +522,101 @@ class OrderItem(models.Model):
             f"{self.product_name} - "
             f"{self.size} × {self.quantity}"
         )
+
+
+# =========================================================
+# NAFI ORDER — RETURN / EXCHANGE REQUEST
+# =========================================================
+
+class OrderReturnExchange(models.Model):
+
+    REQUEST_TYPE_CHOICES = [
+        ("Return", "Return"),
+        ("Exchange", "Exchange"),
+    ]
+
+    STATUS_CHOICES = [
+        ("Pending", "Pending"),
+        ("Approved", "Approved"),
+        ("Rejected", "Rejected"),
+        ("Completed", "Completed"),
+    ]
+
+    REASON_CHOICES = [
+        ("Wrong Size", "Wrong Size"),
+        ("Wrong Product", "Wrong Product"),
+        ("Damaged Product", "Damaged Product"),
+        ("Defective Product", "Defective Product"),
+        ("Different From Description", "Different From Description"),
+        ("Quality Issue", "Quality Issue"),
+        ("Other", "Other"),
+    ]
+
+    order = models.ForeignKey(
+        "Order",
+        on_delete=models.CASCADE,
+        related_name="return_exchange_requests"
+    )
+
+    customer = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="return_exchange_requests"
+    )
+
+    order_item = models.ForeignKey(
+        "OrderItem",
+        on_delete=models.CASCADE,
+        related_name="return_exchange_requests"
+    )
+
+    request_type = models.CharField(
+        max_length=20,
+        choices=REQUEST_TYPE_CHOICES
+    )
+
+    requested_quantity = models.PositiveIntegerField(
+        default=1
+    )
+
+    reason = models.CharField(
+        max_length=80,
+        choices=REASON_CHOICES
+    )
+
+    note = models.TextField(
+        blank=True
+    )
+
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default="Pending"
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True
+    )
+
+    class Meta:
+        ordering = [
+            "-created_at"
+        ]
+
+        verbose_name = "Return / Exchange Request"
+        verbose_name_plural = "Return / Exchange Requests"
+
+    def __str__(self):
+        return (
+            f"{self.request_type} — "
+            f"{self.order.order_number} — "
+            f"{self.order_item.product_name}"
+        )
+
+        

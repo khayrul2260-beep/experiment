@@ -3,7 +3,9 @@ from admin_dashboard.models import *
 from .models import *
 from django.http import JsonResponse
 from types import SimpleNamespace
-
+from django.db import transaction
+from django.views.decorators.http import require_POST
+from django.db.models import Sum
 
 # =========================================================
 # GUEST CART HELPERS
@@ -2498,3 +2500,307 @@ def order_details_page(request, order_number):
         context
     )
 
+# =========================================================
+# RETURN / EXCHANGE REQUEST
+# =========================================================
+
+@require_POST
+def request_return_exchange(request, order_number):
+
+    if not request.user.is_authenticated:
+        return redirect("customer_login")
+
+    # -----------------------------------------------------
+    # GET CUSTOMER'S DELIVERED ORDER
+    # -----------------------------------------------------
+
+    order = get_object_or_404(
+        Order,
+        order_number=order_number,
+        customer=request.user,
+        status="Delivered"
+    )
+
+    # -----------------------------------------------------
+    # GET FORM DATA
+    # -----------------------------------------------------
+
+    order_item_id = request.POST.get(
+        "order_item_id"
+    )
+
+    request_type = request.POST.get(
+        "request_type"
+    )
+
+    reason = request.POST.get(
+        "reason"
+    )
+
+    note = request.POST.get(
+        "note",
+        ""
+    ).strip()
+
+    # -----------------------------------------------------
+    # VALIDATE ORDER ITEM
+    # -----------------------------------------------------
+
+    order_item = get_object_or_404(
+        OrderItem,
+        id=order_item_id,
+        order=order
+    )
+
+    # -----------------------------------------------------
+    # VALIDATE REQUEST TYPE
+    # -----------------------------------------------------
+
+    if request_type not in [
+        "Return",
+        "Exchange"
+    ]:
+        return redirect(
+            "order_details",
+            order_number=order.order_number
+        )
+
+    # -----------------------------------------------------
+    # VALIDATE REASON
+    # -----------------------------------------------------
+
+    valid_reasons = [
+        choice[0]
+        for choice in
+        OrderReturnExchange.REASON_CHOICES
+    ]
+
+    if reason not in valid_reasons:
+        return redirect(
+            "order_details",
+            order_number=order.order_number
+        )
+
+    # -----------------------------------------------------
+    # GET REQUESTED QUANTITY
+    # -----------------------------------------------------
+
+    try:
+
+        requested_quantity = int(
+            request.POST.get(
+                "requested_quantity",
+                1
+            )
+        )
+
+    except (TypeError, ValueError):
+
+        requested_quantity = 1
+
+    # -----------------------------------------------------
+    # VALIDATE QUANTITY
+    # -----------------------------------------------------
+
+    if requested_quantity < 1:
+
+        requested_quantity = 1
+
+    if requested_quantity > order_item.quantity:
+
+        requested_quantity = order_item.quantity
+
+    # -----------------------------------------------------
+    # CHECK EXISTING ACTIVE REQUEST
+    # -----------------------------------------------------
+
+    existing_request = (
+        OrderReturnExchange.objects
+        .filter(
+            order=order,
+            order_item=order_item,
+            status__in=[
+                "Pending",
+                "Approved"
+            ]
+        )
+        .exists()
+    )
+
+    if existing_request:
+
+        return redirect(
+            "order_details",
+            order_number=order.order_number
+        )
+
+    # -----------------------------------------------------
+    # CREATE REQUEST
+    # -----------------------------------------------------
+
+    OrderReturnExchange.objects.create(
+
+        order=order,
+
+        customer=request.user,
+
+        order_item=order_item,
+
+        request_type=request_type,
+
+        requested_quantity=requested_quantity,
+
+        reason=reason,
+
+        note=note,
+
+        status="Pending",
+    )
+
+    # -----------------------------------------------------
+    # RETURN TO ORDER DETAILS
+    # -----------------------------------------------------
+
+    return redirect(
+        "order_details",
+        order_number=order.order_number
+    )
+# =========================================================
+# CANCEL ORDER
+# =========================================================
+
+@require_POST
+def cancel_order(request, order_number):
+
+    if not request.user.is_authenticated:
+        return redirect("customer_login")
+
+
+    with transaction.atomic():
+
+        order = get_object_or_404(
+            Order.objects.select_for_update(),
+            order_number=order_number,
+            customer=request.user
+        )
+
+
+        # -------------------------------------------------
+        # ONLY PENDING / CONFIRMED ORDERS CAN BE CANCELLED
+        # -------------------------------------------------
+
+        if order.status not in [
+            "Pending",
+            "Confirmed"
+        ]:
+
+            return redirect(
+                "order_details",
+                order_number=order.order_number
+            )
+
+
+        # -------------------------------------------------
+        # RESTORE PRODUCT SIZE STOCK
+        # -------------------------------------------------
+
+        items = order.items.select_related(
+            "product"
+        )
+
+
+        affected_products = set()
+
+
+        for item in items:
+
+            if not item.product:
+                continue
+
+
+            product_size = (
+                ProductSize.objects
+                .select_for_update()
+                .filter(
+                    product=item.product,
+                    size=item.size
+                )
+                .first()
+            )
+
+
+            if not product_size:
+                continue
+
+
+            product_size.stock += item.quantity
+
+            product_size.save(
+                update_fields=[
+                    "stock",
+                    "updated_at"
+                ]
+            )
+
+
+            affected_products.add(
+                item.product.id
+            )
+
+
+        # -------------------------------------------------
+        # RECALCULATE PRODUCT TOTAL STOCK
+        # -------------------------------------------------
+
+        for product_id in affected_products:
+
+            product = (
+                ProductsModel.objects
+                .select_for_update()
+                .get(
+                    id=product_id
+                )
+            )
+
+
+            total_stock = (
+                ProductSize.objects
+                .filter(
+                    product=product
+                )
+                .aggregate(
+                    total=Sum("stock")
+                )["total"]
+                or 0
+            )
+
+
+            product.stock = total_stock
+
+            product.save(
+                update_fields=[
+                    "stock",
+                    "status",
+                    "updated_at"
+                ]
+            )
+
+
+        # -------------------------------------------------
+        # CANCEL ORDER
+        # -------------------------------------------------
+
+        order.status = "Cancelled"
+
+        order.save(
+            update_fields=[
+                "status",
+                "updated_at"
+            ]
+        )
+
+
+    return redirect(
+        "order_details",
+        order_number=order.order_number
+    )

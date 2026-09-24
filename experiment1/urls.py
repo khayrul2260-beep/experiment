@@ -24,6 +24,8 @@ urlpatterns = [
     path("order-confirmation/<str:order_number>/", order_confirmation_page, name="order_confirmation"),
     path("my-orders/", my_orders_page, name="my_orders"),
     path("order-details/<str:order_number>/", order_details_page, name="order_details"),
+    path("order-details/<str:order_number>/return-exchange/", request_return_exchange, name="request_return_exchange"),
+    path("order-details/<str:order_number>/cancel/", cancel_order, name="cancel_order"),
     
     path("wishlist/", wishlist_page, name="wishlist_page"),
     path("wishlist/toggle/<int:product_id>/", add_to_wishlist, name="add_to_wishlist"),
