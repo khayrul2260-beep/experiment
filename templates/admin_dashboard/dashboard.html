@@ -1,209 +1,1271 @@
-{% extends 'admin_dashboard/master/base.html' %}
-{% load static %} 
-{% block title %} 
-Dashboard 
-{% endblock %} 
-{% block css %}
-<link rel="stylesheet" href="{% static 'admin_panel/css/dashboard.css' %}" />
-{% endblock %} {% block page_title %} Dashboard {% endblock %} {% block content %}
+{% extends "admin_dashboard/master/base.html" %}
 
-<!-- ==========================
-    Dashboard Container
-========================== -->
+{% load static %}
+
+{% block title %}
+    NAFI Admin Dashboard
+{% endblock %}
+
+
+{% block css %}
+
+<link rel="stylesheet"
+      href="{% static 'admin_panel/css/dashboard.css' %}">
+
+{% endblock %}
+
+
+{% block content %}
 
 <div class="dashboard-container">
-  <!-- ==========================
-        Statistics Cards
-    ========================== -->
 
-  <section class="statistics-section">
-    <div class="stat-card">
-      <div class="stat-icon">
-        <i class="bi bi-currency-dollar"></i>
-      </div>
 
-      <div class="stat-content">
-        <h5>Total Revenue</h5>
+    <!-- =====================================================
+         DASHBOARD HEADER
+    ====================================================== -->
 
-        <h2>$25,450</h2>
+    <section class="dashboard-header">
 
-        <span>+12% This Month</span>
-      </div>
-    </div>
+        <div class="dashboard-header-content">
 
-    <div class="stat-card">
-      <div class="stat-icon">
-        <i class="bi bi-bag-check"></i>
-      </div>
+            <p class="dashboard-eyebrow">
+                NAFI ADMIN PANEL
+            </p>
 
-      <div class="stat-content">
-        <h5>Total Orders</h5>
+            <h1>
+                Business Overview
+            </h1>
 
-        <h2>1,256</h2>
+            <p class="dashboard-description">
+                Monitor your store performance, orders,
+                products and revenue from one place.
+            </p>
 
-        <span>+18 Today</span>
-      </div>
-    </div>
+        </div>
 
-    <div class="stat-card">
-      <div class="stat-icon">
-        <i class="fa-solid fa-shirt"></i>
-      </div>
 
-      <div class="stat-content">
-        <h5>Total Products</h5>
+        <div class="dashboard-date">
 
-        <h2>{{ total_products }}</h2>
+            <i class="fa-regular fa-calendar"></i>
 
-        <span>Active Products</span>
-      </div>
-    </div>    
-    
-    <div class="stat-card">
-      <div class="stat-icon">
-        <i class="bi bi-people"></i>
-      </div>
+            {% now "d M Y" %}
 
-      <div class="stat-content">
-        <h5>Customers</h5>
+        </div>
 
-        <h2>4,850</h2>
+    </section>
 
-        <span>+54 New Users</span>
-      </div>
-    </div>
-  </section>
 
-  <!-- ==========================
-        Analytics
-    ========================== -->
 
-<section class="analytics-section">
-  <div class="sales-chart">
+    <!-- =====================================================
+         KPI STATISTICS
+    ====================================================== -->
 
-    <div class="chart-header">
+    <section class="statistics-section">
 
-        <div class="chart-title">
 
-            <h4>Sales Statistics</h4>
+        <!-- TOTAL REVENUE -->
 
-            <div class="chart-income">
+        <div class="stat-card">
 
-                <h2>$110,854.21</h2>
+            <div class="stat-content">
 
-                <span>+10%</span>
+                <p class="stat-label">
+                    Total Revenue
+                </p>
+
+                <h2>
+                    ৳{{ total_revenue|floatformat:0 }}
+                </h2>
+
+                <div class="stat-meta">
+
+                    <i class="fa-solid fa-chart-line"></i>
+
+                    <span>
+                        From delivered orders
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-icon">
+
+                <i class="fa-solid fa-bangladeshi-taka-sign"></i>
 
             </div>
 
         </div>
 
-        <div class="chart-filter">
 
-            <select>
 
-                <option>This Year</option>
-                <option>Last Year</option>
+        <!-- TOTAL ORDERS -->
 
-            </select>
+        <div class="stat-card">
+
+            <div class="stat-content">
+
+                <p class="stat-label">
+                    Total Orders
+                </p>
+
+                <h2>
+                    {{ total_orders }}
+                </h2>
+
+                <div class="stat-meta">
+
+                    <i class="fa-solid fa-bag-shopping"></i>
+
+                    <span>
+                        All orders
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-icon">
+
+                <i class="fa-solid fa-cart-shopping"></i>
+
+            </div>
 
         </div>
 
-    </div>
 
-    <div class="chart-body">
 
-        <canvas id="salesChart"></canvas>
+        <!-- PRODUCTS -->
 
-    </div>
+        <div class="stat-card">
 
-  </div>
+            <div class="stat-content">
 
-  <div class="visitor-chart">
-      <div class="section-header" style="display: flex; flex-direction: column; gap: 0px; align-items: start;">
-        <h3>Recent Month</h3>
-        <p style="font-size: 12px;">Visitors</p>
-      </div>
-      <div class="chart-body">
-        <canvas id="visitorChart"></canvas>
-      </div>
-  </div>
-</section>
+                <p class="stat-label">
+                    Total Products
+                </p>
 
-  <!-- ==========================
-        Recent Orders
-    ========================== -->
+                <h2>
+                    {{ total_products }}
+                </h2>
 
-  <section class="recent-orders">
-    <div class="section-header">
-      <h3>Recent Orders</h3>
+                <div class="stat-meta">
 
-      <a href="#">View All</a>
-    </div>
+                    <i class="fa-solid fa-box"></i>
 
-    <table>
-      <thead>
-        <tr>
-          <th>#</th>
+                    <span>
+                        {{ active_products }} active
+                    </span>
 
-          <th>Customer</th>
+                </div>
 
-          <th>Product</th>
+            </div>
 
-          <th>Amount</th>
 
-          <th>Status</th>
+            <div class="stat-icon">
 
-          <th>Date</th>
-        </tr>
-      </thead>
+                <i class="fa-solid fa-shirt"></i>
 
-      <tbody>
-        <tr>
-          <td>#1001</td>
+            </div>
 
-          <td>John Doe</td>
+        </div>
 
-          <td>Premium Shirt</td>
 
-          <td>$45</td>
 
-          <td>Delivered</td>
+        <!-- CUSTOMERS -->
 
-          <td>31 Jul 2026</td>
-        </tr>
-      </tbody>
-    </table>
-  </section>
+        <div class="stat-card">
 
-  <!-- ==========================
-        Bottom Widgets
-    ========================== -->
+            <div class="stat-content">
 
-  <section class="bottom-widgets">
-    <div class="top-products">
-      <div class="section-header">
-        <h3>Top Selling Products</h3>
-      </div>
+                <p class="stat-label">
+                    Customers
+                </p>
 
-      <div class="widget-body">Product List</div>
-    </div>
+                <h2>
+                    {{ total_customers }}
+                </h2>
 
-    <div class="recent-activity">
-      <div class="section-header">
-        <h3>Recent Activity</h3>
-      </div>
+                <div class="stat-meta">
 
-      <div class="widget-body">Activity Timeline</div>
-    </div>
-  </section>
+                    <i class="fa-solid fa-users"></i>
+
+                    <span>
+                        {{ registered_customers }} registered
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-icon">
+
+                <i class="fa-solid fa-user-group"></i>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         ORDER OVERVIEW
+    ====================================================== -->
+
+    <section class="order-overview dashboard-panel">
+
+
+        <div class="panel-header">
+
+            <div class="panel-title-group">
+
+                <p class="panel-eyebrow">
+                    ORDER PIPELINE
+                </p>
+
+                <h3>
+                    Order Overview
+                </h3>
+
+            </div>
+
+
+            <a href="{% url 'orders_page' %}"
+               class="panel-action">
+
+                View All
+
+                <i class="fa-solid fa-arrow-right"></i>
+
+            </a>
+
+        </div>
+
+
+
+        <div class="order-status-grid">
+
+
+            <!-- PENDING -->
+
+            <div class="order-status-item pending">
+
+                <div class="order-status-label">
+
+                    <span class="order-status-dot"></span>
+
+                    Pending
+
+                </div>
+
+                <strong class="order-status-count">
+                    {{ pending_orders }}
+                </strong>
+
+                <a href="{% url 'orders_page' %}?status=Pending"
+                   class="order-status-link">
+
+                    Manage
+
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </a>
+
+            </div>
+
+
+
+            <!-- PROCESSING -->
+
+            <div class="order-status-item processing">
+
+                <div class="order-status-label">
+
+                    <span class="order-status-dot"></span>
+
+                    Processing
+
+                </div>
+
+                <strong class="order-status-count">
+                    {{ processing_orders }}
+                </strong>
+
+                <a href="{% url 'orders_page' %}?status=Processing"
+                   class="order-status-link">
+
+                    Manage
+
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </a>
+
+            </div>
+
+
+
+            <!-- SHIPPED -->
+
+            <div class="order-status-item shipped">
+
+                <div class="order-status-label">
+
+                    <span class="order-status-dot"></span>
+
+                    Shipped
+
+                </div>
+
+                <strong class="order-status-count">
+                    {{ shipped_orders }}
+                </strong>
+
+                <a href="{% url 'orders_page' %}?status=Shipped"
+                   class="order-status-link">
+
+                    Manage
+
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </a>
+
+            </div>
+
+
+
+            <!-- DELIVERED -->
+
+            <div class="order-status-item delivered">
+
+                <div class="order-status-label">
+
+                    <span class="order-status-dot"></span>
+
+                    Delivered
+
+                </div>
+
+                <strong class="order-status-count">
+                    {{ delivered_orders }}
+                </strong>
+
+                <a href="{% url 'orders_page' %}?status=Delivered"
+                   class="order-status-link">
+
+                    View
+
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </a>
+
+            </div>
+
+
+
+            <!-- CANCELLED -->
+
+            <div class="order-status-item cancelled">
+
+                <div class="order-status-label">
+
+                    <span class="order-status-dot"></span>
+
+                    Cancelled
+
+                </div>
+
+                <strong class="order-status-count">
+                    {{ cancelled_orders }}
+                </strong>
+
+                <a href="{% url 'orders_page' %}?status=Cancelled"
+                   class="order-status-link">
+
+                    View
+
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         ANALYTICS
+    ====================================================== -->
+
+    <section class="analytics-section">
+
+
+        <!-- =================================================
+             REVENUE OVERVIEW
+        ================================================== -->
+
+        <div class="sales-chart dashboard-panel">
+
+
+            <div class="chart-header">
+
+
+                <div class="chart-income">
+
+                    <p class="panel-eyebrow">
+                        PERFORMANCE
+                    </p>
+
+                    <h3>
+                        Revenue Overview
+                    </h3>
+
+                    <h2>
+                        ৳{{ selected_period_revenue|floatformat:0 }}
+                    </h2>
+
+                    <p>
+                        {% if revenue_period == "today" %}
+                            Today's revenue
+                        {% elif revenue_period == "week" %}
+                            This week's revenue
+                        {% elif revenue_period == "month" %}
+                            This month's revenue
+                        {% elif revenue_period == "year" %}
+                            This year's revenue
+                        {% else %}
+                            {{ revenue_period }} revenue
+                        {% endif %}
+                    </p>
+
+                </div>
+
+
+
+                <!-- REVENUE FILTER -->
+
+                <div class="chart-filter">
+
+                    <select
+                        id="revenuePeriod"
+                        class="revenue-period-select"
+                        aria-label="Revenue period"
+                    >
+
+                        <option
+                            value="today"
+                            {% if revenue_period == "today" %}
+                                selected
+                            {% endif %}
+                        >
+                            Today
+                        </option>
+
+
+                        <option
+                            value="week"
+                            {% if revenue_period == "week" %}
+                                selected
+                            {% endif %}
+                        >
+                            This Week
+                        </option>
+
+
+                        <option
+                            value="month"
+                            {% if revenue_period == "month" %}
+                                selected
+                            {% endif %}
+                        >
+                            This Month
+                        </option>
+
+
+                        <option
+                            value="year"
+                            {% if revenue_period == "year" %}
+                                selected
+                            {% endif %}
+                        >
+                            This Year
+                        </option>
+
+
+                        <!-- PREVIOUS YEARS -->
+
+                        {% for year in available_years %}
+
+                            {% if year != current_year %}
+
+                                <option
+                                    value="{{ year }}"
+                                    {% if revenue_period == year|stringformat:"s" %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    {{ year }}
+                                </option>
+
+                            {% endif %}
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- CHART -->
+
+            <div class="chart-body">
+
+                <canvas
+                    id="salesChart"
+                    aria-label="Revenue chart"
+                ></canvas>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             STORE OVERVIEW
+        ================================================== -->
+
+        <div class="visitor-chart dashboard-panel">
+
+
+            <div class="panel-header">
+
+                <div class="panel-title-group">
+
+                    <p class="panel-eyebrow">
+                        INVENTORY
+                    </p>
+
+                    <h3>
+                        Store Overview
+                    </h3>
+
+                </div>
+
+
+                <a href="{% url 'inventory_page' %}"
+                   class="panel-action">
+
+                    Inventory
+
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </a>
+
+            </div>
+
+
+
+            <div class="store-overview-grid">
+
+
+                <!-- ACTIVE -->
+
+                <div class="store-stat">
+
+                    <span class="store-stat-label">
+                        Active Products
+                    </span>
+
+                    <strong class="store-stat-value">
+                        {{ active_products }}
+                    </strong>
+
+                    <a href="{% url 'products_page' %}"
+                       class="store-stat-link">
+
+                        View products
+
+                    </a>
+
+                </div>
+
+
+
+                <!-- FEATURED -->
+
+                <div class="store-stat">
+
+                    <span class="store-stat-label">
+                        Featured Products
+                    </span>
+
+                    <strong class="store-stat-value">
+                        {{ featured_products }}
+                    </strong>
+
+                    <a href="{% url 'products_page' %}"
+                       class="store-stat-link">
+
+                        Manage
+
+                    </a>
+
+                </div>
+
+
+
+                <!-- LOW STOCK -->
+
+                <div class="store-stat">
+
+                    <span class="store-stat-label">
+                        Low Stock
+                    </span>
+
+                    <strong class="store-stat-value warning">
+                        {{ low_stock_products }}
+                    </strong>
+
+                    <a href="{% url 'inventory_page' %}"
+                       class="store-stat-link">
+
+                        Check stock
+
+                    </a>
+
+                </div>
+
+
+
+                <!-- OUT OF STOCK -->
+
+                <div class="store-stat">
+
+                    <span class="store-stat-label">
+                        Out of Stock
+                    </span>
+
+                    <strong class="store-stat-value danger">
+                        {{ out_of_stock_products }}
+                    </strong>
+
+                    <a href="{% url 'inventory_page' %}"
+                       class="store-stat-link">
+
+                        Restock
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         RECENT ORDERS
+    ====================================================== -->
+
+    <section class="recent-orders dashboard-panel">
+
+
+        <div class="panel-header">
+
+            <div class="panel-title-group">
+
+                <p class="panel-eyebrow">
+                    SALES ACTIVITY
+                </p>
+
+                <h3>
+                    Recent Orders
+                </h3>
+
+                <p class="panel-description">
+                    Latest customer orders from your store.
+                </p>
+
+            </div>
+
+
+            <a href="{% url 'orders_page' %}"
+               class="panel-action">
+
+                View All
+
+                <i class="fa-solid fa-arrow-right"></i>
+
+            </a>
+
+        </div>
+
+
+
+        <div class="orders-table-wrapper">
+
+            <table class="orders-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Order
+                        </th>
+
+                        <th>
+                            Customer
+                        </th>
+
+                        <th>
+                            Items
+                        </th>
+
+                        <th>
+                            Total
+                        </th>
+
+                        <th>
+                            Payment
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
+                        <th>
+                            Date
+                        </th>
+
+                        <th>
+                            Action
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+
+                <tbody>
+
+
+                    {% for order in recent_orders %}
+
+                    <tr>
+
+
+                        <!-- ORDER NUMBER -->
+
+                        <td>
+
+                            <span class="order-number">
+
+                                #{{ order.order_number }}
+
+                            </span>
+
+                        </td>
+
+
+
+                        <!-- CUSTOMER -->
+
+                        <td>
+
+                            <span class="customer-name">
+
+                                {% if order.customer %}
+
+                                    {{ order.customer.get_full_name|default:order.customer.username }}
+
+                                {% else %}
+
+                                    {{ order.full_name|default:"Guest Customer" }}
+
+                                {% endif %}
+
+                            </span>
+
+
+                            <span class="customer-type">
+
+                                {% if order.customer %}
+
+                                    Registered
+
+                                {% else %}
+
+                                    Guest
+
+                                {% endif %}
+
+                            </span>
+
+                        </td>
+
+
+
+                        <!-- ITEMS -->
+
+                        <td>
+
+                            <span class="order-items-count">
+
+                                {{ order.item_quantity }}
+                                item{{ order.item_quantity|pluralize }}
+
+                            </span>
+
+                        </td>
+
+
+
+                        <!-- TOTAL -->
+
+                        <td>
+
+                            <span class="order-total">
+
+                                ৳{{ order.total_amount|floatformat:0 }}
+
+                            </span>
+
+                        </td>
+
+
+
+                        <!-- PAYMENT -->
+
+                        <td>
+
+                            <span class="payment-method">
+
+                                {{ order.payment_method }}
+
+                            </span>
+
+                            <br>
+
+                            <span
+                                class="payment-status {{ order.payment_status|lower }}"
+                            >
+
+                                {{ order.payment_status }}
+
+                            </span>
+
+                        </td>
+
+
+
+                        <!-- STATUS -->
+
+                        <td>
+
+                            <span
+                                class="order-status-badge {{ order.status|lower }}"
+                            >
+
+                                {{ order.status }}
+
+                            </span>
+
+                        </td>
+
+
+
+                        <!-- DATE -->
+
+                        <td>
+
+                            <span class="order-date">
+
+                                {{ order.created_at|date:"d M Y" }}
+
+                            </span>
+
+                        </td>
+
+
+
+                        <!-- ACTION -->
+
+                        <td>
+
+                            <a
+                                href="{% url 'admin_order_details' order.order_number %}"
+                                class="order-view"
+                                title="View order"
+                            >
+
+                                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td
+                            colspan="8"
+                            class="empty-table"
+                        >
+
+                            <i class="fa-regular fa-folder-open"></i>
+
+                            No orders found.
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         BOTTOM WIDGETS
+    ====================================================== -->
+
+    <section class="bottom-widgets">
+
+
+        <!-- =================================================
+             TOP SELLING PRODUCTS
+        ================================================== -->
+
+        <div class="top-products dashboard-panel">
+
+
+            <div class="panel-header">
+
+                <div class="panel-title-group">
+
+                    <p class="panel-eyebrow">
+                        PRODUCT PERFORMANCE
+                    </p>
+
+                    <h3>
+                        Top Selling Products
+                    </h3>
+
+                </div>
+
+
+                <a href="{% url 'products_page' %}"
+                   class="panel-action">
+
+                    Products
+
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </a>
+
+            </div>
+
+
+
+            <div class="product-list">
+
+
+                {% for product in top_products %}
+
+                <div class="product-list-item">
+
+
+                    <!-- RANK -->
+
+                    <span class="product-rank">
+
+                        #{{ forloop.counter }}
+
+                    </span>
+
+
+
+                    <!-- IMAGE -->
+
+                    <div class="product-thumb">
+
+                        {% if product.image %}
+
+                            <img
+                                src="{{ product.image.url }}"
+                                alt="{{ product.product_name }}"
+                                loading="lazy"
+                            >
+
+                        {% else %}
+
+                            <div class="product-placeholder">
+
+                                <i class="fa-solid fa-shirt"></i>
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+
+                    <!-- INFO -->
+
+                    <div class="product-info">
+
+                        <p class="product-name">
+
+                            {{ product.product_name }}
+
+                        </p>
+
+                        <span class="product-code">
+
+                            {{ product.product_code }}
+
+                        </span>
+
+                    </div>
+
+
+
+                    <!-- SOLD -->
+
+                    <div class="product-sold">
+
+                        <strong>
+                            {{ product.total_sold }}
+                        </strong>
+
+                        <span>
+                            sold
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                {% empty %}
+
+                <div class="empty-table">
+
+                    No sales data available.
+
+                </div>
+
+                {% endfor %}
+
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             QUICK ACTIONS
+        ================================================== -->
+
+        <div class="quick-actions dashboard-panel">
+
+
+            <div class="panel-header">
+
+                <div class="panel-title-group">
+
+                    <p class="panel-eyebrow">
+                        SHORTCUTS
+                    </p>
+
+                    <h3>
+                        Quick Actions
+                    </h3>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="quick-action-grid">
+
+
+                <!-- ADD PRODUCT -->
+
+                <a
+                    href="{% url 'add_product_page' %}"
+                    class="quick-action"
+                >
+
+                    <span class="quick-action-icon">
+
+                        <i class="fa-solid fa-plus"></i>
+
+                    </span>
+
+
+                    <span class="quick-action-text">
+
+                        <span class="quick-action-title">
+                            Add Product
+                        </span>
+
+                        <span class="quick-action-description">
+                            Create a new product
+                        </span>
+
+                    </span>
+
+                </a>
+
+
+
+                <!-- ORDERS -->
+
+                <a
+                    href="{% url 'orders_page' %}"
+                    class="quick-action"
+                >
+
+                    <span class="quick-action-icon">
+
+                        <i class="fa-solid fa-bag-shopping"></i>
+
+                    </span>
+
+
+                    <span class="quick-action-text">
+
+                        <span class="quick-action-title">
+                            Manage Orders
+                        </span>
+
+                        <span class="quick-action-description">
+                            Review customer orders
+                        </span>
+
+                    </span>
+
+                </a>
+
+
+
+                <!-- CUSTOMERS -->
+
+                <a
+                    href="{% url 'customers_page' %}"
+                    class="quick-action"
+                >
+
+                    <span class="quick-action-icon">
+
+                        <i class="fa-solid fa-users"></i>
+
+                    </span>
+
+
+                    <span class="quick-action-text">
+
+                        <span class="quick-action-title">
+                            Customers
+                        </span>
+
+                        <span class="quick-action-description">
+                            View customer accounts
+                        </span>
+
+                    </span>
+
+                </a>
+
+
+
+                <!-- INVENTORY -->
+
+                <a
+                    href="{% url 'inventory_page' %}"
+                    class="quick-action"
+                >
+
+                    <span class="quick-action-icon">
+
+                        <i class="fa-solid fa-boxes-stacked"></i>
+
+                    </span>
+
+
+                    <span class="quick-action-text">
+
+                        <span class="quick-action-title">
+                            Inventory
+                        </span>
+
+                        <span class="quick-action-description">
+                            Check stock levels
+                        </span>
+
+                    </span>
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
 </div>
+
+
+<!-- =========================================================
+     REVENUE DATA FOR JAVASCRIPT
+========================================================== -->
+
+{{ revenue_labels|json_script:"revenue-labels" }}
+
+{{ revenue_values|json_script:"revenue-values" }}
+
 
 {% endblock %}
 
 
 
 {% block js %}
-  <script src="{% static 'admin_panel/js/dashboard.js' %}"></script>
-  <script src="{% static 'admin_panel/js/chart.js' %}"></script>  
-{% endblock  %}
-  
+
+<script src="{% static 'admin_panel/js/dashboard.js' %}"></script>
+
+<script src="{% static 'admin_panel/js/chart.js' %}"></script>
+
+{% endblock %}

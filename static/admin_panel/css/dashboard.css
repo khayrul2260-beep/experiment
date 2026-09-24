@@ -1,414 +1,1740 @@
-/* ==========================================
+/* =========================================================
+   NAFI ADMIN DASHBOARD
+   Premium Dark Dashboard
+========================================================= */
+
+
+/* =========================================================
    DASHBOARD CONTAINER
-========================================== */
+========================================================= */
 
 .dashboard-container {
-  display: flex;
-
-  flex-direction: column;
-
-  gap: 20px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    color: var(--text-color);
 }
 
-/* ==========================================
-   SECTION HEADER
-========================================== */
-
-.section-header {
-  display: flex;
-
-  justify-content: space-between;
-
-  align-items: center;
-
-  margin-bottom: 20px;
+.dashboard-container *,
+.dashboard-container *::before,
+.dashboard-container *::after {
+    box-sizing: border-box;
 }
 
-.section-header h3 {
-  font-size: 20px;
-
-  font-weight: 600;
-
-  color: var(--text-color);
+.dashboard-container a {
+    text-decoration: none;
 }
 
-.section-header a {
-  color: rgba(91, 223, 102, 0.568);
 
-  font-size: 11px;
+/* =========================================================
+   DASHBOARD HEADER
+========================================================= */
 
-  font-weight: 500;
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 20px;
+    padding-bottom: 2px;
 }
 
-.section-header a:hover {
-  text-decoration: underline;
+.dashboard-header-content {
+    min-width: 0;
 }
 
-/* ==========================================
-   STATISTICS SECTION
-========================================== */
+.dashboard-eyebrow,
+.panel-eyebrow {
+    margin: 0 0 6px;
+    color: #60a5fa;
+    font-size: 9px;
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+.dashboard-header h1 {
+    margin: 0;
+    color: #f8fafc;
+    font-size: 25px;
+    line-height: 1.15;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+}
+
+.dashboard-description {
+    max-width: 650px;
+    margin: 7px 0 0;
+    color: #94a3b8;
+    font-size: 11px;
+    line-height: 1.6;
+}
+
+.dashboard-date {
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    gap: 7px;
+
+    padding: 9px 13px;
+
+    color: #94a3b8;
+    background: rgba(255, 255, 255, 0.025);
+
+    border: 1px solid var(--border-color);
+    border-radius: 9px;
+
+    font-size: 9px;
+    font-weight: 500;
+
+    transition:
+        border-color 0.25s ease,
+        background 0.25s ease;
+}
+
+.dashboard-date i {
+    color: #60a5fa;
+    font-size: 10px;
+}
+
+.dashboard-date:hover {
+    border-color: rgba(96, 165, 250, 0.2);
+    background: rgba(255, 255, 255, 0.04);
+}
+
+
+/* =========================================================
+   COMMON DASHBOARD PANEL
+========================================================= */
+
+.dashboard-panel {
+    min-width: 0;
+
+    background: var(--card-color);
+
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+
+    overflow: hidden;
+
+    transition:
+        transform 0.3s ease,
+        border-color 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+.dashboard-panel:hover {
+    border-color: rgba(96, 165, 250, 0.15);
+
+    box-shadow:
+        0 18px 40px rgba(0, 0, 0, 0.20);
+}
+
+
+/* =========================================================
+   KPI STATISTICS
+========================================================= */
 
 .statistics-section {
-  display: grid;
+    display: grid;
 
-  grid-template-columns: repeat(4, 1fr);
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
 
-  gap: 20px;
+    gap: 16px;
 }
 
-/* ==========================================
+
+/* =========================================================
    STAT CARD
-========================================== */
+========================================================= */
 
 .stat-card {
-  display: flex;
+    position: relative;
 
-  align-items: center;
+    min-width: 0;
 
-  gap: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 
-  padding: 25px;
+    gap: 15px;
 
-  background: var(--card-color);
+    padding: 18px;
 
-  border: 1px solid var(--border-color);
+    background: var(--card-color);
 
-  border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
 
-  transition: var(--transition);
+    overflow: hidden;
+
+    transition:
+        transform 0.3s ease,
+        border-color 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+.stat-card::after {
+    content: "";
+
+    position: absolute;
+
+    width: 100px;
+    height: 100px;
+
+    right: -45px;
+    bottom: -50px;
+
+    border-radius: 50%;
+
+    background: rgba(37, 99, 235, 0.05);
+
+    pointer-events: none;
 }
 
 .stat-card:hover {
-  transform: translateY(-5px);
+    transform: translateY(-3px);
 
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+    border-color: rgba(96, 165, 250, 0.18);
+
+    box-shadow:
+        0 15px 35px rgba(0, 0, 0, 0.22);
 }
 
-.stat-icon {
-  width: 50px;
 
-  height: 50px;
-
-  display: flex;
-
-  justify-content: center;
-
-  align-items: center;
-
-  border-radius: 50%;
-
-  background: rgba(59, 130, 246, 0.15);
-
-  color: var(--primary-hover);
-
-  font-size: 24px;
-}
+/* =========================================================
+   STAT CONTENT
+========================================================= */
 
 .stat-content {
-  display: flex;
+    position: relative;
+    z-index: 2;
 
-  flex-direction: column;
+    min-width: 0;
 
-  gap: 5px;
+    display: flex;
+    flex-direction: column;
 }
 
-.stat-content h5 {
-  font-size: 14px;
+.stat-label {
+    margin: 0 0 5px;
 
-  color: var(--text-light);
+    color: #94a3b8;
 
-  font-weight: 500;
+    font-size: 10px;
+    line-height: 1.3;
+    font-weight: 500;
 }
 
 .stat-content h2 {
-  font-size: 24px;
+    margin: 0;
 
-  font-weight: 400;
+    color: #f8fafc;
 
-  color: var(--text-color);
+    font-size: 22px;
+    line-height: 1.15;
+
+    font-weight: 600;
+
+    letter-spacing: -0.02em;
 }
 
-.stat-content span {
-  font-size: 12px;
+.stat-meta {
+    display: flex;
+    align-items: center;
 
-  color: var(--success);
+    gap: 5px;
+
+    margin-top: 7px;
+
+    color: #64748b;
+
+    font-size: 8px;
+    line-height: 1.3;
 }
 
-/* ==========================================
-   ANALYTICS SECTION
-========================================== */
+.stat-meta i {
+    color: #60a5fa;
+    font-size: 8px;
+}
+
+
+/* =========================================================
+   STAT ICON
+========================================================= */
+
+.stat-icon {
+    position: relative;
+    z-index: 2;
+
+    flex: 0 0 42px;
+
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 11px;
+
+    background: rgba(37, 99, 235, 0.11);
+
+    border: 1px solid rgba(96, 165, 250, 0.09);
+
+    color: #60a5fa;
+
+    font-size: 16px;
+}
+
+
+/* =========================================================
+   PANEL HEADER
+========================================================= */
+
+.panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    padding: 17px 18px;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.055);
+}
+
+.panel-title-group {
+    min-width: 0;
+}
+
+.panel-title-group .panel-eyebrow {
+    margin-bottom: 4px;
+}
+
+.panel-title-group h3 {
+    margin: 0;
+
+    color: #f8fafc;
+
+    font-size: 13px;
+    line-height: 1.3;
+
+    font-weight: 600;
+}
+
+.panel-description {
+    margin: 5px 0 0;
+
+    color: #64748b;
+
+    font-size: 9px;
+    line-height: 1.4;
+}
+
+.panel-action {
+    flex-shrink: 0;
+
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+
+    color: #60a5fa;
+
+    font-size: 9px;
+    font-weight: 500;
+
+    transition:
+        color 0.25s ease,
+        gap 0.25s ease;
+}
+
+.panel-action i {
+    font-size: 8px;
+}
+
+.panel-action:hover {
+    color: #93c5fd;
+    gap: 8px;
+}
+
+
+/* =========================================================
+   ORDER OVERVIEW
+========================================================= */
+
+.order-overview {
+    width: 100%;
+}
+
+
+/* =========================================================
+   ORDER STATUS GRID
+========================================================= */
+
+.order-status-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(5, minmax(0, 1fr));
+
+    gap: 1px;
+
+    background: rgba(255, 255, 255, 0.045);
+}
+
+
+/* =========================================================
+   ORDER STATUS ITEM
+========================================================= */
+
+.order-status-item {
+    position: relative;
+
+    min-width: 0;
+
+    padding: 17px;
+
+    background: var(--card-color);
+
+    transition:
+        background 0.25s ease,
+        transform 0.25s ease;
+}
+
+.order-status-item:hover {
+    background: rgba(255, 255, 255, 0.025);
+}
+
+
+/* =========================================================
+   ORDER STATUS LABEL
+========================================================= */
+
+.order-status-label {
+    display: flex;
+    align-items: center;
+
+    gap: 7px;
+
+    margin-bottom: 9px;
+
+    color: #94a3b8;
+
+    font-size: 9px;
+    font-weight: 500;
+}
+
+.order-status-dot {
+    width: 6px;
+    height: 6px;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+
+    background: #64748b;
+}
+
+
+/* =========================================================
+   STATUS COLORS
+========================================================= */
+
+.order-status-item.pending .order-status-dot {
+    background: #f59e0b;
+
+    box-shadow:
+        0 0 0 3px rgba(245, 158, 11, 0.08);
+}
+
+.order-status-item.processing .order-status-dot {
+    background: #60a5fa;
+
+    box-shadow:
+        0 0 0 3px rgba(96, 165, 250, 0.08);
+}
+
+.order-status-item.shipped .order-status-dot {
+    background: #06b6d4;
+
+    box-shadow:
+        0 0 0 3px rgba(6, 182, 212, 0.08);
+}
+
+.order-status-item.delivered .order-status-dot {
+    background: #22c55e;
+
+    box-shadow:
+        0 0 0 3px rgba(34, 197, 94, 0.08);
+}
+
+.order-status-item.cancelled .order-status-dot {
+    background: #ef4444;
+
+    box-shadow:
+        0 0 0 3px rgba(239, 68, 68, 0.08);
+}
+
+
+/* =========================================================
+   ORDER COUNT
+========================================================= */
+
+.order-status-count {
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: #f8fafc;
+
+    font-size: 21px;
+    line-height: 1.1;
+
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   ORDER STATUS LINK
+========================================================= */
+
+.order-status-link {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 5px;
+
+    color: #64748b;
+
+    font-size: 8px;
+    font-weight: 500;
+
+    transition:
+        color 0.2s ease,
+        gap 0.2s ease;
+}
+
+.order-status-link i {
+    font-size: 7px;
+}
+
+.order-status-link:hover {
+    color: #60a5fa;
+    gap: 7px;
+}
+
+
+/* =========================================================
+   ANALYTICS
+========================================================= */
 
 .analytics-section {
-  display: grid;
+    display: grid;
 
-  grid-template-columns: minmax(0, 3fr) minmax(0, 1fr);
+    grid-template-columns:
+        minmax(0, 3fr)
+        minmax(280px, 1fr);
 
-  gap: 20px;
+    gap: 16px;
 }
 
-.sales-chart,
-.visitor-chart {
-  background: var(--card-color);
 
-  border: 1px solid var(--border-color);
+/* =========================================================
+   SALES / REVENUE PANEL
+========================================================= */
 
-  border-radius: var(--border-radius);
-
-  padding: 10px;
+.sales-chart {
+    min-width: 0;
 }
 
-/* ==========================================
-   SALES CHART
-========================================== */
+
+/* =========================================================
+   CHART HEADER
+========================================================= */
 
 .chart-header {
-  display: flex;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
 
-  justify-content: space-between;
+    gap: 20px;
 
-  align-items: flex-start;
-
-  margin-bottom: 20px;
+    padding: 17px 18px 12px;
 }
 
-.chart-title h4 {
-  font-size: 14px;
 
-  color: var(--text-light);
-
-  margin-bottom: 8px;
-}
+/* =========================================================
+   CHART INCOME
+========================================================= */
 
 .chart-income {
-  display: flex;
+    min-width: 0;
 
-  align-items: center;
+    display: flex;
+    flex-direction: column;
+}
 
-  gap: 10px;
+.chart-income .panel-eyebrow {
+    margin-bottom: 4px;
+}
+
+.chart-income h3 {
+    margin: 0;
+
+    color: #f8fafc;
+
+    font-size: 13px;
+    line-height: 1.3;
+
+    font-weight: 600;
 }
 
 .chart-income h2 {
-  font-size: 26px;
+    margin: 6px 0 0;
 
-  font-weight: 500;
+    color: #f8fafc;
 
-  color: #fff;
+    font-size: 23px;
+    line-height: 1.15;
+
+    font-weight: 600;
+
+    letter-spacing: -0.02em;
 }
 
-.chart-income span {
-  color: #22c55e;
+.chart-income > p:last-child {
+    margin: 5px 0 0;
 
-  font-weight: 600;
+    color: #64748b;
+
+    font-size: 9px;
+    line-height: 1.4;
 }
 
-.chart-filter select {
-  background: #252b42;
 
-  color: #fff;
+/* =========================================================
+   REVENUE FILTER
+========================================================= */
 
-  border: 1px solid var(--border-color);
-
-  padding: 8px 15px;
-
-  border-radius: 10px;
-
-  outline: none;
+.chart-filter {
+    flex-shrink: 0;
 }
 
-/* ============================================
-   
-   ============================================ */
+.revenue-period-select {
+    width: 145px;
+    height: 34px;
+
+    padding: 0 30px 0 10px;
+
+    appearance: none;
+    -webkit-appearance: none;
+
+    background-color: #101010;
+
+    background-image:
+        linear-gradient(
+            45deg,
+            transparent 50%,
+            #64748b 50%
+        ),
+        linear-gradient(
+            135deg,
+            #64748b 50%,
+            transparent 50%
+        );
+
+    background-position:
+        calc(100% - 14px) 14px,
+        calc(100% - 10px) 14px;
+
+    background-size:
+        4px 4px,
+        4px 4px;
+
+    background-repeat: no-repeat;
+
+    color: #cbd5e1;
+
+    border: 1px solid var(--border-color);
+    border-radius: 7px;
+
+    outline: none;
+
+    font-family: inherit;
+    font-size: 9px;
+    font-weight: 500;
+
+    cursor: pointer;
+
+    transition:
+        border-color 0.25s ease,
+        background-color 0.25s ease;
+}
+
+.revenue-period-select:hover,
+.revenue-period-select:focus {
+    background-color: #141414;
+
+    border-color:
+        rgba(96, 165, 250, 0.30);
+}
+
+.revenue-period-select option {
+    background: #111111;
+    color: #f8fafc;
+}
+
+
+/* =========================================================
+   CHART BODY
+========================================================= */
+
 .chart-body {
-  position: relative;
+    position: relative;
 
-  height: 320px;
+    width: 100%;
+    height: 300px;
 
-  display: flex;
-
-  justify-content: center;
-
-  align-items: center;
-
-  color: var(--text-light);
-
-  border: 2px dashed var(--border-color);
-
-  border-radius: 10px;
+    padding: 8px 14px 14px;
 }
-/* 
-
-.chart-body canvas{
-
-    width:100% !important;
-
-    height:100% !important;
-
-} */
-
-/* ==========================================
-   RECENT ORDERS
-========================================== */
-
-.recent-orders {
-  background: var(--card-color);
-
-  border: 1px solid var(--border-color);
-
-  border-radius: var(--border-radius);
-  margin-top: 15px;
-  padding: 25px;
-
-  overflow-x: auto;
-}
-
-.recent-orders table {
-  width: 100%;
-
-  border-collapse: collapse;
-}
-
-.recent-orders th {
-  text-align: left;
-  padding: 10px;
-  font-size: 13px;
-  color: var(--text-light);
-  background-color: var(--table-head);
-  border-right: 1px solid rgba(255, 255, 255, 0.05);
-  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
-}
-
-.recent-orders td {
-  padding: 10px;
-  font-size: 11px;
-  border-right: 1px solid rgba(255, 255, 255, 0.05);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.recent-orders tbody tr {
-  transition: var(--transition);
-}
-
-.recent-orders tbody tr:hover {
-  background: rgba(255, 255, 255, 0.03);
-
-}
-
-/* ==========================================
-   BOTTOM WIDGETS
-========================================== */
-
-.bottom-widgets {
-  display: grid;
-
-  grid-template-columns: 1fr 1fr;
-
-  gap: 20px;
-}
-
-.top-products,
-.recent-activity {
-  background: var(--card-color);
-
-  border: 1px solid var(--border-color);
-
-  border-radius: var(--border-radius);
-
-  padding: 25px;
-}
-
-.widget-body {
-  height: 280px;
-
-  display: flex;
-
-  justify-content: center;
-
-  align-items: center;
-
-  color: var(--text-light);
-
-  border: 2px dashed var(--border-color);
-
-  border-radius: 10px;
-}
-
-/* ==========================================
-   RESPONSIVE
-========================================== */
-
-@media (max-width: 1200px) {
-  .statistics-section {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 992px) {
-  .analytics-section {
-    grid-template-columns: 1fr;
-  }
-
-  .bottom-widgets {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 768px) {
-  .statistics-section {
-    grid-template-columns: 1fr;
-  }
-
-  .stat-card {
-    padding: 20px;
-  }
-
-  .sales-chart,
-  .visitor-chart,
-  .recent-orders,
-  .top-products,
-  .recent-activity {
-    padding: 20px;
-  }
-
-  .chart-body,
-  .widget-body {
-    height: 220px;
-  }
-}
-
-/* ==========================================
-   CHART CARD
-========================================== */
-
-.sales-chart,
-.visitor-chart {
-  transition: 0.35s ease;
-}
-
-.sales-chart:hover,
-.visitor-chart:hover {
-  transform: translateY(-4px);
-
-  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.28);
-}
-
-/* ==========================================
-   CHART CANVAS
-========================================== */
-/* 
-.chart-body{
-
-    position:relative;
-
-    overflow:hidden;
-    border: none;
-
-
-} */
 
 .chart-body canvas {
-  max-width: 100% !important;
+    display: block;
 
-  height: 100% !important;
+    width: 100% !important;
+    height: 100% !important;
+}
 
-  display: block;
+
+/* =========================================================
+   STORE OVERVIEW
+========================================================= */
+
+.visitor-chart {
+    min-width: 0;
+}
+
+
+/* =========================================================
+   STORE STAT GRID
+========================================================= */
+
+.store-overview-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 1px;
+
+    background: rgba(255, 255, 255, 0.045);
+}
+
+
+/* =========================================================
+   STORE STAT
+========================================================= */
+
+.store-stat {
+    min-width: 0;
+
+    min-height: 112px;
+
+    padding: 16px;
+
+    background: var(--card-color);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    transition:
+        background 0.25s ease;
+}
+
+.store-stat:hover {
+    background: rgba(255, 255, 255, 0.025);
+}
+
+
+/* =========================================================
+   STORE STAT LABEL
+========================================================= */
+
+.store-stat-label {
+    display: block;
+
+    margin-bottom: 7px;
+
+    color: #64748b;
+
+    font-size: 9px;
+    line-height: 1.3;
+
+    font-weight: 500;
+}
+
+
+/* =========================================================
+   STORE STAT VALUE
+========================================================= */
+
+.store-stat-value {
+    display: block;
+
+    color: #f8fafc;
+
+    font-size: 21px;
+    line-height: 1.1;
+
+    font-weight: 600;
+}
+
+.store-stat-value.warning {
+    color: #f59e0b;
+}
+
+.store-stat-value.danger {
+    color: #ef4444;
+}
+
+
+/* =========================================================
+   STORE STAT LINK
+========================================================= */
+
+.store-stat-link {
+    display: inline-block;
+
+    width: fit-content;
+
+    margin-top: 7px;
+
+    color: #60a5fa;
+
+    font-size: 8px;
+    font-weight: 500;
+
+    transition: color 0.2s ease;
+}
+
+.store-stat-link:hover {
+    color: #93c5fd;
+}
+
+
+/* =========================================================
+   RECENT ORDERS
+========================================================= */
+
+.recent-orders {
+    min-width: 0;
+}
+
+
+/* =========================================================
+   ORDERS TABLE WRAPPER
+========================================================= */
+
+.orders-table-wrapper {
+    width: 100%;
+
+    overflow-x: auto;
+
+    scrollbar-width: thin;
+    scrollbar-color: #2c2c2c transparent;
+}
+
+.orders-table-wrapper::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+}
+
+.orders-table-wrapper::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.orders-table-wrapper::-webkit-scrollbar-thumb {
+    background: #2c2c2c;
+    border-radius: 10px;
+}
+
+
+/* =========================================================
+   ORDERS TABLE
+========================================================= */
+
+.orders-table {
+    width: 100%;
+
+    min-width: 900px;
+
+    border-collapse: collapse;
+
+    table-layout: auto;
+}
+
+
+/* =========================================================
+   TABLE HEAD
+========================================================= */
+
+.orders-table th {
+    padding: 11px 14px;
+
+    text-align: left;
+    white-space: nowrap;
+
+    background: var(--table-head);
+
+    border-bottom:
+        1px solid rgba(255, 255, 255, 0.06);
+
+    color: #64748b;
+
+    font-size: 8px;
+    line-height: 1.2;
+
+    font-weight: 600;
+
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+
+/* =========================================================
+   TABLE BODY
+========================================================= */
+
+.orders-table td {
+    padding: 12px 14px;
+
+    white-space: nowrap;
+
+    border-bottom:
+        1px solid rgba(255, 255, 255, 0.045);
+
+    color: #cbd5e1;
+
+    font-size: 9px;
+    line-height: 1.3;
+}
+
+.orders-table tbody tr {
+    transition:
+        background 0.2s ease;
+}
+
+.orders-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.025);
+}
+
+.orders-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+
+/* =========================================================
+   ORDER TABLE ELEMENTS
+========================================================= */
+
+.order-number {
+    color: #f8fafc;
+    font-weight: 600;
+}
+
+.customer-name {
+    color: #e2e8f0;
+    font-weight: 500;
+}
+
+.customer-type {
+    display: block;
+
+    margin-top: 3px;
+
+    color: #64748b;
+
+    font-size: 7px;
+}
+
+.order-items-count {
+    color: #94a3b8;
+}
+
+.order-total {
+    color: #f8fafc;
+    font-weight: 600;
+}
+
+.payment-method {
+    color: #cbd5e1;
+
+    font-size: 8px;
+    font-weight: 500;
+}
+
+.payment-status {
+    display: inline-block;
+
+    margin-top: 4px;
+
+    font-size: 7px;
+    font-weight: 600;
+
+    text-transform: capitalize;
+}
+
+
+/* =========================================================
+   PAYMENT STATUS COLORS
+========================================================= */
+
+.payment-status.pending {
+    color: #f59e0b;
+}
+
+.payment-status.paid {
+    color: #22c55e;
+}
+
+.payment-status.failed {
+    color: #ef4444;
+}
+
+
+/* =========================================================
+   ORDER STATUS BADGE
+========================================================= */
+
+.order-status-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 20px;
+
+    padding: 4px 7px;
+
+    border-radius: 5px;
+
+    font-size: 7px;
+    line-height: 1;
+
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   ORDER STATUS COLORS
+========================================================= */
+
+.order-status-badge.pending {
+    color: #f59e0b;
+    background: rgba(245, 158, 11, 0.09);
+}
+
+.order-status-badge.confirmed {
+    color: #60a5fa;
+    background: rgba(96, 165, 250, 0.09);
+}
+
+.order-status-badge.processing {
+    color: #60a5fa;
+    background: rgba(96, 165, 250, 0.09);
+}
+
+.order-status-badge.shipped {
+    color: #06b6d4;
+    background: rgba(6, 182, 212, 0.09);
+}
+
+.order-status-badge.delivered {
+    color: #22c55e;
+    background: rgba(34, 197, 94, 0.09);
+}
+
+.order-status-badge.cancelled {
+    color: #ef4444;
+    background: rgba(239, 68, 68, 0.09);
+}
+
+
+/* =========================================================
+   ORDER DATE
+========================================================= */
+
+.order-date {
+    color: #64748b;
+    font-size: 8px;
+}
+
+
+/* =========================================================
+   ORDER VIEW BUTTON
+========================================================= */
+
+.order-view {
+    width: 27px;
+    height: 27px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 7px;
+
+    color: #64748b;
+
+    background: rgba(255, 255, 255, 0.025);
+
+    transition:
+        color 0.25s ease,
+        background 0.25s ease,
+        transform 0.25s ease;
+}
+
+.order-view i {
+    font-size: 9px;
+}
+
+.order-view:hover {
+    color: #60a5fa;
+
+    background: rgba(37, 99, 235, 0.10);
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   EMPTY TABLE
+========================================================= */
+
+.empty-table {
+    padding: 35px 20px !important;
+
+    text-align: center !important;
+
+    color: #64748b !important;
+
+    font-size: 9px !important;
+}
+
+.empty-table i {
+    margin-right: 6px;
+
+    color: #475569;
+}
+
+
+/* =========================================================
+   BOTTOM WIDGETS
+========================================================= */
+
+.bottom-widgets {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1.25fr)
+        minmax(0, 1fr);
+
+    gap: 16px;
+}
+
+
+/* =========================================================
+   TOP PRODUCTS
+========================================================= */
+
+.top-products {
+    min-width: 0;
+}
+
+
+/* =========================================================
+   PRODUCT LIST
+========================================================= */
+
+.product-list {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    padding: 4px 18px 10px;
+}
+
+
+/* =========================================================
+   PRODUCT LIST ITEM
+========================================================= */
+
+.product-list-item {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    min-width: 0;
+
+    padding: 11px 0;
+
+    border-bottom:
+        1px solid rgba(255, 255, 255, 0.045);
+}
+
+.product-list-item:last-child {
+    border-bottom: none;
+}
+
+
+/* =========================================================
+   PRODUCT RANK
+========================================================= */
+
+.product-rank {
+    flex: 0 0 22px;
+
+    color: #475569;
+
+    font-size: 8px;
+    font-weight: 600;
+
+    text-align: center;
+}
+
+
+/* =========================================================
+   PRODUCT THUMB
+========================================================= */
+
+.product-thumb {
+    flex: 0 0 39px;
+
+    width: 39px;
+    height: 39px;
+
+    overflow: hidden;
+
+    border-radius: 7px;
+
+    background: #101010;
+
+    border:
+        1px solid rgba(255, 255, 255, 0.06);
+}
+
+.product-thumb img {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    object-fit: cover;
+}
+
+.product-placeholder {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #475569;
+
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   PRODUCT INFO
+========================================================= */
+
+.product-info {
+    min-width: 0;
+    flex: 1;
+}
+
+.product-name {
+    margin: 0;
+
+    color: #e2e8f0;
+
+    font-size: 9px;
+    line-height: 1.3;
+
+    font-weight: 500;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.product-code {
+    display: block;
+
+    margin-top: 4px;
+
+    color: #64748b;
+
+    font-size: 7px;
+}
+
+
+/* =========================================================
+   PRODUCT SOLD
+========================================================= */
+
+.product-sold {
+    flex-shrink: 0;
+
+    text-align: right;
+}
+
+.product-sold strong {
+    display: block;
+
+    color: #f8fafc;
+
+    font-size: 11px;
+    line-height: 1.1;
+
+    font-weight: 600;
+}
+
+.product-sold span {
+    display: block;
+
+    margin-top: 3px;
+
+    color: #64748b;
+
+    font-size: 7px;
+}
+
+
+/* =========================================================
+   QUICK ACTIONS
+========================================================= */
+
+.quick-actions {
+    min-width: 0;
+}
+
+
+/* =========================================================
+   QUICK ACTION GRID
+========================================================= */
+
+.quick-action-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 10px;
+
+    padding: 16px 18px 18px;
+}
+
+
+/* =========================================================
+   QUICK ACTION
+========================================================= */
+
+.quick-action {
+    min-width: 0;
+
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 12px;
+
+    background: rgba(255, 255, 255, 0.018);
+
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+
+    color: #cbd5e1;
+
+    transition:
+        transform 0.25s ease,
+        background 0.25s ease,
+        border-color 0.25s ease,
+        color 0.25s ease;
+}
+
+.quick-action:hover {
+    transform: translateY(-2px);
+
+    background: rgba(37, 99, 235, 0.07);
+
+    border-color:
+        rgba(96, 165, 250, 0.20);
+
+    color: #f8fafc;
+}
+
+
+/* =========================================================
+   QUICK ACTION ICON
+========================================================= */
+
+.quick-action-icon {
+    flex: 0 0 31px;
+
+    width: 31px;
+    height: 31px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 7px;
+
+    background: rgba(37, 99, 235, 0.10);
+
+    color: #60a5fa;
+
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   QUICK ACTION TEXT
+========================================================= */
+
+.quick-action-text {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.quick-action-title {
+    color: #e2e8f0;
+
+    font-size: 8px;
+    line-height: 1.3;
+
+    font-weight: 600;
+}
+
+.quick-action-description {
+    margin-top: 3px;
+
+    color: #64748b;
+
+    font-size: 7px;
+    line-height: 1.3;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+/* =========================================================
+   GENERAL SCROLLBAR
+========================================================= */
+
+.dashboard-container ::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+}
+
+.dashboard-container ::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.dashboard-container ::-webkit-scrollbar-thumb {
+    background: #292929;
+    border-radius: 10px;
+}
+
+.dashboard-container ::-webkit-scrollbar-thumb:hover {
+    background: #3a3a3a;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1200px) {
+
+    .statistics-section {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .order-status-grid {
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr));
+    }
+
+    .analytics-section {
+        grid-template-columns: 1fr;
+    }
+
+    .bottom-widgets {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 992px) {
+
+    .dashboard-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .dashboard-date {
+        align-self: flex-start;
+    }
+
+    .order-status-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .chart-body {
+        height: 280px;
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 768px) {
+
+    .dashboard-container {
+        gap: 15px;
+    }
+
+    .dashboard-header h1 {
+        font-size: 22px;
+    }
+
+    .dashboard-description {
+        font-size: 10px;
+    }
+
+    .statistics-section {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 10px;
+    }
+
+    .stat-card {
+        padding: 14px;
+
+        gap: 9px;
+    }
+
+    .stat-content h2 {
+        font-size: 19px;
+    }
+
+    .stat-icon {
+        flex-basis: 36px;
+
+        width: 36px;
+        height: 36px;
+
+        border-radius: 9px;
+
+        font-size: 14px;
+    }
+
+    .stat-label {
+        font-size: 9px;
+    }
+
+    .stat-meta {
+        font-size: 7px;
+    }
+
+    .order-status-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .order-status-item {
+        padding: 14px;
+    }
+
+    .order-status-count {
+        font-size: 18px;
+    }
+
+    .chart-header {
+        flex-direction: column;
+
+        gap: 12px;
+
+        padding: 15px 14px 10px;
+    }
+
+    .chart-filter {
+        width: 100%;
+    }
+
+    .revenue-period-select {
+        width: 100%;
+    }
+
+    .chart-body {
+        height: 240px;
+
+        padding:
+            6px 9px 10px;
+    }
+
+    .panel-header {
+        padding: 15px 14px;
+    }
+
+    .store-stat {
+        min-height: 105px;
+
+        padding: 13px;
+    }
+
+    .store-stat-value {
+        font-size: 19px;
+    }
+
+    .product-list {
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+
+    .quick-action-grid {
+        padding:
+            14px;
+    }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 576px) {
+
+    .statistics-section {
+        grid-template-columns: 1fr;
+    }
+
+    .stat-card {
+        padding: 15px;
+    }
+
+    .stat-content h2 {
+        font-size: 20px;
+    }
+
+    .order-status-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .order-status-item {
+        min-height: 92px;
+    }
+
+    .analytics-section {
+        gap: 12px;
+    }
+
+    .chart-income h2 {
+        font-size: 20px;
+    }
+
+    .store-overview-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .bottom-widgets {
+        gap: 12px;
+    }
+
+    .quick-action-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 8px;
+    }
+
+    .quick-action {
+        padding: 10px;
+
+        gap: 7px;
+    }
+
+    .quick-action-icon {
+        flex-basis: 28px;
+
+        width: 28px;
+        height: 28px;
+
+        font-size: 10px;
+    }
+
+    .quick-action-title {
+        font-size: 8px;
+    }
+
+    .quick-action-description {
+        font-size: 6.5px;
+    }
+}
+
+
+/* =========================================================
+   VERY SMALL MOBILE
+========================================================= */
+
+@media (max-width: 380px) {
+
+    .dashboard-header h1 {
+        font-size: 20px;
+    }
+
+    .statistics-section {
+        grid-template-columns: 1fr;
+    }
+
+    .store-overview-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .quick-action-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .chart-body {
+        height: 210px;
+    }
+
+    .dashboard-date {
+        width: 100%;
+    }
 }
