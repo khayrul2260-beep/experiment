@@ -5,8 +5,8 @@ from experiment1.models import *
 from django.contrib.auth import get_user_model
 
 
-
 User = get_user_model()
+
 
 def customers_page(request):
 
@@ -20,7 +20,7 @@ def customers_page(request):
         .prefetch_related(
             "orders__items"
         )
-        .order_by("-date_joined")
+        .order_by("-last_login", "-date_joined")
     )
 
 
@@ -59,23 +59,55 @@ def customers_page(request):
         )
 
 
+        # -----------------------------------------------------
+        # LOGIN TIME
+        #
+        # Registered customer:
+        # last_login is the primary sorting value.
+        #
+        # If the customer has never logged in,
+        # date_joined is used as fallback.
+        # -----------------------------------------------------
+
+        last_login = (
+            customer.last_login
+            or customer.date_joined
+        )
+
+
         registered_customer_data.append({
+
             "id": customer.id,
+
             "name": (
                 customer.get_full_name()
                 or customer.username
             ),
+
             "username": customer.username,
+
             "email": customer.email,
-            "phone": getattr(customer, "phone", ""),
+
+            "phone": getattr(
+                customer,
+                "phone",
+                ""
+            ),
+
             "profile_image": customer.profile_image,
+
             "type": "REGISTERED",
 
             "total_orders": total_orders,
+
             "total_items": total_items,
+
             "total_spent": total_spent,
 
             "date_joined": customer.date_joined,
+
+            "last_login": last_login,
+
             "last_order": (
                 last_order.created_at
                 if last_order
@@ -83,11 +115,13 @@ def customers_page(request):
             ),
 
             "is_active": customer.is_active,
+
             "status": (
                 "Active"
                 if customer.is_active
                 else "Inactive"
             ),
+
         })
 
 
@@ -142,8 +176,6 @@ def customers_page(request):
 
         else:
 
-            # No phone/email available.
-            # Keep this order as a separate guest.
             guest_key = f"order:{order.id}"
 
 
@@ -154,6 +186,7 @@ def customers_page(request):
         if guest_key not in guest_groups:
 
             guest_groups[guest_key] = {
+
                 "id": guest_key,
 
                 "name": order.full_name,
@@ -178,11 +211,14 @@ def customers_page(request):
 
                 "date_joined": order.created_at,
 
+                "last_login": order.created_at,
+
                 "last_order": order.created_at,
 
                 "is_active": True,
 
                 "status": "Guest",
+
             }
 
 
@@ -193,11 +229,13 @@ def customers_page(request):
         # ORDER COUNT
         # -----------------------------------------------------
 
-        guest["orders"].append(
-            order.id
-        )
+        if order.status != "Cancelled":
 
-        guest["total_orders"] += 1
+            guest["orders"].append(
+                order.id
+            )
+
+            guest["total_orders"] += 1
 
 
         # -----------------------------------------------------
@@ -235,12 +273,20 @@ def customers_page(request):
 
 
         # -----------------------------------------------------
-        # LAST ORDER
+        # LAST ORDER / ACTIVITY
         # -----------------------------------------------------
 
         if order.created_at > guest["last_order"]:
 
             guest["last_order"] = (
+                order.created_at
+            )
+
+            # Guest has no login.
+            # Last order is therefore used as
+            # their latest activity time.
+
+            guest["last_login"] = (
                 order.created_at
             )
 
@@ -261,15 +307,23 @@ def customers_page(request):
 
 
     # =========================================================
-    # PURCHASE RANKING
+    # DEFAULT SORT
     #
-    # Highest total item quantity first
+    # LATEST LOGIN / ACTIVITY FIRST
+    #
+    # Registered:
+    #     last_login
+    #
+    # Guest:
+    #     last_order / last activity
+    #
+    # Every customer already has last_login value.
     # =========================================================
 
     customers.sort(
         key=lambda customer: (
-            customer["total_items"],
-            customer["total_orders"],
+            customer["last_login"]
+            or customer["date_joined"]
         ),
         reverse=True
     )
@@ -343,7 +397,6 @@ def customers_page(request):
         "admin_dashboard/customers.html",
         context
     )
-
 
 def customer_details_page(request, customer_id):
 

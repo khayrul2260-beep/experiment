@@ -1,14 +1,907 @@
 {% extends 'admin_dashboard/master/base.html' %}
-{% load static %} 
-{% block title %} 
-Inventory    
-{% endblock %} 
+{% load static %}
+
+{% block title %}
+Inventory
+{% endblock %}
+
 {% block css %}
-{% endblock %} {% block page_title %} Inventory {% endblock %}
+<link
+  rel="stylesheet"
+  href="{% static 'admin_panel/css/inventory.css' %}"
+/>
+{% endblock %}
 
 {% block content %}
-    
-    <h1>Inventory page</h1>
+
+<div class="inventory-page">
+
+  <!-- =========================================================
+       PAGE HEADER
+  ========================================================== -->
+  <div class="inventory-header">
+
+    <div class="inventory-heading">
+      <span class="inventory-eyebrow">INVENTORY</span>
+
+      <h1>Stock Management</h1>
+
+      <p>
+        Monitor product stock and manage size-wise inventory.
+      </p>
+    </div>
+
+    <button
+      type="button"
+      class="inventory-refresh-btn"
+      id="inventoryRefreshBtn"
+    >
+      <i class="bi bi-arrow-clockwise"></i>
+      <span>Refresh</span>
+    </button>
+
+  </div>
+
+
+  <!-- =========================================================
+       SUMMARY CARDS
+  ========================================================== -->
+  <div class="inventory-summary-grid">
+
+    <!-- Total Products -->
+    <div class="inventory-summary-card">
+
+      <div class="summary-card-top">
+        <span class="summary-label">
+          Total Products
+        </span>
+
+        <span class="summary-icon">
+          <i class="bi bi-box-seam"></i>
+        </span>
+      </div>
+
+      <div class="summary-value" id="totalProductsCount">
+        {{ total_products }}
+      </div>
+
+      <div class="summary-description">
+        Products in inventory
+      </div>
+
+    </div>
+
+
+    <!-- In Stock -->
+    <div class="inventory-summary-card">
+
+      <div class="summary-card-top">
+        <span class="summary-label">
+          In Stock
+        </span>
+
+        <span class="summary-icon">
+          <i class="bi bi-check2-circle"></i>
+        </span>
+      </div>
+
+      <div class="summary-value" id="inStockCount">
+        {{ in_stock_count }}
+      </div>
+
+      <div class="summary-description">
+        More than 5 units
+      </div>
+
+    </div>
+
+
+    <!-- Low Stock -->
+    <div class="inventory-summary-card">
+
+      <div class="summary-card-top">
+        <span class="summary-label">
+          Low Stock
+        </span>
+
+        <span class="summary-icon">
+          <i class="bi bi-exclamation-circle"></i>
+        </span>
+      </div>
+
+      <div class="summary-value" id="lowStockCount">
+        {{ low_stock_count }}
+      </div>
+
+      <div class="summary-description">
+        1 to 5 units remaining
+      </div>
+
+    </div>
+
+
+    <!-- Out of Stock -->
+    <div class="inventory-summary-card">
+
+      <div class="summary-card-top">
+        <span class="summary-label">
+          Out of Stock
+        </span>
+
+        <span class="summary-icon">
+          <i class="bi bi-x-circle"></i>
+        </span>
+      </div>
+
+      <div class="summary-value" id="outOfStockCount">
+        {{ out_of_stock_count }}
+      </div>
+
+      <div class="summary-description">
+        No stock available
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================================================
+       FILTER / SEARCH TOOLBAR
+  ========================================================== -->
+  <div class="inventory-toolbar">
+
+    <!-- Search -->
+    <div class="inventory-search">
+
+      <i class="bi bi-search"></i>
+
+      <input
+        type="text"
+        id="inventorySearch"
+        placeholder="Search product or code..."
+        autocomplete="off"
+      />
+
+    </div>
+
+
+    <!-- Stock Status -->
+    <div class="inventory-filter">
+
+      <select id="stockStatusFilter">
+
+        <option value="all">
+          All Stock
+        </option>
+
+        <option value="in-stock">
+          In Stock
+        </option>
+
+        <option value="low-stock">
+          Low Stock
+        </option>
+
+        <option value="out-of-stock">
+          Out of Stock
+        </option>
+
+      </select>
+
+    </div>
+
+
+    <!-- Category -->
+    <div class="inventory-filter">
+
+      <select id="inventoryCategoryFilter">
+
+        <option value="all">
+          All Categories
+        </option>
+
+        {% regroup inventory_products by category as category_list %}
+
+        {% for category in category_list %}
+
+          {% if category.grouper %}
+
+          <option value="{{ category.grouper|lower }}">
+            {{ category.grouper }}
+          </option>
+
+          {% endif %}
+
+        {% endfor %}
+
+      </select>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================================================
+       DESKTOP INVENTORY TABLE
+  ========================================================== -->
+  <div class="inventory-table-wrapper">
+
+    <table class="inventory-table">
+
+      <thead>
+
+        <tr>
+
+          <th class="inventory-product-column">
+            Product
+          </th>
+
+          <th>
+            M
+          </th>
+
+          <th>
+            L
+          </th>
+
+          <th>
+            XL
+          </th>
+
+          <th>
+            XXL
+          </th>
+
+          <th>
+            Total
+          </th>
+
+          <th>
+            Status
+          </th>
+
+          <th>
+            Updated
+          </th>
+
+          <th class="inventory-action-column">
+            Action
+          </th>
+
+        </tr>
+
+      </thead>
+
+
+      <tbody id="inventoryTableBody">
+
+        {% for product in inventory_products %}
+
+        <tr
+          class="inventory-row"
+          data-product-id="{{ product.id }}"
+          data-product-name="{{ product.name|lower }}"
+          data-product-code="{{ product.product_code|lower }}"
+          data-category="{{ product.category|lower }}"
+          data-status="{{ product.status }}"
+          data-total="{{ product.total }}"
+        >
+
+          <!-- Product -->
+          <td>
+
+            <div class="inventory-product">
+
+              <div class="inventory-product-image">
+
+                {% if product.image %}
+
+                  <img
+                    src="{{ product.image }}"
+                    alt="{{ product.name }}"
+                    loading="lazy"
+                  />
+
+                {% else %}
+
+                  <div class="inventory-no-image">
+                    <i class="bi bi-image"></i>
+                  </div>
+
+                {% endif %}
+
+              </div>
+
+
+              <div class="inventory-product-info">
+
+                <span class="inventory-product-name">
+                  {{ product.name }}
+                </span>
+
+                <span class="inventory-product-code">
+                  {{ product.product_code }}
+                </span>
+
+              </div>
+
+            </div>
+
+          </td>
+
+
+          <!-- M -->
+          <td>
+            <span
+              class="stock-number"
+              data-size="M"
+            >
+              {{ product.M }}
+            </span>
+          </td>
+
+
+          <!-- L -->
+          <td>
+            <span
+              class="stock-number"
+              data-size="L"
+            >
+              {{ product.L }}
+            </span>
+          </td>
+
+
+          <!-- XL -->
+          <td>
+            <span
+              class="stock-number"
+              data-size="XL"
+            >
+              {{ product.XL }}
+            </span>
+          </td>
+
+
+          <!-- XXL -->
+          <td>
+            <span
+              class="stock-number"
+              data-size="XXL"
+            >
+              {{ product.XXL }}
+            </span>
+          </td>
+
+
+          <!-- Total -->
+          <td>
+
+            <span
+              class="inventory-total"
+              data-total
+            >
+              {{ product.total }}
+            </span>
+
+          </td>
+
+
+          <!-- Status -->
+          <td>
+
+            {% if product.status == "in-stock" %}
+
+              <span class="inventory-status status-in-stock">
+                In Stock
+              </span>
+
+            {% elif product.status == "low-stock" %}
+
+              <span class="inventory-status status-low-stock">
+                Low Stock
+              </span>
+
+            {% else %}
+
+              <span class="inventory-status status-out-of-stock">
+                Out of Stock
+              </span>
+
+            {% endif %}
+
+          </td>
+
+
+          <!-- Updated -->
+          <td>
+
+            <span class="inventory-updated">
+
+              {{ product.updated_at|date:"d M Y" }}
+
+            </span>
+
+          </td>
+
+
+          <!-- Action -->
+          <td>
+
+            <button
+              type="button"
+              class="inventory-manage-btn"
+              data-product-id="{{ product.id }}"
+              data-product-name="{{ product.name }}"
+              data-stock-m="{{ product.M }}"
+              data-stock-l="{{ product.L }}"
+              data-stock-xl="{{ product.XL }}"
+              data-stock-xxl="{{ product.XXL }}"
+            >
+
+              <i class="bi bi-pencil"></i>
+
+              <span>
+                Manage
+              </span>
+
+            </button>
+
+          </td>
+
+        </tr>
+
+        {% empty %}
+
+        <tr>
+
+          <td
+            colspan="9"
+            class="inventory-empty-table"
+          >
+
+            <div>
+
+              <i class="bi bi-box-seam"></i>
+
+              <span>
+                No products found.
+              </span>
+
+            </div>
+
+          </td>
+
+        </tr>
+
+        {% endfor %}
+
+      </tbody>
+
+    </table>
+
+
+    <!-- =======================================================
+         EMPTY FILTER STATE
+    ======================================================== -->
+    <div
+      class="inventory-empty-state"
+      id="inventoryEmptyState"
+      style="display: none;"
+    >
+
+      <div class="inventory-empty-icon">
+
+        <i class="bi bi-search"></i>
+
+      </div>
+
+      <h3>
+        No products found
+      </h3>
+
+      <p>
+        Try changing your search or filter.
+      </p>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================================================
+       MOBILE INVENTORY LIST
+  ========================================================== -->
+  <div
+    class="inventory-mobile-list"
+    id="inventoryMobileList"
+  >
+
+    {% for product in inventory_products %}
+
+    <div
+      class="inventory-mobile-card"
+      data-product-id="{{ product.id }}"
+      data-product-name="{{ product.name|lower }}"
+      data-product-code="{{ product.product_code|lower }}"
+      data-category="{{ product.category|lower }}"
+      data-status="{{ product.status }}"
+      data-total="{{ product.total }}"
+    >
+
+      <!-- Mobile Product Header -->
+      <div class="mobile-inventory-product">
+
+        <div class="mobile-inventory-image">
+
+          {% if product.image %}
+
+            <img
+              src="{{ product.image }}"
+              alt="{{ product.name }}"
+              loading="lazy"
+            />
+
+          {% else %}
+
+            <div class="inventory-no-image">
+              <i class="bi bi-image"></i>
+            </div>
+
+          {% endif %}
+
+        </div>
+
+
+        <div class="mobile-inventory-product-info">
+
+          <span class="mobile-inventory-product-name">
+            {{ product.name }}
+          </span>
+
+          <span class="mobile-inventory-product-code">
+            {{ product.product_code }}
+          </span>
+
+        </div>
+
+
+        {% if product.status == "in-stock" %}
+
+          <span class="inventory-status status-in-stock">
+            In Stock
+          </span>
+
+        {% elif product.status == "low-stock" %}
+
+          <span class="inventory-status status-low-stock">
+            Low Stock
+          </span>
+
+        {% else %}
+
+          <span class="inventory-status status-out-of-stock">
+            Out of Stock
+          </span>
+
+        {% endif %}
+
+      </div>
+
+
+      <!-- Mobile Size Stock -->
+      <div class="mobile-stock-grid">
+
+        <div class="mobile-stock-item">
+
+          <span>M</span>
+
+          <strong>
+            {{ product.M }}
+          </strong>
+
+        </div>
+
+
+        <div class="mobile-stock-item">
+
+          <span>L</span>
+
+          <strong>
+            {{ product.L }}
+          </strong>
+
+        </div>
+
+
+        <div class="mobile-stock-item">
+
+          <span>XL</span>
+
+          <strong>
+            {{ product.XL }}
+          </strong>
+
+        </div>
+
+
+        <div class="mobile-stock-item">
+
+          <span>XXL</span>
+
+          <strong>
+            {{ product.XXL }}
+          </strong>
+
+        </div>
+
+
+        <div class="mobile-stock-item mobile-stock-total">
+
+          <span>Total</span>
+
+          <strong>
+            {{ product.total }}
+          </strong>
+
+        </div>
+
+      </div>
+
+
+      <!-- Mobile Footer -->
+      <div class="mobile-inventory-footer">
+
+        <span class="mobile-inventory-updated">
+          Updated {{ product.updated_at|date:"d M Y" }}
+        </span>
+
+
+        <button
+          type="button"
+          class="inventory-manage-btn mobile-manage-btn"
+          data-product-id="{{ product.id }}"
+          data-product-name="{{ product.name }}"
+          data-stock-m="{{ product.M }}"
+          data-stock-l="{{ product.L }}"
+          data-stock-xl="{{ product.XL }}"
+          data-stock-xxl="{{ product.XXL }}"
+        >
+
+          <i class="bi bi-pencil"></i>
+
+          <span>
+            Manage
+          </span>
+
+        </button>
+
+      </div>
+
+    </div>
+
+    {% endfor %}
+
+  </div>
+
+
+  <!-- =========================================================
+       MANAGE STOCK MODAL
+  ========================================================== -->
+  <div
+    class="inventory-modal"
+    id="inventoryStockModal"
+    aria-hidden="true"
+  >
+
+    <div class="inventory-modal-overlay"></div>
+
+
+    <div
+      class="inventory-modal-dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="inventoryModalTitle"
+    >
+
+      <!-- Modal Header -->
+      <div class="inventory-modal-header">
+
+        <div>
+
+          <span class="inventory-modal-eyebrow">
+            MANAGE STOCK
+          </span>
+
+          <h2 id="inventoryModalTitle">
+            Product Stock
+          </h2>
+
+          <p id="inventoryModalProductName">
+            -
+          </p>
+
+        </div>
+
+
+        <button
+          type="button"
+          class="inventory-modal-close"
+          id="inventoryModalClose"
+          aria-label="Close"
+        >
+
+          <i class="bi bi-x-lg"></i>
+
+        </button>
+
+      </div>
+
+
+      <!-- Modal Body -->
+      <div class="inventory-modal-body">
+
+        <div class="inventory-stock-input-grid">
+
+          <!-- M -->
+          <div class="inventory-stock-field">
+
+            <label for="stockSizeM">
+              Size M
+            </label>
+
+            <input
+              type="number"
+              id="stockSizeM"
+              min="0"
+              step="1"
+              value="0"
+              inputmode="numeric"
+            />
+
+          </div>
+
+
+          <!-- L -->
+          <div class="inventory-stock-field">
+
+            <label for="stockSizeL">
+              Size L
+            </label>
+
+            <input
+              type="number"
+              id="stockSizeL"
+              min="0"
+              step="1"
+              value="0"
+              inputmode="numeric"
+            />
+
+          </div>
+
+
+          <!-- XL -->
+          <div class="inventory-stock-field">
+
+            <label for="stockSizeXL">
+              Size XL
+            </label>
+
+            <input
+              type="number"
+              id="stockSizeXL"
+              min="0"
+              step="1"
+              value="0"
+              inputmode="numeric"
+            />
+
+          </div>
+
+
+          <!-- XXL -->
+          <div class="inventory-stock-field">
+
+            <label for="stockSizeXXL">
+              Size XXL
+            </label>
+
+            <input
+              type="number"
+              id="stockSizeXXL"
+              min="0"
+              step="1"
+              value="0"
+              inputmode="numeric"
+            />
+
+          </div>
+
+        </div>
+
+
+        <!-- Total -->
+        <div class="inventory-modal-total">
+
+          <span>
+            Total Stock
+          </span>
+
+          <strong id="inventoryModalTotal">
+            0
+          </strong>
+
+        </div>
+
+
+        <!-- Information -->
+        <div class="inventory-modal-note">
+
+          <i class="bi bi-info-circle"></i>
+
+          <span>
+            Stock is managed separately for each size.
+            Total stock is automatically calculated.
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- Modal Footer -->
+      <div class="inventory-modal-footer">
+
+        <button
+          type="button"
+          class="inventory-modal-cancel"
+          id="inventoryModalCancel"
+        >
+          Cancel
+        </button>
+
+
+        <button
+          type="button"
+          class="inventory-modal-save"
+          id="inventoryModalSave"
+        >
+
+          <i class="bi bi-check2"></i>
+
+          <span>
+            Save Stock
+          </span>
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================================================
+       CSRF TOKEN
+  ========================================================== -->
+  <form
+    id="inventoryCsrfForm"
+    style="display: none;"
+  >
+    {% csrf_token %}
+  </form>
+
+
+</div>
 
 {% endblock %}
-    
+
+
+{% block js %}
+
+<script src="{% static 'admin_panel/js/inventory.js' %}"></script>
+
+{% endblock %}

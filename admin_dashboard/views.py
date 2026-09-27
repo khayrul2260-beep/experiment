@@ -1787,14 +1787,313 @@ def update_payment_status(request, order_number):
         order_number=order.order_number
     )
 
-
 def inventory_page(request):
 
-    return render(request, 'admin_dashboard/inventory.html', { "page_title": "Inventory" })  
+    products = (
+        ProductsModel.objects
+        .select_related("category")
+        .prefetch_related("sizes")
+        .order_by("-updated_at")
+    )
+
+    inventory_products = []
+
+    for product in products:
+
+        size_stock = {
+            "M": 0,
+            "L": 0,
+            "XL": 0,
+            "XXL": 0,
+        }
+
+        for size in product.sizes.all():
+
+            if size.size in size_stock:
+                size_stock[size.size] = size.stock
+
+        total_stock = sum(size_stock.values())
+
+        # -----------------------------------------
+        # Inventory status
+        # -----------------------------------------
+
+        if total_stock == 0:
+            inventory_status = "out-of-stock"
+
+        elif total_stock <= 5:
+            inventory_status = "low-stock"
+
+        else:
+            inventory_status = "in-stock"
+
+        inventory_products.append({
+            "id": product.id,
+            "name": product.name,
+            "product_code": product.product_code,
+
+            "image": (
+                product.image.url
+                if product.image
+                else ""
+            ),
+
+            "category": (
+                product.category.name
+                if product.category
+                else ""
+            ),
+
+            "M": size_stock["M"],
+            "L": size_stock["L"],
+            "XL": size_stock["XL"],
+            "XXL": size_stock["XXL"],
+
+            "total": total_stock,
+
+            "status": inventory_status,
+
+            "updated_at": product.updated_at,
+        })
+
+    # -----------------------------------------
+    # Summary
+    # -----------------------------------------
+
+    total_products = len(inventory_products)
+
+    in_stock_count = sum(
+        1
+        for product in inventory_products
+        if product["status"] == "in-stock"
+    )
+
+    low_stock_count = sum(
+        1
+        for product in inventory_products
+        if product["status"] == "low-stock"
+    )
+
+    out_of_stock_count = sum(
+        1
+        for product in inventory_products
+        if product["status"] == "out-of-stock"
+    )
+
+    context = {
+
+        "page_title": "Inventory",
+
+        "inventory_products": inventory_products,
+
+        "total_products": total_products,
+        "in_stock_count": in_stock_count,
+        "low_stock_count": low_stock_count,
+        "out_of_stock_count": out_of_stock_count,
+    }
+
+    return render(
+        request,
+        "admin_dashboard/inventory.html",
+        context
+    )
 
 
+# =========================================================
+# INVENTORY - UPDATE STOCK
+# =========================================================
 
 
+def update_inventory_stock(request):
+
+    if request.method != "POST":
+        return JsonResponse(
+            {
+                "success": False,
+                "message": "Invalid request method."
+            },
+            status=405
+        )
+
+    product_id = request.POST.get("product_id")
+
+    if not product_id:
+        return JsonResponse(
+            {
+                "success": False,
+                "message": "Product ID is required."
+            },
+            status=400
+        )
+
+    # -----------------------------------------------------
+    # STOCK VALUES
+    # -----------------------------------------------------
+
+    sizes = ["M", "L", "XL", "XXL"]
+    size_stock = {}
+
+    for size in sizes:
+
+        raw_value = request.POST.get(
+            f"stock_{size}"
+        )
+
+        if raw_value in (None, ""):
+            raw_value = "0"
+
+        try:
+            value = int(raw_value)
+
+        except (ValueError, TypeError):
+
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": f"Invalid stock value for size {size}."
+                },
+                status=400
+            )
+
+        if value < 0:
+
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": f"Stock cannot be negative for size {size}."
+                },
+                status=400
+            )
+
+        size_stock[size] = value
+
+    total_stock = sum(
+        size_stock.values()
+    )
+
+    # -----------------------------------------------------
+    # DATABASE UPDATE
+    # -----------------------------------------------------
+
+    try:
+
+        with transaction.atomic():
+
+            product = (
+                ProductsModel.objects
+                .select_for_update()
+                .get(id=product_id)
+            )
+
+            # ---------------------------------------------
+            # UPDATE PRODUCT SIZE STOCK
+            # ---------------------------------------------
+
+            for size in sizes:
+
+                stock_value = size_stock[size]
+
+                product_size, created = (
+                    ProductSize.objects.get_or_create(
+                        product=product,
+                        size=size,
+                        defaults={
+                            "stock": stock_value,
+                            "is_available": stock_value > 0,
+                        }
+                    )
+                )
+
+                if not created:
+
+                    product_size.stock = stock_value
+                    product_size.is_available = (
+                        stock_value > 0
+                    )
+
+                    product_size.save(
+                        update_fields=[
+                            "stock",
+                            "is_available",
+                            "updated_at",
+                        ]
+                    )
+
+            # ---------------------------------------------
+            # UPDATE PRODUCT TOTAL STOCK
+            # ---------------------------------------------
+
+            product.stock = total_stock
+
+            product.save()
+
+    except ProductsModel.DoesNotExist:
+
+        return JsonResponse(
+            {
+                "success": False,
+                "message": "Product not found."
+            },
+            status=404
+        )
+
+    except Exception as error:
+
+        print(
+            "Inventory update error:",
+            error
+        )
+
+        return JsonResponse(
+            {
+                "success": False,
+                "message": "Unable to update inventory."
+            },
+            status=500
+        )
+
+    # -----------------------------------------------------
+    # INVENTORY STATUS
+    # -----------------------------------------------------
+
+    if total_stock == 0:
+
+        inventory_status = "out-of-stock"
+
+    elif total_stock <= 5:
+
+        inventory_status = "low-stock"
+
+    else:
+
+        inventory_status = "in-stock"
+
+    # -----------------------------------------------------
+    # RESPONSE
+    # -----------------------------------------------------
+
+    return JsonResponse(
+        {
+            "success": True,
+            "message": "Stock updated successfully.",
+
+            "product_id": product.id,
+            "product_name": product.name,
+
+            "M": size_stock["M"],
+            "L": size_stock["L"],
+            "XL": size_stock["XL"],
+            "XXL": size_stock["XXL"],
+
+            "total": total_stock,
+
+            "status": inventory_status,
+
+            "updated_at": product.updated_at.strftime(
+                "%d %b %Y"
+            ),
+        }
+    )
 def coupons_page(request):
 
     return render(request, 'admin_dashboard/coupons.html', { "page_title": "Coupons" })   

@@ -1,14 +1,2024 @@
 {% extends 'admin_dashboard/master/base.html' %}
-{% load static %} 
-{% block title %} 
-Dashboard    
-{% endblock %} 
-{% block css %}
-{% endblock %} {% block page_title %} Dashboard {% endblock %}
+{% load static %}
 
-{% block content %}
-    
-    <h1>Dashboard</h1>
+{% block title %}
+Dashboard | NAFI Admin
+{% endblock %}
+
+
+{% block css %}
+
+<link
+    rel="stylesheet"
+    href="{% static 'admin_panel/css/dashboard.css' %}"
+>
 
 {% endblock %}
-    
+
+
+{% block page_title %}
+Dashboard
+{% endblock %}
+
+
+{% block content %}
+
+<div class="dashboard-page">
+
+
+    <!-- =========================================================
+         DASHBOARD HEADER
+    ========================================================== -->
+
+    <div class="dashboard-header">
+
+        <div class="dashboard-heading">
+
+            <span class="dashboard-eyebrow">
+                BUSINESS OVERVIEW
+            </span>
+
+            <h1>
+                Good Morning, Admin!
+                <span class="dashboard-wave">👋</span>
+            </h1>
+
+            <p>
+                Here's what's happening with NAFI today.
+            </p>
+
+        </div>
+
+
+        <div class="dashboard-date">
+
+            <span>
+                {% now "l, d F Y" %}
+            </span>
+
+            <strong>
+                {% now "h:i A" %}
+            </strong>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =========================================================
+         OVERVIEW CARDS
+    ========================================================== -->
+
+    <section class="dashboard-overview">
+
+
+        <!-- TOTAL SALES -->
+
+        <article class="dashboard-overview-card">
+
+            <div class="dashboard-overview-content">
+
+                <span class="dashboard-card-label">
+                    TOTAL SALES
+                </span>
+
+                <strong class="dashboard-card-value">
+                    ৳125,430
+                </strong>
+
+                <div class="dashboard-card-growth positive">
+
+                    <i class="bi bi-arrow-up"></i>
+
+                    <span>
+                        12.5%
+                    </span>
+
+                    <small>
+                        vs last week
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <div class="dashboard-overview-icon">
+
+                <i class="bi bi-cart3"></i>
+
+            </div>
+
+        </article>
+
+
+
+        <!-- TOTAL ORDERS -->
+
+        <article class="dashboard-overview-card">
+
+            <div class="dashboard-overview-content">
+
+                <span class="dashboard-card-label">
+                    TOTAL ORDERS
+                </span>
+
+                <strong class="dashboard-card-value">
+                    328
+                </strong>
+
+                <div class="dashboard-card-growth positive">
+
+                    <i class="bi bi-arrow-up"></i>
+
+                    <span>
+                        8.3%
+                    </span>
+
+                    <small>
+                        vs last week
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <div class="dashboard-overview-icon">
+
+                <i class="bi bi-bag-check"></i>
+
+            </div>
+
+        </article>
+
+
+
+        <!-- NET PROFIT -->
+
+        <article class="dashboard-overview-card">
+
+            <div class="dashboard-overview-content">
+
+                <span class="dashboard-card-label">
+                    NET PROFIT
+                </span>
+
+                <strong class="dashboard-card-value">
+                    ৳32,500
+                </strong>
+
+                <div class="dashboard-card-growth positive">
+
+                    <i class="bi bi-arrow-up"></i>
+
+                    <span>
+                        15.2%
+                    </span>
+
+                    <small>
+                        vs last week
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <div class="dashboard-overview-icon">
+
+                <i class="bi bi-graph-up-arrow"></i>
+
+            </div>
+
+        </article>
+
+
+
+        <!-- TOTAL CUSTOMERS -->
+
+        <article class="dashboard-overview-card">
+
+            <div class="dashboard-overview-content">
+
+                <span class="dashboard-card-label">
+                    TOTAL CUSTOMERS
+                </span>
+
+                <strong class="dashboard-card-value">
+                    245
+                </strong>
+
+                <div class="dashboard-card-growth positive">
+
+                    <i class="bi bi-arrow-up"></i>
+
+                    <span>
+                        10.4%
+                    </span>
+
+                    <small>
+                        vs last week
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <div class="dashboard-overview-icon">
+
+                <i class="bi bi-people"></i>
+
+            </div>
+
+        </article>
+
+
+    </section>
+
+
+
+    <!-- =========================================================
+         MAIN DASHBOARD GRID
+    ========================================================== -->
+
+    <div class="dashboard-main-grid">
+
+
+        <!-- =====================================================
+             LEFT / MAIN COLUMN
+        ====================================================== -->
+
+        <div class="dashboard-primary-column">
+
+
+            <!-- =================================================
+                 SALES OVERVIEW
+            ================================================== -->
+
+            <section class="dashboard-panel sales-overview-panel">
+
+
+                <div class="dashboard-panel-header">
+
+                    <div>
+
+                        <span class="dashboard-section-label">
+                            SALES ANALYTICS
+                        </span>
+
+                        <h2>
+                            Sales Overview
+                        </h2>
+
+                    </div>
+
+
+                    <div
+                        class="dashboard-period-switcher"
+                        id="salesPeriodSwitcher"
+                    >
+
+                        <button
+                            type="button"
+                            class="dashboard-period-btn"
+                            data-period="7"
+                        >
+                            7 Days
+                        </button>
+
+                        <button
+                            type="button"
+                            class="dashboard-period-btn active"
+                            data-period="30"
+                        >
+                            30 Days
+                        </button>
+
+                        <button
+                            type="button"
+                            class="dashboard-period-btn"
+                            data-period="90"
+                        >
+                            3 Months
+                        </button>
+
+                        <button
+                            type="button"
+                            class="dashboard-period-btn"
+                            data-period="365"
+                        >
+                            1 Year
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div class="dashboard-chart-wrapper sales-chart-wrapper">
+
+                    <canvas
+                        id="salesOverviewChart"
+                    ></canvas>
+
+                </div>
+
+
+            </section>
+
+
+
+            <!-- =================================================
+                 SECOND ROW
+            ================================================== -->
+
+            <div class="dashboard-two-column">
+
+
+                <!-- =============================================
+                     ORDER STATUS
+                ============================================== -->
+
+                <section class="dashboard-panel order-status-panel">
+
+
+                    <div class="dashboard-panel-header">
+
+                        <div>
+
+                            <span class="dashboard-section-label">
+                                ORDER MANAGEMENT
+                            </span>
+
+                            <h2>
+                                Order Status
+                            </h2>
+
+                        </div>
+
+
+                        <a
+                            href="{% url 'orders_page' %}"
+                            class="dashboard-view-all"
+                        >
+                            View All
+                        </a>
+
+                    </div>
+
+
+                    <div class="dashboard-status-list">
+
+
+                        <div class="dashboard-status-row">
+
+                            <div class="dashboard-status-name">
+
+                                <span class="dashboard-status-dot status-new"></span>
+
+                                <span>
+                                    New
+                                </span>
+
+                            </div>
+
+                            <strong>
+                                12
+                            </strong>
+
+                        </div>
+
+
+                        <div class="dashboard-status-row">
+
+                            <div class="dashboard-status-name">
+
+                                <span class="dashboard-status-dot status-confirmed"></span>
+
+                                <span>
+                                    Confirmed
+                                </span>
+
+                            </div>
+
+                            <strong>
+                                18
+                            </strong>
+
+                        </div>
+
+
+                        <div class="dashboard-status-row">
+
+                            <div class="dashboard-status-name">
+
+                                <span class="dashboard-status-dot status-processing"></span>
+
+                                <span>
+                                    Processing
+                                </span>
+
+                            </div>
+
+                            <strong>
+                                25
+                            </strong>
+
+                        </div>
+
+
+                        <div class="dashboard-status-row">
+
+                            <div class="dashboard-status-name">
+
+                                <span class="dashboard-status-dot status-packed"></span>
+
+                                <span>
+                                    Packed
+                                </span>
+
+                            </div>
+
+                            <strong>
+                                14
+                            </strong>
+
+                        </div>
+
+
+                        <div class="dashboard-status-row">
+
+                            <div class="dashboard-status-name">
+
+                                <span class="dashboard-status-dot status-shipped"></span>
+
+                                <span>
+                                    Shipped
+                                </span>
+
+                            </div>
+
+                            <strong>
+                                32
+                            </strong>
+
+                        </div>
+
+
+                        <div class="dashboard-status-row">
+
+                            <div class="dashboard-status-name">
+
+                                <span class="dashboard-status-dot status-delivered"></span>
+
+                                <span>
+                                    Delivered
+                                </span>
+
+                            </div>
+
+                            <strong>
+                                205
+                            </strong>
+
+                        </div>
+
+
+                        <div class="dashboard-status-row">
+
+                            <div class="dashboard-status-name">
+
+                                <span class="dashboard-status-dot status-cancelled"></span>
+
+                                <span>
+                                    Cancelled
+                                </span>
+
+                            </div>
+
+                            <strong>
+                                8
+                            </strong>
+
+                        </div>
+
+
+                        <div class="dashboard-status-row">
+
+                            <div class="dashboard-status-name">
+
+                                <span class="dashboard-status-dot status-returned"></span>
+
+                                <span>
+                                    Returned
+                                </span>
+
+                            </div>
+
+                            <strong>
+                                14
+                            </strong>
+
+                        </div>
+
+
+                    </div>
+
+                </section>
+
+
+
+                <!-- =============================================
+                     REVENUE / EXPENSE / PROFIT
+                ============================================== -->
+
+                <section class="dashboard-panel revenue-panel">
+
+
+                    <div class="dashboard-panel-header">
+
+                        <div>
+
+                            <span class="dashboard-section-label">
+                                FINANCIAL OVERVIEW
+                            </span>
+
+                            <h2>
+                                Revenue vs Expense vs Profit
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="dashboard-chart-legend">
+
+                        <span>
+
+                            <i class="legend-dot revenue-dot"></i>
+
+                            Revenue
+
+                        </span>
+
+
+                        <span>
+
+                            <i class="legend-dot expense-dot"></i>
+
+                            Expenses
+
+                        </span>
+
+
+                        <span>
+
+                            <i class="legend-dot profit-dot"></i>
+
+                            Profit
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="dashboard-chart-wrapper revenue-chart-wrapper">
+
+                        <canvas
+                            id="revenueExpenseProfitChart"
+                        ></canvas>
+
+                    </div>
+
+
+                </section>
+
+
+            </div>
+
+
+
+            <!-- =================================================
+                 RECENT ORDERS
+            ================================================== -->
+
+            <section class="dashboard-panel recent-orders-panel">
+
+
+                <div class="dashboard-panel-header">
+
+                    <div>
+
+                        <span class="dashboard-section-label">
+                            ORDER ACTIVITY
+                        </span>
+
+                        <h2>
+                            Recent Orders
+                        </h2>
+
+                    </div>
+
+
+                    <a
+                        href="{% url 'orders_page' %}"
+                        class="dashboard-view-all"
+                    >
+                        View All
+                    </a>
+
+                </div>
+
+
+                <div class="dashboard-table-wrapper">
+
+                    <table class="dashboard-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    #
+                                </th>
+
+                                <th>
+                                    ORDER ID
+                                </th>
+
+                                <th>
+                                    CUSTOMER
+                                </th>
+
+                                <th>
+                                    PRODUCTS
+                                </th>
+
+                                <th>
+                                    AMOUNT
+                                </th>
+
+                                <th>
+                                    STATUS
+                                </th>
+
+                                <th>
+                                    DATE
+                                </th>
+
+                                <th>
+                                    ACTION
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+
+                            <tr>
+
+                                <td>
+                                    01
+                                </td>
+
+                                <td>
+                                    <strong class="dashboard-order-id">
+                                        #1047
+                                    </strong>
+                                </td>
+
+                                <td>
+                                    Rahim Hasan
+                                </td>
+
+                                <td>
+                                    2 × T-shirt, 1 × Cap
+                                </td>
+
+                                <td>
+                                    ৳2,400
+                                </td>
+
+                                <td>
+
+                                    <span class="dashboard-table-status processing">
+                                        Processing
+                                    </span>
+
+                                </td>
+
+                                <td>
+                                    26 Apr 2025
+                                </td>
+
+                                <td>
+
+                                    <a
+                                        href="{% url 'orders_page' %}"
+                                        class="dashboard-table-action"
+                                    >
+                                        View
+                                    </a>
+
+                                </td>
+
+                            </tr>
+
+
+                            <tr>
+
+                                <td>
+                                    02
+                                </td>
+
+                                <td>
+                                    <strong class="dashboard-order-id">
+                                        #1046
+                                    </strong>
+                                </td>
+
+                                <td>
+                                    Ayesha Rahman
+                                </td>
+
+                                <td>
+                                    1 × Punjabi
+                                </td>
+
+                                <td>
+                                    ৳1,200
+                                </td>
+
+                                <td>
+
+                                    <span class="dashboard-table-status confirmed">
+                                        Confirmed
+                                    </span>
+
+                                </td>
+
+                                <td>
+                                    26 Apr 2025
+                                </td>
+
+                                <td>
+
+                                    <a
+                                        href="{% url 'orders_page' %}"
+                                        class="dashboard-table-action"
+                                    >
+                                        View
+                                    </a>
+
+                                </td>
+
+                            </tr>
+
+
+                            <tr>
+
+                                <td>
+                                    03
+                                </td>
+
+                                <td>
+                                    <strong class="dashboard-order-id">
+                                        #1045
+                                    </strong>
+                                </td>
+
+                                <td>
+                                    Tanvir Ahmed
+                                </td>
+
+                                <td>
+                                    1 × Shirt, 1 × T-shirt
+                                </td>
+
+                                <td>
+                                    ৳2,650
+                                </td>
+
+                                <td>
+
+                                    <span class="dashboard-table-status shipped">
+                                        Shipped
+                                    </span>
+
+                                </td>
+
+                                <td>
+                                    25 Apr 2025
+                                </td>
+
+                                <td>
+
+                                    <a
+                                        href="{% url 'orders_page' %}"
+                                        class="dashboard-table-action"
+                                    >
+                                        View
+                                    </a>
+
+                                </td>
+
+                            </tr>
+
+
+                            <tr>
+
+                                <td>
+                                    04
+                                </td>
+
+                                <td>
+                                    <strong class="dashboard-order-id">
+                                        #1044
+                                    </strong>
+                                </td>
+
+                                <td>
+                                    Sakib Hossain
+                                </td>
+
+                                <td>
+                                    2 × Polo
+                                </td>
+
+                                <td>
+                                    ৳1,800
+                                </td>
+
+                                <td>
+
+                                    <span class="dashboard-table-status delivered">
+                                        Delivered
+                                    </span>
+
+                                </td>
+
+                                <td>
+                                    25 Apr 2025
+                                </td>
+
+                                <td>
+
+                                    <a
+                                        href="{% url 'orders_page' %}"
+                                        class="dashboard-table-action"
+                                    >
+                                        View
+                                    </a>
+
+                                </td>
+
+                            </tr>
+
+
+                            <tr>
+
+                                <td>
+                                    05
+                                </td>
+
+                                <td>
+                                    <strong class="dashboard-order-id">
+                                        #1043
+                                    </strong>
+                                </td>
+
+                                <td>
+                                    Farhan Rahman
+                                </td>
+
+                                <td>
+                                    1 × Hoodie
+                                </td>
+
+                                <td>
+                                    ৳2,200
+                                </td>
+
+                                <td>
+
+                                    <span class="dashboard-table-status delivered">
+                                        Delivered
+                                    </span>
+
+                                </td>
+
+                                <td>
+                                    24 Apr 2025
+                                </td>
+
+                                <td>
+
+                                    <a
+                                        href="{% url 'orders_page' %}"
+                                        class="dashboard-table-action"
+                                    >
+                                        View
+                                    </a>
+
+                                </td>
+
+                            </tr>
+
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+            </section>
+
+
+
+            <!-- =================================================
+                 BOTTOM GRID
+            ================================================== -->
+
+            <div class="dashboard-bottom-grid">
+
+
+                <!-- =============================================
+                     LOW STOCK PRODUCTS
+                ============================================== -->
+
+                <section class="dashboard-panel low-stock-panel">
+
+
+                    <div class="dashboard-panel-header">
+
+                        <div>
+
+                            <span class="dashboard-section-label">
+                                INVENTORY
+                            </span>
+
+                            <h2>
+                                Low Stock Products
+                            </h2>
+
+                        </div>
+
+
+                        <a
+                            href="{% url 'inventory_page' %}"
+                            class="dashboard-view-all"
+                        >
+                            View All
+                        </a>
+
+                    </div>
+
+
+                    <div class="dashboard-product-list">
+
+
+                        <div class="dashboard-product-row">
+
+                            <div class="dashboard-product-thumb">
+                                <i class="bi bi-box"></i>
+                            </div>
+
+                            <div class="dashboard-product-info">
+
+                                <strong>
+                                    NAFI Black Oversized T-shirt
+                                </strong>
+
+                                <span>
+                                    Product stock
+                                </span>
+
+                            </div>
+
+                            <div class="dashboard-product-stock low">
+                                3
+                            </div>
+
+                            <span class="dashboard-stock-status low">
+                                Low
+                            </span>
+
+                        </div>
+
+
+
+                        <div class="dashboard-product-row">
+
+                            <div class="dashboard-product-thumb">
+                                <i class="bi bi-box"></i>
+                            </div>
+
+                            <div class="dashboard-product-info">
+
+                                <strong>
+                                    NAFI White T-shirt
+                                </strong>
+
+                                <span>
+                                    Product stock
+                                </span>
+
+                            </div>
+
+                            <div class="dashboard-product-stock low">
+                                5
+                            </div>
+
+                            <span class="dashboard-stock-status low">
+                                Low
+                            </span>
+
+                        </div>
+
+
+
+                        <div class="dashboard-product-row">
+
+                            <div class="dashboard-product-thumb">
+                                <i class="bi bi-box"></i>
+                            </div>
+
+                            <div class="dashboard-product-info">
+
+                                <strong>
+                                    NAFI Denim Shirt
+                                </strong>
+
+                                <span>
+                                    Product stock
+                                </span>
+
+                            </div>
+
+                            <div class="dashboard-product-stock low">
+                                2
+                            </div>
+
+                            <span class="dashboard-stock-status low">
+                                Low
+                            </span>
+
+                        </div>
+
+
+
+                        <div class="dashboard-product-row">
+
+                            <div class="dashboard-product-thumb">
+                                <i class="bi bi-box"></i>
+                            </div>
+
+                            <div class="dashboard-product-info">
+
+                                <strong>
+                                    NAFI Polo Shirt
+                                </strong>
+
+                                <span>
+                                    Product stock
+                                </span>
+
+                            </div>
+
+                            <div class="dashboard-product-stock out">
+                                0
+                            </div>
+
+                            <span class="dashboard-stock-status out">
+                                Out of Stock
+                            </span>
+
+                        </div>
+
+
+
+                        <div class="dashboard-product-row">
+
+                            <div class="dashboard-product-thumb">
+                                <i class="bi bi-box"></i>
+                            </div>
+
+                            <div class="dashboard-product-info">
+
+                                <strong>
+                                    NAFI Hoodie
+                                </strong>
+
+                                <span>
+                                    Product stock
+                                </span>
+
+                            </div>
+
+                            <div class="dashboard-product-stock low">
+                                1
+                            </div>
+
+                            <span class="dashboard-stock-status low">
+                                Low
+                            </span>
+
+                        </div>
+
+
+                    </div>
+
+                </section>
+
+
+
+                <!-- =============================================
+                     BUSINESS PERFORMANCE
+                ============================================== -->
+
+                <section class="dashboard-panel business-performance-panel">
+
+
+                    <div class="dashboard-panel-header">
+
+                        <div>
+
+                            <span class="dashboard-section-label">
+                                PERFORMANCE
+                            </span>
+
+                            <h2>
+                                Business Performance
+                            </h2>
+
+                        </div>
+
+
+                        <a
+                            href="{% url 'reports_page' %}"
+                            class="dashboard-view-all"
+                        >
+                            View All
+                        </a>
+
+                    </div>
+
+
+                    <div class="dashboard-performance-grid">
+
+
+                        <div class="dashboard-performance-card">
+
+                            <span>
+                                CONVERSION RATE
+                            </span>
+
+                            <strong>
+                                2.8%
+                            </strong>
+
+                            <small class="positive">
+                                ↑ 0.6%
+                            </small>
+
+                        </div>
+
+
+                        <div class="dashboard-performance-card">
+
+                            <span>
+                                AVERAGE ORDER VALUE
+                            </span>
+
+                            <strong>
+                                ৳845
+                            </strong>
+
+                            <small class="positive">
+                                ↑ 8.2%
+                            </small>
+
+                        </div>
+
+
+                        <div class="dashboard-performance-card">
+
+                            <span>
+                                REPEAT CUSTOMER RATE
+                            </span>
+
+                            <strong>
+                                34%
+                            </strong>
+
+                            <small class="positive">
+                                ↑ 5.7%
+                            </small>
+
+                        </div>
+
+
+                        <div class="dashboard-performance-card">
+
+                            <span>
+                                RETURN RATE
+                            </span>
+
+                            <strong>
+                                4.2%
+                            </strong>
+
+                            <small class="positive">
+                                ↓ 1.3%
+                            </small>
+
+                        </div>
+
+
+                        <div class="dashboard-performance-card">
+
+                            <span>
+                                CUSTOMER ACQUISITION COST
+                            </span>
+
+                            <strong>
+                                ৳420
+                            </strong>
+
+                            <small class="positive">
+                                ↓ 12.4%
+                            </small>
+
+                        </div>
+
+
+                        <div class="dashboard-performance-card">
+
+                            <span>
+                                ROAS
+                            </span>
+
+                            <strong>
+                                3.8x
+                            </strong>
+
+                            <small class="positive">
+                                ↑ 18.6%
+                            </small>
+
+                        </div>
+
+
+                    </div>
+
+                </section>
+
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- =====================================================
+             RIGHT SIDEBAR
+        ====================================================== -->
+
+        <aside class="dashboard-secondary-column">
+
+
+            <!-- =================================================
+                 RECENT NOTIFICATIONS
+            ================================================== -->
+
+            <section class="dashboard-panel notifications-panel">
+
+
+                <div class="dashboard-panel-header">
+
+                    <div>
+
+                        <span class="dashboard-section-label">
+                            ACTIVITY
+                        </span>
+
+                        <h2>
+                            Recent Notifications
+                        </h2>
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        class="dashboard-text-button"
+                    >
+                        View All
+                    </button>
+
+                </div>
+
+
+                <div class="dashboard-notification-list">
+
+
+                    <div class="dashboard-notification-item">
+
+                        <div class="dashboard-notification-icon">
+
+                            <i class="bi bi-cart-check"></i>
+
+                        </div>
+
+
+                        <div class="dashboard-notification-content">
+
+                            <strong>
+                                New order received
+                            </strong>
+
+                            <span>
+                                Order #1047 from Rahim Hasan
+                            </span>
+
+                            <small>
+                                2m ago
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="dashboard-notification-item">
+
+                        <div class="dashboard-notification-icon">
+
+                            <i class="bi bi-exclamation-triangle"></i>
+
+                        </div>
+
+
+                        <div class="dashboard-notification-content">
+
+                            <strong>
+                                Low stock alert
+                            </strong>
+
+                            <span>
+                                NAFI Black Oversized T-shirt
+                            </span>
+
+                            <small>
+                                12m ago
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="dashboard-notification-item">
+
+                        <div class="dashboard-notification-icon">
+
+                            <i class="bi bi-arrow-repeat"></i>
+
+                        </div>
+
+
+                        <div class="dashboard-notification-content">
+
+                            <strong>
+                                Return request
+                            </strong>
+
+                            <span>
+                                Order #1023 · Customer wants return
+                            </span>
+
+                            <small>
+                                25m ago
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="dashboard-notification-item">
+
+                        <div class="dashboard-notification-icon">
+
+                            <i class="bi bi-wallet2"></i>
+
+                        </div>
+
+
+                        <div class="dashboard-notification-content">
+
+                            <strong>
+                                Payment received
+                            </strong>
+
+                            <span>
+                                ৳2,400 from Order #1045
+                            </span>
+
+                            <small>
+                                1h ago
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="dashboard-notification-item">
+
+                        <div class="dashboard-notification-icon">
+
+                            <i class="bi bi-box-seam"></i>
+
+                        </div>
+
+
+                        <div class="dashboard-notification-content">
+
+                            <strong>
+                                Order delivered
+                            </strong>
+
+                            <span>
+                                Order #1008 delivered successfully
+                            </span>
+
+                            <small>
+                                2h ago
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="dashboard-notification-item">
+
+                        <div class="dashboard-notification-icon">
+
+                            <i class="bi bi-person-plus"></i>
+
+                        </div>
+
+
+                        <div class="dashboard-notification-content">
+
+                            <strong>
+                                New customer registered
+                            </strong>
+
+                            <span>
+                                Ayesha Rahman
+                            </span>
+
+                            <small>
+                                3h ago
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 QUICK ACTIONS
+            ================================================== -->
+
+            <section class="dashboard-panel quick-actions-panel">
+
+
+                <div class="dashboard-panel-header">
+
+                    <div>
+
+                        <span class="dashboard-section-label">
+                            SHORTCUTS
+                        </span>
+
+                        <h2>
+                            Quick Actions
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <div class="dashboard-quick-actions">
+
+
+                    <a
+                        href="{% url 'add_product_page' %}"
+                        class="dashboard-quick-action"
+                    >
+
+                        <span class="dashboard-action-icon">
+                            <i class="bi bi-plus-lg"></i>
+                        </span>
+
+                        <span>
+                            Add New Product
+                        </span>
+
+                        <i class="bi bi-arrow-up-right dashboard-action-arrow"></i>
+
+                    </a>
+
+
+
+                    <a
+                        href="{% url 'orders_page' %}"
+                        class="dashboard-quick-action"
+                    >
+
+                        <span class="dashboard-action-icon">
+                            <i class="bi bi-bag-plus"></i>
+                        </span>
+
+                        <span>
+                            Create Order
+                        </span>
+
+                        <i class="bi bi-arrow-up-right dashboard-action-arrow"></i>
+
+                    </a>
+
+
+
+                    <a
+                        href="{% url 'reports_page' %}"
+                        class="dashboard-quick-action"
+                    >
+
+                        <span class="dashboard-action-icon">
+                            <i class="bi bi-receipt"></i>
+                        </span>
+
+                        <span>
+                            Add Expense
+                        </span>
+
+                        <i class="bi bi-arrow-up-right dashboard-action-arrow"></i>
+
+                    </a>
+
+
+
+                    <a
+                        href="{% url 'reports_page' %}"
+                        class="dashboard-quick-action"
+                    >
+
+                        <span class="dashboard-action-icon">
+                            <i class="bi bi-file-earmark-bar-graph"></i>
+                        </span>
+
+                        <span>
+                            Generate Report
+                        </span>
+
+                        <i class="bi bi-arrow-up-right dashboard-action-arrow"></i>
+
+                    </a>
+
+
+
+                    <a
+                        href="{% url 'reports_page' %}"
+                        class="dashboard-quick-action"
+                    >
+
+                        <span class="dashboard-action-icon">
+                            <i class="bi bi-file-earmark-spreadsheet"></i>
+                        </span>
+
+                        <span>
+                            Export to Excel
+                        </span>
+
+                        <i class="bi bi-arrow-up-right dashboard-action-arrow"></i>
+
+                    </a>
+
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 TOP SELLING PRODUCTS
+            ================================================== -->
+
+            <section class="dashboard-panel top-selling-panel">
+
+
+                <div class="dashboard-panel-header">
+
+                    <div>
+
+                        <span class="dashboard-section-label">
+                            PRODUCT PERFORMANCE
+                        </span>
+
+                        <h2>
+                            Top Selling Products
+                        </h2>
+
+                    </div>
+
+
+                    <a
+                        href="{% url 'products_page' %}"
+                        class="dashboard-view-all"
+                    >
+                        View All
+                    </a>
+
+                </div>
+
+
+                <div class="dashboard-top-products">
+
+
+                    <div class="dashboard-top-product">
+
+                        <div class="dashboard-top-product-thumb">
+                            <i class="bi bi-box"></i>
+                        </div>
+
+
+                        <div class="dashboard-top-product-info">
+
+                            <strong>
+                                NAFI Oversized T-shirt
+                            </strong>
+
+                            <span>
+                                128 sold
+                            </span>
+
+                        </div>
+
+
+                        <strong class="dashboard-top-product-sales">
+                            ৳64,000
+                        </strong>
+
+                    </div>
+
+
+
+                    <div class="dashboard-top-product">
+
+                        <div class="dashboard-top-product-thumb">
+                            <i class="bi bi-box"></i>
+                        </div>
+
+
+                        <div class="dashboard-top-product-info">
+
+                            <strong>
+                                NAFI Punjabi
+                            </strong>
+
+                            <span>
+                                96 sold
+                            </span>
+
+                        </div>
+
+
+                        <strong class="dashboard-top-product-sales">
+                            ৳57,600
+                        </strong>
+
+                    </div>
+
+
+
+                    <div class="dashboard-top-product">
+
+                        <div class="dashboard-top-product-thumb">
+                            <i class="bi bi-box"></i>
+                        </div>
+
+
+                        <div class="dashboard-top-product-info">
+
+                            <strong>
+                                NAFI Regular Shirt
+                            </strong>
+
+                            <span>
+                                72 sold
+                            </span>
+
+                        </div>
+
+
+                        <strong class="dashboard-top-product-sales">
+                            ৳46,800
+                        </strong>
+
+                    </div>
+
+
+
+                    <div class="dashboard-top-product">
+
+                        <div class="dashboard-top-product-thumb">
+                            <i class="bi bi-box"></i>
+                        </div>
+
+
+                        <div class="dashboard-top-product-info">
+
+                            <strong>
+                                NAFI Polo Shirt
+                            </strong>
+
+                            <span>
+                                54 sold
+                            </span>
+
+                        </div>
+
+
+                        <strong class="dashboard-top-product-sales">
+                            ৳32,400
+                        </strong>
+
+                    </div>
+
+
+
+                    <div class="dashboard-top-product">
+
+                        <div class="dashboard-top-product-thumb">
+                            <i class="bi bi-box"></i>
+                        </div>
+
+
+                        <div class="dashboard-top-product-info">
+
+                            <strong>
+                                NAFI Hoodie
+                            </strong>
+
+                            <span>
+                                38 sold
+                            </span>
+
+                        </div>
+
+
+                        <strong class="dashboard-top-product-sales">
+                            ৳30,400
+                        </strong>
+
+                    </div>
+
+
+                </div>
+
+            </section>
+
+
+        </aside>
+
+
+    </div>
+
+
+
+    <!-- =========================================================
+         SALES BY CATEGORY
+    ========================================================== -->
+
+    <section class="dashboard-category-section">
+
+
+        <div class="dashboard-panel category-sales-panel">
+
+
+            <div class="dashboard-panel-header">
+
+                <div>
+
+                    <span class="dashboard-section-label">
+                        PRODUCT MIX
+                    </span>
+
+                    <h2>
+                        Sales by Category
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            <div class="dashboard-category-content">
+
+
+                <div class="dashboard-doughnut-wrapper">
+
+                    <canvas
+                        id="salesCategoryChart"
+                    ></canvas>
+
+
+                    <div class="dashboard-doughnut-center">
+
+                        <span>
+                            TOTAL SALES
+                        </span>
+
+                        <strong>
+                            ৳125,430
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="dashboard-category-list">
+
+
+                    <div class="dashboard-category-item">
+
+                        <div>
+
+                            <span class="dashboard-category-dot category-one"></span>
+
+                            <span>
+                                T-Shirts
+                            </span>
+
+                        </div>
+
+                        <strong>
+                            38%
+                        </strong>
+
+                    </div>
+
+
+                    <div class="dashboard-category-item">
+
+                        <div>
+
+                            <span class="dashboard-category-dot category-two"></span>
+
+                            <span>
+                                Punjabi
+                            </span>
+
+                        </div>
+
+                        <strong>
+                            22%
+                        </strong>
+
+                    </div>
+
+
+                    <div class="dashboard-category-item">
+
+                        <div>
+
+                            <span class="dashboard-category-dot category-three"></span>
+
+                            <span>
+                                Shirts
+                            </span>
+
+                        </div>
+
+                        <strong>
+                            16%
+                        </strong>
+
+                    </div>
+
+
+                    <div class="dashboard-category-item">
+
+                        <div>
+
+                            <span class="dashboard-category-dot category-four"></span>
+
+                            <span>
+                                Polo
+                            </span>
+
+                        </div>
+
+                        <strong>
+                            12%
+                        </strong>
+
+                    </div>
+
+
+                    <div class="dashboard-category-item">
+
+                        <div>
+
+                            <span class="dashboard-category-dot category-five"></span>
+
+                            <span>
+                                Hoodies
+                            </span>
+
+                        </div>
+
+                        <strong>
+                            8%
+                        </strong>
+
+                    </div>
+
+
+                    <div class="dashboard-category-item">
+
+                        <div>
+
+                            <span class="dashboard-category-dot category-six"></span>
+
+                            <span>
+                                Others
+                            </span>
+
+                        </div>
+
+                        <strong>
+                            4%
+                        </strong>
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+    </section>
+
+
+</div>
+
+{% endblock %}
+
+
+
+{% block js %}
+
+<script
+    src="{% static 'admin_panel/js/chart.js' %}"
+></script>
+
+<script
+    src="{% static 'admin_panel/js/dashboard.js' %}"
+></script>
+
+{% endblock %}

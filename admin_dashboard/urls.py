@@ -19,6 +19,8 @@ urlpatterns = [
 
 
     path('inventory/', inventory_page, name='inventory_page'),
+    path('inventory/update-stock/', update_inventory_stock, name='update_inventory_stock'),
+
     path('coupons/', coupons_page, name='coupons_page'),
     path('reviews/', reviews_page, name='reviews_page'),
     path('reports/', reports_page, name='reports_page'),

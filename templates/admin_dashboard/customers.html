@@ -189,31 +189,49 @@
 
 
         <!-- PANEL HEADER -->
-
         <div class="customers-panel-header">
-
+        
             <div>
-
+            
                 <span class="customers-section-eyebrow">
-                    CUSTOMER PURCHASE ANALYTICS
+                    CUSTOMER MANAGEMENT
                 </span>
-
-                <h2>
-                    Customer Purchase Ranking
+            
+                <h2 id="customerTableTitle">
+                    Latest Customers
                 </h2>
-
+            
             </div>
-
-
-            <div class="customers-count">
-
-                SORTED BY ITEMS
-
+        
+        
+            <div class="customers-panel-actions">
+            
+                <span
+                    class="customers-count"
+                    id="customerSortLabel"
+                >
+                    LATEST LOGIN
+                </span>
+            
+            
+                <button
+                    type="button"
+                    class="customer-sort-btn"
+                    id="customerSortToggle"
+                    aria-label="Toggle customer ranking"
+                >
+            
+                    <i class="bi bi-bar-chart-line"></i>
+            
+                    <span>
+                        Purchase Ranking
+                    </span>
+                
+                </button>
+            
             </div>
-
+        
         </div>
-
-
 
         <!-- =================================================
              FILTERS
@@ -352,16 +370,27 @@
 
                     {% for customer in customers %}
 
-                    <tr
-                        class="customer-row"
-                        data-name="{{ customer.name|lower }}"
-                        data-username="{{ customer.username|lower }}"
-                        data-email="{{ customer.email|lower }}"
-                        data-phone="{{ customer.phone|lower }}"
-                        data-type="{{ customer.type|lower }}"
-                        data-status="{% if customer.type == 'GUEST' %}guest{% elif customer.is_active %}active{% else %}inactive{% endif %}"
-                    >
+                        <tr
+                            class="customer-row"
 
+                            data-name="{{ customer.name|lower }}"
+
+                            data-username="{{ customer.username|lower }}"
+
+                            data-email="{{ customer.email|lower }}"
+
+                            data-phone="{{ customer.phone|lower }}"
+
+                            data-type="{{ customer.type|lower }}"
+
+                            data-status="{% if customer.type == 'GUEST' %}guest{% elif customer.is_active %}active{% else %}inactive{% endif %}"
+
+                            data-orders="{{ customer.total_orders }}"
+
+                            data-items="{{ customer.total_items }}"
+
+                            data-login="{% if customer.last_login %}{{ customer.last_login|date:'U' }}{% else %}0{% endif %}"
+                        >
 
                         <!-- RANK -->
 
@@ -891,15 +920,17 @@
 
 
 {% block js %}
-<!-- =========================================================
-     CUSTOMER FILTER SCRIPT
-========================================================= -->
 
 <script>
 
 document.addEventListener(
     "DOMContentLoaded",
     function () {
+
+
+        /* =====================================================
+           ELEMENTS
+        ===================================================== */
 
         const searchInput =
             document.getElementById(
@@ -919,18 +950,292 @@ document.addEventListener(
             );
 
 
-        const tableRows =
-            document.querySelectorAll(
-                ".customer-row"
+        const sortToggle =
+            document.getElementById(
+                "customerSortToggle"
             );
 
 
-        const mobileCards =
-            document.querySelectorAll(
-                ".customer-mobile-card"
+        const sortLabel =
+            document.getElementById(
+                "customerSortLabel"
             );
 
 
+        const tableTitle =
+            document.getElementById(
+                "customerTableTitle"
+            );
+
+
+        const tableBody =
+            document.getElementById(
+                "customersTableBody"
+            );
+
+
+        const mobileList =
+            document.getElementById(
+                "customersMobileList"
+            );
+
+
+        /* =====================================================
+           STATE
+        ===================================================== */
+
+        let purchaseRanking = false;
+
+
+        /* =====================================================
+           ORIGINAL ORDER
+           Keep the backend's default latest-login order.
+        ===================================================== */
+
+        const originalTableRows =
+            Array.from(
+                tableBody.querySelectorAll(
+                    ".customer-row"
+                )
+            );
+
+
+        const originalMobileCards =
+            Array.from(
+                mobileList.querySelectorAll(
+                    ".customer-mobile-card"
+                )
+            );
+
+
+        /* =====================================================
+           SORT TABLE
+        ===================================================== */
+
+        function sortCustomers() {
+
+
+            const rows =
+                Array.from(
+                    tableBody.querySelectorAll(
+                        ".customer-row"
+                    )
+                );
+
+
+            const cards =
+                Array.from(
+                    mobileList.querySelectorAll(
+                        ".customer-mobile-card"
+                    )
+                );
+
+
+            if (purchaseRanking) {
+
+                /* =============================================
+                   PURCHASE RANKING
+
+                   Highest total orders first.
+                ============================================= */
+
+                rows.sort(
+                    function (a, b) {
+
+                        const ordersA =
+                            Number(
+                                a.dataset.orders || 0
+                            );
+
+
+                        const ordersB =
+                            Number(
+                                b.dataset.orders || 0
+                            );
+
+
+                        /* Orders first */
+
+                        if (
+                            ordersB !== ordersA
+                        ) {
+
+                            return (
+                                ordersB - ordersA
+                            );
+
+                        }
+
+
+                        /* If orders are equal,
+                           compare purchased items */
+
+                        const itemsA =
+                            Number(
+                                a.dataset.items || 0
+                            );
+
+
+                        const itemsB =
+                            Number(
+                                b.dataset.items || 0
+                            );
+
+
+                        return (
+                            itemsB - itemsA
+                        );
+
+                    }
+                );
+
+
+                cards.sort(
+                    function (a, b) {
+
+                        const ordersA =
+                            Number(
+                                a.dataset.orders || 0
+                            );
+
+
+                        const ordersB =
+                            Number(
+                                b.dataset.orders || 0
+                            );
+
+
+                        if (
+                            ordersB !== ordersA
+                        ) {
+
+                            return (
+                                ordersB - ordersA
+                            );
+
+                        }
+
+
+                        const itemsA =
+                            Number(
+                                a.dataset.items || 0
+                            );
+
+
+                        const itemsB =
+                            Number(
+                                b.dataset.items || 0
+                            );
+
+
+                        return (
+                            itemsB - itemsA
+                        );
+
+                    }
+                );
+
+
+            } else {
+
+                /* =============================================
+                   LATEST LOGIN
+
+                   Restore backend order.
+                ============================================= */
+
+                rows.sort(
+                    function (a, b) {
+
+                        return (
+                            originalTableRows.indexOf(a)
+                            -
+                            originalTableRows.indexOf(b)
+                        );
+
+                    }
+                );
+
+
+                cards.sort(
+                    function (a, b) {
+
+                        return (
+                            originalMobileCards.indexOf(a)
+                            -
+                            originalMobileCards.indexOf(b)
+                        );
+
+                    }
+                );
+
+            }
+
+
+            /* =============================================
+               RE-APPEND TABLE ROWS
+            ============================================= */
+
+            rows.forEach(
+                function (row) {
+
+                    tableBody.appendChild(
+                        row
+                    );
+
+                }
+            );
+
+
+            /* =============================================
+               RE-APPEND MOBILE CARDS
+            ============================================= */
+
+            cards.forEach(
+                function (card) {
+
+                    mobileList.appendChild(
+                        card
+                    );
+
+                }
+            );
+
+
+            /* =============================================
+               UPDATE RANK NUMBER
+            ============================================= */
+
+            rows.forEach(
+                function (row, index) {
+
+                    const rank =
+                        row.querySelector(
+                            ".customer-rank"
+                        );
+
+
+                    if (rank) {
+
+                        rank.textContent =
+                            String(
+                                index + 1
+                            ).padStart(
+                                2,
+                                "0"
+                            );
+
+                    }
+
+                }
+            );
+
+        }
+
+
+        /* =====================================================
+           FILTER CUSTOMERS
+        ===================================================== */
 
         function filterCustomers() {
 
@@ -951,10 +1256,15 @@ document.addEventListener(
                     .toLowerCase();
 
 
-
             /* =============================================
                TABLE
             ============================================= */
+
+            const tableRows =
+                tableBody.querySelectorAll(
+                    ".customer-row"
+                );
+
 
             tableRows.forEach(
                 function (row) {
@@ -984,7 +1294,6 @@ document.addEventListener(
                         row.dataset.status || "";
 
 
-
                     const matchesSearch =
 
                         name.includes(
@@ -1010,7 +1319,6 @@ document.addEventListener(
                         );
 
 
-
                     const matchesType =
 
                         typeValue === "all"
@@ -1020,7 +1328,6 @@ document.addEventListener(
                         type === typeValue;
 
 
-
                     const matchesStatus =
 
                         statusValue === "all"
@@ -1028,7 +1335,6 @@ document.addEventListener(
                         ||
 
                         status === statusValue;
-
 
 
                     row.style.display =
@@ -1045,10 +1351,15 @@ document.addEventListener(
             );
 
 
-
             /* =============================================
                MOBILE
             ============================================= */
+
+            const mobileCards =
+                mobileList.querySelectorAll(
+                    ".customer-mobile-card"
+                );
+
 
             mobileCards.forEach(
                 function (card) {
@@ -1078,7 +1389,6 @@ document.addEventListener(
                         card.dataset.status || "";
 
 
-
                     const matchesSearch =
 
                         name.includes(
@@ -1104,7 +1414,6 @@ document.addEventListener(
                         );
 
 
-
                     const matchesType =
 
                         typeValue === "all"
@@ -1114,7 +1423,6 @@ document.addEventListener(
                         type === typeValue;
 
 
-
                     const matchesStatus =
 
                         statusValue === "all"
@@ -1122,7 +1430,6 @@ document.addEventListener(
                         ||
 
                         status === statusValue;
-
 
 
                     card.style.display =
@@ -1141,10 +1448,90 @@ document.addEventListener(
         }
 
 
+        /* =====================================================
+           TOGGLE PURCHASE RANKING
+        ===================================================== */
 
-        /* =============================================
+        sortToggle.addEventListener(
+            "click",
+            function () {
+
+
+                purchaseRanking =
+                    !purchaseRanking;
+
+
+                if (purchaseRanking) {
+
+                    /* =========================================
+                       PURCHASE RANKING MODE
+                    ========================================= */
+
+                    sortToggle.classList.add(
+                        "active"
+                    );
+
+
+                    sortToggle.innerHTML =
+
+                        '<i class="bi bi-clock-history"></i>' +
+
+                        '<span>Latest Login</span>';
+
+
+                    sortLabel.textContent =
+                        "SORTED BY ORDERS";
+
+
+                    tableTitle.textContent =
+                        "Customer Purchase Ranking";
+
+
+                } else {
+
+                    /* =========================================
+                       LATEST LOGIN MODE
+                    ========================================= */
+
+                    sortToggle.classList.remove(
+                        "active"
+                    );
+
+
+                    sortToggle.innerHTML =
+
+                        '<i class="bi bi-bar-chart-line"></i>' +
+
+                        '<span>Purchase Ranking</span>';
+
+
+                    sortLabel.textContent =
+                        "LATEST LOGIN";
+
+
+                    tableTitle.textContent =
+                        "Latest Customers";
+
+                }
+
+
+                sortCustomers();
+
+
+                /*
+                 * Re-apply current search/filter
+                 * after sorting.
+                 */
+
+                filterCustomers();
+
+            }
+        );
+
+
+        /* =====================================================
            EVENTS
-        ============================================= */
+        ===================================================== */
 
         searchInput.addEventListener(
             "input",
@@ -1164,10 +1551,18 @@ document.addEventListener(
         );
 
 
+        /* =====================================================
+           INITIAL STATE
+        ===================================================== */
+
+        sortCustomers();
+
+        filterCustomers();
+
     }
+
 );
 
 </script>
-
 
 {% endblock %}
