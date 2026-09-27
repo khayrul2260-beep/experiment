@@ -1,576 +1,901 @@
-document.addEventListener("DOMContentLoaded", () => {
+(function () {
     "use strict";
 
-    /* =========================================================
-       ELEMENTS
-    ========================================================= */
 
-    const editModal = document.getElementById("editCouponModal");
-    const deleteModal = document.getElementById("deleteCouponModal");
+    /* =====================================================
+       ELEMENT HELPERS
+    ===================================================== */
 
-    const editForm = document.getElementById("editCouponForm");
-    const deleteForm = document.getElementById("deleteCouponForm");
-
-    const editCode = document.getElementById("edit_code");
-    const editDescription = document.getElementById("edit_description");
-    const editDiscountType = document.getElementById("edit_discount_type");
-    const editDiscountValue = document.getElementById("edit_discount_value");
-    const editMinimumOrder = document.getElementById("edit_minimum_order_amount");
-    const editMaximumDiscount = document.getElementById("edit_maximum_discount");
-    const editStartDate = document.getElementById("edit_start_date");
-    const editExpiryDate = document.getElementById("edit_expiry_date");
-    const editUsageLimit = document.getElementById("edit_usage_limit");
-    const editIsActive = document.getElementById("edit_is_active");
-
-    const deleteCouponCode = document.getElementById("delete_coupon_code");
+    function getElement(id) {
+        return document.getElementById(id);
+    }
 
 
-    /* =========================================================
-       URL TEMPLATES
-       These variables come from coupons.html
-    ========================================================= */
-
-    const updateUrlTemplate =
-        window.couponUpdateUrlTemplate || "";
-
-    const deleteUrlTemplate =
-        window.couponDeleteUrlTemplate || "";
+    function getElements(selector) {
+        return document.querySelectorAll(selector);
+    }
 
 
-    /* =========================================================
-       HELPER
-    ========================================================= */
+    function setValue(id, value) {
+        const element = getElement(id);
 
-    function buildUrl(template, id) {
-        if (!template) {
+        if (element) {
+            element.value = value ?? "";
+        }
+    }
+
+
+    function setChecked(id, value) {
+        const element = getElement(id);
+
+        if (element) {
+            element.checked = Boolean(value);
+        }
+    }
+
+
+    /* =====================================================
+       MODAL HELPERS
+    ===================================================== */
+
+    function openModal(modal) {
+
+        if (!modal) {
+            return;
+        }
+
+        modal.classList.add("is-open");
+        modal.setAttribute("aria-hidden", "false");
+
+        document.body.classList.add("coupon-modal-open");
+    }
+
+
+    function closeModal(modal) {
+
+        if (!modal) {
+            return;
+        }
+
+        modal.classList.remove("is-open");
+        modal.setAttribute("aria-hidden", "true");
+
+        if (!document.querySelector(".coupon-modal.is-open")) {
+            document.body.classList.remove("coupon-modal-open");
+        }
+    }
+
+
+    function closeAllModals() {
+
+        getElements(".coupon-modal.is-open").forEach(function (modal) {
+            modal.classList.remove("is-open");
+            modal.setAttribute("aria-hidden", "true");
+        });
+
+        document.body.classList.remove("coupon-modal-open");
+    }
+
+
+    /* =====================================================
+       MODALS
+    ===================================================== */
+
+    const createModal = getElement("createCouponModal");
+    const editModal = getElement("editCouponModal");
+    const deleteModal = getElement("deleteCouponModal");
+
+
+    /* =====================================================
+       OPEN CREATE MODAL
+    ===================================================== */
+
+    const createButtons = [
+        getElement("openCreateCoupon"),
+        getElement("openCreateCouponEmpty")
+    ];
+
+
+    createButtons.forEach(function (button) {
+
+        if (!button) {
+            return;
+        }
+
+        button.addEventListener("click", function () {
+
+            resetCreateForm();
+
+            openModal(createModal);
+
+            const codeInput = getElement("createCouponCode");
+
+            if (codeInput) {
+                setTimeout(function () {
+                    codeInput.focus();
+                }, 150);
+            }
+
+        });
+
+    });
+
+
+    /* =====================================================
+       CLOSE MODALS
+    ===================================================== */
+
+    getElements("[data-close-modal]").forEach(function (button) {
+
+        button.addEventListener("click", function () {
+
+            const modal = button.closest(".coupon-modal");
+
+            closeModal(modal);
+
+        });
+
+    });
+
+
+    /* =====================================================
+       CLOSE BY OVERLAY
+    ===================================================== */
+
+    getElements(".coupon-modal-overlay").forEach(function (overlay) {
+
+        overlay.addEventListener("click", function () {
+
+            const modal = overlay.closest(".coupon-modal");
+
+            closeModal(modal);
+
+        });
+
+    });
+
+
+    /* =====================================================
+       ESCAPE KEY
+    ===================================================== */
+
+    document.addEventListener("keydown", function (event) {
+
+        if (event.key !== "Escape") {
+            return;
+        }
+
+        closeAllModals();
+
+    });
+
+
+    /* =====================================================
+       BODY SCROLL CONTROL
+    ===================================================== */
+
+    const style = document.createElement("style");
+
+    style.textContent = `
+        body.coupon-modal-open {
+            overflow: hidden;
+        }
+    `;
+
+    document.head.appendChild(style);
+
+
+    /* =====================================================
+       DATE HELPERS
+    ===================================================== */
+
+    function formatDateTimeLocal(dateValue) {
+
+        if (!dateValue) {
             return "";
         }
 
-        return template.replace("/0/", `/${id}/`);
-    }
+        const date = new Date(dateValue);
 
-
-    function formatDateTimeLocal(value) {
-        if (!value) {
+        if (Number.isNaN(date.getTime())) {
             return "";
         }
 
-        /*
-         * Django datetime value may come as:
-         * 2026-09-27T15:30:00+06:00
-         *
-         * datetime-local needs:
-         * 2026-09-27T15:30
-         */
+        const year = date.getFullYear();
 
-        return value.substring(0, 16);
-    }
-
-
-    function toggleMaximumDiscount(selectElement, inputElement) {
-        if (!selectElement || !inputElement) {
-            return;
-        }
-
-        if (selectElement.value === "fixed") {
-            inputElement.value = "";
-            inputElement.disabled = true;
-            inputElement.placeholder = "Not applicable";
-        } else {
-            inputElement.disabled = false;
-            inputElement.placeholder = "Optional";
-        }
-    }
-
-
-    /* =========================================================
-       COUPON CODE — UPPERCASE
-    ========================================================= */
-
-    const couponCodeInputs = [
-        document.getElementById("code"),
-        editCode
-    ];
-
-    couponCodeInputs.forEach((input) => {
-        if (!input) {
-            return;
-        }
-
-        input.addEventListener("input", () => {
-            input.value = input.value.toUpperCase();
-        });
-    });
-
-
-    /* =========================================================
-       CREATE MODAL
-    ========================================================= */
-
-    const createDiscountType =
-        document.getElementById("discount_type");
-
-    const createMaximumDiscount =
-        document.getElementById("maximum_discount");
-
-    if (createDiscountType && createMaximumDiscount) {
-        toggleMaximumDiscount(
-            createDiscountType,
-            createMaximumDiscount
-        );
-
-        createDiscountType.addEventListener("change", () => {
-            toggleMaximumDiscount(
-                createDiscountType,
-                createMaximumDiscount
-            );
-        });
-    }
-
-
-    /* =========================================================
-       EDIT MODAL
-    ========================================================= */
-
-    if (editModal) {
-        editModal.addEventListener("show.bs.modal", (event) => {
-            const button = event.relatedTarget;
-
-            if (!button) {
-                return;
-            }
-
-            const couponId = button.dataset.id || "";
-
-            /*
-             * Fill form
-             */
-
-            if (editCode) {
-                editCode.value = button.dataset.code || "";
-            }
-
-            if (editDescription) {
-                editDescription.value =
-                    button.dataset.description || "";
-            }
-
-            if (editDiscountType) {
-                editDiscountType.value =
-                    button.dataset.discountType || "percentage";
-            }
-
-            if (editDiscountValue) {
-                editDiscountValue.value =
-                    button.dataset.discountValue || "";
-            }
-
-            if (editMinimumOrder) {
-                editMinimumOrder.value =
-                    button.dataset.minimumOrder || "0";
-            }
-
-            if (editMaximumDiscount) {
-                editMaximumDiscount.value =
-                    button.dataset.maximumDiscount || "";
-            }
-
-            if (editStartDate) {
-                editStartDate.value =
-                    formatDateTimeLocal(
-                        button.dataset.startDate
-                    );
-            }
-
-            if (editExpiryDate) {
-                editExpiryDate.value =
-                    formatDateTimeLocal(
-                        button.dataset.expiryDate
-                    );
-            }
-
-            if (editUsageLimit) {
-                editUsageLimit.value =
-                    button.dataset.usageLimit || "";
-            }
-
-            if (editIsActive) {
-                editIsActive.checked =
-                    button.dataset.isActive === "true";
-            }
-
-
-            /*
-             * Set update URL
-             */
-
-            if (editForm && updateUrlTemplate) {
-                editForm.action =
-                    buildUrl(updateUrlTemplate, couponId);
-            }
-
-
-            /*
-             * Enable/disable maximum discount
-             */
-
-            toggleMaximumDiscount(
-                editDiscountType,
-                editMaximumDiscount
-            );
-        });
-    }
-
-
-    /* =========================================================
-       EDIT DISCOUNT TYPE CHANGE
-    ========================================================= */
-
-    if (editDiscountType && editMaximumDiscount) {
-        editDiscountType.addEventListener("change", () => {
-            toggleMaximumDiscount(
-                editDiscountType,
-                editMaximumDiscount
-            );
-        });
-    }
-
-
-    /* =========================================================
-       DELETE MODAL
-    ========================================================= */
-
-    if (deleteModal) {
-        deleteModal.addEventListener("show.bs.modal", (event) => {
-            const button = event.relatedTarget;
-
-            if (!button) {
-                return;
-            }
-
-            const couponId = button.dataset.id || "";
-            const couponCode = button.dataset.code || "";
-
-            if (deleteCouponCode) {
-                deleteCouponCode.textContent =
-                    couponCode;
-            }
-
-            if (deleteForm && deleteUrlTemplate) {
-                deleteForm.action =
-                    buildUrl(deleteUrlTemplate, couponId);
-            }
-        });
-    }
-
-
-    /* =========================================================
-       NUMBER INPUT PROTECTION
-    ========================================================= */
-
-    const decimalInputs = [
-        document.getElementById("discount_value"),
-        document.getElementById("minimum_order_amount"),
-        document.getElementById("maximum_discount"),
-        editDiscountValue,
-        editMinimumOrder,
-        editMaximumDiscount
-    ];
-
-    decimalInputs.forEach((input) => {
-        if (!input) {
-            return;
-        }
-
-        input.addEventListener("input", () => {
-            if (input.value !== "") {
-                const value = parseFloat(input.value);
-
-                if (!Number.isNaN(value) && value < 0) {
-                    input.value = "0";
-                }
-            }
-        });
-    });
-
-
-    /* =========================================================
-       USAGE LIMIT
-    ========================================================= */
-
-    const usageLimitInputs = [
-        document.getElementById("usage_limit"),
-        editUsageLimit
-    ];
-
-    usageLimitInputs.forEach((input) => {
-        if (!input) {
-            return;
-        }
-
-        input.addEventListener("input", () => {
-            if (input.value !== "") {
-                const value = parseInt(input.value, 10);
-
-                if (!Number.isNaN(value) && value < 0) {
-                    input.value = "0";
-                }
-            }
-        });
-    });
-
-
-    /* =========================================================
-       FORM VALIDATION
-    ========================================================= */
-
-    function validateCouponForm(form) {
-        if (!form) {
-            return true;
-        }
-
-        const discountType =
-            form.querySelector('[name="discount_type"]');
-
-        const discountValue =
-            form.querySelector('[name="discount_value"]');
-
-        const minimumOrder =
-            form.querySelector('[name="minimum_order_amount"]');
-
-        const maximumDiscount =
-            form.querySelector('[name="maximum_discount"]');
-
-        const startDate =
-            form.querySelector('[name="start_date"]');
-
-        const expiryDate =
-            form.querySelector('[name="expiry_date"]');
-
-
-        /*
-         * Discount value
-         */
-
-        if (
-            discountValue &&
-            parseFloat(discountValue.value || "0") <= 0
-        ) {
-            alert("Discount value must be greater than 0.");
-            discountValue.focus();
-            return false;
-        }
-
-
-        /*
-         * Minimum order
-         */
-
-        if (
-            minimumOrder &&
-            parseFloat(minimumOrder.value || "0") < 0
-        ) {
-            alert("Minimum order amount cannot be negative.");
-            minimumOrder.focus();
-            return false;
-        }
-
-
-        /*
-         * Percentage
-         */
-
-        if (
-            discountType &&
-            discountType.value === "percentage" &&
-            parseFloat(discountValue?.value || "0") > 100
-        ) {
-            alert("Percentage discount cannot exceed 100%.");
-            discountValue.focus();
-            return false;
-        }
-
-
-        /*
-         * Maximum discount
-         */
-
-        if (
-            discountType &&
-            discountType.value === "percentage" &&
-            maximumDiscount &&
-            maximumDiscount.value !== "" &&
-            parseFloat(maximumDiscount.value) < 0
-        ) {
-            alert("Maximum discount cannot be negative.");
-            maximumDiscount.focus();
-            return false;
-        }
-
-
-        /*
-         * Date validation
-         */
-
-        if (
-            startDate &&
-            expiryDate &&
-            startDate.value &&
-            expiryDate.value
-        ) {
-            const start = new Date(startDate.value);
-            const expiry = new Date(expiryDate.value);
-
-            if (expiry <= start) {
-                alert(
-                    "Expiry date must be later than the start date."
-                );
-
-                expiryDate.focus();
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-
-    /* =========================================================
-       CREATE FORM
-    ========================================================= */
-
-    const createForm =
-        document.getElementById("createCouponForm");
-
-    if (createForm) {
-        createForm.addEventListener("submit", (event) => {
-            if (!validateCouponForm(createForm)) {
-                event.preventDefault();
-            }
-        });
-    }
-
-
-    /* =========================================================
-       EDIT FORM
-    ========================================================= */
-
-    if (editForm) {
-        editForm.addEventListener("submit", (event) => {
-            if (!validateCouponForm(editForm)) {
-                event.preventDefault();
-            }
-        });
-    }
-
-
-    /* =========================================================
-       AUTO DEFAULT DATE
-    ========================================================= */
-
-    function getLocalDateTime() {
-        const now = new Date();
-
-        const year = now.getFullYear();
         const month = String(
-            now.getMonth() + 1
+            date.getMonth() + 1
         ).padStart(2, "0");
 
         const day = String(
-            now.getDate()
+            date.getDate()
         ).padStart(2, "0");
 
         const hours = String(
-            now.getHours()
+            date.getHours()
         ).padStart(2, "0");
 
         const minutes = String(
-            now.getMinutes()
+            date.getMinutes()
         ).padStart(2, "0");
 
         return `${year}-${month}-${day}T${hours}:${minutes}`;
     }
 
 
-    const createStartDate =
-        document.getElementById("start_date");
+    function getLocalDateTimePlusDays(days) {
 
-    const createExpiryDate =
-        document.getElementById("expiry_date");
+        const date = new Date();
 
-    if (createStartDate && !createStartDate.value) {
-        createStartDate.value =
-            getLocalDateTime();
-    }
-
-
-    if (createExpiryDate && !createExpiryDate.value) {
-        const expiry = new Date();
-        expiry.setDate(
-            expiry.getDate() + 7
+        date.setDate(
+            date.getDate() + days
         );
 
-        const year = expiry.getFullYear();
-
-        const month = String(
-            expiry.getMonth() + 1
-        ).padStart(2, "0");
-
-        const day = String(
-            expiry.getDate()
-        ).padStart(2, "0");
-
-        const hours = String(
-            expiry.getHours()
-        ).padStart(2, "0");
-
-        const minutes = String(
-            expiry.getMinutes()
-        ).padStart(2, "0");
-
-        createExpiryDate.value =
-            `${year}-${month}-${day}T${hours}:${minutes}`;
+        return formatDateTimeLocal(date);
     }
 
 
-    /* =========================================================
-       RESET CREATE MODAL
-    ========================================================= */
+    /* =====================================================
+       CREATE FORM RESET
+    ===================================================== */
 
-    const createModal =
-        document.getElementById("createCouponModal");
+    function resetCreateForm() {
 
-    if (createModal) {
-        createModal.addEventListener(
-            "hidden.bs.modal",
-            () => {
-                if (createForm) {
-                    createForm.reset();
-                }
+        const form = getElement("createCouponForm");
+
+        if (!form) {
+            return;
+        }
+
+        form.reset();
+
+        setValue(
+            "createStartDate",
+            formatDateTimeLocal(new Date())
+        );
+
+        setValue(
+            "createExpiryDate",
+            getLocalDateTimePlusDays(7)
+        );
+
+        setValue(
+            "createMinimumOrder",
+            "0"
+        );
+
+        setChecked(
+            "createIsActive",
+            true
+        );
+
+        updateCreateDiscountFields();
+
+    }
+
+
+    /* =====================================================
+       EDIT FORM RESET
+    ===================================================== */
+
+    function resetEditForm() {
+
+        const form = getElement("editCouponForm");
+
+        if (!form) {
+            return;
+        }
+
+        form.reset();
+
+    }
+
+
+    /* =====================================================
+       UPPERCASE COUPON CODE
+    ===================================================== */
+
+    function normalizeCouponCode(input) {
+
+        if (!input) {
+            return;
+        }
+
+        input.addEventListener("input", function () {
+
+            input.value = input.value
+                .toUpperCase()
+                .replace(/\s+/g, "");
+
+        });
+
+    }
+
+
+    normalizeCouponCode(
+        getElement("createCouponCode")
+    );
+
+
+    normalizeCouponCode(
+        getElement("editCouponCode")
+    );
+
+
+    /* =====================================================
+       DISCOUNT TYPE
+    ===================================================== */
+
+    const createDiscountType =
+        getElement("createDiscountType");
+
+    const editDiscountType =
+        getElement("editDiscountType");
+
+
+    function updateDiscountFields(
+        typeElement,
+        maximumInput
+    ) {
+
+        if (!typeElement || !maximumInput) {
+            return;
+        }
+
+        if (typeElement.value === "percentage") {
+
+            maximumInput.placeholder =
+                "Optional";
+
+        } else {
+
+            maximumInput.placeholder =
+                "Optional maximum amount";
+
+        }
+
+    }
+
+
+    function updateCreateDiscountFields() {
+
+        updateDiscountFields(
+            createDiscountType,
+            getElement("createMaximumDiscount")
+        );
+
+    }
+
+
+    function updateEditDiscountFields() {
+
+        updateDiscountFields(
+            editDiscountType,
+            getElement("editMaximumDiscount")
+        );
+
+    }
+
+
+    if (createDiscountType) {
+
+        createDiscountType.addEventListener(
+            "change",
+            updateCreateDiscountFields
+        );
+
+    }
+
+
+    if (editDiscountType) {
+
+        editDiscountType.addEventListener(
+            "change",
+            updateEditDiscountFields
+        );
+
+    }
+
+
+    /* =====================================================
+       URL BUILDER
+    ===================================================== */
+
+    function buildUrl(template, id) {
+
+        if (!template || !id) {
+            return "";
+        }
+
+        return template.replace(
+            "/0/",
+            `/${id}/`
+        );
+
+    }
+
+
+    /* =====================================================
+       EDIT COUPON
+    ===================================================== */
+
+    getElements(".coupon-edit-btn").forEach(function (button) {
+
+        button.addEventListener("click", function () {
+
+            const id = button.dataset.id;
+
+            if (!id) {
+                return;
+            }
+
+
+            resetEditForm();
+
+
+            /* ---------------------------------------------
+               Fill form
+            --------------------------------------------- */
+
+            setValue(
+                "editCouponCode",
+                button.dataset.code
+            );
+
+
+            setValue(
+                "editCouponDescription",
+                button.dataset.description
+            );
+
+
+            setValue(
+                "editDiscountType",
+                button.dataset.discountType
+            );
+
+
+            setValue(
+                "editDiscountValue",
+                button.dataset.discountValue
+            );
+
+
+            setValue(
+                "editMinimumOrder",
+                button.dataset.minimumOrder
+            );
+
+
+            setValue(
+                "editMaximumDiscount",
+                button.dataset.maximumDiscount
+            );
+
+
+            setValue(
+                "editStartDate",
+                formatDateTimeLocal(
+                    button.dataset.startDate
+                )
+            );
+
+
+            setValue(
+                "editExpiryDate",
+                formatDateTimeLocal(
+                    button.dataset.expiryDate
+                )
+            );
+
+
+            setValue(
+                "editUsageLimit",
+                button.dataset.usageLimit
+            );
+
+
+            setChecked(
+                "editIsActive",
+                button.dataset.isActive === "true"
+            );
+
+
+            updateEditDiscountFields();
+
+
+            /* ---------------------------------------------
+               Dynamic form action
+            --------------------------------------------- */
+
+            const editForm =
+                getElement("editCouponForm");
+
+            if (editForm) {
+
+                editForm.action = buildUrl(
+                    window.couponUpdateUrlTemplate,
+                    id
+                );
+
+            }
+
+
+            /* ---------------------------------------------
+               Open modal
+            --------------------------------------------- */
+
+            openModal(editModal);
+
+
+            const codeInput =
+                getElement("editCouponCode");
+
+            if (codeInput) {
+
+                setTimeout(function () {
+                    codeInput.focus();
+                }, 150);
+
+            }
+
+        });
+
+    });
+
+
+    /* =====================================================
+       DELETE COUPON
+    ===================================================== */
+
+    getElements(".coupon-delete-btn").forEach(function (button) {
+
+        button.addEventListener("click", function () {
+
+            const id = button.dataset.id;
+            const code = button.dataset.code;
+
+            if (!id) {
+                return;
+            }
+
+
+            const codeElement =
+                getElement("deleteCouponCode");
+
+            if (codeElement) {
+
+                codeElement.textContent =
+                    code || "this coupon";
+
+            }
+
+
+            const deleteForm =
+                getElement("deleteCouponForm");
+
+            if (deleteForm) {
+
+                deleteForm.action = buildUrl(
+                    window.couponDeleteUrlTemplate,
+                    id
+                );
+
+            }
+
+
+            openModal(deleteModal);
+
+        });
+
+    });
+
+
+    /* =====================================================
+       CREATE VALIDATION
+    ===================================================== */
+
+    const createForm =
+        getElement("createCouponForm");
+
+
+    if (createForm) {
+
+        createForm.addEventListener(
+            "submit",
+            function (event) {
+
+                const code =
+                    getElement("createCouponCode");
+
+                const discountType =
+                    getElement("createDiscountType");
+
+                const discountValue =
+                    getElement("createDiscountValue");
+
+                const minimumOrder =
+                    getElement("createMinimumOrder");
+
+                const maximumDiscount =
+                    getElement("createMaximumDiscount");
+
+                const startDate =
+                    getElement("createStartDate");
+
+                const expiryDate =
+                    getElement("createExpiryDate");
+
+
+                /* -----------------------------------------
+                   Code
+                ----------------------------------------- */
 
                 if (
-                    createDiscountType &&
-                    createMaximumDiscount
+                    !code ||
+                    !code.value.trim()
                 ) {
-                    createDiscountType.value =
-                        "percentage";
 
-                    createMaximumDiscount.disabled =
-                        false;
+                    event.preventDefault();
 
-                    createMaximumDiscount.placeholder =
-                        "Optional";
+                    if (code) {
+                        code.focus();
+                    }
+
+                    return;
+
                 }
+
+
+                /* -----------------------------------------
+                   Discount
+                ----------------------------------------- */
+
+                const discount =
+                    Number(discountValue.value);
+
+
+                if (
+                    !discountValue.value ||
+                    Number.isNaN(discount) ||
+                    discount <= 0
+                ) {
+
+                    event.preventDefault();
+
+                    discountValue.focus();
+
+                    return;
+
+                }
+
+
+                if (
+                    discountType.value === "percentage" &&
+                    discount > 100
+                ) {
+
+                    event.preventDefault();
+
+                    discountValue.focus();
+
+                    return;
+
+                }
+
+
+                /* -----------------------------------------
+                   Minimum order
+                ----------------------------------------- */
+
+                const minimum =
+                    Number(minimumOrder.value || 0);
+
+
+                if (
+                    Number.isNaN(minimum) ||
+                    minimum < 0
+                ) {
+
+                    event.preventDefault();
+
+                    minimumOrder.focus();
+
+                    return;
+
+                }
+
+
+                /* -----------------------------------------
+                   Maximum discount
+                ----------------------------------------- */
+
+                if (maximumDiscount.value) {
+
+                    const maximum =
+                        Number(maximumDiscount.value);
+
+                    if (
+                        Number.isNaN(maximum) ||
+                        maximum < 0
+                    ) {
+
+                        event.preventDefault();
+
+                        maximumDiscount.focus();
+
+                        return;
+
+                    }
+
+                }
+
+
+                /* -----------------------------------------
+                   Dates
+                ----------------------------------------- */
+
+                if (
+                    startDate.value &&
+                    expiryDate.value
+                ) {
+
+                    const start =
+                        new Date(startDate.value);
+
+                    const expiry =
+                        new Date(expiryDate.value);
+
+
+                    if (expiry <= start) {
+
+                        event.preventDefault();
+
+                        expiryDate.focus();
+
+                        return;
+
+                    }
+
+                }
+
             }
         );
+
     }
 
 
-    /* =========================================================
-       CONSOLE CHECK
-    ========================================================= */
+    /* =====================================================
+       EDIT VALIDATION
+    ===================================================== */
 
-    console.log(
-        "NAFI Coupon Management JS loaded successfully."
-    );
-});
+    const editForm =
+        getElement("editCouponForm");
+
+
+    if (editForm) {
+
+        editForm.addEventListener(
+            "submit",
+            function (event) {
+
+                const discountType =
+                    getElement("editDiscountType");
+
+                const discountValue =
+                    getElement("editDiscountValue");
+
+                const startDate =
+                    getElement("editStartDate");
+
+                const expiryDate =
+                    getElement("editExpiryDate");
+
+
+                const discount =
+                    Number(discountValue.value);
+
+
+                if (
+                    !discountValue.value ||
+                    Number.isNaN(discount) ||
+                    discount <= 0
+                ) {
+
+                    event.preventDefault();
+
+                    discountValue.focus();
+
+                    return;
+
+                }
+
+
+                if (
+                    discountType.value === "percentage" &&
+                    discount > 100
+                ) {
+
+                    event.preventDefault();
+
+                    discountValue.focus();
+
+                    return;
+
+                }
+
+
+                if (
+                    startDate.value &&
+                    expiryDate.value
+                ) {
+
+                    const start =
+                        new Date(startDate.value);
+
+                    const expiry =
+                        new Date(expiryDate.value);
+
+
+                    if (expiry <= start) {
+
+                        event.preventDefault();
+
+                        expiryDate.focus();
+
+                        return;
+
+                    }
+
+                }
+
+            }
+        );
+
+    }
+
+
+    /* =====================================================
+       PREVENT DOUBLE SUBMIT
+    ===================================================== */
+
+    getElements(
+        "#createCouponForm, #editCouponForm, #deleteCouponForm"
+    ).forEach(function (form) {
+
+        form.addEventListener(
+            "submit",
+            function () {
+
+                const submitButton =
+                    form.querySelector(
+                        'button[type="submit"]'
+                    );
+
+
+                if (!submitButton) {
+                    return;
+                }
+
+
+                submitButton.disabled = true;
+
+                submitButton.style.opacity = "0.55";
+
+                submitButton.style.cursor =
+                    "not-allowed";
+
+            }
+        );
+
+    });
+
+
+    /* =====================================================
+       INITIALIZE
+    ===================================================== */
+
+    updateCreateDiscountFields();
+    updateEditDiscountFields();
+
+})();

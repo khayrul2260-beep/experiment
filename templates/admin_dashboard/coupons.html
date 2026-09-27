@@ -1,125 +1,115 @@
-{% extends 'admin_dashboard/master/base.html' %}
+{% extends "admin_dashboard/master/base.html" %}
 {% load static %}
 
-{% block title %}
-Coupons | NAFI Admin
-{% endblock %}
+{% block title %}Coupons | NAFI Admin{% endblock %}
 
 {% block css %}
 <link rel="stylesheet" href="{% static 'admin_panel/css/coupons.css' %}">
 {% endblock %}
 
-{% block page_title %}
-Coupons
-{% endblock %}
-
 {% block content %}
 
-<div class="coupons-page">
+<div class="coupon-page">
 
-    <!-- =========================
+    <!-- =========================================
          PAGE HEADER
-    ========================== -->
-    <div class="coupons-header">
+    ========================================== -->
+    <header class="coupon-page-header">
 
-        <div class="coupons-heading">
-            <span class="coupons-eyebrow">MARKETING</span>
+        <div class="coupon-header-content">
 
-            <h1>Coupons</h1>
+            <span class="coupon-eyebrow">
+                SALES / DISCOUNTS
+            </span>
 
-            <p>
-                Create, manage and monitor discount coupons.
+            <h1 class="coupon-page-title">
+                Coupons
+            </h1>
+
+            <p class="coupon-page-description">
+                Create and manage promotional discounts for your store.
             </p>
+
         </div>
 
         <button
             type="button"
             class="coupon-primary-btn"
-            data-bs-toggle="modal"
-            data-bs-target="#createCouponModal"
+            id="openCreateCoupon"
         >
             <i class="bi bi-plus-lg"></i>
             <span>Create Coupon</span>
         </button>
 
-    </div>
+    </header>
 
 
-    <!-- =========================
+    <!-- =========================================
          SUMMARY
-    ========================== -->
-    <div class="coupon-summary-grid">
+    ========================================== -->
+    <section class="coupon-summary">
 
-        <div class="coupon-summary-card">
+        <div class="coupon-summary-item">
 
-            <div class="summary-card-top">
-                <span>Total Coupons</span>
+            <span class="coupon-summary-label">
+                TOTAL COUPONS
+            </span>
 
-                <i class="bi bi-ticket-perforated"></i>
-            </div>
-
-            <strong>{{ total_coupons }}</strong>
-
-            <small>All created coupons</small>
+            <strong class="coupon-summary-value">
+                {{ total_coupons }}
+            </strong>
 
         </div>
 
 
-        <div class="coupon-summary-card">
+        <div class="coupon-summary-item">
 
-            <div class="summary-card-top">
-                <span>Active</span>
+            <span class="coupon-summary-label">
+                ACTIVE
+            </span>
 
-                <i class="bi bi-check-circle"></i>
-            </div>
-
-            <strong>{{ active_coupons }}</strong>
-
-            <small>Currently active</small>
+            <strong class="coupon-summary-value">
+                {{ active_coupons }}
+            </strong>
 
         </div>
 
 
-        <div class="coupon-summary-card">
+        <div class="coupon-summary-item">
 
-            <div class="summary-card-top">
-                <span>Expired</span>
+            <span class="coupon-summary-label">
+                EXPIRED
+            </span>
 
-                <i class="bi bi-clock-history"></i>
-            </div>
-
-            <strong>{{ expired_coupons }}</strong>
-
-            <small>Past expiry date</small>
+            <strong class="coupon-summary-value">
+                {{ expired_coupons }}
+            </strong>
 
         </div>
 
 
-        <div class="coupon-summary-card">
+        <div class="coupon-summary-item">
 
-            <div class="summary-card-top">
-                <span>Used</span>
+            <span class="coupon-summary-label">
+                USED
+            </span>
 
-                <i class="bi bi-arrow-repeat"></i>
-            </div>
-
-            <strong>{{ used_coupons }}</strong>
-
-            <small>Coupons already used</small>
+            <strong class="coupon-summary-value">
+                {{ used_coupons }}
+            </strong>
 
         </div>
 
-    </div>
+    </section>
 
 
-    <!-- =========================
-         FILTER BAR
-    ========================== -->
-    <div class="coupon-toolbar">
+    <!-- =========================================
+         TOOLBAR
+    ========================================== -->
+    <section class="coupon-toolbar">
 
         <form
-            method="GET"
-            action="{% url 'coupons_page' %}"
+            method="get"
             class="coupon-filter-form"
         >
 
@@ -144,25 +134,34 @@ Coupons
 
                 <select name="status">
 
-                    <option value="">All Status</option>
+                    <option value="">
+                        All Status
+                    </option>
 
                     <option
                         value="active"
-                        {% if status_filter == 'active' %}selected{% endif %}
+                        {% if status_filter == "active" %}selected{% endif %}
                     >
                         Active
                     </option>
 
                     <option
                         value="inactive"
-                        {% if status_filter == 'inactive' %}selected{% endif %}
+                        {% if status_filter == "inactive" %}selected{% endif %}
                     >
                         Inactive
                     </option>
 
                     <option
+                        value="scheduled"
+                        {% if status_filter == "scheduled" %}selected{% endif %}
+                    >
+                        Scheduled
+                    </option>
+
+                    <option
                         value="expired"
-                        {% if status_filter == 'expired' %}selected{% endif %}
+                        {% if status_filter == "expired" %}selected{% endif %}
                     >
                         Expired
                     </option>
@@ -172,23 +171,25 @@ Coupons
             </div>
 
 
-            <!-- Discount Type -->
+            <!-- Discount type -->
             <div class="coupon-filter">
 
                 <select name="discount_type">
 
-                    <option value="">All Types</option>
+                    <option value="">
+                        All Discounts
+                    </option>
 
                     <option
                         value="percentage"
-                        {% if discount_type_filter == 'percentage' %}selected{% endif %}
+                        {% if discount_type_filter == "percentage" %}selected{% endif %}
                     >
                         Percentage
                     </option>
 
                     <option
                         value="fixed"
-                        {% if discount_type_filter == 'fixed' %}selected{% endif %}
+                        {% if discount_type_filter == "fixed" %}selected{% endif %}
                     >
                         Fixed Amount
                     </option>
@@ -207,51 +208,73 @@ Coupons
 
 
             {% if search_query or status_filter or discount_type_filter %}
+
                 <a
                     href="{% url 'coupons_page' %}"
                     class="coupon-clear-filter"
                 >
                     Clear
                 </a>
+
             {% endif %}
 
         </form>
 
-    </div>
 
+        <div class="coupon-result-count">
 
-    <!-- =========================
-         COUPON TABLE
-    ========================== -->
-    <div class="coupon-table-card">
+            {{ coupons|length }}
 
-        <div class="coupon-table-header">
-
-            <div>
-                <h2>All Coupons</h2>
-
-                <span>
-                    {{ coupons|length }} coupon{{ coupons|length|pluralize }}
-                </span>
-            </div>
+            <span>
+                coupon{{ coupons|length|pluralize }}
+            </span>
 
         </div>
 
+    </section>
 
-        <div class="coupon-table-wrapper">
+
+    <!-- =========================================
+         DESKTOP TABLE
+    ========================================== -->
+    <section class="coupon-table-wrapper">
+
+        <div class="coupon-table-scroll">
 
             <table class="coupon-table">
 
                 <thead>
 
                     <tr>
-                        <th>Coupon</th>
-                        <th>Discount</th>
-                        <th>Minimum Order</th>
-                        <th>Usage</th>
-                        <th>Validity</th>
-                        <th>Status</th>
-                        <th></th>
+
+                        <th>
+                            Coupon
+                        </th>
+
+                        <th>
+                            Discount
+                        </th>
+
+                        <th>
+                            Minimum Order
+                        </th>
+
+                        <th>
+                            Usage
+                        </th>
+
+                        <th>
+                            Validity
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
+                        <th class="coupon-action-column">
+                            Actions
+                        </th>
+
                     </tr>
 
                 </thead>
@@ -266,16 +289,18 @@ Coupons
                         <!-- Coupon -->
                         <td>
 
-                            <div class="coupon-name-cell">
+                            <div class="coupon-code-cell">
 
-                                <div class="coupon-code">
+                                <span class="coupon-code">
                                     {{ coupon.code }}
-                                </div>
+                                </span>
 
                                 {% if coupon.description %}
-                                    <div class="coupon-description">
+
+                                    <span class="coupon-description">
                                         {{ coupon.description }}
-                                    </div>
+                                    </span>
+
                                 {% endif %}
 
                             </div>
@@ -286,21 +311,27 @@ Coupons
                         <!-- Discount -->
                         <td>
 
-                            <div class="coupon-discount">
+                            <div class="coupon-discount-cell">
 
-                                {% if coupon.discount_type == 'percentage' %}
+                                {% if coupon.discount_type == "percentage" %}
 
-                                    {{ coupon.discount_value|floatformat:0 }}%
+                                    <strong>
+                                        {{ coupon.discount_value|floatformat:0 }}%
+                                    </strong>
 
-                                    {% if coupon.maximum_discount %}
-                                        <small>
-                                            Max ৳{{ coupon.maximum_discount|floatformat:0 }}
-                                        </small>
-                                    {% endif %}
+                                    <span>
+                                        Percentage
+                                    </span>
 
                                 {% else %}
 
-                                    ৳{{ coupon.discount_value|floatformat:0 }}
+                                    <strong>
+                                        ৳{{ coupon.discount_value|floatformat:2 }}
+                                    </strong>
+
+                                    <span>
+                                        Fixed Amount
+                                    </span>
 
                                 {% endif %}
 
@@ -309,14 +340,12 @@ Coupons
                         </td>
 
 
-                        <!-- Minimum -->
+                        <!-- Minimum order -->
                         <td>
 
-                            {% if coupon.minimum_order_amount %}
-                                ৳{{ coupon.minimum_order_amount|floatformat:0 }}
-                            {% else %}
-                                —
-                            {% endif %}
+                            <span class="coupon-money">
+                                ৳{{ coupon.minimum_order_amount|floatformat:2 }}
+                            </span>
 
                         </td>
 
@@ -326,18 +355,39 @@ Coupons
 
                             <div class="coupon-usage">
 
-                                <strong>
-                                    {{ coupon.used_count }}
-                                </strong>
+                                <div class="coupon-usage-top">
+
+                                    <span>
+                                        {{ coupon.used_count }}
+                                    </span>
+
+                                    {% if coupon.usage_limit %}
+
+                                        <span>
+                                            / {{ coupon.usage_limit }}
+                                        </span>
+
+                                    {% else %}
+
+                                        <span>
+                                            / Unlimited
+                                        </span>
+
+                                    {% endif %}
+
+                                </div>
+
 
                                 {% if coupon.usage_limit %}
-                                    <span>
-                                        / {{ coupon.usage_limit }}
-                                    </span>
-                                {% else %}
-                                    <span>
-                                        / ∞
-                                    </span>
+
+                                    <div class="coupon-progress">
+
+                                        <span
+                                            style="width: {% widthratio coupon.used_count coupon.usage_limit 100 %}%;"
+                                        ></span>
+
+                                    </div>
+
                                 {% endif %}
 
                             </div>
@@ -351,13 +401,15 @@ Coupons
                             <div class="coupon-validity">
 
                                 <span>
-                                    {{ coupon.start_date|date:"d M Y" }}
+                                    {{ coupon.start_date|date:"d M Y, h:i A" }}
                                 </span>
 
-                                <i class="bi bi-arrow-right"></i>
+                                <span class="coupon-validity-separator">
+                                    →
+                                </span>
 
                                 <span>
-                                    {{ coupon.expiry_date|date:"d M Y" }}
+                                    {{ coupon.expiry_date|date:"d M Y, h:i A" }}
                                 </span>
 
                             </div>
@@ -372,29 +424,29 @@ Coupons
 
                             {% if not coupon.is_active %}
 
-                                <span class="coupon-status inactive">
-                                    <span></span>
+                                <span class="coupon-status coupon-status-inactive">
+                                    <i></i>
                                     Inactive
                                 </span>
 
                             {% elif coupon.expiry_date|date:"U" < current_timestamp %}
 
-                                <span class="coupon-status expired">
-                                    <span></span>
+                                <span class="coupon-status coupon-status-expired">
+                                    <i></i>
                                     Expired
                                 </span>
 
-                            {% elif coupon.usage_limit and coupon.used_count >= coupon.usage_limit %}
+                            {% elif coupon.start_date|date:"U" > current_timestamp %}
 
-                                <span class="coupon-status expired">
-                                    <span></span>
-                                    Limit Reached
+                                <span class="coupon-status coupon-status-scheduled">
+                                    <i></i>
+                                    Scheduled
                                 </span>
 
                             {% else %}
 
-                                <span class="coupon-status active">
-                                    <span></span>
+                                <span class="coupon-status coupon-status-active">
+                                    <i></i>
                                     Active
                                 </span>
 
@@ -411,44 +463,50 @@ Coupons
                                 <!-- Edit -->
                                 <button
                                     type="button"
-                                    class="coupon-action-btn"
-                                    title="Edit"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#editCouponModal"
+                                    class="coupon-icon-btn coupon-edit-btn"
+                                    title="Edit coupon"
+
                                     data-id="{{ coupon.id }}"
                                     data-code="{{ coupon.code }}"
                                     data-description="{{ coupon.description }}"
                                     data-discount-type="{{ coupon.discount_type }}"
                                     data-discount-value="{{ coupon.discount_value }}"
-                                    data-minimum="{{ coupon.minimum_order_amount }}"
-                                    data-maximum="{{ coupon.maximum_discount|default:'' }}"
-                                    data-start="{{ coupon.start_date|date:'Y-m-d\TH:i' }}"
-                                    data-expiry="{{ coupon.expiry_date|date:'Y-m-d\TH:i' }}"
-                                    data-usage-limit="{{ coupon.usage_limit|default:'' }}"
-                                    data-active="{{ coupon.is_active|yesno:'true,false' }}"
+                                    data-minimum-order="{{ coupon.minimum_order_amount }}"
+                                    data-maximum-discount="{{ coupon.maximum_discount|default_if_none:'' }}"
+                                    data-start-date="{{ coupon.start_date|date:'c' }}"
+                                    data-expiry-date="{{ coupon.expiry_date|date:'c' }}"
+                                    data-usage-limit="{{ coupon.usage_limit|default_if_none:'' }}"
+                                    data-is-active="{{ coupon.is_active|yesno:'true,false' }}"
                                 >
+
                                     <i class="bi bi-pencil"></i>
+
                                 </button>
 
 
                                 <!-- Toggle -->
                                 <form
-                                    method="POST"
+                                    method="post"
                                     action="{% url 'toggle_coupon' coupon.id %}"
+                                    class="coupon-action-form"
                                 >
 
                                     {% csrf_token %}
 
                                     <button
                                         type="submit"
-                                        class="coupon-action-btn"
+                                        class="coupon-icon-btn"
                                         title="{% if coupon.is_active %}Deactivate{% else %}Activate{% endif %}"
                                     >
 
                                         {% if coupon.is_active %}
+
                                             <i class="bi bi-pause"></i>
+
                                         {% else %}
+
                                             <i class="bi bi-play"></i>
+
                                         {% endif %}
 
                                     </button>
@@ -459,14 +517,14 @@ Coupons
                                 <!-- Delete -->
                                 <button
                                     type="button"
-                                    class="coupon-action-btn delete"
-                                    title="Delete"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#deleteCouponModal"
+                                    class="coupon-icon-btn coupon-delete-btn"
+                                    title="Delete coupon"
                                     data-id="{{ coupon.id }}"
                                     data-code="{{ coupon.code }}"
                                 >
+
                                     <i class="bi bi-trash3"></i>
+
                                 </button>
 
                             </div>
@@ -475,25 +533,36 @@ Coupons
 
                     </tr>
 
-
                     {% empty %}
 
                     <tr>
 
                         <td
                             colspan="7"
-                            class="coupon-empty"
+                            class="coupon-empty-cell"
                         >
 
-                            <div>
+                            <div class="coupon-empty-state">
 
-                                <i class="bi bi-ticket-perforated"></i>
+                                <div class="coupon-empty-icon">
+                                    <i class="bi bi-ticket-perforated"></i>
+                                </div>
 
-                                <h3>No coupons found</h3>
+                                <h3>
+                                    No coupons found
+                                </h3>
 
                                 <p>
                                     Create your first coupon to start offering discounts.
                                 </p>
+
+                                <button
+                                    type="button"
+                                    class="coupon-empty-btn"
+                                    id="openCreateCouponEmpty"
+                                >
+                                    Create Coupon
+                                </button>
 
                             </div>
 
@@ -509,599 +578,799 @@ Coupons
 
         </div>
 
-    </div>
-
-</div>
+    </section>
 
 
-<!-- ==================================================
-     CREATE COUPON MODAL
-================================================== -->
-<div
-    class="modal fade coupon-modal"
-    id="createCouponModal"
-    tabindex="-1"
-    aria-hidden="true"
->
+    <!-- =========================================
+         MOBILE COUPON LIST
+    ========================================== -->
+    <section class="coupon-mobile-list">
 
-    <div class="modal-dialog modal-dialog-centered modal-lg">
+        {% for coupon in coupons %}
 
-        <div class="modal-content">
+        <article class="coupon-mobile-card">
 
-            <div class="modal-header">
+            <div class="coupon-mobile-card-header">
 
                 <div>
-                    <span>COUPON MANAGEMENT</span>
-                    <h5>Create Coupon</h5>
+
+                    <span class="coupon-mobile-code">
+                        {{ coupon.code }}
+                    </span>
+
+                    {% if coupon.description %}
+
+                        <p>
+                            {{ coupon.description }}
+                        </p>
+
+                    {% endif %}
+
                 </div>
 
-                <button
-                    type="button"
-                    class="btn-close"
-                    data-bs-dismiss="modal"
-                    aria-label="Close"
-                ></button>
+
+                {% if not coupon.is_active %}
+
+                    <span class="coupon-status coupon-status-inactive">
+                        <i></i>
+                        Inactive
+                    </span>
+
+                {% else %}
+
+                    <span class="coupon-status coupon-status-active">
+                        <i></i>
+                        Active
+                    </span>
+
+                {% endif %}
 
             </div>
 
 
-            <form
-                method="POST"
-                action="{% url 'create_coupon' %}"
-                id="createCouponForm"
-            >
-
-                {% csrf_token %}
-
-                <div class="modal-body">
-
-                    <div class="coupon-form-grid">
-
-                        <!-- Code -->
-                        <div class="coupon-form-group full">
-
-                            <label for="create_code">
-                                Coupon Code
-                            </label>
-
-                            <input
-                                type="text"
-                                id="create_code"
-                                name="code"
-                                maxlength="50"
-                                placeholder="e.g. NAFI10"
-                                required
-                            >
-
-                            <small>
-                                Use a short, memorable uppercase code.
-                            </small>
-
-                        </div>
-
-
-                        <!-- Description -->
-                        <div class="coupon-form-group full">
-
-                            <label for="create_description">
-                                Description
-                            </label>
-
-                            <input
-                                type="text"
-                                id="create_description"
-                                name="description"
-                                maxlength="255"
-                                placeholder="10% discount for selected customers"
-                            >
-
-                        </div>
-
-
-                        <!-- Type -->
-                        <div class="coupon-form-group">
-
-                            <label for="create_discount_type">
-                                Discount Type
-                            </label>
-
-                            <select
-                                id="create_discount_type"
-                                name="discount_type"
-                                required
-                            >
-                                <option value="percentage">
-                                    Percentage
-                                </option>
-
-                                <option value="fixed">
-                                    Fixed Amount
-                                </option>
-                            </select>
-
-                        </div>
-
-
-                        <!-- Value -->
-                        <div class="coupon-form-group">
-
-                            <label for="create_discount_value">
-                                Discount Value
-                            </label>
-
-                            <input
-                                type="number"
-                                id="create_discount_value"
-                                name="discount_value"
-                                min="0"
-                                step="0.01"
-                                placeholder="10"
-                                required
-                            >
-
-                        </div>
-
-
-                        <!-- Minimum -->
-                        <div class="coupon-form-group">
-
-                            <label for="create_minimum">
-                                Minimum Order
-                            </label>
-
-                            <input
-                                type="number"
-                                id="create_minimum"
-                                name="minimum_order_amount"
-                                min="0"
-                                step="0.01"
-                                value="0"
-                            >
-
-                        </div>
-
-
-                        <!-- Maximum -->
-                        <div class="coupon-form-group">
-
-                            <label for="create_maximum">
-                                Maximum Discount
-                            </label>
-
-                            <input
-                                type="number"
-                                id="create_maximum"
-                                name="maximum_discount"
-                                min="0"
-                                step="0.01"
-                                placeholder="Optional"
-                            >
-
-                        </div>
-
-
-                        <!-- Start -->
-                        <div class="coupon-form-group">
-
-                            <label for="create_start">
-                                Start Date
-                            </label>
-
-                            <input
-                                type="datetime-local"
-                                id="create_start"
-                                name="start_date"
-                                required
-                            >
-
-                        </div>
-
-
-                        <!-- Expiry -->
-                        <div class="coupon-form-group">
-
-                            <label for="create_expiry">
-                                Expiry Date
-                            </label>
-
-                            <input
-                                type="datetime-local"
-                                id="create_expiry"
-                                name="expiry_date"
-                                required
-                            >
-
-                        </div>
-
-
-                        <!-- Usage -->
-                        <div class="coupon-form-group">
-
-                            <label for="create_usage_limit">
-                                Usage Limit
-                            </label>
-
-                            <input
-                                type="number"
-                                id="create_usage_limit"
-                                name="usage_limit"
-                                min="1"
-                                step="1"
-                                placeholder="Unlimited"
-                            >
-
-                        </div>
-
-
-                        <!-- Active -->
-                        <div class="coupon-form-group coupon-checkbox-group">
-
-                            <label>
-                                <input
-                                    type="checkbox"
-                                    name="is_active"
-                                    checked
-                                >
-
-                                <span>Active immediately</span>
-                            </label>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <div class="modal-footer">
-
-                    <button
-                        type="button"
-                        class="coupon-secondary-btn"
-                        data-bs-dismiss="modal"
-                    >
-                        Cancel
-                    </button>
-
-                    <button
-                        type="submit"
-                        class="coupon-primary-btn"
-                    >
-                        Create Coupon
-                    </button>
-
-                </div>
-
-            </form>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- ==================================================
-     EDIT COUPON MODAL
-================================================== -->
-<div
-    class="modal fade coupon-modal"
-    id="editCouponModal"
-    tabindex="-1"
-    aria-hidden="true"
->
-
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-
-        <div class="modal-content">
-
-            <div class="modal-header">
+            <div class="coupon-mobile-details">
 
                 <div>
-                    <span>COUPON MANAGEMENT</span>
-                    <h5>Edit Coupon</h5>
+                    <span>Discount</span>
+
+                    <strong>
+
+                        {% if coupon.discount_type == "percentage" %}
+                            {{ coupon.discount_value|floatformat:0 }}%
+                        {% else %}
+                            ৳{{ coupon.discount_value|floatformat:2 }}
+                        {% endif %}
+
+                    </strong>
+
                 </div>
 
-                <button
-                    type="button"
-                    class="btn-close"
-                    data-bs-dismiss="modal"
-                    aria-label="Close"
-                ></button>
+
+                <div>
+                    <span>Minimum</span>
+
+                    <strong>
+                        ৳{{ coupon.minimum_order_amount|floatformat:2 }}
+                    </strong>
+                </div>
+
+
+                <div>
+                    <span>Used</span>
+
+                    <strong>
+                        {{ coupon.used_count }}
+                        {% if coupon.usage_limit %}
+                            / {{ coupon.usage_limit }}
+                        {% endif %}
+                    </strong>
+                </div>
 
             </div>
 
 
-            <form
-                method="POST"
-                id="editCouponForm"
-            >
+            <div class="coupon-mobile-footer">
 
-                {% csrf_token %}
-
-                <div class="modal-body">
-
-                    <div class="coupon-form-grid">
-
-                        <div class="coupon-form-group full">
-
-                            <label for="edit_code">
-                                Coupon Code
-                            </label>
-
-                            <input
-                                type="text"
-                                id="edit_code"
-                                name="code"
-                                maxlength="50"
-                                required
-                            >
-
-                        </div>
-
-
-                        <div class="coupon-form-group full">
-
-                            <label for="edit_description">
-                                Description
-                            </label>
-
-                            <input
-                                type="text"
-                                id="edit_description"
-                                name="description"
-                                maxlength="255"
-                            >
-
-                        </div>
-
-
-                        <div class="coupon-form-group">
-
-                            <label for="edit_discount_type">
-                                Discount Type
-                            </label>
-
-                            <select
-                                id="edit_discount_type"
-                                name="discount_type"
-                                required
-                            >
-
-                                <option value="percentage">
-                                    Percentage
-                                </option>
-
-                                <option value="fixed">
-                                    Fixed Amount
-                                </option>
-
-                            </select>
-
-                        </div>
-
-
-                        <div class="coupon-form-group">
-
-                            <label for="edit_discount_value">
-                                Discount Value
-                            </label>
-
-                            <input
-                                type="number"
-                                id="edit_discount_value"
-                                name="discount_value"
-                                min="0"
-                                step="0.01"
-                                required
-                            >
-
-                        </div>
-
-
-                        <div class="coupon-form-group">
-
-                            <label for="edit_minimum">
-                                Minimum Order
-                            </label>
-
-                            <input
-                                type="number"
-                                id="edit_minimum"
-                                name="minimum_order_amount"
-                                min="0"
-                                step="0.01"
-                            >
-
-                        </div>
-
-
-                        <div class="coupon-form-group">
-
-                            <label for="edit_maximum">
-                                Maximum Discount
-                            </label>
-
-                            <input
-                                type="number"
-                                id="edit_maximum"
-                                name="maximum_discount"
-                                min="0"
-                                step="0.01"
-                            >
-
-                        </div>
-
-
-                        <div class="coupon-form-group">
-
-                            <label for="edit_start">
-                                Start Date
-                            </label>
-
-                            <input
-                                type="datetime-local"
-                                id="edit_start"
-                                name="start_date"
-                                required
-                            >
-
-                        </div>
-
-
-                        <div class="coupon-form-group">
-
-                            <label for="edit_expiry">
-                                Expiry Date
-                            </label>
-
-                            <input
-                                type="datetime-local"
-                                id="edit_expiry"
-                                name="expiry_date"
-                                required
-                            >
-
-                        </div>
-
-
-                        <div class="coupon-form-group">
-
-                            <label for="edit_usage_limit">
-                                Usage Limit
-                            </label>
-
-                            <input
-                                type="number"
-                                id="edit_usage_limit"
-                                name="usage_limit"
-                                min="1"
-                                step="1"
-                            >
-
-                        </div>
-
-
-                        <div class="coupon-form-group coupon-checkbox-group">
-
-                            <label>
-
-                                <input
-                                    type="checkbox"
-                                    name="is_active"
-                                    id="edit_active"
-                                >
-
-                                <span>Coupon active</span>
-
-                            </label>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <div class="modal-footer">
-
-                    <button
-                        type="button"
-                        class="coupon-secondary-btn"
-                        data-bs-dismiss="modal"
-                    >
-                        Cancel
-                    </button>
-
-                    <button
-                        type="submit"
-                        class="coupon-primary-btn"
-                    >
-                        Save Changes
-                    </button>
-
-                </div>
-
-            </form>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- ==================================================
-     DELETE MODAL
-================================================== -->
-<div
-    class="modal fade coupon-modal"
-    id="deleteCouponModal"
-    tabindex="-1"
-    aria-hidden="true"
->
-
-    <div class="modal-dialog modal-dialog-centered">
-
-        <div class="modal-content coupon-delete-modal">
-
-            <div class="modal-body">
-
-                <div class="delete-icon">
-                    <i class="bi bi-trash3"></i>
-                </div>
-
-                <span class="delete-eyebrow">
-                    DELETE COUPON
+                <span>
+                    Expires {{ coupon.expiry_date|date:"d M Y" }}
                 </span>
 
-                <h5>Delete this coupon?</h5>
 
-                <p>
-                    Coupon
-                    <strong id="deleteCouponCode"></strong>
-                    will be permanently removed.
-                </p>
+                <div class="coupon-actions">
 
-                <div class="delete-warning">
-                    <i class="bi bi-exclamation-triangle"></i>
-                    <span>
-                        Used coupons should normally be deactivated instead.
-                    </span>
+                    <button
+                        type="button"
+                        class="coupon-icon-btn coupon-edit-btn"
+
+                        data-id="{{ coupon.id }}"
+                        data-code="{{ coupon.code }}"
+                        data-description="{{ coupon.description }}"
+                        data-discount-type="{{ coupon.discount_type }}"
+                        data-discount-value="{{ coupon.discount_value }}"
+                        data-minimum-order="{{ coupon.minimum_order_amount }}"
+                        data-maximum-discount="{{ coupon.maximum_discount|default_if_none:'' }}"
+                        data-start-date="{{ coupon.start_date|date:'c' }}"
+                        data-expiry-date="{{ coupon.expiry_date|date:'c' }}"
+                        data-usage-limit="{{ coupon.usage_limit|default_if_none:'' }}"
+                        data-is-active="{{ coupon.is_active|yesno:'true,false' }}"
+                    >
+
+                        <i class="bi bi-pencil"></i>
+
+                    </button>
+
+
+                    <form
+                        method="post"
+                        action="{% url 'toggle_coupon' coupon.id %}"
+                    >
+
+                        {% csrf_token %}
+
+                        <button
+                            type="submit"
+                            class="coupon-icon-btn"
+                        >
+
+                            {% if coupon.is_active %}
+                                <i class="bi bi-pause"></i>
+                            {% else %}
+                                <i class="bi bi-play"></i>
+                            {% endif %}
+
+                        </button>
+
+                    </form>
+
+
+                    <button
+                        type="button"
+                        class="coupon-icon-btn coupon-delete-btn"
+                        data-id="{{ coupon.id }}"
+                        data-code="{{ coupon.code }}"
+                    >
+
+                        <i class="bi bi-trash3"></i>
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </article>
+
+        {% endfor %}
+
+    </section>
+
+</div>
+
+
+<!-- =====================================================
+     CREATE COUPON MODAL
+====================================================== -->
+<div
+    class="coupon-modal"
+    id="createCouponModal"
+    aria-hidden="true"
+>
+
+    <div class="coupon-modal-overlay"></div>
+
+    <div
+        class="coupon-modal-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="createCouponTitle"
+    >
+
+        <div class="coupon-modal-header">
+
+            <div>
+
+                <span class="coupon-modal-eyebrow">
+                    NEW DISCOUNT
+                </span>
+
+                <h2 id="createCouponTitle">
+                    Create Coupon
+                </h2>
+
+            </div>
+
+            <button
+                type="button"
+                class="coupon-modal-close"
+                data-close-modal
+                aria-label="Close"
+            >
+                <i class="bi bi-x-lg"></i>
+            </button>
+
+        </div>
+
+
+        <form
+            method="post"
+            action="{% url 'create_coupon' %}"
+            id="createCouponForm"
+        >
+
+            {% csrf_token %}
+
+            <div class="coupon-modal-body">
+
+                <div class="coupon-form-grid">
+
+                    <!-- Code -->
+                    <div class="coupon-form-group coupon-form-full">
+
+                        <label for="createCouponCode">
+                            Coupon Code
+                        </label>
+
+                        <input
+                            type="text"
+                            id="createCouponCode"
+                            name="code"
+                            maxlength="50"
+                            placeholder="e.g. NAFI10"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- Description -->
+                    <div class="coupon-form-group coupon-form-full">
+
+                        <label for="createCouponDescription">
+                            Description
+                        </label>
+
+                        <input
+                            type="text"
+                            id="createCouponDescription"
+                            name="description"
+                            maxlength="255"
+                            placeholder="Optional coupon description"
+                        >
+
+                    </div>
+
+
+                    <!-- Discount type -->
+                    <div class="coupon-form-group">
+
+                        <label for="createDiscountType">
+                            Discount Type
+                        </label>
+
+                        <select
+                            id="createDiscountType"
+                            name="discount_type"
+                        >
+
+                            <option value="percentage">
+                                Percentage
+                            </option>
+
+                            <option value="fixed">
+                                Fixed Amount
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Discount value -->
+                    <div class="coupon-form-group">
+
+                        <label for="createDiscountValue">
+                            Discount Value
+                        </label>
+
+                        <input
+                            type="number"
+                            id="createDiscountValue"
+                            name="discount_value"
+                            min="0"
+                            step="0.01"
+                            placeholder="10"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- Minimum -->
+                    <div class="coupon-form-group">
+
+                        <label for="createMinimumOrder">
+                            Minimum Order
+                        </label>
+
+                        <input
+                            type="number"
+                            id="createMinimumOrder"
+                            name="minimum_order_amount"
+                            min="0"
+                            step="0.01"
+                            value="0"
+                        >
+
+                    </div>
+
+
+                    <!-- Maximum discount -->
+                    <div class="coupon-form-group">
+
+                        <label for="createMaximumDiscount">
+                            Maximum Discount
+                        </label>
+
+                        <input
+                            type="number"
+                            id="createMaximumDiscount"
+                            name="maximum_discount"
+                            min="0"
+                            step="0.01"
+                            placeholder="Optional"
+                        >
+
+                    </div>
+
+
+                    <!-- Start -->
+                    <div class="coupon-form-group">
+
+                        <label for="createStartDate">
+                            Start Date
+                        </label>
+
+                        <input
+                            type="datetime-local"
+                            id="createStartDate"
+                            name="start_date"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- Expiry -->
+                    <div class="coupon-form-group">
+
+                        <label for="createExpiryDate">
+                            Expiry Date
+                        </label>
+
+                        <input
+                            type="datetime-local"
+                            id="createExpiryDate"
+                            name="expiry_date"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- Usage -->
+                    <div class="coupon-form-group">
+
+                        <label for="createUsageLimit">
+                            Usage Limit
+                        </label>
+
+                        <input
+                            type="number"
+                            id="createUsageLimit"
+                            name="usage_limit"
+                            min="1"
+                            step="1"
+                            placeholder="Unlimited"
+                        >
+
+                    </div>
+
+
+                    <!-- Active -->
+                    <div class="coupon-form-group coupon-toggle-group">
+
+                        <label>
+                            Status
+                        </label>
+
+                        <label class="coupon-switch">
+
+                            <input
+                                type="checkbox"
+                                name="is_active"
+                                id="createIsActive"
+                                checked
+                            >
+
+                            <span></span>
+
+                            <small>
+                                Active
+                            </small>
+
+                        </label>
+
+                    </div>
+
                 </div>
 
             </div>
 
 
-            <div class="modal-footer">
+            <div class="coupon-modal-footer">
 
                 <button
                     type="button"
                     class="coupon-secondary-btn"
-                    data-bs-dismiss="modal"
+                    data-close-modal
                 >
                     Cancel
                 </button>
 
-                <form
-                    method="POST"
-                    id="deleteCouponForm"
+                <button
+                    type="submit"
+                    class="coupon-primary-btn"
                 >
-
-                    {% csrf_token %}
-
-                    <button
-                        type="submit"
-                        class="coupon-delete-btn"
-                    >
-                        Delete Coupon
-                    </button>
-
-                </form>
+                    Create Coupon
+                </button>
 
             </div>
 
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     EDIT COUPON MODAL
+====================================================== -->
+<div
+    class="coupon-modal"
+    id="editCouponModal"
+    aria-hidden="true"
+>
+
+    <div class="coupon-modal-overlay"></div>
+
+    <div
+        class="coupon-modal-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="editCouponTitle"
+    >
+
+        <div class="coupon-modal-header">
+
+            <div>
+
+                <span class="coupon-modal-eyebrow">
+                    COUPON SETTINGS
+                </span>
+
+                <h2 id="editCouponTitle">
+                    Edit Coupon
+                </h2>
+
+            </div>
+
+            <button
+                type="button"
+                class="coupon-modal-close"
+                data-close-modal
+            >
+                <i class="bi bi-x-lg"></i>
+            </button>
+
         </div>
+
+
+        <form
+            method="post"
+            id="editCouponForm"
+        >
+
+            {% csrf_token %}
+
+            <div class="coupon-modal-body">
+
+                <div class="coupon-form-grid">
+
+                    <div class="coupon-form-group coupon-form-full">
+
+                        <label for="editCouponCode">
+                            Coupon Code
+                        </label>
+
+                        <input
+                            type="text"
+                            id="editCouponCode"
+                            name="code"
+                            maxlength="50"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="coupon-form-group coupon-form-full">
+
+                        <label for="editCouponDescription">
+                            Description
+                        </label>
+
+                        <input
+                            type="text"
+                            id="editCouponDescription"
+                            name="description"
+                            maxlength="255"
+                        >
+
+                    </div>
+
+
+                    <div class="coupon-form-group">
+
+                        <label for="editDiscountType">
+                            Discount Type
+                        </label>
+
+                        <select
+                            id="editDiscountType"
+                            name="discount_type"
+                        >
+
+                            <option value="percentage">
+                                Percentage
+                            </option>
+
+                            <option value="fixed">
+                                Fixed Amount
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="coupon-form-group">
+
+                        <label for="editDiscountValue">
+                            Discount Value
+                        </label>
+
+                        <input
+                            type="number"
+                            id="editDiscountValue"
+                            name="discount_value"
+                            min="0"
+                            step="0.01"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="coupon-form-group">
+
+                        <label for="editMinimumOrder">
+                            Minimum Order
+                        </label>
+
+                        <input
+                            type="number"
+                            id="editMinimumOrder"
+                            name="minimum_order_amount"
+                            min="0"
+                            step="0.01"
+                        >
+
+                    </div>
+
+
+                    <div class="coupon-form-group">
+
+                        <label for="editMaximumDiscount">
+                            Maximum Discount
+                        </label>
+
+                        <input
+                            type="number"
+                            id="editMaximumDiscount"
+                            name="maximum_discount"
+                            min="0"
+                            step="0.01"
+                        >
+
+                    </div>
+
+
+                    <div class="coupon-form-group">
+
+                        <label for="editStartDate">
+                            Start Date
+                        </label>
+
+                        <input
+                            type="datetime-local"
+                            id="editStartDate"
+                            name="start_date"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="coupon-form-group">
+
+                        <label for="editExpiryDate">
+                            Expiry Date
+                        </label>
+
+                        <input
+                            type="datetime-local"
+                            id="editExpiryDate"
+                            name="expiry_date"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="coupon-form-group">
+
+                        <label for="editUsageLimit">
+                            Usage Limit
+                        </label>
+
+                        <input
+                            type="number"
+                            id="editUsageLimit"
+                            name="usage_limit"
+                            min="1"
+                            step="1"
+                        >
+
+                    </div>
+
+
+                    <div class="coupon-form-group coupon-toggle-group">
+
+                        <label>
+                            Status
+                        </label>
+
+                        <label class="coupon-switch">
+
+                            <input
+                                type="checkbox"
+                                name="is_active"
+                                id="editIsActive"
+                            >
+
+                            <span></span>
+
+                            <small>
+                                Active
+                            </small>
+
+                        </label>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="coupon-modal-footer">
+
+                <button
+                    type="button"
+                    class="coupon-secondary-btn"
+                    data-close-modal
+                >
+                    Cancel
+                </button>
+
+                <button
+                    type="submit"
+                    class="coupon-primary-btn"
+                >
+                    Save Changes
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     DELETE COUPON MODAL
+====================================================== -->
+<div
+    class="coupon-modal coupon-delete-modal"
+    id="deleteCouponModal"
+    aria-hidden="true"
+>
+
+    <div class="coupon-modal-overlay"></div>
+
+    <div
+        class="coupon-modal-dialog coupon-delete-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="deleteCouponTitle"
+    >
+
+        <div class="coupon-delete-icon">
+            <i class="bi bi-trash3"></i>
+        </div>
+
+
+        <div class="coupon-delete-content">
+
+            <span class="coupon-modal-eyebrow">
+                DELETE COUPON
+            </span>
+
+            <h2 id="deleteCouponTitle">
+                Delete this coupon?
+            </h2>
+
+            <p>
+                You are about to delete
+                <strong id="deleteCouponCode">
+                    coupon
+                </strong>.
+                This action cannot be undone.
+            </p>
+
+        </div>
+
+
+        <form
+            method="post"
+            id="deleteCouponForm"
+        >
+
+            {% csrf_token %}
+
+            <div class="coupon-modal-footer">
+
+                <button
+                    type="button"
+                    class="coupon-secondary-btn"
+                    data-close-modal
+                >
+                    Cancel
+                </button>
+
+                <button
+                    type="submit"
+                    class="coupon-danger-btn"
+                >
+                    Delete Coupon
+                </button>
+
+            </div>
+
+        </form>
 
     </div>
 
@@ -1112,13 +1381,19 @@ Coupons
 
 {% block js %}
 
+<!-- =====================================================
+     URL TEMPLATES
+====================================================== -->
 <script>
+
     window.couponUpdateUrlTemplate =
         "{% url 'update_coupon' 0 %}";
 
     window.couponDeleteUrlTemplate =
         "{% url 'delete_coupon' 0 %}";
+
 </script>
+
 
 <script src="{% static 'admin_panel/js/coupons.js' %}"></script>
 

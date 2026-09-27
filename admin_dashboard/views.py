@@ -2214,7 +2214,7 @@ def coupons_page(request):
 
         "page_title": "Coupons",
 
-        "coupon_data": coupon_data,
+        "coupons": coupon_data,
 
         "search_query": search_query,
 
