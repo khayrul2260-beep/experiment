@@ -22,6 +22,12 @@ urlpatterns = [
     path('inventory/update-stock/', update_inventory_stock, name='update_inventory_stock'),
 
     path('coupons/', coupons_page, name='coupons_page'),
+    path('coupons/create/',create_coupon,name='create_coupon'),
+    path('coupons/<int:coupon_id>/update/', update_coupon, name='update_coupon'),
+    path('coupons/<int:coupon_id>/toggle/', toggle_coupon, name='toggle_coupon'),
+    path('coupons/<int:coupon_id>/delete/', delete_coupon, name='delete_coupon'),
+
+
     path('reviews/', reviews_page, name='reviews_page'),
     path('reports/', reports_page, name='reports_page'),
 

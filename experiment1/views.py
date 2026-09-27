@@ -6,6 +6,8 @@ from types import SimpleNamespace
 from django.db import transaction
 from django.views.decorators.http import require_POST
 from django.db.models import Sum
+from decimal import Decimal
+from .coupon_utils import validate_coupon
 
 # =========================================================
 # GUEST CART HELPERS
@@ -1709,6 +1711,191 @@ def all_products_page(request):
         context
     )
 
+
+
+# =========================================================
+# APPLY COUPON
+# =========================================================
+
+@require_POST
+def apply_coupon(request):
+
+    code = request.POST.get(
+        "code",
+        ""
+    ).strip()
+
+    # =====================================================
+    # GET CURRENT CART SUBTOTAL
+    # =====================================================
+
+    if request.user.is_authenticated:
+
+        cart = (
+            Cart.objects
+            .filter(
+                user=request.user
+            )
+            .first()
+        )
+
+        if not cart:
+
+            return JsonResponse({
+                "success": False,
+                "message": "Your cart is empty.",
+            }, status=400)
+
+        cart_items = (
+            cart.items
+            .select_related("product")
+        )
+
+        if not cart_items.exists():
+
+            return JsonResponse({
+                "success": False,
+                "message": "Your cart is empty.",
+            }, status=400)
+
+        subtotal = sum(
+            item.total_price
+            for item in cart_items
+        )
+
+    else:
+
+        cart_items = _get_guest_cart_items(
+            request
+        )
+
+        if not cart_items:
+
+            return JsonResponse({
+                "success": False,
+                "message": "Your cart is empty.",
+            }, status=400)
+
+        cart = _get_guest_cart_summary(
+            cart_items
+        )
+
+        subtotal = cart.subtotal
+
+    # =====================================================
+    # VALIDATE COUPON
+    # =====================================================
+
+    result = validate_coupon(
+        code,
+        subtotal
+    )
+
+    # =====================================================
+    # INVALID COUPON
+    # =====================================================
+
+    if not result["valid"]:
+
+        request.session.pop(
+            "coupon_code",
+            None
+        )
+
+        request.session.modified = True
+
+        return JsonResponse({
+            "success": False,
+            "message": result["message"],
+        }, status=400)
+
+    # =====================================================
+    # STORE COUPON IN SESSION
+    # =====================================================
+
+    coupon = result["coupon"]
+
+    request.session["coupon_code"] = coupon.code
+
+    request.session.modified = True
+
+    discount = result["discount"]
+
+    delivery_charge = Decimal(
+        "0.00"
+    )
+
+    total_amount = (
+        Decimal(str(subtotal))
+        + delivery_charge
+        - discount
+    )
+
+    if total_amount < Decimal("0.00"):
+
+        total_amount = Decimal(
+            "0.00"
+        )
+
+    # =====================================================
+    # RESPONSE
+    # =====================================================
+
+    return JsonResponse({
+
+        "success": True,
+
+        "message": result["message"],
+
+        "coupon_code": coupon.code,
+
+        "discount_type": coupon.discount_type,
+
+        "discount_value": str(
+            coupon.discount_value
+        ),
+
+        "subtotal": str(
+            subtotal
+        ),
+
+        "discount": str(
+            discount
+        ),
+
+        "delivery_charge": str(
+            delivery_charge
+        ),
+
+        "total_amount": str(
+            total_amount
+        ),
+
+    })
+
+
+
+# =========================================================
+# CLEAR COUPON
+# =========================================================
+
+@require_POST
+def clear_coupon(request):
+
+    request.session.pop(
+        "coupon_code",
+        None
+    )
+
+    request.session.modified = True
+
+    return JsonResponse({
+
+        "success": True,
+
+        "message": "Coupon removed successfully.",
+
+    })
 # =========================================================
 # CHECKOUT PAGE
 # =========================================================
@@ -2081,23 +2268,104 @@ def checkout_page(request):
                     })
 
                 # =================================================
-                # DELIVERY + DISCOUNT
+                # DELIVERY
                 # =================================================
 
                 # Delivery charge will be implemented later.
+
                 delivery_charge = Decimal(
                     "0.00"
+                )
+
+                # =================================================
+                # COUPON VALIDATION
+                # =================================================
+
+                coupon = None
+
+                coupon_code = request.session.get(
+                    "coupon_code"
                 )
 
                 discount = Decimal(
                     "0.00"
                 )
 
+                if coupon_code:
+
+                    # ---------------------------------------------
+                    # LOCK COUPON ROW
+                    # ---------------------------------------------
+
+                    try:
+
+                        coupon = (
+                            Coupon.objects
+                            .select_for_update()
+                            .get(
+                                code__iexact=coupon_code
+                            )
+                        )
+
+                    except Coupon.DoesNotExist:
+
+                        request.session.pop(
+                            "coupon_code",
+                            None
+                        )
+
+                        request.session.modified = True
+
+                        raise ValueError(
+                            "The selected coupon is no longer available."
+                        )
+
+                    # ---------------------------------------------
+                    # RE-VALIDATE COUPON
+                    # ---------------------------------------------
+
+                    coupon_result = validate_coupon(
+                        coupon.code,
+                        subtotal,
+                        coupon=coupon
+                    )
+
+                    if not coupon_result["valid"]:
+
+                        request.session.pop(
+                            "coupon_code",
+                            None
+                        )
+
+                        request.session.modified = True
+
+                        raise ValueError(
+                            coupon_result["message"]
+                        )
+
+                    # ---------------------------------------------
+                    # GET FINAL DISCOUNT
+                    # ---------------------------------------------
+
+                    discount = coupon_result[
+                        "discount"
+                    ]
+
+                # =================================================
+                # CALCULATE TOTAL
+                # =================================================
+
                 total_amount = (
                     subtotal
                     + delivery_charge
                     - discount
                 )
+
+                if total_amount < Decimal("0.00"):
+
+                    total_amount = Decimal(
+                        "0.00"
+                    )
 
                 # =================================================
                 # CREATE ORDER
@@ -2126,6 +2394,14 @@ def checkout_page(request):
                     delivery_charge=delivery_charge,
 
                     discount=discount,
+
+                    coupon=coupon,
+
+                    coupon_code=(
+                        coupon.code
+                        if coupon
+                        else ""
+                    ),
 
                     total_amount=total_amount,
 
@@ -2211,6 +2487,20 @@ def checkout_page(request):
                     )
 
                 # =================================================
+                # INCREMENT COUPON USAGE
+                # =================================================
+
+                if coupon:
+
+                    coupon.used_count += 1
+
+                    coupon.save(
+                        update_fields=[
+                            "used_count"
+                        ]
+                    )
+
+                # =================================================
                 # CLEAR CART
                 # =================================================
 
@@ -2224,10 +2514,23 @@ def checkout_page(request):
                         request
                     )
 
+                # =================================================
+                # CLEAR COUPON SESSION
+                # =================================================
+
+                if coupon_code:
+
+                    request.session.pop(
+                        "coupon_code",
+                        None
+                    )
+
+                    request.session.modified = True
+
         except ValueError as e:
 
             # =================================================
-            # STOCK / PRODUCT ERROR
+            # STOCK / PRODUCT / COUPON ERROR
             # =================================================
 
             error_message = str(e)
@@ -2384,6 +2687,7 @@ def checkout_page(request):
         "customer/checkout.html",
         context
     )
+
 
 def order_confirmation_page(request, order_number):
 

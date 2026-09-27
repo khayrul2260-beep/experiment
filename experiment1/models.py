@@ -399,6 +399,19 @@ class Order(models.Model):
         default=0
     )
 
+    coupon = models.ForeignKey(
+        "admin_dashboard.Coupon",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="orders"
+    )
+    
+    coupon_code = models.CharField(
+        max_length=50,
+        blank=True
+    )
+
     total_amount = models.DecimalField(
         max_digits=10,
         decimal_places=2,

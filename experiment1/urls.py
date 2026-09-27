@@ -22,6 +22,10 @@ urlpatterns = [
 
     path("checkout/", checkout_page, name="checkout_page"),
     path("order-confirmation/<str:order_number>/", order_confirmation_page, name="order_confirmation"),
+    path("checkout/clear-coupon/", clear_coupon, name="clear_coupon"),
+    path("checkout/apply-coupon/", apply_coupon, name="apply_coupon"),
+
+
     path("my-orders/", my_orders_page, name="my_orders"),
     path("order-details/<str:order_number>/", order_details_page, name="order_details"),
     path("order-details/<str:order_number>/return-exchange/", request_return_exchange, name="request_return_exchange"),

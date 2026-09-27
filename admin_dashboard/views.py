@@ -12,6 +12,11 @@ from django.db.models import Count, Sum, Q
 from django.utils import timezone
 from django.contrib.auth import get_user_model
 from django.db.models.functions import TruncMonth, TruncDay, TruncHour
+from django.views.decorators.http import require_POST
+from experiment1.coupon_utils import validate_coupon_data
+
+
+
 
 def dashboard_page(request):
 
@@ -2094,11 +2099,333 @@ def update_inventory_stock(request):
             ),
         }
     )
+
+# =========================================================
+# COUPON MANAGEMENT
+# =========================================================
+
+
 def coupons_page(request):
 
-    return render(request, 'admin_dashboard/coupons.html', { "page_title": "Coupons" })   
+    search_query = request.GET.get(
+        "search",
+        ""
+    ).strip()
+
+    status_filter = request.GET.get(
+        "status",
+        ""
+    ).strip()
+
+    discount_filter = request.GET.get(
+        "discount_type",
+        ""
+    ).strip()
 
 
+    # =====================================================
+    # ALL COUPONS
+    # =====================================================
+
+    coupon_data = Coupon.objects.all()
+
+
+    # =====================================================
+    # SEARCH
+    # =====================================================
+
+    if search_query:
+
+        coupon_data = coupon_data.filter(
+            Q(code__icontains=search_query) |
+            Q(description__icontains=search_query)
+        )
+
+
+    # =====================================================
+    # STATUS FILTER
+    # =====================================================
+
+    now = timezone.now()
+
+    if status_filter == "active":
+
+        coupon_data = coupon_data.filter(
+            is_active=True,
+            start_date__lte=now,
+            expiry_date__gte=now
+        )
+
+    elif status_filter == "inactive":
+
+        coupon_data = coupon_data.filter(
+            is_active=False
+        )
+
+    elif status_filter == "expired":
+
+        coupon_data = coupon_data.filter(
+            expiry_date__lt=now
+        )
+
+    elif status_filter == "scheduled":
+
+        coupon_data = coupon_data.filter(
+            start_date__gt=now
+        )
+
+
+    # =====================================================
+    # DISCOUNT TYPE FILTER
+    # =====================================================
+
+    if discount_filter in [
+        "percentage",
+        "fixed"
+    ]:
+
+        coupon_data = coupon_data.filter(
+            discount_type=discount_filter
+        )
+
+
+    # =====================================================
+    # STATISTICS
+    # =====================================================
+
+    total_coupons = Coupon.objects.count()
+
+    active_coupons = Coupon.objects.filter(
+        is_active=True,
+        start_date__lte=now,
+        expiry_date__gte=now
+    ).count()
+
+    expired_coupons = Coupon.objects.filter(
+        expiry_date__lt=now
+    ).count()
+
+    used_coupons = Coupon.objects.filter(
+        used_count__gt=0
+    ).count()
+
+
+    context = {
+
+        "page_title": "Coupons",
+
+        "coupon_data": coupon_data,
+
+        "search_query": search_query,
+
+        "status_filter": status_filter,
+
+        "discount_filter": discount_filter,
+
+        "total_coupons": total_coupons,
+
+        "active_coupons": active_coupons,
+
+        "expired_coupons": expired_coupons,
+
+        "used_coupons": used_coupons,
+    }
+
+
+    return render(
+        request,
+        "admin_dashboard/coupons.html",
+        context
+    )
+
+
+# =========================================================
+# CREATE COUPON
+# =========================================================
+
+
+@require_POST
+def create_coupon(request):
+
+    result = validate_coupon_data(
+        request.POST
+    )
+
+
+    if not result["valid"]:
+
+        messages.error(
+            request,
+            result["message"]
+        )
+
+        return redirect(
+            "coupons_page"
+        )
+
+
+    Coupon.objects.create(
+        **result["data"]
+    )
+
+
+    messages.success(
+        request,
+        "Coupon created successfully."
+    )
+
+
+    return redirect(
+        "coupons_page"
+    )
+
+
+# =========================================================
+# UPDATE COUPON
+# =========================================================
+
+
+@require_POST
+def update_coupon(request, coupon_id):
+
+    coupon = get_object_or_404(
+        Coupon,
+        id=coupon_id
+    )
+
+
+    result = validate_coupon_data(
+        request.POST,
+        coupon=coupon
+    )
+
+
+    if not result["valid"]:
+
+        messages.error(
+            request,
+            result["message"]
+        )
+
+        return redirect(
+            "coupons_page"
+        )
+
+
+    for field, value in result["data"].items():
+
+        setattr(
+            coupon,
+            field,
+            value
+        )
+
+
+    coupon.save()
+
+
+    messages.success(
+        request,
+        "Coupon updated successfully."
+    )
+
+
+    return redirect(
+        "coupons_page"
+    )
+
+
+# =========================================================
+# TOGGLE ACTIVE / INACTIVE
+# =========================================================
+
+
+@require_POST
+def toggle_coupon(request, coupon_id):
+
+    coupon = get_object_or_404(
+        Coupon,
+        id=coupon_id
+    )
+
+
+    coupon.is_active = not coupon.is_active
+
+    coupon.save(
+        update_fields=[
+            "is_active",
+            "updated_at"
+        ]
+    )
+
+
+    if coupon.is_active:
+
+        messages.success(
+            request,
+            f"Coupon {coupon.code} activated."
+        )
+
+    else:
+
+        messages.success(
+            request,
+            f"Coupon {coupon.code} deactivated."
+        )
+
+
+    return redirect(
+        "coupons_page"
+    )
+
+
+# =========================================================
+# DELETE COUPON
+# =========================================================
+
+
+@require_POST
+def delete_coupon(request, coupon_id):
+
+    coupon = get_object_or_404(
+        Coupon,
+        id=coupon_id
+    )
+
+
+    # -----------------------------------------------------
+    # USED COUPON
+    # -----------------------------------------------------
+
+    if coupon.used_count > 0:
+
+        messages.error(
+            request,
+            (
+                f"Coupon {coupon.code} has already been used. "
+                "Deactivate it instead of deleting it."
+            )
+        )
+
+        return redirect(
+            "coupons_page"
+        )
+
+
+    coupon_code = coupon.code
+
+    coupon.delete()
+
+
+    messages.success(
+        request,
+        f"Coupon {coupon_code} deleted successfully."
+    )
+
+
+    return redirect(
+        "coupons_page"
+    )
 
 def reviews_page(request):
 
