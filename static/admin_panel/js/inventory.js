@@ -1036,10 +1036,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try {
 
-      const response =
-        await fetch(
-          "/admin/inventory/update-stock/",
-          {
+        const response =
+            await fetch(
+                inventoryUpdateUrl,
+                {
             method: "POST",
 
             headers: {
