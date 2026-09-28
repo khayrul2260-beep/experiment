@@ -618,32 +618,7 @@ document.addEventListener("DOMContentLoaded", () => {
                      */
 
 
-                    const subtotal =
-                        subtotalElement
-                            ? Number(
-                                subtotalElement.textContent
-                            ) || 0
-                            : 0;
-
-
-                    const delivery =
-                        deliveryElement
-                            ? Number(
-                                deliveryElement.textContent
-                            ) || 0
-                            : 0;
-
-
-                    const newTotal =
-                        subtotal + delivery;
-
-
-                    updateSummary({
-                        discount: "0.00",
-                        total_amount:
-                            formatMoney(newTotal)
-                    });
-
+                    updateSummary(data);
 
                     showCouponForm();
 

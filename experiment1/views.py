@@ -776,28 +776,6 @@ def guest_update_cart(request, item_key):
 
     return redirect("cart_page")
 
-# =========================================================
-# GUEST REMOVE
-# =========================================================
-
-def guest_remove_from_cart(request, item_key):
-
-    guest_cart = _get_guest_cart(request)
-
-
-    guest_cart.pop(
-        item_key,
-        None
-    )
-
-
-    _save_guest_cart(
-        request,
-        guest_cart
-    )
-
-
-    return redirect("cart_page")
 
 # =========================================================
 # GUEST REMOVE
@@ -2084,6 +2062,38 @@ def apply_coupon(request):
 @require_POST
 def clear_coupon(request):
 
+    # Get current cart items
+    if request.user.is_authenticated:
+
+        cart = Cart.objects.filter(
+            user=request.user
+        ).first()
+
+        if cart:
+            cart_items = list(
+                cart.items
+                .select_related("product")
+                .order_by("-created_at")
+            )
+        else:
+            cart_items = []
+
+    else:
+
+        cart_items = _get_guest_cart_items(
+            request
+        )
+
+    # Calculate fresh subtotal
+    subtotal = Decimal("0.00")
+
+    for item in cart_items:
+
+        subtotal += Decimal(
+            str(item.total_price)
+        )
+
+    # Remove coupon from session
     request.session.pop(
         "coupon_code",
         None
@@ -2091,16 +2101,42 @@ def clear_coupon(request):
 
     request.session.modified = True
 
+    # Delivery charge
+    delivery_charge = Decimal(
+        "0.00"
+    )
+
+    # Coupon removed = no discount
+    discount = Decimal(
+        "0.00"
+    )
+
+    # Final total
+    total_amount = (
+        subtotal
+        + delivery_charge
+    )
+
     return JsonResponse({
 
         "success": True,
 
-        "message": "Coupon removed successfully.",
+        "message":
+            "Coupon removed successfully.",
 
-        "discount": "0.00",
+        "subtotal":
+            str(subtotal),
+
+        "discount":
+            str(discount),
+
+        "delivery_charge":
+            str(delivery_charge),
+
+        "total_amount":
+            str(total_amount),
 
     })
-
 
 
 # =========================================================
