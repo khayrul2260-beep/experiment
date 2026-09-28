@@ -34,7 +34,7 @@
 .coupon-page {
     width: 100%;
     min-height: 100%;
-    padding: 28px 30px 50px;
+    padding: 0px 0px 50px;
 
     color: var(--coupon-text);
 }
