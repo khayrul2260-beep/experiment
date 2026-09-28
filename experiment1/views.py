@@ -176,6 +176,132 @@ def _get_guest_cart_summary(cart_items):
 
 
 # =========================================================
+# CART PRICING + COUPON SUMMARY
+# =========================================================
+
+def _get_cart_pricing(request, cart_items, is_guest=False):
+
+    subtotal = Decimal("0.00")
+
+    # -----------------------------------------------------
+    # CALCULATE SUBTOTAL
+    # -----------------------------------------------------
+
+    for item in cart_items:
+
+        subtotal += Decimal(
+            str(item.total_price)
+        )
+
+    # -----------------------------------------------------
+    # DEFAULT VALUES
+    # -----------------------------------------------------
+
+    delivery_charge = Decimal("0.00")
+
+    discount = Decimal("0.00")
+
+    coupon = None
+
+    coupon_code = request.session.get(
+        "coupon_code"
+    )
+
+    coupon_error = None
+
+    # -----------------------------------------------------
+    # VALIDATE SESSION COUPON
+    # -----------------------------------------------------
+
+    if coupon_code:
+
+        try:
+
+            coupon = Coupon.objects.get(
+                code__iexact=coupon_code
+            )
+
+        except Coupon.DoesNotExist:
+
+            request.session.pop(
+                "coupon_code",
+                None
+            )
+
+            request.session.modified = True
+
+            coupon = None
+
+        # -------------------------------------------------
+        # RE-VALIDATE COUPON
+        # -------------------------------------------------
+
+        if coupon:
+
+            result = validate_coupon(
+                coupon.code,
+                subtotal,
+                coupon=coupon
+            )
+
+            if result["valid"]:
+
+                discount = result["discount"]
+
+            else:
+
+                coupon_error = result["message"]
+
+                request.session.pop(
+                    "coupon_code",
+                    None
+                )
+
+                request.session.modified = True
+
+                coupon = None
+
+    # -----------------------------------------------------
+    # FINAL TOTAL
+    # -----------------------------------------------------
+
+    total_amount = (
+        subtotal
+        + delivery_charge
+        - discount
+    )
+
+    if total_amount < Decimal("0.00"):
+
+        total_amount = Decimal(
+            "0.00"
+        )
+
+    # -----------------------------------------------------
+    # RETURN PRICING DATA
+    # -----------------------------------------------------
+
+    return {
+        "subtotal": subtotal,
+
+        "coupon": coupon,
+
+        "coupon_code": (
+            coupon.code
+            if coupon
+            else ""
+        ),
+
+        "discount": discount,
+
+        "delivery_charge": delivery_charge,
+
+        "total_amount": total_amount,
+
+        "coupon_error": coupon_error,
+    }
+
+# =========================================================
 # HOME MAIN
 # =========================================================    
 
@@ -1133,6 +1259,9 @@ def add_to_cart(request, product_id):
 # =========================================================
 # CART PAGE
 # =========================================================
+# =========================================================
+# CART PAGE
+# =========================================================
 
 def cart_page(request):
 
@@ -1146,13 +1275,17 @@ def cart_page(request):
             user=request.user
         )
 
-
         cart_items = (
             cart.items
             .select_related("product")
             .order_by("-created_at")
         )
 
+        pricing = _get_cart_pricing(
+            request,
+            cart_items,
+            is_guest=False
+        )
 
         context = {
 
@@ -1162,15 +1295,33 @@ def cart_page(request):
 
             "is_guest_cart": False,
 
-        }
+            "subtotal": pricing["subtotal"],
 
+            "coupon": pricing["coupon"],
+
+            "coupon_code": pricing["coupon_code"],
+
+            "discount": pricing["discount"],
+
+            "delivery_charge": pricing[
+                "delivery_charge"
+            ],
+
+            "total_amount": pricing[
+                "total_amount"
+            ],
+
+            "coupon_error": pricing[
+                "coupon_error"
+            ],
+
+        }
 
         return render(
             request,
             "customer/cart.html",
             context
         )
-
 
     # =====================================================
     # GUEST USER
@@ -1180,11 +1331,15 @@ def cart_page(request):
         request
     )
 
-
     guest_cart = _get_guest_cart_summary(
         cart_items
     )
 
+    pricing = _get_cart_pricing(
+        request,
+        cart_items,
+        is_guest=True
+    )
 
     context = {
 
@@ -1194,8 +1349,27 @@ def cart_page(request):
 
         "is_guest_cart": True,
 
-    }
+        "subtotal": pricing["subtotal"],
 
+        "coupon": pricing["coupon"],
+
+        "coupon_code": pricing["coupon_code"],
+
+        "discount": pricing["discount"],
+
+        "delivery_charge": pricing[
+            "delivery_charge"
+        ],
+
+        "total_amount": pricing[
+            "total_amount"
+        ],
+
+        "coupon_error": pricing[
+            "coupon_error"
+        ],
+
+    }
 
     return render(
         request,
@@ -1717,6 +1891,10 @@ def all_products_page(request):
 # APPLY COUPON
 # =========================================================
 
+# =========================================================
+# APPLY COUPON
+# =========================================================
+
 @require_POST
 def apply_coupon(request):
 
@@ -1726,7 +1904,7 @@ def apply_coupon(request):
     ).strip()
 
     # =====================================================
-    # GET CURRENT CART SUBTOTAL
+    # GET CURRENT CART
     # =====================================================
 
     if request.user.is_authenticated:
@@ -1740,27 +1918,15 @@ def apply_coupon(request):
         )
 
         if not cart:
-
             return JsonResponse({
                 "success": False,
                 "message": "Your cart is empty.",
             }, status=400)
 
-        cart_items = (
+        cart_items = list(
             cart.items
             .select_related("product")
-        )
-
-        if not cart_items.exists():
-
-            return JsonResponse({
-                "success": False,
-                "message": "Your cart is empty.",
-            }, status=400)
-
-        subtotal = sum(
-            item.total_price
-            for item in cart_items
+            .order_by("-created_at")
         )
 
     else:
@@ -1770,17 +1936,22 @@ def apply_coupon(request):
         )
 
         if not cart_items:
-
             return JsonResponse({
                 "success": False,
                 "message": "Your cart is empty.",
             }, status=400)
 
-        cart = _get_guest_cart_summary(
-            cart_items
-        )
+    # =====================================================
+    # CALCULATE SUBTOTAL
+    # =====================================================
 
-        subtotal = cart.subtotal
+    subtotal = Decimal("0.00")
+
+    for item in cart_items:
+
+        subtotal += Decimal(
+            str(item.total_price)
+        )
 
     # =====================================================
     # VALIDATE COUPON
@@ -1805,28 +1976,57 @@ def apply_coupon(request):
         request.session.modified = True
 
         return JsonResponse({
+
             "success": False,
+
             "message": result["message"],
+
+            "subtotal": str(
+                subtotal
+            ),
+
+            "discount": "0.00",
+
+            "delivery_charge": "0.00",
+
+            "total_amount": str(
+                subtotal
+            ),
+
         }, status=400)
 
     # =====================================================
-    # STORE COUPON IN SESSION
+    # STORE COUPON
     # =====================================================
 
     coupon = result["coupon"]
 
-    request.session["coupon_code"] = coupon.code
+    request.session["coupon_code"] = (
+        coupon.code
+    )
 
     request.session.modified = True
 
+    # =====================================================
+    # DISCOUNT
+    # =====================================================
+
     discount = result["discount"]
+
+    # =====================================================
+    # DELIVERY
+    # =====================================================
 
     delivery_charge = Decimal(
         "0.00"
     )
 
+    # =====================================================
+    # FINAL TOTAL
+    # =====================================================
+
     total_amount = (
-        Decimal(str(subtotal))
+        subtotal
         + delivery_charge
         - discount
     )
@@ -1873,7 +2073,9 @@ def apply_coupon(request):
 
     })
 
-
+# =========================================================
+# CLEAR COUPON
+# =========================================================
 
 # =========================================================
 # CLEAR COUPON
@@ -1895,10 +2097,16 @@ def clear_coupon(request):
 
         "message": "Coupon removed successfully.",
 
+        "discount": "0.00",
+
     })
+
+
+
 # =========================================================
 # CHECKOUT PAGE
 # =========================================================
+
 def checkout_page(request):
 
     # =====================================================
@@ -1907,12 +2115,9 @@ def checkout_page(request):
 
     if request.method == "POST":
 
-        from decimal import Decimal
-        from django.db import transaction
-
-        # -------------------------------------------------
+        # =================================================
         # CUSTOMER INFORMATION
-        # -------------------------------------------------
+        # =================================================
 
         full_name = request.POST.get(
             "full_name",
@@ -1929,9 +2134,10 @@ def checkout_page(request):
             ""
         ).strip()
 
-        # -------------------------------------------------
+
+        # =================================================
         # SHIPPING INFORMATION
-        # -------------------------------------------------
+        # =================================================
 
         address = request.POST.get(
             "address",
@@ -1953,14 +2159,16 @@ def checkout_page(request):
             ""
         ).strip()
 
-        # -------------------------------------------------
+
+        # =================================================
         # PAYMENT
-        # -------------------------------------------------
+        # =================================================
 
         payment_method = request.POST.get(
             "payment_method",
             "COD"
         ).strip()
+
 
         # =================================================
         # BASIC VALIDATION
@@ -2009,15 +2217,16 @@ def checkout_page(request):
 
             error_message = None
 
+
         # =================================================
         # VALIDATION ERROR
         # =================================================
 
         if error_message:
 
-            # ---------------------------------------------
+            # =================================================
             # LOGGED-IN USER
-            # ---------------------------------------------
+            # =================================================
 
             if request.user.is_authenticated:
 
@@ -2026,9 +2235,11 @@ def checkout_page(request):
                 ).first()
 
                 if not cart:
+
                     return redirect(
                         "cart_page"
                     )
+
 
                 cart_items = (
                     cart.items
@@ -2040,17 +2251,67 @@ def checkout_page(request):
                     )
                 )
 
+
                 if not cart_items.exists():
+
                     return redirect(
                         "cart_page"
                     )
 
+
+                # ---------------------------------------------
+                # GET CURRENT PRICING
+                # ---------------------------------------------
+
+                pricing = _get_cart_pricing(
+                    request,
+                    cart_items
+                )
+
+
+                # ---------------------------------------------
+                # CONTEXT
+                # ---------------------------------------------
+
                 context = {
+
                     "cart": cart,
+
                     "cart_items": cart_items,
+
                     "is_guest_checkout": False,
+
                     "checkout_error": error_message,
+
+                    "subtotal": pricing[
+                        "subtotal"
+                    ],
+
+                    "coupon": pricing[
+                        "coupon"
+                    ],
+
+                    "coupon_code": pricing[
+                        "coupon_code"
+                    ],
+
+                    "discount": pricing[
+                        "discount"
+                    ],
+
+                    "delivery_charge": pricing[
+                        "delivery_charge"
+                    ],
+
+                    "total_amount": pricing[
+                        "total_amount"
+                    ],
+
+                    "coupon_error": pricing[
+                        "coupon_error"
+                    ],
                 }
+
 
                 return render(
                     request,
@@ -2058,35 +2319,89 @@ def checkout_page(request):
                     context
                 )
 
-            # ---------------------------------------------
+
+            # =================================================
             # GUEST USER
-            # ---------------------------------------------
+            # =================================================
 
             cart_items = _get_guest_cart_items(
                 request
             )
 
+
             if not cart_items:
+
                 return redirect(
                     "cart_page"
                 )
+
 
             cart = _get_guest_cart_summary(
                 cart_items
             )
 
+
+            # ---------------------------------------------
+            # GET CURRENT PRICING
+            # ---------------------------------------------
+
+            pricing = _get_cart_pricing(
+                request,
+                cart_items,
+                is_guest=True
+            )
+
+
+            # ---------------------------------------------
+            # CONTEXT
+            # ---------------------------------------------
+
             context = {
+
                 "cart": cart,
+
                 "cart_items": cart_items,
+
                 "is_guest_checkout": True,
+
                 "checkout_error": error_message,
+
+                "subtotal": pricing[
+                    "subtotal"
+                ],
+
+                "coupon": pricing[
+                    "coupon"
+                ],
+
+                "coupon_code": pricing[
+                    "coupon_code"
+                ],
+
+                "discount": pricing[
+                    "discount"
+                ],
+
+                "delivery_charge": pricing[
+                    "delivery_charge"
+                ],
+
+                "total_amount": pricing[
+                    "total_amount"
+                ],
+
+                "coupon_error": pricing[
+                    "coupon_error"
+                ],
             }
+
 
             return render(
                 request,
                 "customer/checkout.html",
                 context
             )
+
 
         # =================================================
         # GET CURRENT CART
@@ -2098,10 +2413,13 @@ def checkout_page(request):
                 user=request.user
             ).first()
 
+
             if not cart:
+
                 return redirect(
                     "cart_page"
                 )
+
 
             cart_items = list(
                 cart.items
@@ -2113,12 +2431,16 @@ def checkout_page(request):
                 )
             )
 
+
             if not cart_items:
+
                 return redirect(
                     "cart_page"
                 )
 
+
             customer = request.user
+
 
         else:
 
@@ -2126,16 +2448,21 @@ def checkout_page(request):
                 request
             )
 
+
             if not cart_items:
+
                 return redirect(
                     "cart_page"
                 )
+
 
             cart = _get_guest_cart_summary(
                 cart_items
             )
 
+
             customer = None
+
 
         # =================================================
         # CREATE ORDER
@@ -2145,9 +2472,9 @@ def checkout_page(request):
 
             with transaction.atomic():
 
-                # -----------------------------------------
+                # =================================================
                 # PREPARE ORDER ITEMS
-                # -----------------------------------------
+                # =================================================
 
                 order_items_data = []
 
@@ -2155,24 +2482,32 @@ def checkout_page(request):
                     "0.00"
                 )
 
+
+                # =================================================
+                # VALIDATE CART ITEMS + STOCK
+                # =================================================
+
                 for cart_item in cart_items:
 
                     product = cart_item.product
+
 
                     quantity = int(
                         cart_item.quantity
                     )
 
-                    # -------------------------------------
-                    # FIND PRODUCT SIZE
-                    # -------------------------------------
+
+                    # ---------------------------------------------
+                    # GET PRODUCT SIZE WITH ROW LOCK
+                    # ---------------------------------------------
 
                     if request.user.is_authenticated:
 
                         product_size = (
-                            product.sizes
+                            ProductSize.objects
                             .select_for_update()
                             .filter(
+                                product=product,
                                 size=cart_item.size
                             )
                             .first()
@@ -2181,17 +2516,19 @@ def checkout_page(request):
                     else:
 
                         product_size = (
-                            product.sizes
+                            ProductSize.objects
                             .select_for_update()
                             .filter(
+                                product=product,
                                 pk=cart_item.product_size.pk
                             )
                             .first()
                         )
 
-                    # -------------------------------------
-                    # CHECK SIZE
-                    # -------------------------------------
+
+                    # ---------------------------------------------
+                    # SIZE EXISTS?
+                    # ---------------------------------------------
 
                     if not product_size:
 
@@ -2200,9 +2537,10 @@ def checkout_page(request):
                             "selected size is no longer available."
                         )
 
-                    # -------------------------------------
-                    # CHECK AVAILABILITY
-                    # -------------------------------------
+
+                    # ---------------------------------------------
+                    # SIZE AVAILABLE?
+                    # ---------------------------------------------
 
                     if not product_size.is_available:
 
@@ -2211,9 +2549,10 @@ def checkout_page(request):
                             f"{product_size.size} is currently unavailable."
                         )
 
-                    # -------------------------------------
-                    # CHECK STOCK
-                    # -------------------------------------
+
+                    # ---------------------------------------------
+                    # STOCK CHECK
+                    # ---------------------------------------------
 
                     if product_size.stock < quantity:
 
@@ -2224,9 +2563,10 @@ def checkout_page(request):
                             f"{product_size.size}."
                         )
 
-                    # -------------------------------------
-                    # PRICE
-                    # -------------------------------------
+
+                    # ---------------------------------------------
+                    # GET CURRENT PRODUCT PRICE
+                    # ---------------------------------------------
 
                     unit_price = (
                         product.discount_price
@@ -2234,19 +2574,28 @@ def checkout_page(request):
                         else product.price
                     )
 
+
                     unit_price = Decimal(
                         str(unit_price)
                     )
 
+
+                    # ---------------------------------------------
+                    # CALCULATE ITEM TOTAL
+                    # ---------------------------------------------
+
                     item_total = (
-                        unit_price * quantity
+                        unit_price *
+                        quantity
                     )
+
 
                     subtotal += item_total
 
-                    # -------------------------------------
+
+                    # ---------------------------------------------
                     # STORE ORDER ITEM DATA
-                    # -------------------------------------
+                    # ---------------------------------------------
 
                     order_items_data.append({
 
@@ -2265,10 +2614,12 @@ def checkout_page(request):
                         "total_price": item_total,
 
                         "product_size": product_size,
+
                     })
 
+
                 # =================================================
-                # DELIVERY
+                # DELIVERY CHARGE
                 # =================================================
 
                 # Delivery charge will be implemented later.
@@ -2277,8 +2628,9 @@ def checkout_page(request):
                     "0.00"
                 )
 
+
                 # =================================================
-                # COUPON VALIDATION
+                # COUPON
                 # =================================================
 
                 coupon = None
@@ -2287,14 +2639,20 @@ def checkout_page(request):
                     "coupon_code"
                 )
 
+
                 discount = Decimal(
                     "0.00"
                 )
 
+
+                # =================================================
+                # RE-VALIDATE COUPON
+                # =================================================
+
                 if coupon_code:
 
                     # ---------------------------------------------
-                    # LOCK COUPON ROW
+                    # LOCK COUPON
                     # ---------------------------------------------
 
                     try:
@@ -2309,6 +2667,10 @@ def checkout_page(request):
 
                     except Coupon.DoesNotExist:
 
+                        # -----------------------------------------
+                        # REMOVE INVALID SESSION COUPON
+                        # -----------------------------------------
+
                         request.session.pop(
                             "coupon_code",
                             None
@@ -2316,12 +2678,14 @@ def checkout_page(request):
 
                         request.session.modified = True
 
+
                         raise ValueError(
                             "The selected coupon is no longer available."
                         )
 
+
                     # ---------------------------------------------
-                    # RE-VALIDATE COUPON
+                    # VALIDATE COUPON AGAINST FRESH SUBTOTAL
                     # ---------------------------------------------
 
                     coupon_result = validate_coupon(
@@ -2330,7 +2694,12 @@ def checkout_page(request):
                         coupon=coupon
                     )
 
+
                     if not coupon_result["valid"]:
+
+                        # -----------------------------------------
+                        # REMOVE INVALID COUPON FROM SESSION
+                        # -----------------------------------------
 
                         request.session.pop(
                             "coupon_code",
@@ -2339,20 +2708,27 @@ def checkout_page(request):
 
                         request.session.modified = True
 
+
                         raise ValueError(
                             coupon_result["message"]
                         )
+
 
                     # ---------------------------------------------
                     # GET FINAL DISCOUNT
                     # ---------------------------------------------
 
-                    discount = coupon_result[
-                        "discount"
-                    ]
+                    discount = Decimal(
+                        str(
+                            coupon_result[
+                                "discount"
+                            ]
+                        )
+                    )
+
 
                 # =================================================
-                # CALCULATE TOTAL
+                # CALCULATE FINAL TOTAL
                 # =================================================
 
                 total_amount = (
@@ -2361,11 +2737,15 @@ def checkout_page(request):
                     - discount
                 )
 
-                if total_amount < Decimal("0.00"):
+
+                if total_amount < Decimal(
+                    "0.00"
+                ):
 
                     total_amount = Decimal(
                         "0.00"
                     )
+
 
                 # =================================================
                 # CREATE ORDER
@@ -2410,13 +2790,19 @@ def checkout_page(request):
                     payment_method=payment_method,
 
                     payment_status="Pending",
+
                 )
 
+
                 # =================================================
-                # CREATE ORDER ITEMS + REDUCE STOCK
+                # CREATE ORDER ITEMS
                 # =================================================
 
                 for item_data in order_items_data:
+
+                    # ---------------------------------------------
+                    # CREATE ORDER ITEM
+                    # ---------------------------------------------
 
                     OrderItem.objects.create(
 
@@ -2449,19 +2835,25 @@ def checkout_page(request):
                         total_price=item_data[
                             "total_price"
                         ],
+
                     )
 
-                    # -----------------------------------------
-                    # REDUCE SIZE-SPECIFIC STOCK
-                    # -----------------------------------------
+
+                    # ---------------------------------------------
+                    # REDUCE SIZE STOCK
+                    # ---------------------------------------------
 
                     product_size = item_data[
                         "product_size"
                     ]
 
+
                     product_size.stock -= (
-                        item_data["quantity"]
+                        item_data[
+                            "quantity"
+                        ]
                     )
+
 
                     product_size.save(
                         update_fields=[
@@ -2469,22 +2861,33 @@ def checkout_page(request):
                         ]
                     )
 
-                    # -----------------------------------------
+
+                    # ---------------------------------------------
                     # UPDATE PRODUCT TOTAL STOCK
-                    # -----------------------------------------
+                    # ---------------------------------------------
 
                     total_stock = sum(
+
                         size.stock
-                        for size in product.sizes.all()
+
+                        for size
+                        in product_size.product.sizes.all()
+
                     )
 
+
+                    product = product_size.product
+
+
                     product.stock = total_stock
+
 
                     product.save(
                         update_fields=[
                             "stock"
                         ]
                     )
+
 
                 # =================================================
                 # INCREMENT COUPON USAGE
@@ -2500,6 +2903,7 @@ def checkout_page(request):
                         ]
                     )
 
+
                 # =================================================
                 # CLEAR CART
                 # =================================================
@@ -2514,6 +2918,7 @@ def checkout_page(request):
                         request
                     )
 
+
                 # =================================================
                 # CLEAR COUPON SESSION
                 # =================================================
@@ -2527,17 +2932,19 @@ def checkout_page(request):
 
                     request.session.modified = True
 
-        except ValueError as e:
 
-            # =================================================
-            # STOCK / PRODUCT / COUPON ERROR
-            # =================================================
+        # =========================================================
+        # CHECKOUT ERROR
+        # =========================================================
+
+        except ValueError as e:
 
             error_message = str(e)
 
-            # ---------------------------------------------
+
+            # =================================================
             # LOGGED-IN USER
-            # ---------------------------------------------
+            # =================================================
 
             if request.user.is_authenticated:
 
@@ -2545,10 +2952,13 @@ def checkout_page(request):
                     user=request.user
                 ).first()
 
+
                 if not cart:
+
                     return redirect(
                         "cart_page"
                     )
+
 
                 cart_items = (
                     cart.items
@@ -2560,17 +2970,67 @@ def checkout_page(request):
                     )
                 )
 
+
                 if not cart_items.exists():
+
                     return redirect(
                         "cart_page"
                     )
 
+
+                # ---------------------------------------------
+                # RECALCULATE PRICING
+                # ---------------------------------------------
+
+                pricing = _get_cart_pricing(
+                    request,
+                    cart_items
+                )
+
+
+                # ---------------------------------------------
+                # CONTEXT
+                # ---------------------------------------------
+
                 context = {
+
                     "cart": cart,
+
                     "cart_items": cart_items,
+
                     "is_guest_checkout": False,
+
                     "checkout_error": error_message,
+
+                    "subtotal": pricing[
+                        "subtotal"
+                    ],
+
+                    "coupon": pricing[
+                        "coupon"
+                    ],
+
+                    "coupon_code": pricing[
+                        "coupon_code"
+                    ],
+
+                    "discount": pricing[
+                        "discount"
+                    ],
+
+                    "delivery_charge": pricing[
+                        "delivery_charge"
+                    ],
+
+                    "total_amount": pricing[
+                        "total_amount"
+                    ],
+
+                    "coupon_error": pricing[
+                        "coupon_error"
+                    ],
                 }
+
 
                 return render(
                     request,
@@ -2578,35 +3038,89 @@ def checkout_page(request):
                     context
                 )
 
-            # ---------------------------------------------
+
+            # =================================================
             # GUEST USER
-            # ---------------------------------------------
+            # =================================================
 
             cart_items = _get_guest_cart_items(
                 request
             )
 
+
             if not cart_items:
+
                 return redirect(
                     "cart_page"
                 )
+
 
             cart = _get_guest_cart_summary(
                 cart_items
             )
 
+
+            # ---------------------------------------------
+            # RECALCULATE PRICING
+            # ---------------------------------------------
+
+            pricing = _get_cart_pricing(
+                request,
+                cart_items,
+                is_guest=True
+            )
+
+
+            # ---------------------------------------------
+            # CONTEXT
+            # ---------------------------------------------
+
             context = {
+
                 "cart": cart,
+
                 "cart_items": cart_items,
+
                 "is_guest_checkout": True,
+
                 "checkout_error": error_message,
+
+                "subtotal": pricing[
+                    "subtotal"
+                ],
+
+                "coupon": pricing[
+                    "coupon"
+                ],
+
+                "coupon_code": pricing[
+                    "coupon_code"
+                ],
+
+                "discount": pricing[
+                    "discount"
+                ],
+
+                "delivery_charge": pricing[
+                    "delivery_charge"
+                ],
+
+                "total_amount": pricing[
+                    "total_amount"
+                ],
+
+                "coupon_error": pricing[
+                    "coupon_error"
+                ],
             }
+
 
             return render(
                 request,
                 "customer/checkout.html",
                 context
             )
+
 
         # =================================================
         # ORDER CREATED SUCCESSFULLY
@@ -2617,8 +3131,9 @@ def checkout_page(request):
             order_number=order.order_number
         )
 
+
     # =====================================================
-    # LOGGED-IN USER
+    # GET — LOGGED-IN USER
     # =====================================================
 
     if request.user.is_authenticated:
@@ -2627,10 +3142,13 @@ def checkout_page(request):
             user=request.user
         ).first()
 
+
         if not cart:
+
             return redirect(
                 "cart_page"
             )
+
 
         cart_items = (
             cart.items
@@ -2642,16 +3160,65 @@ def checkout_page(request):
             )
         )
 
+
         if not cart_items.exists():
+
             return redirect(
                 "cart_page"
             )
 
+
+        # ---------------------------------------------
+        # GET CURRENT PRICING
+        # ---------------------------------------------
+
+        pricing = _get_cart_pricing(
+            request,
+            cart_items
+        )
+
+
+        # ---------------------------------------------
+        # CONTEXT
+        # ---------------------------------------------
+
         context = {
+
             "cart": cart,
+
             "cart_items": cart_items,
+
             "is_guest_checkout": False,
+
+            "subtotal": pricing[
+                "subtotal"
+            ],
+
+            "coupon": pricing[
+                "coupon"
+            ],
+
+            "coupon_code": pricing[
+                "coupon_code"
+            ],
+
+            "discount": pricing[
+                "discount"
+            ],
+
+            "delivery_charge": pricing[
+                "delivery_charge"
+            ],
+
+            "total_amount": pricing[
+                "total_amount"
+            ],
+
+            "coupon_error": pricing[
+                "coupon_error"
+            ],
         }
+
 
         return render(
             request,
@@ -2659,34 +3226,87 @@ def checkout_page(request):
             context
         )
 
+
     # =====================================================
-    # GUEST CHECKOUT
+    # GET — GUEST USER
     # =====================================================
 
     cart_items = _get_guest_cart_items(
         request
     )
 
+
     if not cart_items:
+
         return redirect(
             "cart_page"
         )
+
 
     cart = _get_guest_cart_summary(
         cart_items
     )
 
+
+    # ---------------------------------------------
+    # GET CURRENT PRICING
+    # ---------------------------------------------
+
+    pricing = _get_cart_pricing(
+        request,
+        cart_items,
+        is_guest=True
+    )
+
+
+    # ---------------------------------------------
+    # CONTEXT
+    # ---------------------------------------------
+
     context = {
+
         "cart": cart,
+
         "cart_items": cart_items,
+
         "is_guest_checkout": True,
+
+        "subtotal": pricing[
+            "subtotal"
+        ],
+
+        "coupon": pricing[
+            "coupon"
+        ],
+
+        "coupon_code": pricing[
+            "coupon_code"
+        ],
+
+        "discount": pricing[
+            "discount"
+        ],
+
+        "delivery_charge": pricing[
+            "delivery_charge"
+        ],
+
+        "total_amount": pricing[
+            "total_amount"
+        ],
+
+        "coupon_error": pricing[
+            "coupon_error"
+        ],
     }
+
 
     return render(
         request,
         "customer/checkout.html",
         context
     )
+
 
 
 def order_confirmation_page(request, order_number):

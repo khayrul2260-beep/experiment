@@ -1,386 +1,497 @@
-{% extends 'customer/master/base.html' %}
+{% extends "customer/master/base.html" %}
 {% load static %}
 
-{% block title %}
-Checkout | NAFI
-{% endblock %}
+{% block title %}Checkout | NAFI{% endblock %}
 
 {% block extra_css %}
-
 <link rel="stylesheet" href="{% static 'customer/css/checkout.css' %}">
-
 {% endblock %}
 
 {% block content %}
 
-<section class="nafi-checkout-page">
+<main class="nafi-checkout-page">
 
-<!-- =====================================================
-     HEADER
-====================================================== -->
+    <!-- =====================================================
+         CHECKOUT HEADER
+    ====================================================== -->
 
-<div class="checkout-header">
+    <section class="checkout-header">
 
-    <span class="checkout-eyebrow">
-        NAFI COLLECTION
-    </span>
+        <div class="checkout-header-inner">
 
-    <h1>
-        CHECKOUT
-    </h1>
+            <span class="checkout-eyebrow">
+                NAFI CHECKOUT
+            </span>
 
-    <p>
-        Complete your information to place your order.
-    </p>
+            <h1>
+                Complete Your Order
+            </h1>
 
-</div>
+            <p>
+                Review your order details and complete your purchase.
+            </p>
 
+        </div>
 
-<!-- =====================================================
-     CHECKOUT FORM
-====================================================== -->
-
-<form
-    method="POST"
-    action="{% url 'checkout_page' %}"
->
-
-    {% csrf_token %}
+    </section>
 
 
     <!-- =====================================================
-         CHECKOUT CONTAINER
+         CHECKOUT MESSAGES
     ====================================================== -->
 
-    <div class="checkout-container">
+    {% if checkout_error %}
 
-        <div class="checkout-layout">
+        <div class="checkout-message checkout-message-error">
+            {{ checkout_error }}
+        </div>
 
+    {% endif %}
 
-            <!-- =================================================
-                 LEFT — CUSTOMER INFORMATION
-            ================================================== -->
 
-            <div class="checkout-form-section">
+    {% if coupon_error %}
 
+        <div class="checkout-message checkout-message-error">
+            {{ coupon_error }}
+        </div>
 
-                <!-- CUSTOMER INFORMATION -->
+    {% endif %}
 
-                <div class="checkout-section-heading">
 
-                    <span>
-                        01
-                    </span>
+    <!-- =====================================================
+         CHECKOUT LAYOUT
+    ====================================================== -->
 
-                    <div>
+    <section class="checkout-layout">
 
-                        <small>
-                            CUSTOMER INFORMATION
-                        </small>
 
-                        <h2>
-                            Your Details
-                        </h2>
+        <!-- =================================================
+             LEFT — CHECKOUT FORM
+        ================================================== -->
 
-                    </div>
+        <div class="checkout-main">
 
-                </div>
+            <form
+                method="POST"
+                action="{% url 'checkout_page' %}"
+                class="checkout-form"
+                id="checkout-form"
+            >
 
+                {% csrf_token %}
 
-                <div class="checkout-form-card">
 
-                    <div class="checkout-field-grid">
+                <!-- =========================================
+                     01 — CUSTOMER INFORMATION
+                ========================================== -->
 
+                <section class="checkout-form-section">
 
-                        <!-- FULL NAME -->
+                    <div class="checkout-section-heading">
 
-                        <div class="checkout-field full-width">
-
-                            <label for="full_name">
-                                FULL NAME
-                            </label>
-
-                            <input
-                                type="text"
-                                id="full_name"
-                                name="full_name"
-                                placeholder="Enter your full name"
-                                value="{% if request.user.is_authenticated %}{{ request.user.get_full_name }}{% endif %}"
-                            >
-
-                        </div>
-
-
-                        <!-- PHONE -->
-
-                        <div class="checkout-field">
-
-                            <label for="phone">
-                                PHONE NUMBER
-                            </label>
-
-                            <input
-                                type="tel"
-                                id="phone"
-                                name="phone"
-                                placeholder="01XXXXXXXXX"
-                                value="{% if request.user.is_authenticated %}{{ request.user.phone }}{% endif %}"
-                            >
-
-                        </div>
-
-
-                        <!-- EMAIL -->
-
-                        <div class="checkout-field">
-
-                            <label for="email">
-                                EMAIL
-                            </label>
-
-                            <input
-                                type="email"
-                                id="email"
-                                name="email"
-                                placeholder="your@email.com"
-                            >
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <!-- =================================================
-                     SHIPPING ADDRESS
-                ================================================== -->
-
-                <div class="checkout-section-heading">
-
-                    <span>
-                        02
-                    </span>
-
-                    <div>
-
-                        <small>
-                            SHIPPING INFORMATION
-                        </small>
-
-                        <h2>
-                            Delivery Address
-                        </h2>
-
-                    </div>
-
-                </div>
-
-
-                <div class="checkout-form-card">
-
-                    <div class="checkout-field-grid">
-
-
-                        <!-- ADDRESS -->
-
-                        <div class="checkout-field full-width">
-
-                            <label for="address">
-                                FULL ADDRESS
-                            </label>
-
-                            <textarea
-                                id="address"
-                                name="address"
-                                rows="4"
-                                placeholder="House / Road / Area / Local Address"
-                            ></textarea>
-
-                        </div>
-
-
-                        <!-- CITY -->
-
-                        <div class="checkout-field">
-
-                            <label for="city">
-                                CITY
-                            </label>
-
-                            <input
-                                type="text"
-                                id="city"
-                                name="city"
-                                placeholder="City"
-                            >
-
-                        </div>
-
-
-                        <!-- AREA -->
-
-                        <div class="checkout-field">
-
-                            <label for="area">
-                                AREA
-                            </label>
-
-                            <input
-                                type="text"
-                                id="area"
-                                name="area"
-                                placeholder="Area / Thana"
-                            >
-
-                        </div>
-
-
-                        <!-- DELIVERY NOTE -->
-
-                        <div class="checkout-field full-width">
-
-                            <label for="delivery_note">
-
-                                DELIVERY NOTE
-
-                                <span>
-                                    OPTIONAL
-                                </span>
-
-                            </label>
-
-                            <textarea
-                                id="delivery_note"
-                                name="delivery_note"
-                                rows="3"
-                                placeholder="Any special instruction for delivery?"
-                            ></textarea>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <!-- =================================================
-                     PAYMENT
-                ================================================== -->
-
-                <div class="checkout-section-heading">
-
-                    <span>
-                        03
-                    </span>
-
-                    <div>
-
-                        <small>
-                            PAYMENT
-                        </small>
-
-                        <h2>
-                            Payment Method
-                        </h2>
-
-                    </div>
-
-                </div>
-
-
-                <div class="checkout-payment-card">
-
-
-                    <!-- CASH ON DELIVERY -->
-
-                    <label class="payment-option">
-
-                        <input
-                            type="radio"
-                            name="payment_method"
-                            value="COD"
-                            checked
-                        >
-
-                        <span class="payment-radio"></span>
-
-                        <span class="payment-content">
-
-                            <strong>
-                                Cash on Delivery
-                            </strong>
-
-                            <small>
-                                Pay when your order is delivered.
-                            </small>
-
+                        <span class="checkout-section-number">
+                            01
                         </span>
 
-                    </label>
+                        <div>
+
+                            <h2>
+                                Customer Information
+                            </h2>
+
+                            <p>
+                                Enter your contact information.
+                            </p>
+
+                        </div>
+
+                    </div>
 
 
-                    <!-- ONLINE PAYMENT -->
+                    <div class="checkout-form-card">
 
-                    <label class="payment-option disabled">
+                        <div class="checkout-field-grid">
 
-                        <input
-                            type="radio"
-                            name="payment_method"
-                            value="Online"
-                            disabled
-                        >
 
-                        <span class="payment-radio"></span>
+                            <!-- Full Name -->
 
-                        <span class="payment-content">
+                            <div class="checkout-field">
 
-                            <strong>
-                                Online Payment
-                            </strong>
+                                <label for="full_name">
+                                    Full Name
+                                </label>
 
-                            <small>
-                                Online payment will be available soon.
-                            </small>
+                                <input
+                                    type="text"
+                                    id="full_name"
+                                    name="full_name"
+                                    value="{{ request.POST.full_name|default:'' }}"
+                                    placeholder="Your full name"
+                                    autocomplete="name"
+                                    required
+                                >
 
+                            </div>
+
+
+                            <!-- Phone -->
+
+                            <div class="checkout-field">
+
+                                <label for="phone">
+                                    Phone Number
+                                </label>
+
+                                <input
+                                    type="tel"
+                                    id="phone"
+                                    name="phone"
+                                    value="{{ request.POST.phone|default:'' }}"
+                                    placeholder="01XXXXXXXXX"
+                                    autocomplete="tel"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <!-- Email -->
+
+                            <div class="checkout-field checkout-field-full">
+
+                                <label for="email">
+                                    Email Address
+
+                                    <span>
+                                        Optional
+                                    </span>
+
+                                </label>
+
+                                <input
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    value="{{ request.POST.email|default:'' }}"
+                                    placeholder="you@example.com"
+                                    autocomplete="email"
+                                >
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =========================================
+                     02 — SHIPPING INFORMATION
+                ========================================== -->
+
+                <section class="checkout-form-section">
+
+                    <div class="checkout-section-heading">
+
+                        <span class="checkout-section-number">
+                            02
                         </span>
 
-                    </label>
+                        <div>
+
+                            <h2>
+                                Shipping Information
+                            </h2>
+
+                            <p>
+                                Where should we deliver your order?
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="checkout-form-card">
+
+                        <div class="checkout-field-grid">
+
+
+                            <!-- Address -->
+
+                            <div class="checkout-field checkout-field-full">
+
+                                <label for="address">
+                                    Delivery Address
+                                </label>
+
+                                <textarea
+                                    id="address"
+                                    name="address"
+                                    rows="3"
+                                    placeholder="House, road, village or detailed delivery address"
+                                    autocomplete="street-address"
+                                    required
+                                >{{ request.POST.address|default:'' }}</textarea>
+
+                            </div>
+
+
+                            <!-- City -->
+
+                            <div class="checkout-field">
+
+                                <label for="city">
+                                    City / District
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="city"
+                                    name="city"
+                                    value="{{ request.POST.city|default:'' }}"
+                                    placeholder="e.g. Dhaka"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <!-- Area -->
+
+                            <div class="checkout-field">
+
+                                <label for="area">
+                                    Area
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="area"
+                                    name="area"
+                                    value="{{ request.POST.area|default:'' }}"
+                                    placeholder="e.g. Mirpur"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <!-- Delivery Note -->
+
+                            <div class="checkout-field checkout-field-full">
+
+                                <label for="delivery_note">
+
+                                    Delivery Note
+
+                                    <span>
+                                        Optional
+                                    </span>
+
+                                </label>
+
+                                <textarea
+                                    id="delivery_note"
+                                    name="delivery_note"
+                                    rows="3"
+                                    placeholder="Any special delivery instructions?"
+                                >{{ request.POST.delivery_note|default:'' }}</textarea>
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =========================================
+                     03 — PAYMENT METHOD
+                ========================================== -->
+
+                <section class="checkout-form-section">
+
+                    <div class="checkout-section-heading">
+
+                        <span class="checkout-section-number">
+                            03
+                        </span>
+
+                        <div>
+
+                            <h2>
+                                Payment Method
+                            </h2>
+
+                            <p>
+                                Select your preferred payment method.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="checkout-payment-card">
+
+
+                        <!-- Cash On Delivery -->
+
+                        <label class="payment-option">
+
+                            <input
+                                type="radio"
+                                name="payment_method"
+                                value="COD"
+
+                                {% if request.POST.payment_method == "COD" or not request.POST.payment_method %}
+                                    checked
+                                {% endif %}
+                            >
+
+                            <span class="payment-option-radio"></span>
+
+
+                            <span class="payment-option-content">
+
+                                <strong>
+                                    Cash on Delivery
+                                </strong>
+
+                                <small>
+                                    Pay when your order arrives.
+                                </small>
+
+                            </span>
+
+                        </label>
+
+
+                        <!-- Online Payment -->
+
+                        <label class="payment-option">
+
+                            <input
+                                type="radio"
+                                name="payment_method"
+                                value="Online"
+
+                                {% if request.POST.payment_method == "Online" %}
+                                    checked
+                                {% endif %}
+                            >
+
+                            <span class="payment-option-radio"></span>
+
+
+                            <span class="payment-option-content">
+
+                                <strong>
+                                    Online Payment
+                                </strong>
+
+                                <small>
+                                    Pay securely online.
+                                </small>
+
+                            </span>
+
+                        </label>
+
+
+                    </div>
+
+                </section>
+
+
+                <!-- =========================================
+                     PLACE ORDER
+                ========================================== -->
+
+                <div class="checkout-submit-area">
+
+                    <button
+                        type="submit"
+                        class="place-order-btn"
+                        id="place-order-btn"
+                    >
+
+                        <span>
+                            PLACE ORDER
+                        </span>
+
+                        <span class="place-order-arrow">
+                            →
+                        </span>
+
+                    </button>
+
+
+                    <div class="checkout-secure">
+
+                        <span>
+                            🔒
+                        </span>
+
+                        <p>
+                            Your information is securely processed.
+                        </p>
+
+                    </div>
 
                 </div>
 
-            </div>
+
+            </form>
+
+        </div>
 
 
+        <!-- =================================================
+             RIGHT — ORDER SUMMARY
+        ================================================== -->
 
-            <!-- =================================================
-                 RIGHT — ORDER SUMMARY
-            ================================================== -->
-
-            <aside class="checkout-summary">
-
-                <div class="checkout-summary-inner">
+        <aside class="checkout-sidebar">
 
 
-                    <span class="summary-eyebrow">
+            <div class="checkout-summary">
+
+
+                <!-- =========================================
+                     SUMMARY HEADER
+                ========================================== -->
+
+                <div class="checkout-summary-header">
+
+                    <span>
                         YOUR ORDER
                     </span>
 
-                    <h2>
-                        Order Summary
-                    </h2>
+                    <strong>
+                        {{ cart_items|length }}
+                        ITEM{{ cart_items|length|pluralize }}
+                    </strong>
+
+                </div>
 
 
-                    <!-- ORDER ITEMS -->
+                <!-- =========================================
+                     CART ITEMS
+                ========================================== -->
 
-                    <div class="checkout-items">
+                <div class="checkout-items">
 
-                        {% for item in cart_items %}
+                    {% for item in cart_items %}
 
                         <div class="checkout-item">
 
 
-                            <!-- PRODUCT IMAGE -->
+                            <!-- Product Image -->
 
                             <div class="checkout-item-image">
 
@@ -393,56 +504,175 @@ Checkout | NAFI
 
                                 {% else %}
 
-                                    <span>
+                                    <div class="checkout-item-image-placeholder">
                                         NAFI
-                                    </span>
+                                    </div>
 
                                 {% endif %}
 
                             </div>
 
 
-                            <!-- PRODUCT INFO -->
+                            <!-- Product Information -->
 
                             <div class="checkout-item-info">
 
-                                <strong>
+                                <h3>
                                     {{ item.product.name }}
-                                </strong>
+                                </h3>
 
-                                <span>
 
-                                    SIZE:
-                                    {{ item.size }}
+                                <div class="checkout-item-meta">
 
-                                    ×
+                                    <span>
+                                        Size:
+                                        {{ item.size }}
+                                    </span>
 
-                                    {{ item.quantity }}
+                                    <span>
+                                        Qty:
+                                        {{ item.quantity }}
+                                    </span>
 
-                                </span>
+                                </div>
 
                             </div>
 
 
-                            <!-- ITEM PRICE -->
+                            <!-- Item Price -->
 
-                            <strong class="checkout-item-price">
+                            <div class="checkout-item-price">
 
-                                ৳{{ item.total_price|floatformat:0 }}
+                                ৳{{ item.total_price|floatformat:2 }}
 
-                            </strong>
+                            </div>
+
 
                         </div>
 
-                        {% endfor %}
+                    {% empty %}
+
+                        <p class="checkout-empty">
+                            Your cart is empty.
+                        </p>
+
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- =========================================
+                     COUPON
+                ========================================== -->
+
+                <div class="checkout-coupon-section">
+
+
+                    <div class="checkout-coupon-heading">
+
+                        <span>
+                            HAVE A COUPON?
+                        </span>
 
                     </div>
 
 
-                    <div class="checkout-summary-divider"></div>
+                    <!-- =====================================
+                         COUPON FORM
+                    ====================================== -->
+
+                    <form
+                        id="coupon-form"
+                        class="coupon-form {% if coupon %}coupon-hidden{% endif %}"
+                        action="{% url 'apply_coupon' %}"
+                        method="POST"
+                    >
+
+                        {% csrf_token %}
 
 
-                    <!-- SUBTOTAL -->
+                        <div class="coupon-input-wrapper">
+
+                            <input
+                                type="text"
+                                id="coupon-code"
+                                name="code"
+                                placeholder="ENTER COUPON CODE"
+                                autocomplete="off"
+                                maxlength="50"
+                            >
+
+
+                            <button
+                                type="submit"
+                                id="coupon-apply-btn"
+                                class="coupon-action-btn"
+                            >
+                                APPLY
+                            </button>
+
+                        </div>
+
+                    </form>
+
+
+                    <!-- =====================================
+                         APPLIED COUPON
+                    ====================================== -->
+
+                    <div
+                        id="coupon-applied"
+                        class="coupon-applied {% if not coupon %}coupon-hidden{% endif %}"
+                    >
+
+                        <div class="coupon-applied-info">
+
+                            <span>
+                                COUPON APPLIED
+                            </span>
+
+                            <strong id="coupon-applied-code">
+                                {% if coupon %}
+                                    {{ coupon_code }}
+                                {% endif %}
+                            </strong>
+
+                        </div>
+
+
+                        <button
+                            type="button"
+                            id="coupon-remove-btn"
+                            data-url="{% url 'clear_coupon' %}"
+                            class="coupon-remove-btn"
+                        >
+                            REMOVE
+                        </button>
+
+                    </div>
+
+
+                    <!-- =====================================
+                         COUPON MESSAGE
+                    ====================================== -->
+
+                    <div
+                        id="coupon-message"
+                        class="coupon-message"
+                    ></div>
+
+
+                </div>
+
+
+                <!-- =========================================
+                     PRICING
+                ========================================== -->
+
+                <div class="checkout-pricing">
+
+
+                    <!-- Subtotal -->
 
                     <div class="checkout-summary-line">
 
@@ -451,13 +681,35 @@ Checkout | NAFI
                         </span>
 
                         <strong>
-                            ৳{{ cart.subtotal|floatformat:0 }}
+                            ৳<span id="checkout-subtotal">{{ subtotal|floatformat:2 }}</span>
                         </strong>
 
                     </div>
 
 
-                    <!-- DELIVERY -->
+                    <!-- Discount -->
+
+                    <div
+                        class="checkout-summary-line checkout-discount-line"
+                        id="checkout-discount-row"
+
+                        {% if not discount %}
+                            style="display: none;"
+                        {% endif %}
+                    >
+
+                        <span>
+                            Discount
+                        </span>
+
+                        <strong>
+                            -৳<span id="checkout-discount">{{ discount|floatformat:2 }}</span>
+                        </strong>
+
+                    </div>
+
+
+                    <!-- Delivery -->
 
                     <div class="checkout-summary-line">
 
@@ -465,96 +717,72 @@ Checkout | NAFI
                             Delivery
                         </span>
 
-                        <span class="checkout-delivery-note">
-                            Calculated below
-                        </span>
-
-                    </div>
-
-
-                    <!-- DISCOUNT -->
-
-                    <div class="checkout-summary-line">
-
-                        <span>
-                            Discount
-                        </span>
-
                         <strong>
-                            ৳0
+                            ৳<span id="checkout-delivery">{{ delivery_charge|floatformat:2 }}</span>
                         </strong>
 
                     </div>
 
 
-                    <div class="checkout-summary-divider"></div>
-
-
-                    <!-- TOTAL -->
+                    <!-- Total -->
 
                     <div class="checkout-total">
 
-                        <div>
-
-                            <span>
-                                TOTAL
-                            </span>
-
-                            <small>
-                                Final amount
-                            </small>
-
-                        </div>
+                        <span>
+                            TOTAL
+                        </span>
 
                         <strong>
-
-                            ৳{{ cart.subtotal|floatformat:0 }}
-
+                            ৳<span id="checkout-total">{{ total_amount|floatformat:2 }}</span>
                         </strong>
 
                     </div>
 
 
-                    <!-- PLACE ORDER -->
-
-                    <button
-                        type="submit"
-                        class="place-order-btn"
-                    >
-
-                        <span>
-                            PLACE ORDER
-                        </span>
-
-                        <i class="bi bi-arrow-right"></i>
-
-                    </button>
+                </div>
 
 
-                    <!-- SECURE CHECKOUT -->
+                <!-- =========================================
+                     SECURE CHECKOUT
+                ========================================== -->
 
-                    <div class="checkout-secure">
+                <div class="checkout-sidebar-secure">
 
-                        <i class="bi bi-shield-check"></i>
+                    <span>
+                        🔒
+                    </span>
 
-                        <span>
-                            Secure NAFI checkout
-                        </span>
+                    <div>
+
+                        <strong>
+                            SECURE CHECKOUT
+                        </strong>
+
+                        <p>
+                            Your order information is protected.
+                        </p>
 
                     </div>
 
                 </div>
 
-            </aside>
+
+            </div>
 
 
-        </div>
-
-    </div>
-
-</form>
+        </aside>
 
 
-</section>
+    </section>
+
+
+</main>
+
+
+<!-- =========================================================
+     CHECKOUT JAVASCRIPT
+========================================================== -->
+
+<script src="{% static 'customer/js/checkout.js' %}"></script>
 
 {% endblock %}
