@@ -1,3 +1,4 @@
+
 {% extends 'customer/master/base.html' %}
 {% load static %}
 
@@ -70,6 +71,7 @@
 
                     <span class="cart-item-count">
                         {{ cart_items|length }}
+
                         {% if cart_items|length == 1 %}
                             ITEM
                         {% else %}
@@ -413,7 +415,6 @@
             </div>
 
 
-
             <!-- =================================================
                  RIGHT — ORDER SUMMARY
             ================================================== -->
@@ -431,6 +432,8 @@
                     </h2>
 
 
+                    <!-- SUBTOTAL -->
+
                     <div class="summary-line">
 
                         <span>
@@ -438,11 +441,148 @@
                         </span>
 
                         <strong>
-                            ৳{{ cart.subtotal|floatformat:0 }}
+                            ৳{{ subtotal|floatformat:0 }}
                         </strong>
 
                     </div>
 
+
+                    <!-- =================================================
+                         PROMO CODE
+                    ================================================== -->
+
+                    <div class="cart-promo-section">
+
+                        <span class="promo-label">
+                            DISCOUND CODE
+                        </span>
+
+
+                        {% if coupon %}
+
+                            <!-- APPLIED COUPON -->
+
+                            <div class="coupon-applied">
+
+                                <div class="coupon-applied-info">
+
+                                    <div class="coupon-success-icon">
+                                        <i class="bi bi-check"></i>
+                                    </div>
+
+                                    <div class="coupon-applied-text">
+
+                                        <strong>
+                                            {{ coupon_code }}
+                                        </strong>
+
+                                        <span>
+                                            Code applied
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+
+                                <form
+                                    method="POST"
+                                    action="{% url 'clear_coupon' %}"
+                                    class="cart-coupon-remove-form"
+                                >
+
+                                    {% csrf_token %}
+
+                                    <button
+                                        type="submit"
+                                        class="coupon-remove-btn"
+                                        aria-label="Remove coupon"
+                                    >
+                                        REMOVE
+                                    </button>
+
+                                </form>
+
+                            </div>
+
+
+                        {% else %}
+
+                            <!-- COUPON FORM -->
+
+                            <form
+                                method="POST"
+                                action="{% url 'apply_coupon' %}"
+                                class="cart-coupon-form"
+                                id="cart-coupon-form"
+                            >
+
+                                {% csrf_token %}
+
+                                <div class="cart-coupon-input-wrap">
+
+                                    <input
+                                        type="text"
+                                        name="code"
+                                        id="cart-coupon-code"
+                                        class="cart-coupon-input"
+                                        placeholder="Enter Discount code"
+                                        autocomplete="off"
+                                        maxlength="50"
+                                    >
+
+                                    <button
+                                        type="submit"
+                                        class="cart-coupon-apply-btn"
+                                        id="cart-coupon-apply-btn"
+                                    >
+                                        APPLY
+                                    </button>
+
+                                </div>
+
+                            </form>
+
+
+                            {% if coupon_error %}
+
+                                <div class="cart-coupon-message error">
+
+                                    <i class="bi bi-exclamation-circle"></i>
+
+                                    <span>
+                                        {{ coupon_error }}
+                                    </span>
+
+                                </div>
+
+                            {% endif %}
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- DISCOUNT -->
+
+                    {% if discount and discount > 0 %}
+
+                        <div class="summary-line discount-line">
+
+                            <span>
+                                Discount
+                            </span>
+
+                            <strong>
+                                -৳{{ discount|floatformat:0 }}
+                            </strong>
+
+                        </div>
+
+                    {% endif %}
+
+
+                    <!-- DELIVERY -->
 
                     <div class="summary-line">
 
@@ -460,6 +600,8 @@
                     <div class="summary-divider"></div>
 
 
+                    <!-- TOTAL -->
+
                     <div class="summary-total">
 
                         <div>
@@ -469,13 +611,17 @@
                             </span>
 
                             <small>
-                                Including selected items
+                                {% if discount and discount > 0 %}
+                                    You save ৳{{ discount|floatformat:0 }}
+                                {% else %}
+                                    Including selected items
+                                {% endif %}
                             </small>
 
                         </div>
 
                         <strong>
-                            ৳{{ cart.subtotal|floatformat:0 }}
+                            ৳{{ total_amount|floatformat:0 }}
                         </strong>
 
                     </div>
@@ -561,11 +707,16 @@
 
 
 
+
 {% block extra_js %}
 
 <script>
 
 document.addEventListener("DOMContentLoaded", function () {
+
+    /* =====================================================
+       RESTORE CART SCROLL POSITION
+    ====================================================== */
 
     const savedScroll =
         sessionStorage.getItem("nafiCartScroll");
@@ -585,31 +736,431 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
+    /* =====================================================
+       CART FORMS
+    ====================================================== */
+
     const cartForms =
         document.querySelectorAll(
-            ".quantity-form, .remove-item-form, .cart-actions form, .cart-size-form, .another-size-form"
+            ".quantity-form, " +
+            ".remove-item-form, " +
+            ".cart-actions form, " +
+            ".cart-size-form, " +
+            ".another-size-form"
         );
 
 
     cartForms.forEach(function (form) {
 
-        form.addEventListener("submit", function () {
+        form.addEventListener(
+            "submit",
+            function () {
 
-            sessionStorage.setItem(
-                "nafiCartScroll",
-                window.scrollY
-            );
+                sessionStorage.setItem(
+                    "nafiCartScroll",
+                    window.scrollY
+                );
 
-        });
+            }
+        );
 
     });
 
+
+    /* =====================================================
+       COUPON INPUT
+    ====================================================== */
+
+    const couponInput =
+        document.getElementById(
+            "cart-coupon-code"
+        );
+
+
+    if (couponInput) {
+
+        couponInput.addEventListener(
+            "input",
+            function () {
+
+                this.value =
+                    this.value.toUpperCase();
+
+            }
+        );
+
+    }
+
+
+    /* =====================================================
+       APPLY COUPON
+    ====================================================== */
+
+    const couponForm =
+        document.getElementById(
+            "cart-coupon-form"
+        );
+
+
+    if (couponForm) {
+
+        couponForm.addEventListener(
+            "submit",
+            async function (event) {
+
+                event.preventDefault();
+
+
+                const input =
+                    document.getElementById(
+                        "cart-coupon-code"
+                    );
+
+                const button =
+                    document.getElementById(
+                        "cart-coupon-apply-btn"
+                    );
+
+
+                if (!input || !button) {
+
+                    return;
+
+                }
+
+
+                const code =
+                    input.value.trim();
+
+
+                /* -----------------------------------------
+                   EMPTY CODE
+                ----------------------------------------- */
+
+                if (!code) {
+
+                    showCartCouponMessage(
+                        "Please enter a promo code."
+                    );
+
+                    input.focus();
+
+                    return;
+
+                }
+
+
+                /* -----------------------------------------
+                   LOADING STATE
+                ----------------------------------------- */
+
+                const originalText =
+                    button.textContent;
+
+
+                button.disabled = true;
+
+                button.textContent =
+                    "CHECKING";
+
+
+                /* -----------------------------------------
+                   FORM DATA
+                ----------------------------------------- */
+
+                const formData =
+                    new FormData(
+                        couponForm
+                    );
+
+
+                try {
+
+                    const response =
+                        await fetch(
+                            couponForm.action,
+                            {
+                                method: "POST",
+
+                                body: formData,
+
+                                headers: {
+                                    "X-Requested-With":
+                                        "XMLHttpRequest"
+                                }
+                            }
+                        );
+
+
+                    const data =
+                        await response.json();
+
+
+                    /* -------------------------------------
+                       SUCCESS
+                    ------------------------------------- */
+
+                    if (data.success) {
+
+                        /*
+                         * Reload the Cart page.
+                         *
+                         * The backend has already stored
+                         * coupon_code in the session.
+                         *
+                         * cart_page() will revalidate the
+                         * coupon and render:
+                         *
+                         * - coupon
+                         * - discount
+                         * - total_amount
+                         */
+
+                        window.location.reload();
+
+                        return;
+
+                    }
+
+
+                    /* -------------------------------------
+                       ERROR
+                    ------------------------------------- */
+
+                    showCartCouponMessage(
+                        data.message ||
+                        "Unable to apply this coupon."
+                    );
+
+                }
+
+                catch (error) {
+
+                    console.error(
+                        "Coupon error:",
+                        error
+                    );
+
+
+                    showCartCouponMessage(
+                        "Something went wrong. Please try again."
+                    );
+
+                }
+
+                finally {
+
+                    button.disabled = false;
+
+                    button.textContent =
+                        originalText;
+
+                }
+
+            }
+        );
+
+    }
+
+
+    /* =====================================================
+       REMOVE COUPON
+    ====================================================== */
+
+    const removeCouponForm =
+        document.querySelector(
+            ".cart-coupon-remove-form"
+        );
+
+
+    if (removeCouponForm) {
+
+        removeCouponForm.addEventListener(
+            "submit",
+            async function (event) {
+
+                event.preventDefault();
+
+
+                const button =
+                    removeCouponForm.querySelector(
+                        ".coupon-remove-btn"
+                    );
+
+
+                if (button) {
+
+                    button.disabled = true;
+
+                    button.textContent =
+                        "REMOVING";
+
+                }
+
+
+                const formData =
+                    new FormData(
+                        removeCouponForm
+                    );
+
+
+                try {
+
+                    const response =
+                        await fetch(
+                            removeCouponForm.action,
+                            {
+                                method: "POST",
+
+                                body: formData,
+
+                                headers: {
+                                    "X-Requested-With":
+                                        "XMLHttpRequest"
+                                }
+                            }
+                        );
+
+
+                    const data =
+                        await response.json();
+
+
+                    if (data.success) {
+
+                        /*
+                         * clear_coupon() removes the
+                         * coupon from the session.
+                         *
+                         * Reloading allows cart_page()
+                         * to render the fresh total.
+                         */
+
+                        window.location.reload();
+
+                        return;
+
+                    }
+
+
+                    showCartCouponMessage(
+                        data.message ||
+                        "Unable to remove coupon."
+                    );
+
+                }
+
+                catch (error) {
+
+                    console.error(
+                        "Remove coupon error:",
+                        error
+                    );
+
+
+                    showCartCouponMessage(
+                        "Something went wrong. Please try again."
+                    );
+
+                }
+
+                finally {
+
+                    if (button) {
+
+                        button.disabled = false;
+
+                        button.textContent =
+                            "REMOVE";
+
+                    }
+
+                }
+
+            }
+        );
+
+    }
+
 });
 
-</script>
+
+/* =========================================================
+   COUPON ERROR MESSAGE
+========================================================= */
+
+function showCartCouponMessage(message) {
+
+    const promoSection =
+        document.querySelector(
+            ".cart-promo-section"
+        );
 
 
-<script>
+    if (!promoSection) {
+
+        return;
+
+    }
+
+
+    let messageElement =
+        promoSection.querySelector(
+            ".cart-coupon-message"
+        );
+
+
+    /* -----------------------------------------
+       CREATE MESSAGE ELEMENT
+    ----------------------------------------- */
+
+    if (!messageElement) {
+
+        messageElement =
+            document.createElement(
+                "div"
+            );
+
+        messageElement.className =
+            "cart-coupon-message error";
+
+
+        messageElement.innerHTML = `
+            <i class="bi bi-exclamation-circle"></i>
+            <span></span>
+        `;
+
+
+        promoSection.appendChild(
+            messageElement
+        );
+
+    }
+
+
+    const textElement =
+        messageElement.querySelector(
+            "span"
+        );
+
+
+    if (textElement) {
+
+        textElement.textContent =
+            message;
+
+    }
+
+
+    messageElement.style.display =
+        "flex";
+
+}
+
+
+/* =========================================================
+   ANOTHER SIZE
+========================================================= */
 
 function toggleAnotherSize(itemKey) {
 

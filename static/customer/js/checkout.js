@@ -607,17 +607,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
 
 
-                    /*
-                     * The backend currently returns:
-                     *
-                     * discount = 0
-                     *
-                     * We restore the total using:
-                     *
-                     * subtotal + delivery
-                     */
-
-
                     updateSummary(data);
 
                     showCouponForm();

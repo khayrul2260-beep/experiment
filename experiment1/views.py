@@ -1234,17 +1234,10 @@ def add_to_cart(request, product_id):
 # CART PAGE
 # =========================================================
 
-# =========================================================
-# CART PAGE
-# =========================================================
-# =========================================================
-# CART PAGE
-# =========================================================
-
 def cart_page(request):
 
     # =====================================================
-    # LOGGED-IN USER
+    # LOGGED-IN USER CART
     # =====================================================
 
     if request.user.is_authenticated:
@@ -1255,85 +1248,98 @@ def cart_page(request):
 
         cart_items = (
             cart.items
-            .select_related("product")
-            .order_by("-created_at")
+            .select_related(
+                "product"
+            )
+            .order_by(
+                "-created_at"
+            )
         )
 
-        pricing = _get_cart_pricing(
-            request,
-            cart_items,
-            is_guest=False
-        )
-
-        context = {
-
-            "cart": cart,
-
-            "cart_items": cart_items,
-
-            "is_guest_cart": False,
-
-            "subtotal": pricing["subtotal"],
-
-            "coupon": pricing["coupon"],
-
-            "coupon_code": pricing["coupon_code"],
-
-            "discount": pricing["discount"],
-
-            "delivery_charge": pricing[
-                "delivery_charge"
-            ],
-
-            "total_amount": pricing[
-                "total_amount"
-            ],
-
-            "coupon_error": pricing[
-                "coupon_error"
-            ],
-
-        }
-
-        return render(
-            request,
-            "customer/cart.html",
-            context
-        )
+        is_guest_cart = False
 
     # =====================================================
-    # GUEST USER
+    # GUEST CART
     # =====================================================
 
-    cart_items = _get_guest_cart_items(
-        request
-    )
+    else:
 
-    guest_cart = _get_guest_cart_summary(
-        cart_items
-    )
+        cart = None
+
+        cart_items = _get_guest_cart_items(
+            request
+        )
+
+        is_guest_cart = True
+
+    # =====================================================
+    # CART PRICING + COUPON
+    # =====================================================
 
     pricing = _get_cart_pricing(
         request,
         cart_items,
-        is_guest=True
+        is_guest=is_guest_cart
     )
+
+    # =====================================================
+    # TOTAL ITEMS
+    # =====================================================
+
+    if is_guest_cart:
+
+        guest_summary = _get_guest_cart_summary(
+            cart_items
+        )
+
+        total_items = (
+            guest_summary.total_items
+        )
+
+    else:
+
+        total_items = sum(
+            item.quantity
+            for item in cart_items
+        )
+
+    # =====================================================
+    # CONTEXT
+    # =====================================================
 
     context = {
 
-        "cart": guest_cart,
+        # -------------------------------------------------
+        # CART
+        # -------------------------------------------------
+
+        "cart": cart,
 
         "cart_items": cart_items,
 
-        "is_guest_cart": True,
+        "is_guest_cart": is_guest_cart,
 
-        "subtotal": pricing["subtotal"],
+        "total_items": total_items,
 
-        "coupon": pricing["coupon"],
+        # -------------------------------------------------
+        # PRICING
+        # -------------------------------------------------
 
-        "coupon_code": pricing["coupon_code"],
+        "subtotal": pricing[
+            "subtotal"
+        ],
 
-        "discount": pricing["discount"],
+        "coupon": pricing[
+            "coupon"
+        ],
+
+        "coupon_code": pricing[
+            "coupon_code"
+        ],
+
+        "discount": pricing[
+            "discount"
+        ],
 
         "delivery_charge": pricing[
             "delivery_charge"
@@ -1346,8 +1352,11 @@ def cart_page(request):
         "coupon_error": pricing[
             "coupon_error"
         ],
-
     }
+
+    # =====================================================
+    # RENDER
+    # =====================================================
 
     return render(
         request,
