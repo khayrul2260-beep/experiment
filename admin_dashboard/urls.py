@@ -13,6 +13,9 @@ urlpatterns = [
     path("orders/<str:order_number>/", order_details_page, name="admin_order_details"),
     path("orders/<str:order_number>/update-status/", update_order_status, name="update_order_status"),
     path("orders/<str:order_number>/update-payment-status/", update_payment_status, name="update_payment_status"),
+    path("orders/return-exchange/<int:request_id>/approve/",approve_return_exchange,name="approve_return_exchange"),
+    path("orders/return-exchange/<int:request_id>/reject/",reject_return_exchange,name="reject_return_exchange"),
+    path("orders/return-exchange/<int:request_id>/complete/",complete_return_exchange,name="complete_return_exchange"),
 
     path('customers/', customers_page, name='customers_page'),
     path("customers/<str:customer_id>/", customer_details_page, name="customer_details"),

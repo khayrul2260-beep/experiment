@@ -591,28 +591,78 @@ Order Details
 
                         {% endif %}
 
+<div class="return-exchange-actions">
 
-                        <div class="return-exchange-actions">
+    {% if request.status == "Pending" %}
 
-                            <button
-                                type="button"
-                                class="admin-action-btn approve"
-                                data-request-id="{{ request.id }}"
-                            >
-                                <i class="bi bi-check2"></i>
-                                APPROVE
-                            </button>
+        <form
+            method="POST"
+            action="{% url 'approve_return_exchange' request.id %}"
+        >
+            {% csrf_token %}
 
-                            <button
-                                type="button"
-                                class="admin-action-btn reject"
-                                data-request-id="{{ request.id }}"
-                            >
-                                <i class="bi bi-x-lg"></i>
-                                REJECT
-                            </button>
+            <button
+                type="submit"
+                class="admin-action-btn approve"
+            >
+                <i class="bi bi-check2"></i>
+                APPROVE
+            </button>
+        </form>
 
-                        </div>
+
+        <form
+            method="POST"
+            action="{% url 'reject_return_exchange' request.id %}"
+        >
+            {% csrf_token %}
+
+            <button
+                type="submit"
+                class="admin-action-btn reject"
+            >
+                <i class="bi bi-x-lg"></i>
+                REJECT
+            </button>
+        </form>
+
+
+    {% elif request.status == "Approved" %}
+
+        <form
+            method="POST"
+            action="{% url 'complete_return_exchange' request.id %}"
+        >
+            {% csrf_token %}
+
+            <button
+                type="submit"
+                class="admin-action-btn complete"
+            >
+                <i class="bi bi-check2-circle"></i>
+                MARK COMPLETED
+            </button>
+        </form>
+
+
+    {% elif request.status == "Rejected" %}
+
+        <span class="return-action-completed">
+            <i class="bi bi-x-circle"></i>
+            REQUEST REJECTED
+        </span>
+
+
+    {% elif request.status == "Completed" %}
+
+        <span class="return-action-completed">
+            <i class="bi bi-check2-circle"></i>
+            REQUEST COMPLETED
+        </span>
+
+    {% endif %}
+
+</div>
 
                     </div>
 

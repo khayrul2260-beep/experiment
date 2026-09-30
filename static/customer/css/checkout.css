@@ -84,12 +84,12 @@
 
 .checkout-header h1 {
     margin: 0;
-
+    font-family: "Oswald", sans-serif;
     font-size: clamp(32px, 4vw, 58px);
     line-height: 1.05;
 
     font-weight: 700;
-    letter-spacing: -0.045em;
+    letter-spacing: 2px;
 
     color: var(--checkout-white);
 }

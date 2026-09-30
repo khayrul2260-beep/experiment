@@ -1792,6 +1792,146 @@ def update_payment_status(request, order_number):
         order_number=order.order_number
     )
 
+
+# =========================================================
+# RETURN / EXCHANGE MANAGEMENT
+# =========================================================
+
+@require_POST
+def approve_return_exchange(request, request_id):
+
+    return_request = get_object_or_404(
+        OrderReturnExchange.objects.select_related(
+            "order",
+            "order_item",
+            "customer",
+        ),
+        id=request_id,
+    )
+
+    # Only Pending requests can be approved
+    if return_request.status != "Pending":
+
+        messages.warning(
+            request,
+            "Only pending return/exchange requests can be approved."
+        )
+
+        return redirect(
+            "admin_order_details",
+            order_number=return_request.order.order_number
+        )
+
+    return_request.status = "Approved"
+
+    return_request.save(
+        update_fields=[
+            "status",
+            "updated_at",
+        ]
+    )
+
+    messages.success(
+        request,
+        f"{return_request.request_type} request approved successfully."
+    )
+
+    return redirect(
+        "admin_order_details",
+        order_number=return_request.order.order_number
+    )
+
+
+@require_POST
+def reject_return_exchange(request, request_id):
+
+    return_request = get_object_or_404(
+        OrderReturnExchange.objects.select_related(
+            "order",
+            "order_item",
+            "customer",
+        ),
+        id=request_id,
+    )
+
+    # Only Pending requests can be rejected
+    if return_request.status != "Pending":
+
+        messages.warning(
+            request,
+            "Only pending return/exchange requests can be rejected."
+        )
+
+        return redirect(
+            "admin_order_details",
+            order_number=return_request.order.order_number
+        )
+
+    return_request.status = "Rejected"
+
+    return_request.save(
+        update_fields=[
+            "status",
+            "updated_at",
+        ]
+    )
+
+    messages.success(
+        request,
+        f"{return_request.request_type} request rejected."
+    )
+
+    return redirect(
+        "admin_order_details",
+        order_number=return_request.order.order_number
+    )
+
+
+@require_POST
+def complete_return_exchange(request, request_id):
+
+    return_request = get_object_or_404(
+        OrderReturnExchange.objects.select_related(
+            "order",
+            "order_item",
+            "customer",
+        ),
+        id=request_id,
+    )
+
+    # Only Approved requests can be completed
+    if return_request.status != "Approved":
+
+        messages.warning(
+            request,
+            "Only approved return/exchange requests can be completed."
+        )
+
+        return redirect(
+            "admin_order_details",
+            order_number=return_request.order.order_number
+        )
+
+    return_request.status = "Completed"
+
+    return_request.save(
+        update_fields=[
+            "status",
+            "updated_at",
+        ]
+    )
+
+    messages.success(
+        request,
+        f"{return_request.request_type} request completed successfully."
+    )
+
+    return redirect(
+        "admin_order_details",
+        order_number=return_request.order.order_number
+    )
+
+
 def inventory_page(request):
 
     products = (
