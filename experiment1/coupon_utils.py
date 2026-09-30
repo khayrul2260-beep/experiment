@@ -494,6 +494,7 @@ def validate_coupon_data(data, coupon=None):
         "start_date": start_date,
         "expiry_date": expiry_date,
         "usage_limit": usage_limit,
+        "is_active": "is_active" in data,
     }
 
     return {

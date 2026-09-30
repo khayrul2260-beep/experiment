@@ -1862,6 +1862,19 @@ def inventory_page(request):
         })
 
     # -----------------------------------------
+    # Unique Inventory Categories
+    # -----------------------------------------
+    
+    categories = (
+        Category.objects
+        .filter(
+            products__isnull=False
+        )
+        .distinct()
+        .order_by("name")
+    )
+
+    # -----------------------------------------
     # Summary
     # -----------------------------------------
 
@@ -1890,6 +1903,8 @@ def inventory_page(request):
         "page_title": "Inventory",
 
         "inventory_products": inventory_products,
+
+        "categories": categories,
 
         "total_products": total_products,
         "in_stock_count": in_stock_count,

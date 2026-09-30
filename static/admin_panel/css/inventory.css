@@ -1681,7 +1681,6 @@ body.inventory-modal-open {
 .inventory-modal-close:focus-visible,
 .inventory-modal-cancel:focus-visible,
 .inventory-modal-save:focus-visible,
-.inventory-search input:focus-visible,
 .inventory-filter select:focus-visible,
 .inventory-stock-field input:focus-visible {
   outline: 1px solid #666666;

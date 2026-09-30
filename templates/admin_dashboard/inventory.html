@@ -201,18 +201,12 @@ Inventory
           All Categories
         </option>
 
-        {% regroup inventory_products by category as category_list %}
-
-        {% for category in category_list %}
-
-          {% if category.grouper %}
-
-          <option value="{{ category.grouper|lower }}">
-            {{ category.grouper }}
+        {% for category in categories %}
+              
+          <option value="{{ category.name|lower }}">
+            {{ category.name }}
           </option>
-
-          {% endif %}
-
+        
         {% endfor %}
 
       </select>
