@@ -1895,11 +1895,15 @@ def complete_return_exchange(request, request_id):
             "order",
             "order_item",
             "customer",
+            "order_item__product",
         ),
         id=request_id,
     )
 
-    # Only Approved requests can be completed
+    # =====================================================
+    # ONLY APPROVED REQUEST CAN BE COMPLETED
+    # =====================================================
+
     if return_request.status != "Approved":
 
         messages.warning(
@@ -1912,18 +1916,287 @@ def complete_return_exchange(request, request_id):
             order_number=return_request.order.order_number
         )
 
-    return_request.status = "Completed"
 
-    return_request.save(
-        update_fields=[
-            "status",
-            "updated_at",
-        ]
-    )
+    order_item = return_request.order_item
+    product = order_item.product
+    quantity = return_request.requested_quantity
+
+
+    # =====================================================
+    # PRODUCT VALIDATION
+    # =====================================================
+
+    if not product:
+
+        messages.error(
+            request,
+            "The product associated with this request no longer exists."
+        )
+
+        return redirect(
+            "admin_order_details",
+            order_number=return_request.order.order_number
+        )
+
+
+    # =====================================================
+    # INVENTORY SYNC
+    # =====================================================
+
+    try:
+
+        with transaction.atomic():
+
+            # Lock product
+            product = (
+                ProductsModel.objects
+                .select_for_update()
+                .get(
+                    id=product.id
+                )
+            )
+
+
+            # Lock old size
+            old_size = (
+                ProductSize.objects
+                .select_for_update()
+                .filter(
+                    product=product,
+                    size=order_item.size
+                )
+                .first()
+            )
+
+
+            if not old_size:
+
+                messages.error(
+                    request,
+                    f"Original size {order_item.size} was not found in inventory."
+                )
+
+                return redirect(
+                    "admin_order_details",
+                    order_number=return_request.order.order_number
+                )
+
+
+            # =================================================
+            # RETURN
+            # =================================================
+
+            if return_request.request_type == "Return":
+
+                old_size.stock += quantity
+
+                old_size.is_available = (
+                    old_size.stock > 0
+                )
+
+                old_size.save(
+                    update_fields=[
+                        "stock",
+                        "is_available",
+                        "updated_at",
+                    ]
+                )
+
+
+            # =================================================
+            # EXCHANGE
+            # =================================================
+
+            elif return_request.request_type == "Exchange":
+
+                new_size = return_request.new_size
+
+
+                # ---------------------------------------------
+                # NEW SIZE VALIDATION
+                # ---------------------------------------------
+
+                if not new_size:
+
+                    messages.error(
+                        request,
+                        "New size is required for an exchange."
+                    )
+
+                    return redirect(
+                        "admin_order_details",
+                        order_number=return_request.order.order_number
+                    )
+
+
+                if new_size == order_item.size:
+
+                    messages.error(
+                        request,
+                        "New size cannot be the same as the original size."
+                    )
+
+                    return redirect(
+                        "admin_order_details",
+                        order_number=return_request.order.order_number
+                    )
+
+
+                # ---------------------------------------------
+                # GET NEW SIZE
+                # ---------------------------------------------
+
+                new_size_obj = (
+                    ProductSize.objects
+                    .select_for_update()
+                    .filter(
+                        product=product,
+                        size=new_size
+                    )
+                    .first()
+                )
+
+
+                if not new_size_obj:
+
+                    messages.error(
+                        request,
+                        f"New size {new_size} is not available for this product."
+                    )
+
+                    return redirect(
+                        "admin_order_details",
+                        order_number=return_request.order.order_number
+                    )
+
+
+                # ---------------------------------------------
+                # CHECK NEW SIZE STOCK
+                # ---------------------------------------------
+
+                if new_size_obj.stock < quantity:
+
+                    messages.error(
+                        request,
+                        (
+                            f"Not enough stock for size {new_size}. "
+                            f"Available: {new_size_obj.stock}, "
+                            f"Required: {quantity}."
+                        )
+                    )
+
+                    return redirect(
+                        "admin_order_details",
+                        order_number=return_request.order.order_number
+                    )
+
+
+                # ---------------------------------------------
+                # RETURN OLD SIZE
+                # ---------------------------------------------
+
+                old_size.stock += quantity
+
+                old_size.is_available = (
+                    old_size.stock > 0
+                )
+
+                old_size.save(
+                    update_fields=[
+                        "stock",
+                        "is_available",
+                        "updated_at",
+                    ]
+                )
+
+
+                # ---------------------------------------------
+                # REMOVE NEW SIZE
+                # ---------------------------------------------
+
+                new_size_obj.stock -= quantity
+
+                new_size_obj.is_available = (
+                    new_size_obj.stock > 0
+                )
+
+                new_size_obj.save(
+                    update_fields=[
+                        "stock",
+                        "is_available",
+                        "updated_at",
+                    ]
+                )
+
+
+            # =================================================
+            # RECALCULATE TOTAL PRODUCT STOCK
+            # =================================================
+
+            total_stock = (
+                ProductSize.objects
+                .filter(
+                    product=product
+                )
+                .aggregate(
+                    total=Sum("stock")
+                )["total"]
+                or 0
+            )
+
+
+            product.stock = total_stock
+
+            product.save(
+                update_fields=[
+                    "stock",
+                    "updated_at",
+                ]
+            )
+
+
+            # =================================================
+            # COMPLETE REQUEST
+            # =================================================
+
+            return_request.status = "Completed"
+
+            return_request.save(
+                update_fields=[
+                    "status",
+                    "updated_at",
+                ]
+            )
+
+
+    except Exception as error:
+
+        print(
+            "Return/Exchange inventory sync error:",
+            error
+        )
+
+        messages.error(
+            request,
+            "Unable to complete the return/exchange request."
+        )
+
+        return redirect(
+            "admin_order_details",
+            order_number=return_request.order.order_number
+        )
+
+
+    # =====================================================
+    # SUCCESS
+    # =====================================================
 
     messages.success(
         request,
-        f"{return_request.request_type} request completed successfully."
+        (
+            f"{return_request.request_type} completed successfully "
+            f"and inventory updated."
+        )
     )
 
     return redirect(
@@ -1931,7 +2204,7 @@ def complete_return_exchange(request, request_id):
         order_number=return_request.order.order_number
     )
 
-
+    
 def inventory_page(request):
 
     products = (

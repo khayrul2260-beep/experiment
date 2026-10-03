@@ -219,16 +219,33 @@ Order Details
 
                 </div>
 
+<div class="customer-info-item">
 
-                <div class="customer-info-item">
+    <span>PHONE</span>
 
-                    <span>PHONE</span>
+    <div class="customer-phone-action">
 
-                    <strong>
-                        {{ order.phone }}
-                    </strong>
+        <strong>
+            {{ order.phone }}
+        </strong>
 
-                </div>
+        {% if order.phone %}
+
+<a
+    href="https://web.whatsapp.com/send?phone=880{{ order.phone|slice:'1:' }}"
+    target="nafi_whatsapp"
+    rel="noopener noreferrer"
+    class="whatsapp-customer-btn"
+>
+    <i class="bi bi-whatsapp"></i>
+    WHATSAPP
+</a>
+
+        {% endif %}
+
+    </div>
+
+</div>
 
 
                 <div class="customer-info-item">
@@ -550,7 +567,6 @@ Order Details
 
                         </div>
 
-
                         <div class="return-exchange-details">
 
                             <div>
@@ -560,12 +576,42 @@ Order Details
                                 </strong>
                             </div>
 
+
+                            {% if request.request_type == "Exchange" %}
+
+                                <div>
+                                    <span>ORIGINAL SIZE</span>
+                                    <strong>
+                                        {{ request.order_item.size }}
+                                    </strong>
+                                </div>
+
+                                <div>
+                                    <span>NEW SIZE</span>
+                                    <strong>
+                                        {{ request.new_size }}
+                                    </strong>
+                                </div>
+
+                            {% else %}
+
+                                <div>
+                                    <span>SIZE</span>
+                                    <strong>
+                                        {{ request.order_item.size }}
+                                    </strong>
+                                </div>
+
+                            {% endif %}
+
+
                             <div>
                                 <span>REASON</span>
                                 <strong>
                                     {{ request.reason }}
                                 </strong>
                             </div>
+
 
                             <div>
                                 <span>REQUESTED</span>
@@ -575,7 +621,6 @@ Order Details
                             </div>
 
                         </div>
-
 
                         {% if request.note %}
 

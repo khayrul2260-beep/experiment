@@ -988,6 +988,46 @@
 
                     </div>
 
+                    
+                    <!-- NEW SIZE -->
+                    <div
+                        class="nafi-return-field"
+                        id="newSizeField"
+                        style="display: none;"
+                    >
+
+                        <label for="newSize">
+                            NEW SIZE
+                        </label>
+                    
+                        <select
+                            id="newSize"
+                            name="new_size"
+                        >
+                            <option value="" selected disabled>
+                                Select new size
+                            </option>
+                        
+                            <option value="M">
+                                M
+                            </option>
+                        
+                            <option value="L">
+                                L
+                            </option>
+                        
+                            <option value="XL">
+                                XL
+                            </option>
+                        
+                            <option value="XXL">
+                                XXL
+                            </option>
+                        
+                        </select>
+                    
+                    </div>
+
 
                     <!-- REASON -->
                     <div class="nafi-return-field">
@@ -1092,3 +1132,53 @@
 </section>
 
 {% endblock %}
+
+{% block extra_js %}
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const exchangeOptions = document.querySelectorAll(
+        'input[name="request_type"]'
+    );
+
+    const newSizeField = document.getElementById(
+        "newSizeField"
+    );
+
+    const newSizeSelect = document.getElementById(
+        "newSize"
+    );
+
+    if (!exchangeOptions.length || !newSizeField) {
+        return;
+    }
+
+    exchangeOptions.forEach(function (option) {
+
+        option.addEventListener("change", function () {
+
+            if (this.value === "Exchange") {
+
+                newSizeField.style.display = "block";
+
+                newSizeSelect.required = true;
+
+            } else {
+
+                newSizeField.style.display = "none";
+
+                newSizeSelect.required = false;
+                newSizeSelect.value = "";
+
+            }
+
+        });
+
+    });
+
+});
+
+</script>
+{% endblock %}
+

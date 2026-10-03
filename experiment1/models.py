@@ -593,7 +593,11 @@ class OrderReturnExchange(models.Model):
     requested_quantity = models.PositiveIntegerField(
         default=1
     )
-
+    new_size = models.CharField(
+        max_length=10,
+        blank=True,
+        null=True
+    )
     reason = models.CharField(
         max_length=80,
         choices=REASON_CHOICES

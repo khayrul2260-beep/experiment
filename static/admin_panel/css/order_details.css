@@ -316,7 +316,59 @@
     color: #475569;
 }
 
+/* =========================================================
+   CUSTOMER WHATSAPP
+========================================================= */
 
+.customer-phone-action {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.customer-phone-action strong {
+    min-width: 0;
+}
+
+.whatsapp-customer-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+
+    min-height: 26px;
+    padding: 0 9px;
+
+    flex-shrink: 0;
+
+    border: 1px solid rgba(34, 197, 94, 0.20);
+    border-radius: 4px;
+
+    background: rgba(34, 197, 94, 0.07);
+    color: #22c55e;
+
+    font-size: 8px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+
+    text-decoration: none;
+
+    transition:
+        background-color 0.25s ease,
+        border-color 0.25s ease,
+        color 0.25s ease;
+}
+
+.whatsapp-customer-btn i {
+    font-size: 11px;
+}
+
+.whatsapp-customer-btn:hover {
+    background: rgba(34, 197, 94, 0.14);
+    border-color: rgba(34, 197, 94, 0.35);
+    color: #4ade80;
+}
 /* =========================================================
    ORDERED PRODUCTS
 ========================================================= */
@@ -1047,6 +1099,7 @@
 }
 
 
+
 /* =========================================================
    LARGE TABLET
 ========================================================= */
@@ -1670,6 +1723,15 @@
 
 @media (max-width: 576px) {
 
+    .customer-phone-action {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 7px;
+    }
+    
+    .whatsapp-customer-btn {
+        min-height: 28px;
+    }
     .admin-payment-status-form {
         margin-top: 12px;
         padding-top: 11px;

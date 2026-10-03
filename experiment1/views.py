@@ -2900,9 +2900,16 @@ def checkout_page(request):
                     )
 
 
+                    product_size.is_available = (
+                        product_size.stock > 0
+                    )
+
+
                     product_size.save(
                         update_fields=[
-                            "stock"
+                            "stock",
+                            "is_available",
+                            "updated_at",
                         ]
                     )
 
@@ -2911,17 +2918,19 @@ def checkout_page(request):
                     # UPDATE PRODUCT TOTAL STOCK
                     # ---------------------------------------------
 
-                    total_stock = sum(
-
-                        size.stock
-
-                        for size
-                        in product_size.product.sizes.all()
-
-                    )
-
-
                     product = product_size.product
+
+
+                    total_stock = (
+                        ProductSize.objects
+                        .filter(
+                            product=product
+                        )
+                        .aggregate(
+                            total=Sum("stock")
+                        )["total"]
+                        or 0
+                    )
 
 
                     product.stock = total_stock
@@ -2929,10 +2938,10 @@ def checkout_page(request):
 
                     product.save(
                         update_fields=[
-                            "stock"
+                            "stock",
+                            "updated_at",
                         ]
                     )
-
 
                 # =================================================
                 # INCREMENT COUPON USAGE
@@ -3502,6 +3511,8 @@ def request_return_exchange(request, order_number):
         "request_type"
     )
 
+    new_size = request.POST.get("new_size", "").strip()
+
     reason = request.POST.get(
         "reason"
     )
@@ -3520,7 +3531,18 @@ def request_return_exchange(request, order_number):
         id=order_item_id,
         order=order
     )
+    # =====================================================
+    # PREVENT SAME SIZE EXCHANGE
+    # =====================================================
 
+    if (
+        request_type == "Exchange"
+        and new_size == order_item.size
+    ):
+        return redirect(
+            "order_details",
+            order_number=order.order_number
+        )
     # -----------------------------------------------------
     # VALIDATE REQUEST TYPE
     # -----------------------------------------------------
@@ -3533,6 +3555,24 @@ def request_return_exchange(request, order_number):
             "order_details",
             order_number=order.order_number
         )
+
+    # =====================================================
+    # EXCHANGE SIZE VALIDATION
+    # =====================================================
+
+    valid_sizes = ["M", "L", "XL", "XXL"]
+
+    if request_type == "Exchange":
+
+        if new_size not in valid_sizes:
+            return redirect(
+                "order_details",
+                order_number=order.order_number
+            )
+
+    else:
+
+        new_size = None
 
     # -----------------------------------------------------
     # VALIDATE REASON
@@ -3618,7 +3658,7 @@ def request_return_exchange(request, order_number):
         request_type=request_type,
 
         requested_quantity=requested_quantity,
-
+        new_size=new_size,
         reason=reason,
 
         note=note,
