@@ -1635,7 +1635,6 @@ def orders_page(request):
         }
     )
 
-
 def order_details_page(request, order_number):
 
     order = get_object_or_404(
@@ -1650,10 +1649,226 @@ def order_details_page(request, order_number):
 
     return_requests = order.return_exchange_requests.all()
 
+    # =====================================================
+    # ORDER TIMELINE
+    # =====================================================
+
+    timeline = [
+        {
+            "label": "Order Placed",
+            "timestamp": order.created_at,
+            "completed": True,
+        },
+        {
+            "label": "Confirmed",
+            "timestamp": order.confirmed_at,
+            "completed": order.confirmed_at is not None,
+        },
+        {
+            "label": "Processing",
+            "timestamp": order.processing_at,
+            "completed": order.processing_at is not None,
+        },
+        {
+            "label": "Shipped",
+            "timestamp": order.shipped_at,
+            "completed": order.shipped_at is not None,
+        },
+        {
+            "label": "Delivered",
+            "timestamp": order.delivered_at,
+            "completed": order.delivered_at is not None,
+        },
+        {
+            "label": "Cancelled",
+            "timestamp": order.cancelled_at,
+            "completed": order.cancelled_at is not None,
+        },
+    ]
+
+    # =====================================================
+    # ORDER DURATION
+    # =====================================================
+
+    now = timezone.now()
+
+    order_duration = None
+    delivery_duration = None
+    delivered_ago = None
+    return_exchange_remaining = None
+
+    if order.created_at:
+
+        order_duration = (
+            now - order.created_at
+        )
+
+    # =====================================================
+    # DELIVERY DURATION
+    # =====================================================
+
+    delivery_duration = None
+
+    if (
+        order.created_at
+        and order.delivered_at
+    ):
+
+        delivery_duration = (
+            order.delivered_at
+            - order.created_at
+        )
+
+    # =====================================================
+    # DELIVERED AGO
+    # =====================================================
+
+    delivered_ago = None
+
+    if order.delivered_at:
+
+        delivered_ago = (
+            now - order.delivered_at
+        )
+
+    # =====================================================
+    # FORMAT DURATION
+    # =====================================================
+    
+    def format_duration(duration):
+    
+        if duration is None:
+            return None
+    
+        total_seconds = int(
+            duration.total_seconds()
+        )
+    
+        days = total_seconds // 86400
+    
+        hours = (
+            total_seconds % 86400
+        ) // 3600
+    
+        minutes = (
+            total_seconds % 3600
+        ) // 60
+    
+        parts = []
+    
+        if days:
+            parts.append(
+                f"{days} day"
+                + ("s" if days != 1 else "")
+            )
+    
+        if hours:
+            parts.append(
+                f"{hours} hour"
+                + ("s" if hours != 1 else "")
+            )
+    
+        if minutes:
+            parts.append(
+                f"{minutes} minute"
+                + ("s" if minutes != 1 else "")
+            )
+    
+        if not parts:
+            return "Less than 1 minute"
+    
+        return " ".join(parts)
+    order_duration_text = format_duration(
+        order_duration
+    )
+
+    delivery_duration_text = format_duration(
+        delivery_duration
+    )
+
+    delivered_ago_text = format_duration(
+        delivered_ago
+    )
+
+    return_exchange_remaining_text = format_duration(
+        return_exchange_remaining
+    )
+    
+    # =====================================================
+    # RETURN / EXCHANGE DEADLINE
+    # =====================================================
+
+    return_exchange_deadline = None
+    return_exchange_remaining = None
+    return_exchange_window_hours = None
+
+    if order.delivered_at:
+
+        order_settings = (
+            OrderSettings.get_settings()
+        )
+
+        return_exchange_window_hours = (
+            order_settings.return_exchange_window_hours
+        )
+
+        return_exchange_deadline = (
+            order.delivered_at
+            + timedelta(
+                hours=return_exchange_window_hours
+            )
+        )
+
+        if now < return_exchange_deadline:
+
+            return_exchange_remaining = (
+                return_exchange_deadline - now
+            )
+
+    # =====================================================
+    # CONTEXT
+    # =====================================================
+
     context = {
+
         "page_title": "Order Details",
+
         "order": order,
+
         "return_requests": return_requests,
+
+        # Timeline
+        "timeline": timeline,
+
+        # Duration
+        "order_duration": order_duration,
+
+        "delivery_duration": delivery_duration,
+
+        "delivered_ago": delivered_ago,
+
+        "order_duration_text": order_duration_text,
+
+        "delivery_duration_text": delivery_duration_text,
+
+        "delivered_ago_text": delivered_ago_text,
+
+        "return_exchange_remaining_text": (
+            return_exchange_remaining_text
+        ),
+
+        # Return / Exchange window
+        "return_exchange_deadline": (
+            return_exchange_deadline
+        ),
+
+        "return_exchange_remaining": (
+            return_exchange_remaining
+        ),
+
+        "return_exchange_window_hours": (
+            return_exchange_window_hours
+        ),
     }
 
     return render(
@@ -1661,6 +1876,7 @@ def order_details_page(request, order_number):
         "admin_dashboard/order_details.html",
         context
     )
+
 def update_order_status(request, order_number):
 
     if request.method != "POST":

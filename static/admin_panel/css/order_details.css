@@ -1772,3 +1772,502 @@
 
 }
 
+/* =========================================================
+   ORDER TIMELINE
+========================================================= */
+
+.order-timeline-card {
+    margin-bottom: 16px;
+}
+
+
+.order-details-card-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+    margin-bottom: 18px;
+}
+
+
+.order-details-card-heading > div {
+    min-width: 0;
+}
+
+
+.order-details-card-heading span {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: #94a3b8;
+
+    font-size: 9px;
+    font-weight: 600;
+
+    letter-spacing: 0.1em;
+}
+
+
+.order-details-card-heading small {
+    display: block;
+
+    color: #475569;
+
+    font-size: 8px;
+    font-weight: 500;
+
+    letter-spacing: 0.04em;
+}
+
+
+.order-details-card-heading > i {
+    flex-shrink: 0;
+
+    color: #475569;
+
+    font-size: 15px;
+}
+
+
+/* =========================================================
+   TIMELINE CONTAINER
+========================================================= */
+
+.order-timeline {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 0;
+
+    padding-left: 3px;
+}
+
+
+/* =========================================================
+   TIMELINE ITEM
+========================================================= */
+
+.timeline-item {
+    position: relative;
+
+    display: grid;
+    grid-template-columns: 30px minmax(0, 1fr);
+
+    min-height: 64px;
+}
+
+
+/* =========================================================
+   TIMELINE INDICATOR
+========================================================= */
+
+.timeline-indicator {
+    position: relative;
+
+    display: flex;
+    justify-content: center;
+
+    width: 30px;
+}
+
+
+.timeline-indicator::after {
+    position: absolute;
+
+    top: 25px;
+    bottom: -1px;
+
+    left: 50%;
+
+    width: 1px;
+
+    background: #242424;
+
+    content: "";
+
+    transform: translateX(-50%);
+}
+
+
+.timeline-item:last-child .timeline-indicator::after {
+    display: none;
+}
+
+
+/* =========================================================
+   TIMELINE DOT
+========================================================= */
+
+.timeline-dot {
+    position: relative;
+    z-index: 2;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 17px;
+    height: 17px;
+
+    margin-top: 2px;
+
+    border: 1px solid #333333;
+    border-radius: 50%;
+
+    background: #141414;
+
+    color: #475569;
+
+    font-size: 7px;
+}
+
+
+.timeline-completed .timeline-dot {
+    border-color: rgba(96, 165, 250, 0.45);
+
+    background: rgba(96, 165, 250, 0.08);
+
+    color: #60a5fa;
+}
+
+
+.timeline-pending .timeline-dot {
+    border-color: #2b2b2b;
+
+    background: #111111;
+
+    color: #475569;
+}
+
+
+/* =========================================================
+   TIMELINE CONTENT
+========================================================= */
+
+.timeline-content {
+    min-width: 0;
+
+    padding: 0 0 19px 10px;
+}
+
+
+.timeline-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+
+    min-width: 0;
+}
+
+
+.timeline-top strong {
+    overflow: hidden;
+
+    color: #cbd5e1;
+
+    font-size: 11px;
+    font-weight: 600;
+
+    line-height: 1.4;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+.timeline-completed .timeline-top strong {
+    color: #e2e8f0;
+}
+
+
+/* =========================================================
+   TIMELINE STATUS
+========================================================= */
+
+.timeline-status {
+    flex-shrink: 0;
+
+    padding: 3px 6px;
+
+    border-radius: 3px;
+
+    background: rgba(34, 197, 94, 0.07);
+
+    color: #22c55e;
+
+    font-size: 7px;
+    font-weight: 600;
+
+    letter-spacing: 0.05em;
+}
+
+
+.timeline-status.pending {
+    background: rgba(255, 255, 255, 0.035);
+
+    color: #475569;
+}
+
+
+/* =========================================================
+   TIMELINE DATE
+========================================================= */
+
+.timeline-date {
+    display: flex;
+    align-items: center;
+
+    gap: 5px;
+
+    margin-top: 5px;
+
+    color: #64748b;
+
+    font-size: 8px;
+    font-weight: 500;
+}
+
+
+.timeline-date i {
+    color: #475569;
+
+    font-size: 9px;
+}
+
+
+.timeline-separator {
+    color: #334155;
+}
+
+
+.timeline-not-reached {
+    color: #3f4752;
+}
+
+
+/* =========================================================
+   ORDER DURATION
+========================================================= */
+
+.order-duration-card {
+    margin-bottom: 16px;
+
+    padding: 16px;
+
+    background: var(--card-color, #141414);
+
+    border: 1px solid rgba(255, 255, 255, 0.055);
+
+    border-radius: 7px;
+}
+
+
+/* =========================================================
+   DURATION GRID
+========================================================= */
+
+.duration-grid {
+    display: grid;
+
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 1px;
+
+    overflow: hidden;
+
+    background: rgba(255, 255, 255, 0.05);
+
+    border: 1px solid rgba(255, 255, 255, 0.05);
+
+    border-radius: 5px;
+}
+
+
+.duration-item {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    min-width: 0;
+    min-height: 91px;
+
+    padding: 14px;
+
+    background: #111111;
+
+    transition:
+        background-color 0.25s ease;
+}
+
+
+.duration-item:hover {
+    background: #151515;
+}
+
+
+/* =========================================================
+   DURATION ICON
+========================================================= */
+
+.duration-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 35px;
+    height: 35px;
+
+    flex-shrink: 0;
+
+    border: 1px solid rgba(255, 255, 255, 0.07);
+
+    border-radius: 5px;
+
+    background: #0d0d0d;
+
+    color: #64748b;
+
+    font-size: 13px;
+}
+
+
+.duration-item:hover .duration-icon {
+    color: #60a5fa;
+
+    border-color: rgba(96, 165, 250, 0.18);
+
+    background: rgba(96, 165, 250, 0.05);
+}
+
+
+/* =========================================================
+   DURATION CONTENT
+========================================================= */
+
+.duration-content {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 3px;
+}
+
+
+.duration-content > span {
+    display: block;
+
+    color: #64748b;
+
+    font-size: 8px;
+    font-weight: 600;
+
+    letter-spacing: 0.07em;
+}
+
+
+.duration-content strong {
+    display: block;
+
+    overflow: hidden;
+
+    color: #e2e8f0;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    line-height: 1.35;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+.duration-content small {
+    display: block;
+
+    overflow: hidden;
+
+    color: #475569;
+
+    font-size: 8px;
+
+    line-height: 1.4;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   DURATION RESPONSIVE
+========================================================= */
+
+@media (max-width: 600px) {
+
+    .order-duration-card {
+        padding: 14px;
+    }
+
+
+    .duration-grid {
+        grid-template-columns: 1fr;
+    }
+
+
+    .duration-item {
+        min-height: 78px;
+
+        padding: 12px;
+    }
+
+
+    .duration-icon {
+        width: 33px;
+        height: 33px;
+
+        font-size: 12px;
+    }
+
+
+    .duration-content strong {
+        font-size: 11px;
+    }
+
+}
+
+
+@media (max-width: 400px) {
+
+    .order-details-card-heading span {
+        font-size: 8px;
+    }
+
+
+    .order-details-card-heading small {
+        font-size: 7px;
+    }
+
+
+    .timeline-top strong {
+        font-size: 10px;
+    }
+
+
+    .timeline-status {
+        font-size: 6px;
+    }
+
+
+    .duration-item {
+        gap: 10px;
+    }
+
+}

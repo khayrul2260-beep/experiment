@@ -391,6 +391,319 @@ Order Details
         </section>
 
 
+<!-- =============================================
+     ORDER TIMELINE
+============================================== -->
+
+<div class="order-details-card order-timeline-card">
+
+    <div class="order-details-card-heading">
+
+        <div>
+            <span>ORDER TIMELINE</span>
+
+            <small>
+                ORDER STATUS HISTORY
+            </small>
+        </div>
+
+        <i class="bi bi-clock-history"></i>
+
+    </div>
+
+
+    <div class="order-timeline">
+
+        {% for item in timeline %}
+
+            <div
+                class="timeline-item
+                {% if item.completed %}
+                    timeline-completed
+                {% else %}
+                    timeline-pending
+                {% endif %}"
+            >
+
+                <!-- TIMELINE LINE -->
+
+                <div class="timeline-indicator">
+
+                    <span class="timeline-dot">
+
+                        {% if item.completed %}
+
+                            <i class="bi bi-check"></i>
+
+                        {% else %}
+
+                            <i class="bi bi-circle"></i>
+
+                        {% endif %}
+
+                    </span>
+
+                </div>
+
+
+                <!-- TIMELINE CONTENT -->
+
+                <div class="timeline-content">
+
+                    <div class="timeline-top">
+
+                        <strong>
+                            {{ item.label }}
+                        </strong>
+
+                        {% if item.completed %}
+
+                            <span class="timeline-status">
+                                COMPLETED
+                            </span>
+
+                        {% else %}
+
+                            <span class="timeline-status pending">
+                                PENDING
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    {% if item.timestamp %}
+
+                        <div class="timeline-date">
+
+                            <i class="bi bi-calendar3"></i>
+
+                            <span>
+                                {{ item.timestamp|date:"d M Y" }}
+                            </span>
+
+                            <span class="timeline-separator">
+                                •
+                            </span>
+
+                            <span>
+                                {{ item.timestamp|date:"h:i A" }}
+                            </span>
+
+                        </div>
+
+                    {% else %}
+
+                        <div class="timeline-date timeline-not-reached">
+
+                            <span>
+                                Not reached yet
+                            </span>
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+<!-- =============================================
+     ORDER DURATION & DELIVERY
+============================================== -->
+
+<div class="order-details-card order-duration-card">
+
+    <div class="order-details-card-heading">
+
+        <div>
+            <span>ORDER DURATION</span>
+            <small>
+                DELIVERY & TIMING INFORMATION
+            </small>
+        </div>
+
+        <i class="bi bi-stopwatch"></i>
+
+    </div>
+
+
+    <div class="duration-grid">
+
+
+        <!-- ORDER AGE -->
+
+        <div class="duration-item">
+
+            <div class="duration-icon">
+                <i class="bi bi-clock"></i>
+            </div>
+
+            <div class="duration-content">
+
+                <span>
+                    ORDER AGE
+                </span>
+
+                {% if order_duration_text %}
+
+                    <strong>
+                        {{ order_duration_text }}
+                    </strong>
+
+                {% else %}
+
+                    <strong>
+                        —
+                    </strong>
+
+                {% endif %}
+
+                <small>
+                    Since order was placed
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <!-- DELIVERY DURATION -->
+
+        <div class="duration-item">
+
+            <div class="duration-icon">
+                <i class="bi bi-truck"></i>
+            </div>
+
+            <div class="duration-content">
+
+                <span>
+                    DELIVERY DURATION
+                </span>
+
+                {% if delivery_duration_text %}
+
+                    <strong>
+                        {{ delivery_duration_text }}
+                    </strong>
+
+                {% else %}
+
+                    <strong>
+                        —
+                    </strong>
+
+                {% endif %}
+
+                <small>
+                    Order placed to delivered
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <!-- DELIVERED AGO -->
+
+        <div class="duration-item">
+
+            <div class="duration-icon">
+                <i class="bi bi-box-seam"></i>
+            </div>
+
+            <div class="duration-content">
+
+                <span>
+                    DELIVERED AGO
+                </span>
+
+                {% if delivered_ago_text %}
+
+                    <strong>
+                        {{ delivered_ago_text }}
+                    </strong>
+
+                {% else %}
+
+                    <strong>
+                        —
+                    </strong>
+
+                {% endif %}
+
+                <small>
+                    Since delivery
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <!-- RETURN / EXCHANGE WINDOW -->
+
+        <div class="duration-item">
+
+            <div class="duration-icon">
+                <i class="bi bi-arrow-repeat"></i>
+            </div>
+
+            <div class="duration-content">
+
+                <span>
+                    RETURN / EXCHANGE
+                </span>
+
+                {% if return_exchange_window_hours %}
+
+                    <strong>
+                        {{ return_exchange_window_hours }} Hours
+                    </strong>
+
+                    {% if return_exchange_remaining_text %}
+
+                        <small>
+                            {{ return_exchange_remaining_text }}
+                            remaining
+                        </small>
+
+                    {% else %}
+
+                        <small>
+                            Window expired
+                        </small>
+
+                    {% endif %}
+
+                {% else %}
+
+                    <strong>
+                        —
+                    </strong>
+
+                    <small>
+                        Not available
+                    </small>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</div>
         <!-- =============================================
              03 DELIVERY INFORMATION
         ============================================== -->
