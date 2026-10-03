@@ -439,6 +439,31 @@ class Order(models.Model):
     created_at = models.DateTimeField(
         auto_now_add=True
     )
+
+    confirmed_at = models.DateTimeField(
+        null=True,
+        blank=True
+    )
+
+    processing_at = models.DateTimeField(
+        null=True,
+        blank=True
+    )
+
+    shipped_at = models.DateTimeField(
+        null=True,
+        blank=True
+    )
+
+    delivered_at = models.DateTimeField(
+        null=True,
+        blank=True
+    )
+
+    cancelled_at = models.DateTimeField(
+        null=True,
+        blank=True
+    )
     
     updated_at = models.DateTimeField(
         auto_now=True
@@ -480,6 +505,34 @@ class Order(models.Model):
     def __str__(self):
         return f"{self.order_number} - {self.full_name}"
 
+class OrderSettings(models.Model):
+
+    return_exchange_window_hours = models.PositiveIntegerField(
+        default=24,
+        help_text="Return / Exchange request window in hours."
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True
+    )
+
+    class Meta:
+        verbose_name = "Order Settings"
+        verbose_name_plural = "Order Settings"
+
+    def __str__(self):
+        return "Order Settings"
+
+    @classmethod
+    def get_settings(cls):
+        settings, created = cls.objects.get_or_create(
+            pk=1,
+            defaults={
+                "return_exchange_window_hours": 24
+            }
+        )
+
+        return settings
 # =========================================================
 # ORDER ITEM
 # =========================================================

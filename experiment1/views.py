@@ -7,6 +7,8 @@ from django.db import transaction
 from django.views.decorators.http import require_POST
 from django.db.models import Sum
 from decimal import Decimal
+from datetime import timedelta
+from django.utils import timezone
 from .coupon_utils import validate_coupon
 
 # =========================================================
@@ -3500,6 +3502,35 @@ def request_return_exchange(request, order_number):
     )
 
     # -----------------------------------------------------
+    # RETURN / EXCHANGE TIME WINDOW
+    # -----------------------------------------------------
+
+    if order.delivered_at is None:
+
+        return redirect(
+            "order_details",
+            order_number=order.order_number
+        )
+
+    order_settings = OrderSettings.get_settings()
+
+    window_hours = (
+        order_settings.return_exchange_window_hours
+    )
+
+    deadline = (
+        order.delivered_at
+        + timedelta(hours=window_hours)
+    )
+
+    if timezone.now() > deadline:
+
+        return redirect(
+            "order_details",
+            order_number=order.order_number
+        )
+
+    # -----------------------------------------------------
     # GET FORM DATA
     # -----------------------------------------------------
 
@@ -3511,7 +3542,10 @@ def request_return_exchange(request, order_number):
         "request_type"
     )
 
-    new_size = request.POST.get("new_size", "").strip()
+    new_size = request.POST.get(
+        "new_size",
+        ""
+    ).strip()
 
     reason = request.POST.get(
         "reason"
@@ -3531,6 +3565,7 @@ def request_return_exchange(request, order_number):
         id=order_item_id,
         order=order
     )
+
     # =====================================================
     # PREVENT SAME SIZE EXCHANGE
     # =====================================================
@@ -3539,10 +3574,12 @@ def request_return_exchange(request, order_number):
         request_type == "Exchange"
         and new_size == order_item.size
     ):
+
         return redirect(
             "order_details",
             order_number=order.order_number
         )
+
     # -----------------------------------------------------
     # VALIDATE REQUEST TYPE
     # -----------------------------------------------------
@@ -3551,6 +3588,7 @@ def request_return_exchange(request, order_number):
         "Return",
         "Exchange"
     ]:
+
         return redirect(
             "order_details",
             order_number=order.order_number
@@ -3560,11 +3598,17 @@ def request_return_exchange(request, order_number):
     # EXCHANGE SIZE VALIDATION
     # =====================================================
 
-    valid_sizes = ["M", "L", "XL", "XXL"]
+    valid_sizes = [
+        "M",
+        "L",
+        "XL",
+        "XXL"
+    ]
 
     if request_type == "Exchange":
 
         if new_size not in valid_sizes:
+
             return redirect(
                 "order_details",
                 order_number=order.order_number
@@ -3585,6 +3629,7 @@ def request_return_exchange(request, order_number):
     ]
 
     if reason not in valid_reasons:
+
         return redirect(
             "order_details",
             order_number=order.order_number
@@ -3658,7 +3703,9 @@ def request_return_exchange(request, order_number):
         request_type=request_type,
 
         requested_quantity=requested_quantity,
+
         new_size=new_size,
+
         reason=reason,
 
         note=note,

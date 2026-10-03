@@ -9,6 +9,7 @@ from .forms import CategoryForm
 from django.db import transaction
 from experiment1.models import *
 from django.db.models import Count, Sum, Q
+from datetime import timedelta
 from django.utils import timezone
 from django.contrib.auth import get_user_model
 from django.db.models.functions import TruncMonth, TruncDay, TruncHour
@@ -1660,7 +1661,6 @@ def order_details_page(request, order_number):
         "admin_dashboard/order_details.html",
         context
     )
-
 def update_order_status(request, order_number):
 
     if request.method != "POST":
@@ -1707,12 +1707,38 @@ def update_order_status(request, order_number):
 
     order.status = new_status
 
-    order.save(
-        update_fields=[
-            "status",
-            "updated_at"
-        ]
-    )
+    # =====================================================
+    # SAVE STATUS TIMESTAMP
+    # =====================================================
+
+    timestamp = timezone.now()
+
+    if new_status == "Confirmed":
+
+        if order.confirmed_at is None:
+            order.confirmed_at = timestamp
+
+    elif new_status == "Processing":
+
+        if order.processing_at is None:
+            order.processing_at = timestamp
+
+    elif new_status == "Shipped":
+
+        if order.shipped_at is None:
+            order.shipped_at = timestamp
+
+    elif new_status == "Delivered":
+
+        if order.delivered_at is None:
+            order.delivered_at = timestamp
+
+    elif new_status == "Cancelled":
+
+        if order.cancelled_at is None:
+            order.cancelled_at = timestamp
+
+    order.save()
 
     messages.success(
         request,
@@ -1723,6 +1749,7 @@ def update_order_status(request, order_number):
         "admin_order_details",
         order_number=order.order_number
     )
+    
 
 def update_payment_status(request, order_number):
 
@@ -1809,7 +1836,49 @@ def approve_return_exchange(request, request_id):
         id=request_id,
     )
 
-    # Only Pending requests can be approved
+    # =====================================================
+    # RETURN / EXCHANGE TIME WINDOW
+    # =====================================================
+
+    if return_request.order.delivered_at is None:
+
+        messages.error(
+            request,
+            "Delivery time is not available for this order."
+        )
+
+        return redirect(
+            "admin_order_details",
+            order_number=return_request.order.order_number
+        )
+
+    order_settings = OrderSettings.get_settings()
+
+    window_hours = (
+        order_settings.return_exchange_window_hours
+    )
+
+    deadline = (
+        return_request.order.delivered_at
+        + timedelta(hours=window_hours)
+    )
+
+    if timezone.now() > deadline:
+
+        messages.error(
+            request,
+            "The return/exchange window has expired."
+        )
+
+        return redirect(
+            "admin_order_details",
+            order_number=return_request.order.order_number
+        )
+
+    # =====================================================
+    # STATUS VALIDATION
+    # =====================================================
+
     if return_request.status != "Pending":
 
         messages.warning(
@@ -1822,12 +1891,16 @@ def approve_return_exchange(request, request_id):
             order_number=return_request.order.order_number
         )
 
+    # =====================================================
+    # APPROVE REQUEST
+    # =====================================================
+
     return_request.status = "Approved"
 
     return_request.save(
         update_fields=[
             "status",
-            "updated_at",
+            "updated_at"
         ]
     )
 
