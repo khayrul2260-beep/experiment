@@ -1,626 +1,169 @@
 {% extends 'customer/master/base.html' %}
 {% load static %}
 
-{% block title %}
-Order Confirmed | NAFI
-{% endblock %}
+{% block title %}Order Confirmed | NAFI{% endblock %}
 
 {% block extra_css %}
-
-<link
-    rel="stylesheet"
-    href="{% static 'customer/css/order_confirmation.css' %}"
->
-
+<link rel="stylesheet" href="{% static 'customer/css/order_confirmation.css' %}">
 {% endblock %}
-
 
 {% block content %}
 
-<section class="nafi-order-confirmation">
+<div class="nafi-order-success-overlay">
 
-    <!-- =====================================================
-         SUCCESS HEADER
-    ====================================================== -->
+    <div class="nafi-order-success-modal">
 
-    <div class="confirmation-header">
+        <!-- =====================================================
+             SUCCESS ANIMATION
+             Step 2-এ এখানে তোমার reference-এর
+             exact blue animated SVG বসানো হবে.
+             ===================================================== -->
 
-        <div class="confirmation-check">
+        <div class="nafi-success-icon" aria-hidden="true">
 
-            <i class="bi bi-check2"></i>
+            <svg
+                class="nafi-success-svg"
+                viewBox="0 0 200 200"
+                xmlns="http://www.w3.org/2000/svg"
+            >
+
+                <!-- Ambient glow -->
+                <g class="success-ambient">
+                    <circle
+                        cx="100"
+                        cy="100"
+                        r="65"
+                    />
+                    <circle
+                        cx="100"
+                        cy="100"
+                        r="48"
+                    />
+                </g>
+
+                <!-- Base circle -->
+                <circle
+                    class="success-ring-base"
+                    cx="100"
+                    cy="100"
+                    r="64"
+                />
+
+                <!-- Soft blue ring -->
+                <circle
+                    class="success-ring-soft"
+                    cx="100"
+                    cy="100"
+                    r="64"
+                />
+
+                <!-- Main animated ring -->
+                <circle
+                    class="success-ring"
+                    cx="100"
+                    cy="100"
+                    r="64"
+                />
+
+                <!-- Checkmark glow -->
+                <path
+                    class="success-check-glow"
+                    d="M68 102.5 L90 124 L133 76"
+                />
+
+                <!-- Main checkmark -->
+                <path
+                    class="success-check"
+                    d="M68 102.5 L90 124 L133 76"
+                />
+
+                <!-- Pulse -->
+                <circle
+                    class="success-pulse"
+                    cx="100"
+                    cy="100"
+                    r="64"
+                />
+
+                <circle
+                    class="success-pulse-outer"
+                    cx="100"
+                    cy="100"
+                    r="64"
+                />
+
+                <!-- Tiny particles -->
+                <circle
+                    class="success-spark"
+                    cx="47"
+                    cy="76"
+                    r="1.4"
+                />
+
+                <circle
+                    class="success-spark"
+                    cx="151"
+                    cy="78"
+                    r="1.2"
+                />
+
+                <circle
+                    class="success-spark"
+                    cx="142"
+                    cy="132"
+                    r="1"
+                />
+
+                <circle
+                    class="success-spark success-spark-light"
+                    cx="58"
+                    cy="128"
+                    r="1"
+                />
+
+            </svg>
 
         </div>
 
-        <span class="confirmation-eyebrow">
-            NAFI COLLECTION
-        </span>
 
-        <h1>
-            ORDER CONFIRMED
-        </h1>
+        <!-- =====================================================
+             SUCCESS CONTENT
+             ===================================================== -->
 
-        <p>
-            Thank you for shopping with NAFI.
-            Your order has been successfully placed.
-        </p>
+        <div class="nafi-success-content">
 
-        <div class="confirmation-order-number">
-
-            <span>
-                ORDER NUMBER
+            <span class="nafi-success-brand">
+                NAFI
             </span>
 
-            <strong>
-                {{ order.order_number }}
-            </strong>
+            <h1>
+                Order Confirmed
+            </h1>
+
+            <p class="nafi-success-message">
+                Thank you for shopping with NAFI.
+                Your order has been successfully placed.
+            </p>
+
+
+            <!-- Order Number -->
+
+            <div class="nafi-success-order">
+
+                <span>
+                    ORDER NUMBER
+                </span>
+
+                <strong>
+                    #{{ order.order_number }}
+                </strong>
+
+            </div>
 
         </div>
 
     </div>
 
-
-    <!-- =====================================================
-         MAIN CONTAINER
-    ====================================================== -->
-
-    <div class="confirmation-container">
-
-
-        <!-- =================================================
-             ORDER STATUS
-        ================================================== -->
-
-        <div class="confirmation-status-card">
-
-            <div class="status-content">
-
-                <span class="status-label">
-                    ORDER STATUS
-                </span>
-
-                <strong>
-                    {{ order.status }}
-                </strong>
-
-            </div>
-
-
-            <div class="status-divider"></div>
-
-
-            <div class="status-content">
-
-                <span class="status-label">
-                    PAYMENT
-                </span>
-
-                <strong>
-                    {{ order.get_payment_method_display }}
-                </strong>
-
-            </div>
-
-
-            <div class="status-divider"></div>
-
-
-            <div class="status-content">
-
-                <span class="status-label">
-                    ORDER DATE
-                </span>
-
-                <strong>
-                    {{ order.created_at|date:"d M Y" }}
-                </strong>
-
-            </div>
-
-        </div>
-
-
-        <!-- =================================================
-             TWO COLUMN CONTENT
-        ================================================== -->
-
-        <div class="confirmation-layout">
-
-
-            <!-- =============================================
-                 LEFT — ORDER ITEMS
-            ============================================== -->
-
-            <div class="confirmation-main">
-
-
-                <!-- ORDER ITEMS -->
-
-                <div class="confirmation-section">
-
-                    <div class="confirmation-section-heading">
-
-                        <span>
-                            01
-                        </span>
-
-                        <div>
-
-                            <small>
-                                YOUR ORDER
-                            </small>
-
-                            <h2>
-                                Order Items
-                            </h2>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="confirmation-items">
-
-                        {% for item in order.items.all %}
-
-                        <div class="confirmation-item">
-
-
-                            <!-- PRODUCT IMAGE -->
-
-                            <div class="confirmation-item-image">
-
-                                {% if item.product and item.product.image %}
-
-                                    <img
-                                        src="{{ item.product.image.url }}"
-                                        alt="{{ item.product_name }}"
-                                    >
-
-                                {% else %}
-
-                                    <div class="confirmation-image-placeholder">
-                                        NAFI
-                                    </div>
-
-                                {% endif %}
-
-                            </div>
-
-
-                            <!-- PRODUCT INFO -->
-
-                            <div class="confirmation-item-info">
-
-                                <strong>
-                                    {{ item.product_name }}
-                                </strong>
-
-                                <span>
-                                    PRODUCT CODE:
-                                    {{ item.product_code }}
-                                </span>
-
-                                <span>
-                                    SIZE:
-                                    {{ item.size }}
-                                    &nbsp;×&nbsp;
-                                    {{ item.quantity }}
-                                </span>
-
-                            </div>
-
-
-                            <!-- ITEM PRICE -->
-
-                            <div class="confirmation-item-price">
-
-                                <strong>
-                                    ৳{{ item.total_price|floatformat:0 }}
-                                </strong>
-
-                                {% if item.quantity > 1 %}
-
-                                    <span>
-                                        ৳{{ item.unit_price|floatformat:0 }}
-                                        / piece
-                                    </span>
-
-                                {% endif %}
-
-                            </div>
-
-                        </div>
-
-                        {% empty %}
-
-                        <div class="confirmation-empty">
-                            No items found for this order.
-                        </div>
-
-                        {% endfor %}
-
-                    </div>
-
-                </div>
-
-
-
-                <!-- =========================================
-                     CUSTOMER INFORMATION
-                ========================================== -->
-
-                <div class="confirmation-section">
-
-                    <div class="confirmation-section-heading">
-
-                        <span>
-                            02
-                        </span>
-
-                        <div>
-
-                            <small>
-                                CUSTOMER
-                            </small>
-
-                            <h2>
-                                Customer Information
-                            </h2>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="confirmation-info-card">
-
-                        <div class="info-row">
-
-                            <span>
-                                FULL NAME
-                            </span>
-
-                            <strong>
-                                {{ order.full_name }}
-                            </strong>
-
-                        </div>
-
-
-                        <div class="info-row">
-
-                            <span>
-                                PHONE
-                            </span>
-
-                            <strong>
-                                {{ order.phone }}
-                            </strong>
-
-                        </div>
-
-
-                        {% if order.email %}
-
-                        <div class="info-row">
-
-                            <span>
-                                EMAIL
-                            </span>
-
-                            <strong>
-                                {{ order.email }}
-                            </strong>
-
-                        </div>
-
-                        {% endif %}
-
-                    </div>
-
-                </div>
-
-
-
-                <!-- =========================================
-                     DELIVERY INFORMATION
-                ========================================== -->
-
-                <div class="confirmation-section">
-
-                    <div class="confirmation-section-heading">
-
-                        <span>
-                            03
-                        </span>
-
-                        <div>
-
-                            <small>
-                                SHIPPING
-                            </small>
-
-                            <h2>
-                                Delivery Information
-                            </h2>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="confirmation-info-card">
-
-                        <div class="delivery-address">
-
-                            <span>
-                                DELIVERY ADDRESS
-                            </span>
-
-                            <p>
-                                {{ order.address }}
-                            </p>
-
-                        </div>
-
-
-                        <div class="delivery-location">
-
-                            {% if order.area %}
-
-                            <div>
-
-                                <span>
-                                    AREA
-                                </span>
-
-                                <strong>
-                                    {{ order.area }}
-                                </strong>
-
-                            </div>
-
-                            {% endif %}
-
-
-                            {% if order.city %}
-
-                            <div>
-
-                                <span>
-                                    CITY
-                                </span>
-
-                                <strong>
-                                    {{ order.city }}
-                                </strong>
-
-                            </div>
-
-                            {% endif %}
-
-                        </div>
-
-
-                        {% if order.delivery_note %}
-
-                        <div class="delivery-note">
-
-                            <span>
-                                DELIVERY NOTE
-                            </span>
-
-                            <p>
-                                {{ order.delivery_note }}
-                            </p>
-
-                        </div>
-
-                        {% endif %}
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-
-            <!-- =============================================
-                 RIGHT — ORDER SUMMARY
-            ============================================== -->
-
-            <aside class="confirmation-sidebar">
-
-
-                <div class="confirmation-summary-card">
-
-                    <span class="summary-eyebrow">
-                        ORDER SUMMARY
-                    </span>
-
-                    <h2>
-                        Summary
-                    </h2>
-
-
-                    <!-- SUBTOTAL -->
-
-                    <div class="summary-line">
-
-                        <span>
-                            Subtotal
-                        </span>
-
-                        <strong>
-                            ৳{{ order.subtotal|floatformat:0 }}
-                        </strong>
-
-                    </div>
-
-
-                    <!-- DELIVERY -->
-
-                    <div class="summary-line">
-
-                        <span>
-                            Delivery
-                        </span>
-
-                        <strong>
-                            {% if order.delivery_charge > 0 %}
-                                ৳{{ order.delivery_charge|floatformat:0 }}
-                            {% else %}
-                                ৳0
-                            {% endif %}
-                        </strong>
-
-                    </div>
-
-
-                    <!-- DISCOUNT -->
-
-                    <div class="summary-line">
-
-                        <span>
-                            Discount
-                        </span>
-
-                        <strong>
-                            {% if order.discount > 0 %}
-                                − ৳{{ order.discount|floatformat:0 }}
-                            {% else %}
-                                ৳0
-                            {% endif %}
-                        </strong>
-
-                    </div>
-
-
-                    <div class="summary-divider"></div>
-
-
-                    <!-- TOTAL -->
-
-                    <div class="summary-total">
-
-                        <div>
-
-                            <span>
-                                TOTAL
-                            </span>
-
-                            <small>
-                                Final amount
-                            </small>
-
-                        </div>
-
-                        <strong>
-                            ৳{{ order.total_amount|floatformat:0 }}
-                        </strong>
-
-                    </div>
-
-
-                    <!-- PAYMENT -->
-
-                    <div class="summary-payment">
-
-                        <span>
-                            PAYMENT METHOD
-                        </span>
-
-                        <strong>
-                            {{ order.get_payment_method_display }}
-                        </strong>
-
-                    </div>
-
-
-                    <div class="summary-payment">
-
-                        <span>
-                            PAYMENT STATUS
-                        </span>
-
-                        <strong>
-                            {{ order.payment_status }}
-                        </strong>
-
-                    </div>
-
-                </div>
-
-
-
-                <!-- =========================================
-                     NEXT ACTIONS
-                ========================================== -->
-
-                <div class="confirmation-actions">
-
-                    <a
-                        href="{% url 'all_products_page' %}"
-                        class="confirmation-primary-btn"
-                    >
-
-                        <span>
-                            CONTINUE SHOPPING
-                        </span>
-
-                        <i class="bi bi-arrow-right"></i>
-
-                    </a>
-
-
-                    {% if request.user.is_authenticated %}
-
-                    <a
-                        href="{% url 'my_orders' %}"
-                        class="confirmation-secondary-btn"
-                    >
-
-                        <span>
-                            VIEW MY ORDERS
-                        </span>
-
-                    </a>
-
-                    {% endif %}
-
-                </div>
-
-
-                <!-- =========================================
-                     SUPPORT NOTE
-                ========================================== -->
-
-                <div class="confirmation-support">
-
-                    <i class="bi bi-shield-check"></i>
-
-                    <div>
-
-                        <strong>
-                            Thank you for choosing NAFI.
-                        </strong>
-
-                        <span>
-                            We will contact you if any
-                            additional information is required.
-                        </span>
-
-                    </div>
-
-                </div>
-
-            </aside>
-
-        </div>
-
-    </div>
-
-</section>
+</div>
 
 {% endblock %}

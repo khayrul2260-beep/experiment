@@ -21,7 +21,7 @@ urlpatterns = [
     path("cart/clear/", clear_cart, name="clear_cart"),
 
     path("checkout/", checkout_page, name="checkout_page"),
-    path("order-confirmation/<str:order_number>/", order_confirmation_page, name="order_confirmation"),
+    # path("order-confirmation/<str:order_number>/", order_confirmation_page, name="order_confirmation"),
     path("checkout/clear-coupon/", clear_coupon, name="clear_coupon"),
     path("checkout/apply-coupon/", apply_coupon, name="apply_coupon"),
 

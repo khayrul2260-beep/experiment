@@ -20,7 +20,7 @@
     --cart-white: #fdfdfd;
     --cart-muted: #929296;
     --cart-soft: #b7b7ba;
-    --cart-blue: #4d8dff;
+    --cart-blue: #91f79a9d;
 
     min-height: 100vh;
     background:
@@ -87,7 +87,7 @@
 
     margin: 0 auto;
 
-    text-align: center;
+    text-align: start;
 }
 
 
@@ -96,7 +96,7 @@
 
     margin-bottom: 18px;
 
-    color: var(--cart-blue);
+    color: gray;
 
     font-size: 10px;
     font-weight: 700;
@@ -116,7 +116,7 @@
     font-family: "Oswald", sans-serif;
     font-weight: 600;
 
-    letter-spacing: -0.045em;
+    letter-spacing: 0.05em;
 
     line-height: 0.98;
 }
@@ -125,7 +125,7 @@
 .cart-header p {
     max-width: 520px;
 
-    margin: 24px auto 0;
+    margin: 10px 0 0;
 
     color: var(--cart-muted);
 

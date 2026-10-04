@@ -1778,35 +1778,17 @@ def order_details_page(request, order_number):
             return "Less than 1 minute"
     
         return " ".join(parts)
-    order_duration_text = format_duration(
-        order_duration
-    )
 
-    delivery_duration_text = format_duration(
-        delivery_duration
-    )
-
-    delivered_ago_text = format_duration(
-        delivered_ago
-    )
-
-    return_exchange_remaining_text = format_duration(
-        return_exchange_remaining
-    )
-    
     # =====================================================
     # RETURN / EXCHANGE DEADLINE
     # =====================================================
-
     return_exchange_deadline = None
     return_exchange_remaining = None
     return_exchange_window_hours = None
 
     if order.delivered_at:
 
-        order_settings = (
-            OrderSettings.get_settings()
-        )
+        order_settings = OrderSettings.get_settings()
 
         return_exchange_window_hours = (
             order_settings.return_exchange_window_hours
@@ -1820,11 +1802,21 @@ def order_details_page(request, order_number):
         )
 
         if now < return_exchange_deadline:
-
             return_exchange_remaining = (
                 return_exchange_deadline - now
             )
 
+
+    # FORMAT ALL DURATIONS
+    order_duration_text = format_duration(order_duration)
+
+    delivery_duration_text = format_duration(delivery_duration)
+
+    delivered_ago_text = format_duration(delivered_ago)
+
+    return_exchange_remaining_text = format_duration(
+        return_exchange_remaining
+    )
     # =====================================================
     # CONTEXT
     # =====================================================

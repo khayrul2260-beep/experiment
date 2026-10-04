@@ -811,3 +811,50 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 });
+
+
+/* =========================================================
+   NAFI ORDER SUCCESS MODAL
+   Auto redirect to Order Details
+========================================================= */
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const successModal = document.getElementById("nafiOrderSuccessModal");
+
+    // Modal exists only after successful order creation
+    if (!successModal) {
+        return;
+    }
+
+    const redirectUrl = successModal.dataset.redirectUrl;
+
+    if (!redirectUrl) {
+        return;
+    }
+
+    /*
+     * Keep the modal visible long enough
+     * for the premium animation to complete.
+     */
+    const redirectDelay = 3000;
+
+    setTimeout(function () {
+
+        /*
+         * Small fade-out before leaving checkout.
+         * The modal itself remains visible during
+         * almost the entire 3-second experience.
+         */
+        successModal.style.transition =
+            "opacity 0.35s ease";
+
+        successModal.style.opacity = "0";
+
+        setTimeout(function () {
+            window.location.href = redirectUrl;
+        }, 350);
+
+    }, redirectDelay);
+
+});

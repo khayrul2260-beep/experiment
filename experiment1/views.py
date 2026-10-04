@@ -2153,7 +2153,6 @@ def clear_coupon(request):
 # =========================================================
 # CHECKOUT PAGE
 # =========================================================
-
 def checkout_page(request):
 
     # =====================================================
@@ -2280,6 +2279,7 @@ def checkout_page(request):
                 cart = Cart.objects.filter(
                     user=request.user
                 ).first()
+
 
                 if not cart:
 
@@ -2467,6 +2467,11 @@ def checkout_page(request):
                     "cart_page"
                 )
 
+
+            # IMPORTANT:
+            # Convert to list before deleting cart items.
+            # This keeps the order summary available
+            # while rendering the success modal.
 
             cart_items = list(
                 cart.items
@@ -2714,10 +2719,6 @@ def checkout_page(request):
 
                     except Coupon.DoesNotExist:
 
-                        # -----------------------------------------
-                        # REMOVE INVALID SESSION COUPON
-                        # -----------------------------------------
-
                         request.session.pop(
                             "coupon_code",
                             None
@@ -2743,10 +2744,6 @@ def checkout_page(request):
 
 
                     if not coupon_result["valid"]:
-
-                        # -----------------------------------------
-                        # REMOVE INVALID COUPON FROM SESSION
-                        # -----------------------------------------
 
                         request.session.pop(
                             "coupon_code",
@@ -2944,6 +2941,7 @@ def checkout_page(request):
                             "updated_at",
                         ]
                     )
+
 
                 # =================================================
                 # INCREMENT COUPON USAGE
@@ -3182,9 +3180,63 @@ def checkout_page(request):
         # ORDER CREATED SUCCESSFULLY
         # =================================================
 
-        return redirect(
-            "order_confirmation",
-            order_number=order.order_number
+        # DO NOT REDIRECT TO order_confirmation.
+        #
+        # Instead render checkout.html with the newly
+        # created order so the confirmation modal can
+        # appear on top of the checkout page.
+
+        success_context = {
+
+            "cart": cart,
+
+            "cart_items": cart_items,
+
+            "is_guest_checkout": (
+                not request.user.is_authenticated
+            ),
+
+            "subtotal": subtotal,
+
+            "coupon": coupon,
+
+            "coupon_code": (
+                coupon.code
+                if coupon
+                else ""
+            ),
+
+            "discount": discount,
+
+            "delivery_charge": delivery_charge,
+
+            "total_amount": total_amount,
+
+            "coupon_error": None,
+
+            # ---------------------------------------------
+            # ORDER CONFIRMATION MODAL DATA
+            # ---------------------------------------------
+
+            "order_success": True,
+
+            "order": order,
+
+            "order_number": order.order_number,
+
+            "order_total": order.total_amount,
+
+            "order_delivery_charge": order.delivery_charge,
+
+            "order_created_at": order.created_at,
+
+        }
+
+
+        return render(
+            request,
+            "customer/checkout.html",
+            success_context
         )
 
 
@@ -3362,8 +3414,6 @@ def checkout_page(request):
         "customer/checkout.html",
         context
     )
-
-
 
 def order_confirmation_page(request, order_number):
 
