@@ -3415,22 +3415,6 @@ def checkout_page(request):
         context
     )
 
-def order_confirmation_page(request, order_number):
-
-    order = get_object_or_404(
-        Order,
-        order_number=order_number
-    )
-
-    context = {
-        "order": order,
-    }
-
-    return render(
-        request,
-        "customer/order_confirmation.html",
-        context
-    )
 
 def my_orders_page(request):
     if not request.user.is_authenticated:
