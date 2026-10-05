@@ -858,3 +858,168 @@ document.addEventListener("DOMContentLoaded", function () {
     }, redirectDelay);
 
 });
+
+
+// =========================================================
+// NAFI — CITY / DISTRICT → AREA DEPENDENT DROPDOWN
+// =========================================================
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const citySelect = document.getElementById("city");
+    const areaSelect = document.getElementById("area");
+    const locationDataElement =
+        document.getElementById("district-areas-data");
+
+
+    // -----------------------------------------------------
+    // SAFETY CHECK
+    // -----------------------------------------------------
+
+    if (
+        !citySelect ||
+        !areaSelect ||
+        !locationDataElement
+    ) {
+        return;
+    }
+
+
+    // -----------------------------------------------------
+    // LOCATION DATA
+    // -----------------------------------------------------
+
+    let districtAreas = {};
+
+    try {
+
+        districtAreas =
+            JSON.parse(
+                locationDataElement.textContent
+            );
+
+    } catch (error) {
+
+        console.error(
+            "NAFI: Unable to load district/area data.",
+            error
+        );
+
+        return;
+    }
+
+
+    // -----------------------------------------------------
+    // PREVIOUSLY SELECTED AREA
+    // -----------------------------------------------------
+
+    const previousArea =
+        areaSelect.dataset.selectedArea || "";
+
+
+    // -----------------------------------------------------
+    // POPULATE AREA DROPDOWN
+    // -----------------------------------------------------
+
+    function populateAreas(
+        selectedDistrict,
+        selectedArea = ""
+    ) {
+
+        // Clear existing options
+
+        areaSelect.innerHTML = "";
+
+
+        // Default option
+
+        const defaultOption =
+            document.createElement("option");
+
+        defaultOption.value = "";
+        defaultOption.textContent =
+            "Select Area";
+
+        areaSelect.appendChild(defaultOption);
+
+
+        // No district selected
+
+        if (
+            !selectedDistrict ||
+            !districtAreas[selectedDistrict]
+        ) {
+
+            areaSelect.disabled = true;
+
+            return;
+        }
+
+
+        // Enable area dropdown
+
+        areaSelect.disabled = false;
+
+
+        // Add areas
+
+        districtAreas[selectedDistrict].forEach(
+            function (area) {
+
+                const option =
+                    document.createElement("option");
+
+                option.value = area;
+                option.textContent = area;
+
+
+                // Restore previous selection
+
+                if (area === selectedArea) {
+                    option.selected = true;
+                }
+
+
+                areaSelect.appendChild(option);
+
+            }
+        );
+
+    }
+
+
+    // -----------------------------------------------------
+    // DISTRICT CHANGE
+    // -----------------------------------------------------
+
+    citySelect.addEventListener(
+        "change",
+        function () {
+
+            populateAreas(
+                this.value
+            );
+
+        }
+    );
+
+
+    // -----------------------------------------------------
+    // INITIAL LOAD
+    // -----------------------------------------------------
+
+    if (citySelect.value) {
+
+        populateAreas(
+            citySelect.value,
+            previousArea
+        );
+
+    } else {
+
+        areaSelect.disabled = true;
+
+    }
+
+});
+

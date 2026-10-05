@@ -10,6 +10,7 @@ from decimal import Decimal
 from datetime import timedelta
 from django.utils import timezone
 from .coupon_utils import validate_coupon
+from .location_data import DISTRICT_AREAS, DISTRICTS
 
 # =========================================================
 # GUEST CART HELPERS
@@ -2249,6 +2250,17 @@ def checkout_page(request):
             error_message = (
                 "Please enter your area."
             )
+        if not city:
+            error_message = "Please select a city / district."
+
+        elif city not in DISTRICT_AREAS:
+            error_message = "Please select a valid city / district."
+
+        elif not area:
+            error_message = "Please select an area."
+
+        elif area not in DISTRICT_AREAS.get(city, []):
+            error_message = "Please select a valid area for the selected city / district."
 
         elif payment_method not in [
             "COD",
@@ -2329,6 +2341,10 @@ def checkout_page(request):
                     "is_guest_checkout": False,
 
                     "checkout_error": error_message,
+
+                    "districts": DISTRICTS,
+                    
+                    "district_areas": DISTRICT_AREAS,
 
                     "subtotal": pricing[
                         "subtotal"
@@ -2412,6 +2428,10 @@ def checkout_page(request):
                 "is_guest_checkout": True,
 
                 "checkout_error": error_message,
+
+                "districts": DISTRICTS,
+                
+                "district_areas": DISTRICT_AREAS,
 
                 "subtotal": pricing[
                     "subtotal"
@@ -3056,6 +3076,10 @@ def checkout_page(request):
 
                     "checkout_error": error_message,
 
+                    "districts": DISTRICTS,
+                                    
+                    "district_areas": DISTRICT_AREAS,
+
                     "subtotal": pricing[
                         "subtotal"
                     ],
@@ -3139,6 +3163,10 @@ def checkout_page(request):
 
                 "checkout_error": error_message,
 
+                "districts": DISTRICTS,
+                                                    
+                "district_areas": DISTRICT_AREAS,
+
                 "subtotal": pricing[
                     "subtotal"
                 ],
@@ -3191,6 +3219,9 @@ def checkout_page(request):
             "cart": cart,
 
             "cart_items": cart_items,
+
+            "districts": DISTRICTS,
+            "district_areas": DISTRICT_AREAS,
 
             "is_guest_checkout": (
                 not request.user.is_authenticated
@@ -3298,6 +3329,10 @@ def checkout_page(request):
 
             "is_guest_checkout": False,
 
+            "districts": DISTRICTS,
+
+            "district_areas": DISTRICT_AREAS,
+
             "subtotal": pricing[
                 "subtotal"
             ],
@@ -3378,6 +3413,11 @@ def checkout_page(request):
         "cart_items": cart_items,
 
         "is_guest_checkout": True,
+
+        "districts": DISTRICTS,
+        
+        "district_areas": DISTRICT_AREAS,
+
 
         "subtotal": pricing[
             "subtotal"

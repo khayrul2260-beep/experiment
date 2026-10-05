@@ -1020,14 +1020,24 @@
                                     City / District
                                 </label>
 
-                                <input
-                                    type="text"
-                                    id="city"
-                                    name="city"
-                                    value="{{ request.POST.city|default:'' }}"
-                                    placeholder="e.g. Dhaka"
-                                    required
-                                >
+<select
+    id="city"
+    name="city"
+    required
+>
+    <option value="">Select City / District</option>
+
+    {% for district in districts %}
+        <option
+            value="{{ district }}"
+            {% if request.POST.city == district %}
+                selected
+            {% endif %}
+        >
+            {{ district }}
+        </option>
+    {% endfor %}
+</select>
 
                             </div>
 
@@ -1041,14 +1051,15 @@
                                     Area
                                 </label>
 
-                                <input
-                                    type="text"
-                                    id="area"
-                                    name="area"
-                                    value="{{ request.POST.area|default:'' }}"
-                                    placeholder="e.g. Mirpur"
-                                    required
-                                >
+<select
+    id="area"
+    name="area"
+    required
+    disabled
+    data-selected-area="{{ request.POST.area|default:'' }}"
+>
+    <option value="">Select Area</option>
+</select>
 
                             </div>
 
@@ -1120,7 +1131,7 @@
 
                         <label class="payment-option">
 
-                            <input
+                            {% comment %} <input
                                 type="radio"
                                 name="payment_method"
                                 value="COD"
@@ -1130,7 +1141,7 @@
                                 {% endif %}
                             >
 
-                            <span class="payment-option-radio"></span>
+                            <span class="payment-option-radio"></span> {% endcomment %}
 
 
                             <span class="payment-option-content">
@@ -1149,7 +1160,7 @@
 
 
 
-                        <!-- Online Payment -->
+                        {% comment %} <!-- Online Payment -->
 
                         <label class="payment-option">
 
@@ -1179,7 +1190,7 @@
                             </span>
 
                         </label>
-
+ {% endcomment %}
 
                     </div>
 
@@ -1209,18 +1220,6 @@
 
                     </button>
 
-
-                    <div class="checkout-secure">
-
-                        <span>
-                            🔒
-                        </span>
-
-                        <p>
-                            Your information is securely processed.
-                        </p>
-
-                    </div>
 
                 </div>
 
@@ -1911,7 +1910,7 @@
 <!-- =========================================================
      EXISTING CHECKOUT JAVASCRIPT
 ========================================================== -->
-
+{{ district_areas|json_script:"district-areas-data" }}
 <script src="{% static 'customer/js/checkout.js' %}"></script>
 
 
@@ -1921,6 +1920,7 @@
 ========================================================== -->
 
 {% if order_success and order %}
+
 <script>
 
 document.addEventListener(

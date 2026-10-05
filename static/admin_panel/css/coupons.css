@@ -217,7 +217,7 @@
 
     margin-bottom: 8px;
 
-    font-size: 8px;
+    font-size: 9px;
     font-weight: 600;
     letter-spacing: 0.14em;
 
@@ -438,7 +438,7 @@
 
     border-bottom: 1px solid var(--coupon-border);
 
-    font-size: 8px;
+    font-size: 9px;
     font-weight: 600;
     line-height: 1;
     letter-spacing: 0.12em;
@@ -543,7 +543,7 @@
 
 
 .coupon-discount-cell span {
-    font-size: 8px;
+    font-size: 9px;
 
     color: var(--coupon-text-muted);
 }
@@ -612,7 +612,7 @@
 
     white-space: nowrap;
 
-    font-size: 8px;
+    font-size: 9px;
     line-height: 1.4;
 
     color: var(--coupon-text-soft);
@@ -633,7 +633,7 @@
     align-items: center;
     gap: 6px;
 
-    font-size: 8px;
+    font-size: 9px;
     font-weight: 500;
     white-space: nowrap;
 
