@@ -6,32 +6,49 @@ document.addEventListener("DOMContentLoaded", () => {
        ELEMENTS
     ========================================================= */
 
-    const couponForm = document.getElementById("coupon-form");
-    const couponInput = document.getElementById("coupon-code");
-    const couponApplyButton = document.getElementById("coupon-apply-btn");
+    const couponForm =
+        document.getElementById("coupon-form");
 
-    const couponApplied = document.getElementById("coupon-applied");
-    const couponAppliedCode = document.getElementById("coupon-applied-code");
-    const couponRemoveButton = document.getElementById("coupon-remove-btn");
-    const couponMessage = document.getElementById("coupon-message");
+    const couponInput =
+        document.getElementById("coupon-code");
 
-    const subtotalElement = document.getElementById("checkout-subtotal");
-    const discountElement = document.getElementById("checkout-discount");
-    const discountRow = document.getElementById("checkout-discount-row");
-    const deliveryElement = document.getElementById("checkout-delivery");
-    const totalElement = document.getElementById("checkout-total");
+    const couponApplyButton =
+        document.getElementById("coupon-apply-btn");
 
-    const checkoutForm = document.getElementById("checkout-form");
-    const placeOrderButton = document.getElementById("place-order-btn");
+    const couponApplied =
+        document.getElementById("coupon-applied");
+
+    const couponAppliedCode =
+        document.getElementById("coupon-applied-code");
+
+    const couponRemoveButton =
+        document.getElementById("coupon-remove-btn");
+
+    const couponMessage =
+        document.getElementById("coupon-message");
 
 
-    /* =========================================================
-       STOP IF CHECKOUT ELEMENTS ARE NOT AVAILABLE
-    ========================================================= */
+    const subtotalElement =
+        document.getElementById("checkout-subtotal");
 
-    if (!couponForm) {
-        return;
-    }
+    const discountElement =
+        document.getElementById("checkout-discount");
+
+    const discountRow =
+        document.getElementById("checkout-discount-row");
+
+    const deliveryElement =
+        document.getElementById("checkout-delivery");
+
+    const totalElement =
+        document.getElementById("checkout-total");
+
+
+    const checkoutForm =
+        document.getElementById("checkout-form");
+
+    const placeOrderButton =
+        document.getElementById("place-order-btn");
 
 
     /* =========================================================
@@ -40,28 +57,42 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function getCSRFToken() {
 
-        const csrfInput = document.querySelector(
-            'input[name="csrfmiddlewaretoken"]'
-        );
+        const csrfInput =
+            document.querySelector(
+                'input[name="csrfmiddlewaretoken"]'
+            );
 
-        if (csrfInput && csrfInput.value) {
+
+        if (
+            csrfInput &&
+            csrfInput.value
+        ) {
+
             return csrfInput.value;
+
         }
 
 
-        const cookie = document.cookie
-            .split("; ")
-            .find(row => row.startsWith("csrftoken="));
+        const cookie =
+            document.cookie
+                .split("; ")
+                .find(
+                    row =>
+                        row.startsWith("csrftoken=")
+                );
 
 
         if (!cookie) {
+
             return "";
+
         }
 
 
         return decodeURIComponent(
             cookie.split("=")[1]
         );
+
     }
 
 
@@ -71,9 +102,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function formatMoney(value) {
 
-        const number = Number(value || 0);
+        const number =
+            Number(value || 0);
+
 
         return number.toFixed(2);
+
     }
 
 
@@ -81,14 +115,20 @@ document.addEventListener("DOMContentLoaded", () => {
        COUPON MESSAGE
     ========================================================= */
 
-    function showCouponMessage(message, type = "error") {
+    function showCouponMessage(
+        message,
+        type = "error"
+    ) {
 
         if (!couponMessage) {
+
             return;
+
         }
 
 
-        couponMessage.textContent = message || "";
+        couponMessage.textContent =
+            message || "";
 
 
         couponMessage.classList.remove(
@@ -100,23 +140,32 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (type === "success") {
 
-            couponMessage.classList.add("success");
+            couponMessage.classList.add(
+                "success"
+            );
 
         } else {
 
-            couponMessage.classList.add("error");
+            couponMessage.classList.add(
+                "error"
+            );
 
         }
 
 
-        couponMessage.classList.add("show");
+        couponMessage.classList.add(
+            "show"
+        );
+
     }
 
 
     function hideCouponMessage() {
 
         if (!couponMessage) {
+
             return;
+
         }
 
 
@@ -128,6 +177,7 @@ document.addEventListener("DOMContentLoaded", () => {
             "success",
             "error"
         );
+
     }
 
 
@@ -143,7 +193,9 @@ document.addEventListener("DOMContentLoaded", () => {
         ) {
 
             subtotalElement.textContent =
-                formatMoney(data.subtotal);
+                formatMoney(
+                    data.subtotal
+                );
 
         }
 
@@ -154,26 +206,28 @@ document.addEventListener("DOMContentLoaded", () => {
         ) {
 
             const discount =
-                Number(data.discount || 0);
+                Number(
+                    data.discount || 0
+                );
 
 
             discountElement.textContent =
-                formatMoney(discount);
+                formatMoney(
+                    discount
+                );
 
-
-            /*
-             * Show/hide discount row automatically.
-             */
 
             if (discountRow) {
 
                 if (discount > 0) {
 
-                    discountRow.style.display = "";
+                    discountRow.style.display =
+                        "";
 
                 } else {
 
-                    discountRow.style.display = "none";
+                    discountRow.style.display =
+                        "none";
 
                 }
 
@@ -188,7 +242,9 @@ document.addEventListener("DOMContentLoaded", () => {
         ) {
 
             deliveryElement.textContent =
-                formatMoney(data.delivery_charge);
+                formatMoney(
+                    data.delivery_charge
+                );
 
         }
 
@@ -199,7 +255,9 @@ document.addEventListener("DOMContentLoaded", () => {
         ) {
 
             totalElement.textContent =
-                formatMoney(data.total_amount);
+                formatMoney(
+                    data.total_amount
+                );
 
         }
 
@@ -270,10 +328,14 @@ document.addEventListener("DOMContentLoaded", () => {
        APPLY BUTTON LOADING
     ========================================================= */
 
-    function setApplyLoading(isLoading) {
+    function setApplyLoading(
+        isLoading
+    ) {
 
         if (!couponApplyButton) {
+
             return;
+
         }
 
 
@@ -289,14 +351,18 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
 
-            couponApplyButton.disabled = true;
+            couponApplyButton.disabled =
+                true;
+
 
             couponApplyButton.textContent =
                 "APPLYING...";
 
         } else {
 
-            couponApplyButton.disabled = false;
+            couponApplyButton.disabled =
+                false;
+
 
             couponApplyButton.textContent =
                 couponApplyButton.dataset.originalText ||
@@ -311,10 +377,14 @@ document.addEventListener("DOMContentLoaded", () => {
        REMOVE BUTTON LOADING
     ========================================================= */
 
-    function setRemoveLoading(isLoading) {
+    function setRemoveLoading(
+        isLoading
+    ) {
 
         if (!couponRemoveButton) {
+
             return;
+
         }
 
 
@@ -330,14 +400,18 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
 
-            couponRemoveButton.disabled = true;
+            couponRemoveButton.disabled =
+                true;
+
 
             couponRemoveButton.textContent =
                 "REMOVING...";
 
         } else {
 
-            couponRemoveButton.disabled = false;
+            couponRemoveButton.disabled =
+                false;
+
 
             couponRemoveButton.textContent =
                 couponRemoveButton.dataset.originalText ||
@@ -349,26 +423,46 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /* =========================================================
-       SERVER REQUEST
+       SERVER POST REQUEST
     ========================================================= */
 
-    async function sendPostRequest(url, data = {}) {
+    async function sendPostRequest(
+        url,
+        data = {}
+    ) {
 
-        const response = await fetch(
-            url,
-            {
-                method: "POST",
+        if (!url) {
 
-                headers: {
-                    "X-CSRFToken": getCSRFToken(),
-                    "X-Requested-With": "XMLHttpRequest",
-                    "Content-Type":
-                        "application/x-www-form-urlencoded; charset=UTF-8"
-                },
+            throw new Error(
+                "Request URL is missing."
+            );
 
-                body: new URLSearchParams(data)
-            }
-        );
+        }
+
+
+        const response =
+            await fetch(
+                url,
+                {
+                    method: "POST",
+
+                    headers: {
+                        "X-CSRFToken":
+                            getCSRFToken(),
+
+                        "X-Requested-With":
+                            "XMLHttpRequest",
+
+                        "Content-Type":
+                            "application/x-www-form-urlencoded; charset=UTF-8"
+                    },
+
+                    body:
+                        new URLSearchParams(
+                            data
+                        )
+                }
+            );
 
 
         let result;
@@ -376,7 +470,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         try {
 
-            result = await response.json();
+            result =
+                await response.json();
 
         } catch (error) {
 
@@ -399,151 +494,168 @@ document.addEventListener("DOMContentLoaded", () => {
        APPLY COUPON
     ========================================================= */
 
-    couponForm.addEventListener(
-        "submit",
-        async (event) => {
+    if (couponForm) {
 
-            event.preventDefault();
+        couponForm.addEventListener(
+            "submit",
+            async (event) => {
 
-
-            const code = couponInput
-                ? couponInput.value.trim()
-                : "";
+                event.preventDefault();
 
 
-            hideCouponMessage();
+                const code =
+                    couponInput
+                        ? couponInput.value.trim()
+                        : "";
 
 
-            /* ---------------------------------------------
-               EMPTY CODE
-            --------------------------------------------- */
-
-            if (!code) {
-
-                showCouponMessage(
-                    "Please enter a coupon code.",
-                    "error"
-                );
-
-
-                if (couponInput) {
-                    couponInput.focus();
-                }
-
-
-                return;
-            }
-
-
-            setApplyLoading(true);
-
-
-            try {
-
-                const {
-                    response,
-                    data
-                } = await sendPostRequest(
-                    couponForm.action,
-                    {
-                        code: code
-                    }
-                );
+                hideCouponMessage();
 
 
                 /* -----------------------------------------
-                   INVALID COUPON
+                   EMPTY CODE
                 ----------------------------------------- */
 
-                if (
-                    !response.ok ||
-                    !data.success
-                ) {
-
-                    if (
-                        data.subtotal !== undefined
-                    ) {
-
-                        updateSummary({
-                            subtotal:
-                                data.subtotal,
-
-                            discount:
-                                "0.00",
-
-                            delivery_charge:
-                                data.delivery_charge ||
-                                "0.00",
-
-                            total_amount:
-                                data.total_amount ||
-                                data.subtotal ||
-                                "0.00"
-                        });
-
-                    }
-
-
-                    showCouponForm();
-
+                if (!code) {
 
                     showCouponMessage(
-                        data.message ||
-                        "This coupon could not be applied.",
+                        "Please enter a coupon code.",
                         "error"
                     );
 
 
+                    if (couponInput) {
+
+                        couponInput.focus();
+
+                    }
+
+
                     return;
-                }
-
-
-                /* -----------------------------------------
-                   VALID COUPON
-                ----------------------------------------- */
-
-                updateSummary(data);
-
-
-                showAppliedCoupon(
-                    data.coupon_code || code
-                );
-
-
-                showCouponMessage(
-                    data.message ||
-                    "Coupon applied successfully.",
-                    "success"
-                );
-
-
-                if (couponInput) {
-
-                    couponInput.value = "";
 
                 }
 
-            } catch (error) {
 
-                console.error(
-                    "Apply coupon error:",
-                    error
-                );
+                setApplyLoading(true);
 
 
-                showCouponMessage(
-                    "Something went wrong. Please try again.",
-                    "error"
-                );
+                try {
 
-            } finally {
+                    const {
+                        response,
+                        data
+                    } =
+                        await sendPostRequest(
+                            couponForm.action,
+                            {
+                                code: code
+                            }
+                        );
 
-                setApplyLoading(false);
+
+                    /* -------------------------------------
+                       INVALID COUPON
+                    ------------------------------------- */
+
+                    if (
+                        !response.ok ||
+                        !data.success
+                    ) {
+
+                        if (
+                            data.subtotal !==
+                            undefined
+                        ) {
+
+                            updateSummary({
+
+                                subtotal:
+                                    data.subtotal,
+
+                                discount:
+                                    "0.00",
+
+                                delivery_charge:
+                                    data.delivery_charge ||
+                                    "0.00",
+
+                                total_amount:
+                                    data.total_amount ||
+                                    data.subtotal ||
+                                    "0.00"
+
+                            });
+
+                        }
+
+
+                        showCouponForm();
+
+
+                        showCouponMessage(
+                            data.message ||
+                            "This coupon could not be applied.",
+                            "error"
+                        );
+
+
+                        return;
+
+                    }
+
+
+                    /* -------------------------------------
+                       VALID COUPON
+                    ------------------------------------- */
+
+                    updateSummary(data);
+
+
+                    showAppliedCoupon(
+                        data.coupon_code ||
+                        code
+                    );
+
+
+                    showCouponMessage(
+                        data.message ||
+                        "Coupon applied successfully.",
+                        "success"
+                    );
+
+
+                    if (couponInput) {
+
+                        couponInput.value =
+                            "";
+
+                    }
+
+                } catch (error) {
+
+                    console.error(
+                        "NAFI: Apply coupon error:",
+                        error
+                    );
+
+
+                    showCouponMessage(
+                        "Something went wrong. Please try again.",
+                        "error"
+                    );
+
+                } finally {
+
+                    setApplyLoading(
+                        false
+                    );
+
+                }
 
             }
+        );
 
-        }
-    );
+    }
 
 
     /* =========================================================
@@ -570,7 +682,9 @@ document.addEventListener("DOMContentLoaded", () => {
                         "error"
                     );
 
+
                     return;
+
                 }
 
 
@@ -582,9 +696,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     const {
                         response,
                         data
-                    } = await sendPostRequest(
-                        removeUrl
-                    );
+                    } =
+                        await sendPostRequest(
+                            removeUrl
+                        );
 
 
                     /* -------------------------------------
@@ -604,17 +719,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
                         return;
+
                     }
 
 
+                    /* -------------------------------------
+                       REMOVE SUCCESS
+                    ------------------------------------- */
+
                     updateSummary(data);
+
 
                     showCouponForm();
 
 
                     if (couponInput) {
 
-                        couponInput.value = "";
+                        couponInput.value =
+                            "";
 
                     }
 
@@ -628,7 +750,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 } catch (error) {
 
                     console.error(
-                        "Remove coupon error:",
+                        "NAFI: Remove coupon error:",
                         error
                     );
 
@@ -640,7 +762,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 } finally {
 
-                    setRemoveLoading(false);
+                    setRemoveLoading(
+                        false
+                    );
 
                 }
 
@@ -670,7 +794,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /* =========================================================
-       ENTER KEY
+       COUPON INPUT — ENTER KEY
     ========================================================= */
 
     if (couponInput) {
@@ -679,8 +803,12 @@ document.addEventListener("DOMContentLoaded", () => {
             "keydown",
             (event) => {
 
-                if (event.key !== "Enter") {
+                if (
+                    event.key !== "Enter"
+                ) {
+
                     return;
+
                 }
 
 
@@ -706,27 +834,35 @@ document.addEventListener("DOMContentLoaded", () => {
        PREVENT DOUBLE ORDER SUBMISSION
     ========================================================= */
 
-    if (checkoutForm && placeOrderButton) {
+    if (
+        checkoutForm &&
+        placeOrderButton
+    ) {
 
         checkoutForm.addEventListener(
             "submit",
             (event) => {
 
                 /*
-                 * Coupon form has its own submit handler,
-                 * so this only handles the main checkout
-                 * form submission.
+                 * Ignore submissions that are
+                 * not triggered by the main
+                 * place-order button.
                  */
 
                 if (
                     event.submitter &&
-                    event.submitter !== placeOrderButton
+                    event.submitter !==
+                        placeOrderButton
                 ) {
 
                     return;
 
                 }
 
+
+                /* -----------------------------------------
+                   ALREADY SUBMITTING
+                ----------------------------------------- */
 
                 if (
                     placeOrderButton.dataset.submitting ===
@@ -740,11 +876,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
 
 
+                /* -----------------------------------------
+                   LOCK BUTTON
+                ----------------------------------------- */
+
                 placeOrderButton.dataset.submitting =
                     "true";
 
 
-                placeOrderButton.disabled = true;
+                placeOrderButton.disabled =
+                    true;
 
 
                 placeOrderButton.dataset.originalText =
@@ -798,13 +939,17 @@ document.addEventListener("DOMContentLoaded", () => {
             ) || 0;
 
 
-        if (initialDiscount > 0) {
+        if (
+            initialDiscount > 0
+        ) {
 
-            discountRow.style.display = "";
+            discountRow.style.display =
+                "";
 
         } else {
 
-            discountRow.style.display = "none";
+            discountRow.style.display =
+                "none";
 
         }
 
@@ -815,211 +960,384 @@ document.addEventListener("DOMContentLoaded", () => {
 
 /* =========================================================
    NAFI ORDER SUCCESS MODAL
-   Auto redirect to Order Details
+   AUTO REDIRECT TO ORDER DETAILS
 ========================================================= */
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
 
-    const successModal = document.getElementById("nafiOrderSuccessModal");
-
-    // Modal exists only after successful order creation
-    if (!successModal) {
-        return;
-    }
-
-    const redirectUrl = successModal.dataset.redirectUrl;
-
-    if (!redirectUrl) {
-        return;
-    }
-
-    /*
-     * Keep the modal visible long enough
-     * for the premium animation to complete.
-     */
-    const redirectDelay = 3000;
-
-    setTimeout(function () {
-
-        /*
-         * Small fade-out before leaving checkout.
-         * The modal itself remains visible during
-         * almost the entire 3-second experience.
-         */
-        successModal.style.transition =
-            "opacity 0.35s ease";
-
-        successModal.style.opacity = "0";
-
-        setTimeout(function () {
-            window.location.href = redirectUrl;
-        }, 350);
-
-    }, redirectDelay);
-
-});
-
-
-// =========================================================
-// NAFI — CITY / DISTRICT → AREA DEPENDENT DROPDOWN
-// =========================================================
-
-document.addEventListener("DOMContentLoaded", function () {
-
-    const citySelect = document.getElementById("city");
-    const areaSelect = document.getElementById("area");
-    const locationDataElement =
-        document.getElementById("district-areas-data");
-
-
-    // -----------------------------------------------------
-    // SAFETY CHECK
-    // -----------------------------------------------------
-
-    if (
-        !citySelect ||
-        !areaSelect ||
-        !locationDataElement
-    ) {
-        return;
-    }
-
-
-    // -----------------------------------------------------
-    // LOCATION DATA
-    // -----------------------------------------------------
-
-    let districtAreas = {};
-
-    try {
-
-        districtAreas =
-            JSON.parse(
-                locationDataElement.textContent
+        const successModal =
+            document.getElementById(
+                "nafiOrderSuccessModal"
             );
 
-    } catch (error) {
 
-        console.error(
-            "NAFI: Unable to load district/area data.",
-            error
-        );
+        /*
+         * Modal exists only after
+         * successful order creation.
+         */
 
-        return;
-    }
-
-
-    // -----------------------------------------------------
-    // PREVIOUSLY SELECTED AREA
-    // -----------------------------------------------------
-
-    const previousArea =
-        areaSelect.dataset.selectedArea || "";
-
-
-    // -----------------------------------------------------
-    // POPULATE AREA DROPDOWN
-    // -----------------------------------------------------
-
-    function populateAreas(
-        selectedDistrict,
-        selectedArea = ""
-    ) {
-
-        // Clear existing options
-
-        areaSelect.innerHTML = "";
-
-
-        // Default option
-
-        const defaultOption =
-            document.createElement("option");
-
-        defaultOption.value = "";
-        defaultOption.textContent =
-            "Select Area";
-
-        areaSelect.appendChild(defaultOption);
-
-
-        // No district selected
-
-        if (
-            !selectedDistrict ||
-            !districtAreas[selectedDistrict]
-        ) {
-
-            areaSelect.disabled = true;
+        if (!successModal) {
 
             return;
+
         }
 
 
-        // Enable area dropdown
-
-        areaSelect.disabled = false;
-
-
-        // Add areas
-
-        districtAreas[selectedDistrict].forEach(
-            function (area) {
-
-                const option =
-                    document.createElement("option");
-
-                option.value = area;
-                option.textContent = area;
+        const redirectUrl =
+            successModal.dataset.redirectUrl;
 
 
-                // Restore previous selection
+        if (!redirectUrl) {
 
-                if (area === selectedArea) {
-                    option.selected = true;
+            return;
+
+        }
+
+
+        /*
+         * Keep modal visible long enough
+         * for the premium animation.
+         */
+
+        const redirectDelay =
+            3000;
+
+
+        setTimeout(
+            function () {
+
+                /*
+                 * Small fade-out before
+                 * redirecting to order details.
+                 */
+
+                successModal.style.transition =
+                    "opacity 0.35s ease";
+
+
+                successModal.style.opacity =
+                    "0";
+
+
+                setTimeout(
+                    function () {
+
+                        window.location.href =
+                            redirectUrl;
+
+                    },
+                    350
+                );
+
+            },
+            redirectDelay
+        );
+
+    }
+);
+
+
+/* =========================================================
+   NAFI — CITY / DISTRICT → AREA
+   DEPENDENT DROPDOWN
+========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        "use strict";
+
+
+        /* =====================================================
+           ELEMENTS
+        ===================================================== */
+
+        const citySelect =
+            document.getElementById(
+                "city"
+            );
+
+
+        const areaSelect =
+            document.getElementById(
+                "area"
+            );
+
+
+        const locationDataElement =
+            document.getElementById(
+                "district-areas-data"
+            );
+
+
+        /* =====================================================
+           SAFETY CHECK
+        ===================================================== */
+
+        if (
+            !citySelect ||
+            !areaSelect ||
+            !locationDataElement
+        ) {
+
+            return;
+
+        }
+
+
+        /* =====================================================
+           LOAD DISTRICT / AREA DATA
+        ===================================================== */
+
+        let districtAreas = {};
+
+
+        try {
+
+            districtAreas =
+                JSON.parse(
+                    locationDataElement.textContent
+                );
+
+        } catch (error) {
+
+            console.error(
+                "NAFI: Unable to load district/area data.",
+                error
+            );
+
+
+            /*
+             * Keep the area field disabled
+             * if location data cannot be loaded.
+             */
+
+            areaSelect.disabled =
+                true;
+
+
+            return;
+
+        }
+
+
+        /* =====================================================
+           PREVIOUSLY SELECTED AREA
+        ===================================================== */
+
+        const previousArea =
+            areaSelect.dataset.selectedArea ||
+            "";
+
+
+        /* =====================================================
+           POPULATE AREA DROPDOWN
+        ===================================================== */
+
+        function populateAreas(
+            selectedDistrict,
+            selectedArea = ""
+        ) {
+
+            /*
+             * Always clear old area options.
+             */
+
+            areaSelect.innerHTML =
+                "";
+
+
+            /*
+             * Default option.
+             */
+
+            const defaultOption =
+                document.createElement(
+                    "option"
+                );
+
+
+            defaultOption.value =
+                "";
+
+
+            defaultOption.textContent =
+                "Select Area";
+
+
+            areaSelect.appendChild(
+                defaultOption
+            );
+
+
+            /*
+             * No district selected.
+             */
+
+            if (
+                !selectedDistrict ||
+                !districtAreas[
+                    selectedDistrict
+                ]
+            ) {
+
+                areaSelect.disabled =
+                    true;
+
+
+                return;
+
+            }
+
+
+            /*
+             * Enable area dropdown.
+             */
+
+            areaSelect.disabled =
+                false;
+
+
+            /*
+             * Get areas for selected district.
+             */
+
+            const areas =
+                districtAreas[
+                    selectedDistrict
+                ];
+
+
+            /*
+             * Safety check.
+             */
+
+            if (
+                !Array.isArray(areas)
+            ) {
+
+                areaSelect.disabled =
+                    true;
+
+
+                return;
+
+            }
+
+
+            /*
+             * Add area options.
+             */
+
+            areas.forEach(
+                function (area) {
+
+                    const option =
+                        document.createElement(
+                            "option"
+                        );
+
+
+                    option.value =
+                        area;
+
+
+                    option.textContent =
+                        area;
+
+
+                    /*
+                     * Restore previously
+                     * saved area.
+                     */
+
+                    if (
+                        area ===
+                        selectedArea
+                    ) {
+
+                        option.selected =
+                            true;
+
+                    }
+
+
+                    areaSelect.appendChild(
+                        option
+                    );
+
                 }
+            );
+
+        }
 
 
-                areaSelect.appendChild(option);
+        /* =====================================================
+           DISTRICT CHANGE
+        ===================================================== */
+
+        citySelect.addEventListener(
+            "change",
+            function () {
+
+                /*
+                 * When customer manually changes
+                 * district, the previous area must
+                 * not remain selected.
+                 */
+
+                populateAreas(
+                    this.value,
+                    ""
+                );
 
             }
         );
 
-    }
 
+        /* =====================================================
+           INITIAL LOAD
+        ===================================================== */
 
-    // -----------------------------------------------------
-    // DISTRICT CHANGE
-    // -----------------------------------------------------
+        if (
+            citySelect.value
+        ) {
 
-    citySelect.addEventListener(
-        "change",
-        function () {
+            /*
+             * Restore saved district + area.
+             *
+             * This is important for:
+             * - Guest customers
+             * - Registered customers
+             * - Validation errors
+             * - Page reloads
+             */
 
             populateAreas(
-                this.value
+                citySelect.value,
+                previousArea
             );
 
+        } else {
+
+            /*
+             * No district selected.
+             */
+
+            areaSelect.innerHTML = `
+                <option value="">
+                    Select Area
+                </option>
+            `;
+
+
+            areaSelect.disabled =
+                true;
+
         }
-    );
-
-
-    // -----------------------------------------------------
-    // INITIAL LOAD
-    // -----------------------------------------------------
-
-    if (citySelect.value) {
-
-        populateAreas(
-            citySelect.value,
-            previousArea
-        );
-
-    } else {
-
-        areaSelect.disabled = true;
 
     }
-
-});
-
+);

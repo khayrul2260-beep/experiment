@@ -12,6 +12,8 @@ from django.utils import timezone
 from .coupon_utils import validate_coupon
 from .location_data import DISTRICT_AREAS, DISTRICTS
 
+
+
 # =========================================================
 # GUEST CART HELPERS
 # =========================================================
@@ -2152,9 +2154,90 @@ def clear_coupon(request):
 
 
 # =========================================================
+# CHECKOUT — GET LAST CUSTOMER INFORMATION
+# =========================================================
+
+def _get_checkout_customer_data(request):
+
+    if not request.user.is_authenticated:
+        return {}
+
+    last_order = (
+        Order.objects
+        .filter(
+            customer=request.user
+        )
+        .order_by("-created_at")
+        .first()
+    )
+
+    if not last_order:
+        return {}
+
+    return {
+        "full_name": last_order.full_name or "",
+        "phone": last_order.phone or "",
+        "email": last_order.email or "",
+        "address": last_order.address or "",
+        "city": last_order.city or "",
+        "area": last_order.area or "",
+        "delivery_note": last_order.delivery_note or "",
+    }
+
+# =========================================================
 # CHECKOUT PAGE
 # =========================================================
 def checkout_page(request):
+
+    # =====================================================
+    # CHECKOUT CUSTOMER DATA
+    # =====================================================
+    if request.user.is_authenticated:
+    
+        checkout_customer_data = (
+            _get_checkout_customer_data(request) or {}
+        )
+    
+    else:
+    
+        checkout_customer_data = (
+            request.session.get(
+                "guest_checkout_data",
+                {}
+            ) or {}
+        )
+    
+    
+    checkout_customer_data = {
+        "full_name": checkout_customer_data.get(
+            "full_name",
+            ""
+        ),
+        "phone": checkout_customer_data.get(
+            "phone",
+            ""
+        ),
+        "email": checkout_customer_data.get(
+            "email",
+            ""
+        ),
+        "address": checkout_customer_data.get(
+            "address",
+            ""
+        ),
+        "city": checkout_customer_data.get(
+            "city",
+            ""
+        ),
+        "area": checkout_customer_data.get(
+            "area",
+            ""
+        ),
+        "delivery_note": checkout_customer_data.get(
+            "delivery_note",
+            ""
+        ),
+    }
 
     # =====================================================
     # HANDLE CHECKOUT FORM SUBMISSION
@@ -2221,46 +2304,50 @@ def checkout_page(request):
         # BASIC VALIDATION
         # =================================================
 
-        if not full_name:
+        error_message = None
 
+        if not full_name:
+        
             error_message = (
                 "Please enter your full name."
             )
 
         elif not phone:
-
+        
             error_message = (
                 "Please enter your phone number."
             )
 
         elif not address:
-
+        
             error_message = (
                 "Please enter your full address."
             )
 
         elif not city:
-
+        
             error_message = (
-                "Please enter your city."
+                "Please select a city / district."
             )
-
-        elif not area:
-
-            error_message = (
-                "Please enter your area."
-            )
-        if not city:
-            error_message = "Please select a city / district."
 
         elif city not in DISTRICT_AREAS:
-            error_message = "Please select a valid city / district."
+        
+            error_message = (
+                "Please select a valid city / district."
+            )
 
         elif not area:
-            error_message = "Please select an area."
+        
+            error_message = (
+                "Please select an area."
+            )
 
         elif area not in DISTRICT_AREAS.get(city, []):
-            error_message = "Please select a valid area for the selected city / district."
+        
+            error_message = (
+                "Please select a valid area "
+                "for the selected city / district."
+            )
 
         elif payment_method not in [
             "COD",
@@ -2270,10 +2357,6 @@ def checkout_page(request):
             error_message = (
                 "Invalid payment method."
             )
-
-        else:
-
-            error_message = None
 
 
         # =================================================
@@ -2291,7 +2374,6 @@ def checkout_page(request):
                 cart = Cart.objects.filter(
                     user=request.user
                 ).first()
-
 
                 if not cart:
 
@@ -2327,6 +2409,9 @@ def checkout_page(request):
                     cart_items
                 )
 
+                checkout_customer_data = (
+                    _get_checkout_customer_data(request)
+                ) 
 
                 # ---------------------------------------------
                 # CONTEXT
@@ -2345,6 +2430,8 @@ def checkout_page(request):
                     "districts": DISTRICTS,
                     
                     "district_areas": DISTRICT_AREAS,
+
+                    "checkout_customer_data": checkout_customer_data,
 
                     "subtotal": pricing[
                         "subtotal"
@@ -2428,6 +2515,8 @@ def checkout_page(request):
                 "is_guest_checkout": True,
 
                 "checkout_error": error_message,
+
+                "checkout_customer_data": checkout_customer_data,
 
                 "districts": DISTRICTS,
                 
@@ -3076,6 +3165,8 @@ def checkout_page(request):
 
                     "checkout_error": error_message,
 
+                    "checkout_customer_data": checkout_customer_data,
+
                     "districts": DISTRICTS,
                                     
                     "district_areas": DISTRICT_AREAS,
@@ -3163,6 +3254,8 @@ def checkout_page(request):
 
                 "checkout_error": error_message,
 
+                "checkout_customer_data": checkout_customer_data,
+
                 "districts": DISTRICTS,
                                                     
                 "district_areas": DISTRICT_AREAS,
@@ -3214,6 +3307,29 @@ def checkout_page(request):
         # created order so the confirmation modal can
         # appear on top of the checkout page.
 
+        # =========================================================
+        # SAVE GUEST CHECKOUT DATA
+        # =========================================================
+
+        if not request.user.is_authenticated:
+
+            request.session["guest_checkout_data"] = {
+                "full_name": full_name,
+                "phone": phone,
+                "email": email,
+                "address": address,
+                "city": city,
+                "area": area,
+                "delivery_note": delivery_note,
+            }
+
+            request.session.modified = True
+
+            checkout_customer_data = request.session[
+                "guest_checkout_data"
+            ]
+
+
         success_context = {
 
             "cart": cart,
@@ -3222,6 +3338,8 @@ def checkout_page(request):
 
             "districts": DISTRICTS,
             "district_areas": DISTRICT_AREAS,
+
+            "checkout_customer_data": checkout_customer_data,
 
             "is_guest_checkout": (
                 not request.user.is_authenticated
@@ -3329,6 +3447,8 @@ def checkout_page(request):
 
             "is_guest_checkout": False,
 
+            "checkout_customer_data": checkout_customer_data,
+
             "districts": DISTRICTS,
 
             "district_areas": DISTRICT_AREAS,
@@ -3414,6 +3534,8 @@ def checkout_page(request):
 
         "is_guest_checkout": True,
 
+        "checkout_customer_data": checkout_customer_data,
+
         "districts": DISTRICTS,
         
         "district_areas": DISTRICT_AREAS,
@@ -3454,6 +3576,7 @@ def checkout_page(request):
         "customer/checkout.html",
         context
     )
+
 
 
 def my_orders_page(request):

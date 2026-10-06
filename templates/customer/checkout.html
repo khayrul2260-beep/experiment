@@ -893,7 +893,7 @@
                                     type="text"
                                     id="full_name"
                                     name="full_name"
-                                    value="{{ request.POST.full_name|default:'' }}"
+                                    value="{{ request.POST.full_name|default:checkout_customer_data.full_name }}"
                                     placeholder="Your full name"
                                     autocomplete="name"
                                     required
@@ -915,7 +915,7 @@
                                     type="tel"
                                     id="phone"
                                     name="phone"
-                                    value="{{ request.POST.phone|default:'' }}"
+                                    value="{{ request.POST.phone|default:checkout_customer_data.phone }}"
                                     placeholder="01XXXXXXXXX"
                                     autocomplete="tel"
                                     required
@@ -943,7 +943,7 @@
                                     type="email"
                                     id="email"
                                     name="email"
-                                    value="{{ request.POST.email|default:'' }}"
+                                    value="{{ request.POST.email|default:checkout_customer_data.email }}"
                                     placeholder="you@example.com"
                                     autocomplete="email"
                                 >
@@ -1006,7 +1006,7 @@
                                     placeholder="House, road, village or detailed delivery address"
                                     autocomplete="street-address"
                                     required
-                                >{{ request.POST.address|default:'' }}</textarea>
+                                >{{ request.POST.address|default:checkout_customer_data.address }}</textarea>
 
                             </div>
 
@@ -1030,7 +1030,7 @@
     {% for district in districts %}
         <option
             value="{{ district }}"
-            {% if request.POST.city == district %}
+            {% if request.POST.city|default:checkout_customer_data.city == district %}
                 selected
             {% endif %}
         >
@@ -1056,7 +1056,7 @@
     name="area"
     required
     disabled
-    data-selected-area="{{ request.POST.area|default:'' }}"
+    data-selected-area="{{ request.POST.area|default:checkout_customer_data.area }}"
 >
     <option value="">Select Area</option>
 </select>
@@ -1083,8 +1083,8 @@
                                     id="delivery_note"
                                     name="delivery_note"
                                     rows="3"
-                                    placeholder="Any special delivery instructions?"
-                                >{{ request.POST.delivery_note|default:'' }}</textarea>
+                                    placeholder="Any special delivery instructions"
+                                >{{ request.POST.delivery_note|default:checkout_customer_data.delivery_note }}</textarea>
 
                             </div>
 
