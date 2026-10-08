@@ -36,6 +36,7 @@ urlpatterns = [
 
 
     path('settings/', settings_page, name='settings_page'),
+    path('settings/delivery/', delivery_settings_page, name='delivery_settings_page'),
     path('settings/home/', home_management, name='home_management'),
     path('settings/home/update/', update_home_page, name='update_home_page'),
     path("settings/home/visibility/update/", update_home_visibility, name="update_home_visibility"),

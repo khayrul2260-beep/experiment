@@ -14,6 +14,23 @@ from .location_data import DISTRICT_AREAS, DISTRICTS
 
 
 
+def add_business_days(start_date, business_days):
+    current_date = start_date
+    added_days = 0
+
+    while added_days < business_days:
+
+        current_date += timedelta(days=1)
+
+        # Friday = 4
+        # Saturday = 5
+        if current_date.weekday() in (4, 5):
+            continue
+
+        added_days += 1
+
+    return current_date
+
 # =========================================================
 # GUEST CART HELPERS
 # =========================================================
@@ -2131,6 +2148,8 @@ def clear_coupon(request):
         + delivery_charge
     )
 
+
+
     return JsonResponse({
 
         "success": True,
@@ -2189,6 +2208,14 @@ def _get_checkout_customer_data(request):
 # =========================================================
 def checkout_page(request):
 
+    # =====================================================
+    # DELIVERY SETTINGS
+    # =====================================================
+
+    order_settings = OrderSettings.get_settings()
+
+    delivery_min_days = order_settings.delivery_min_days
+    delivery_max_days = order_settings.delivery_max_days
     # =====================================================
     # CHECKOUT CUSTOMER DATA
     # =====================================================
@@ -2431,6 +2458,10 @@ def checkout_page(request):
                     
                     "district_areas": DISTRICT_AREAS,
 
+                    "delivery_min_days": delivery_min_days,
+
+                    "delivery_max_days": delivery_max_days,
+
                     "checkout_customer_data": checkout_customer_data,
 
                     "subtotal": pricing[
@@ -2521,6 +2552,10 @@ def checkout_page(request):
                 "districts": DISTRICTS,
                 
                 "district_areas": DISTRICT_AREAS,
+
+                "delivery_min_days": delivery_min_days,
+
+                "delivery_max_days": delivery_max_days,
 
                 "subtotal": pricing[
                     "subtotal"
@@ -2899,7 +2934,23 @@ def checkout_page(request):
                         "0.00"
                     )
 
-
+                # =================================================
+                # EXPECTED DELIVERY DATE
+                # =================================================
+                
+                order_settings = OrderSettings.get_settings()
+                
+                today = timezone.localtime().date()
+                
+                expected_delivery_from = add_business_days(
+                    today,
+                    order_settings.delivery_min_days
+                )
+                
+                expected_delivery_to = add_business_days(
+                    today,
+                    order_settings.delivery_max_days
+                )
                 # =================================================
                 # CREATE ORDER
                 # =================================================
@@ -2938,6 +2989,10 @@ def checkout_page(request):
 
                     total_amount=total_amount,
 
+                    expected_delivery_from=expected_delivery_from,
+
+                    expected_delivery_to=expected_delivery_to,
+                    
                     status="Pending",
 
                     payment_method=payment_method,
@@ -3171,6 +3226,10 @@ def checkout_page(request):
                                     
                     "district_areas": DISTRICT_AREAS,
 
+                    "delivery_min_days": delivery_min_days,
+
+                    "delivery_max_days": delivery_max_days,
+
                     "subtotal": pricing[
                         "subtotal"
                     ],
@@ -3260,6 +3319,11 @@ def checkout_page(request):
                                                     
                 "district_areas": DISTRICT_AREAS,
 
+
+                "delivery_min_days": delivery_min_days,
+
+                "delivery_max_days": delivery_max_days,
+
                 "subtotal": pricing[
                     "subtotal"
                 ],
@@ -3337,7 +3401,12 @@ def checkout_page(request):
             "cart_items": cart_items,
 
             "districts": DISTRICTS,
+
             "district_areas": DISTRICT_AREAS,
+
+            "delivery_min_days": delivery_min_days,
+
+            "delivery_max_days": delivery_max_days,
 
             "checkout_customer_data": checkout_customer_data,
 
@@ -3453,6 +3522,10 @@ def checkout_page(request):
 
             "district_areas": DISTRICT_AREAS,
 
+            "delivery_min_days": delivery_min_days,
+        
+            "delivery_max_days": delivery_max_days,
+
             "subtotal": pricing[
                 "subtotal"
             ],
@@ -3540,6 +3613,9 @@ def checkout_page(request):
         
         "district_areas": DISTRICT_AREAS,
 
+        "delivery_min_days": delivery_min_days,
+
+        "delivery_max_days": delivery_max_days,
 
         "subtotal": pricing[
             "subtotal"

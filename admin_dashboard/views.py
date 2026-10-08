@@ -4141,3 +4141,95 @@ def delete_home_slide(request, slide_id):
         )
 
     return redirect("home_management")
+
+
+def delivery_settings_page(request):
+
+    settings = OrderSettings.get_settings()
+
+    if request.method == "POST":
+
+        delivery_min_days = request.POST.get(
+            "delivery_min_days",
+            ""
+        ).strip()
+
+        delivery_max_days = request.POST.get(
+            "delivery_max_days",
+            ""
+        ).strip()
+
+        try:
+            delivery_min_days = int(
+                delivery_min_days
+            )
+
+            delivery_max_days = int(
+                delivery_max_days
+            )
+
+        except (TypeError, ValueError):
+
+            messages.error(
+                request,
+                "Please enter valid delivery days."
+            )
+
+            return redirect(
+                "delivery_settings_page"
+            )
+
+        if delivery_min_days < 1:
+
+            messages.error(
+                request,
+                "Minimum delivery days must be at least 1."
+            )
+
+            return redirect(
+                "delivery_settings_page"
+            )
+
+        if delivery_max_days < delivery_min_days:
+
+            messages.error(
+                request,
+                "Maximum delivery days cannot be less than minimum delivery days."
+            )
+
+            return redirect(
+                "delivery_settings_page"
+            )
+
+        settings.delivery_min_days = (
+            delivery_min_days
+        )
+
+        settings.delivery_max_days = (
+            delivery_max_days
+        )
+
+        settings.save()
+
+        messages.success(
+            request,
+            "Delivery settings updated successfully."
+        )
+
+        return redirect(
+            "delivery_settings_page"
+        )
+
+    context = {
+        "settings": settings,
+        "page_title": "Delivery Settings",
+    }
+
+    return render(
+        request,
+        "admin_dashboard/delivery_settings.html",
+        context
+    )
+
+
+

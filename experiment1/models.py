@@ -440,6 +440,16 @@ class Order(models.Model):
         auto_now_add=True
     )
 
+    expected_delivery_from = models.DateField(
+        null=True,
+        blank=True
+    )
+    
+    expected_delivery_to = models.DateField(
+        null=True,
+        blank=True
+    )
+
     confirmed_at = models.DateTimeField(
         null=True,
         blank=True
@@ -516,6 +526,16 @@ class OrderSettings(models.Model):
         auto_now=True
     )
 
+    delivery_min_days = models.PositiveIntegerField(
+        default=3,
+        help_text="Minimum delivery time in business days."
+    )
+
+    delivery_max_days = models.PositiveIntegerField(
+        default=5,
+        help_text="Maximum delivery time in business days."
+    )
+
     class Meta:
         verbose_name = "Order Settings"
         verbose_name_plural = "Order Settings"
@@ -528,7 +548,9 @@ class OrderSettings(models.Model):
         settings, created = cls.objects.get_or_create(
             pk=1,
             defaults={
-                "return_exchange_window_hours": 24
+                "return_exchange_window_hours": 24,
+                "delivery_min_days": 3,
+                "delivery_max_days": 5
             }
         )
 

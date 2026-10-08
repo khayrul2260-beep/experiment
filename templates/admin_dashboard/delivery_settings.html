@@ -1,0 +1,177 @@
+{% extends 'admin_dashboard/master/base.html' %}
+
+{% block title %}
+Delivery Settings
+{% endblock %}
+
+{% block page_title %}
+Delivery Settings
+{% endblock %}
+
+{% block content %}
+
+{% if messages %}
+
+    {% for message in messages %}
+
+        <div
+            id="delivery-success-message"
+            style="
+                max-width: 700px;
+                margin: 0 auto 20px auto;
+                padding: 14px 18px;
+                border-radius: 10px;
+                background: rgba(37, 99, 235, 0.12);
+                border: 1px solid rgba(37, 99, 235, 0.35);
+                color: #ffffff;
+                font-size: 14px;
+                transition: opacity 0.3s ease, transform 0.3s ease;
+            "
+        >
+            {{ message }}
+        </div>
+
+    {% endfor %}
+
+{% endif %}
+<div style="max-width: 700px; margin: 0 auto;">
+
+    <div style="
+        background: #141414;
+        border: 1px solid #242424;
+        border-radius: 18px;
+        padding: 30px;
+    ">
+
+        <h2 style="margin-bottom: 8px;">
+            Delivery Settings
+        </h2>
+
+        <p style="
+            color: #999;
+            margin-bottom: 30px;
+        ">
+            Control the expected delivery time shown to customers.
+        </p>
+
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+
+            <div style="margin-bottom: 22px;">
+
+                <label style="
+                    display: block;
+                    margin-bottom: 8px;
+                ">
+                    Minimum Delivery Days
+                </label>
+
+                <input
+                    type="number"
+                    name="delivery_min_days"
+                    value="{{ settings.delivery_min_days }}"
+                    min="1"
+                    required
+                    style="
+                        width: 100%;
+                        padding: 12px 14px;
+                        background: #0a0a0a;
+                        color: white;
+                        border: 1px solid #333;
+                        border-radius: 10px;
+                    "
+                >
+
+                <small style="color: #777;">
+                    Example: 3
+                </small>
+
+            </div>
+
+
+            <div style="margin-bottom: 28px;">
+
+                <label style="
+                    display: block;
+                    margin-bottom: 8px;
+                ">
+                    Maximum Delivery Days
+                </label>
+
+                <input
+                    type="number"
+                    name="delivery_max_days"
+                    value="{{ settings.delivery_max_days }}"
+                    min="1"
+                    required
+                    style="
+                        width: 100%;
+                        padding: 12px 14px;
+                        background: #0a0a0a;
+                        color: white;
+                        border: 1px solid #333;
+                        border-radius: 10px;
+                    "
+                >
+
+                <small style="color: #777;">
+                    Example: 5
+                </small>
+
+            </div>
+
+
+            <button
+                type="submit"
+                style="
+                    width: 100%;
+                    padding: 13px;
+                    border: 0;
+                    border-radius: 10px;
+                    background: #2563eb;
+                    color: white;
+                    font-weight: 600;
+                    cursor: pointer;
+                "
+            >
+                Save Delivery Settings
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+
+{% block js %}
+<script>
+
+    setTimeout(function () {
+
+        const message =
+            document.getElementById(
+                "delivery-success-message"
+            );
+
+        if (message) {
+
+            message.style.opacity = "0";
+            message.style.transform = "translateY(-5px)";
+
+            setTimeout(function () {
+                message.remove();
+            }, 300);
+
+        }
+
+    }, 2000);
+
+</script>
+{% endblock %}
+    
