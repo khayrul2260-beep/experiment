@@ -3680,16 +3680,16 @@ def my_orders_page(request):
 # =========================================================
 # ORDER DETAILS
 # =========================================================
+
 def order_details_page(request, order_number):
 
     if not request.user.is_authenticated:
         return redirect("customer_login")
 
     order = get_object_or_404(
-        Order.objects
-        .prefetch_related("items__product"),
+        Order.objects.prefetch_related("items__product"),
         order_number=order_number,
-        customer=request.user
+        customer=request.user,
     )
 
     tracking_steps = [
@@ -3721,41 +3721,81 @@ def order_details_page(request, order_number):
     ]
 
     if order.status != "Cancelled":
-
         current_index = next(
             (
                 index
                 for index, step in enumerate(tracking_steps)
                 if step["key"] == order.status
             ),
-            0
+            0,
         )
 
         for index, step in enumerate(tracking_steps):
-
             if index < current_index:
                 step["state"] = "completed"
-
             elif index == current_index:
                 step["state"] = "current"
-
             else:
                 step["state"] = "upcoming"
+
+    # =========================================
+    # RETURN / EXCHANGE ELIGIBILITY
+    # =========================================
+
+    latest_return_exchange_request = (
+        OrderReturnExchange.objects
+        .filter(
+            order=order,
+            customer=request.user,
+        )
+        .order_by("-created_at")
+        .first()
+    )
+
+    can_request_return_exchange = False
+
+    # Allow a request only when the order is delivered,
+    # the deadline has not passed, and no request exists.
+    if (
+        order.status == "Delivered"
+        and order.delivered_at is not None
+        and latest_return_exchange_request is None
+    ):
+        order_settings = OrderSettings.get_settings()
+
+        deadline = (
+            order.delivered_at
+            + timedelta(
+                hours=order_settings.return_exchange_window_hours
+            )
+        )
+
+        can_request_return_exchange = (
+            timezone.now() <= deadline
+        )
 
     context = {
         "order": order,
         "tracking_steps": tracking_steps,
+        "can_request_return_exchange": (
+            can_request_return_exchange
+        ),
+        "latest_return_exchange_request": (
+            latest_return_exchange_request
+        ),
     }
 
     return render(
         request,
         "customer/order_details.html",
-        context
+        context,
     )
+
 
 # =========================================================
 # RETURN / EXCHANGE REQUEST
 # =========================================================
+
 
 @require_POST
 def request_return_exchange(request, order_number):
@@ -3763,236 +3803,149 @@ def request_return_exchange(request, order_number):
     if not request.user.is_authenticated:
         return redirect("customer_login")
 
-    # -----------------------------------------------------
-    # GET CUSTOMER'S DELIVERED ORDER
-    # -----------------------------------------------------
+    # Lock the order while validating and creating the request.
+    with transaction.atomic():
 
-    order = get_object_or_404(
-        Order,
-        order_number=order_number,
-        customer=request.user,
-        status="Delivered"
-    )
-
-    # -----------------------------------------------------
-    # RETURN / EXCHANGE TIME WINDOW
-    # -----------------------------------------------------
-
-    if order.delivered_at is None:
-
-        return redirect(
-            "order_details",
-            order_number=order.order_number
+        order = get_object_or_404(
+            Order.objects.select_for_update(),
+            order_number=order_number,
+            customer=request.user,
+            status="Delivered",
         )
 
-    order_settings = OrderSettings.get_settings()
-
-    window_hours = (
-        order_settings.return_exchange_window_hours
-    )
-
-    deadline = (
-        order.delivered_at
-        + timedelta(hours=window_hours)
-    )
-
-    if timezone.now() > deadline:
-
-        return redirect(
-            "order_details",
-            order_number=order.order_number
-        )
-
-    # -----------------------------------------------------
-    # GET FORM DATA
-    # -----------------------------------------------------
-
-    order_item_id = request.POST.get(
-        "order_item_id"
-    )
-
-    request_type = request.POST.get(
-        "request_type"
-    )
-
-    new_size = request.POST.get(
-        "new_size",
-        ""
-    ).strip()
-
-    reason = request.POST.get(
-        "reason"
-    )
-
-    note = request.POST.get(
-        "note",
-        ""
-    ).strip()
-
-    # -----------------------------------------------------
-    # VALIDATE ORDER ITEM
-    # -----------------------------------------------------
-
-    order_item = get_object_or_404(
-        OrderItem,
-        id=order_item_id,
-        order=order
-    )
-
-    # =====================================================
-    # PREVENT SAME SIZE EXCHANGE
-    # =====================================================
-
-    if (
-        request_type == "Exchange"
-        and new_size == order_item.size
-    ):
-
-        return redirect(
-            "order_details",
-            order_number=order.order_number
-        )
-
-    # -----------------------------------------------------
-    # VALIDATE REQUEST TYPE
-    # -----------------------------------------------------
-
-    if request_type not in [
-        "Return",
-        "Exchange"
-    ]:
-
-        return redirect(
-            "order_details",
-            order_number=order.order_number
-        )
-
-    # =====================================================
-    # EXCHANGE SIZE VALIDATION
-    # =====================================================
-
-    valid_sizes = [
-        "M",
-        "L",
-        "XL",
-        "XXL"
-    ]
-
-    if request_type == "Exchange":
-
-        if new_size not in valid_sizes:
-
+        # Validate delivery timestamp.
+        if order.delivered_at is None:
             return redirect(
                 "order_details",
-                order_number=order.order_number
+                order_number=order.order_number,
             )
 
-    else:
+        # Validate configured request deadline.
+        order_settings = OrderSettings.get_settings()
 
-        new_size = None
-
-    # -----------------------------------------------------
-    # VALIDATE REASON
-    # -----------------------------------------------------
-
-    valid_reasons = [
-        choice[0]
-        for choice in
-        OrderReturnExchange.REASON_CHOICES
-    ]
-
-    if reason not in valid_reasons:
-
-        return redirect(
-            "order_details",
-            order_number=order.order_number
-        )
-
-    # -----------------------------------------------------
-    # GET REQUESTED QUANTITY
-    # -----------------------------------------------------
-
-    try:
-
-        requested_quantity = int(
-            request.POST.get(
-                "requested_quantity",
-                1
+        deadline = (
+            order.delivered_at
+            + timedelta(
+                hours=order_settings.return_exchange_window_hours
             )
         )
 
-    except (TypeError, ValueError):
+        if timezone.now() > deadline:
+            return redirect(
+                "order_details",
+                order_number=order.order_number,
+            )
 
-        requested_quantity = 1
+        # Validate order item ID.
+        try:
+            order_item_id = int(
+                request.POST.get("order_item_id", "")
+            )
+        except (TypeError, ValueError):
+            return redirect(
+                "order_details",
+                order_number=order.order_number,
+            )
 
-    # -----------------------------------------------------
-    # VALIDATE QUANTITY
-    # -----------------------------------------------------
-
-    if requested_quantity < 1:
-
-        requested_quantity = 1
-
-    if requested_quantity > order_item.quantity:
-
-        requested_quantity = order_item.quantity
-
-    # -----------------------------------------------------
-    # CHECK EXISTING ACTIVE REQUEST
-    # -----------------------------------------------------
-
-    existing_request = (
-        OrderReturnExchange.objects
-        .filter(
+        order_item = get_object_or_404(
+            OrderItem,
+            id=order_item_id,
             order=order,
+        )
+
+        # Validate request type.
+        request_type = request.POST.get("request_type", "")
+
+        if request_type not in ("Return", "Exchange"):
+            return redirect(
+                "order_details",
+                order_number=order.order_number,
+            )
+
+        # Validate exchange size.
+        new_size = request.POST.get("new_size", "").strip()
+
+        valid_sizes = ("M", "L", "XL", "XXL")
+
+        if request_type == "Exchange":
+            if new_size not in valid_sizes:
+                return redirect(
+                    "order_details",
+                    order_number=order.order_number,
+                )
+
+            if new_size == order_item.size:
+                return redirect(
+                    "order_details",
+                    order_number=order.order_number,
+                )
+        else:
+            new_size = None
+
+        # Validate reason.
+        reason = request.POST.get("reason", "")
+
+        valid_reasons = {
+            choice[0]
+            for choice in OrderReturnExchange.REASON_CHOICES
+        }
+
+        if reason not in valid_reasons:
+            return redirect(
+                "order_details",
+                order_number=order.order_number,
+            )
+
+        # Validate quantity strictly; do not silently change it.
+        try:
+            requested_quantity = int(
+                request.POST.get("requested_quantity", "")
+            )
+        except (TypeError, ValueError):
+            return redirect(
+                "order_details",
+                order_number=order.order_number,
+            )
+
+        if not 1 <= requested_quantity <= order_item.quantity:
+            return redirect(
+                "order_details",
+                order_number=order.order_number,
+            )
+
+        # Prevent another active request for the same order item.
+        existing_request = (
+            OrderReturnExchange.objects
+            .filter(
+                order=order,
+                order_item=order_item,
+                status__in=("Pending", "Approved"),
+            )
+            .exists()
+        )
+
+        if existing_request:
+            return redirect(
+                "order_details",
+                order_number=order.order_number,
+            )
+
+        # Create the request only after all validations pass.
+        OrderReturnExchange.objects.create(
+            order=order,
+            customer=request.user,
             order_item=order_item,
-            status__in=[
-                "Pending",
-                "Approved"
-            ]
+            request_type=request_type,
+            requested_quantity=requested_quantity,
+            new_size=new_size,
+            reason=reason,
+            note=request.POST.get("note", "").strip(),
+            status="Pending",
         )
-        .exists()
-    )
-
-    if existing_request:
-
-        return redirect(
-            "order_details",
-            order_number=order.order_number
-        )
-
-    # -----------------------------------------------------
-    # CREATE REQUEST
-    # -----------------------------------------------------
-
-    OrderReturnExchange.objects.create(
-
-        order=order,
-
-        customer=request.user,
-
-        order_item=order_item,
-
-        request_type=request_type,
-
-        requested_quantity=requested_quantity,
-
-        new_size=new_size,
-
-        reason=reason,
-
-        note=note,
-
-        status="Pending",
-    )
-
-    # -----------------------------------------------------
-    # RETURN TO ORDER DETAILS
-    # -----------------------------------------------------
 
     return redirect(
         "order_details",
-        order_number=order.order_number
+        order_number=order.order_number,
     )
 # =========================================================
 # CANCEL ORDER
