@@ -3738,31 +3738,19 @@ def order_details_page(request, order_number):
             else:
                 step["state"] = "upcoming"
 
+
     # =========================================
-    # RETURN / EXCHANGE ELIGIBILITY
+    # ITEM-WISE RETURN / EXCHANGE ELIGIBILITY
     # =========================================
 
-    latest_return_exchange_request = (
-        OrderReturnExchange.objects
-        .filter(
-            order=order,
-            customer=request.user,
-        )
-        .order_by("-created_at")
-        .first()
-    )
+    order_settings = OrderSettings.get_settings()
 
-    can_request_return_exchange = False
+    deadline_valid = False
 
-    # Allow a request only when the order is delivered,
-    # the deadline has not passed, and no request exists.
     if (
         order.status == "Delivered"
         and order.delivered_at is not None
-        and latest_return_exchange_request is None
     ):
-        order_settings = OrderSettings.get_settings()
-
         deadline = (
             order.delivered_at
             + timedelta(
@@ -3770,10 +3758,65 @@ def order_details_page(request, order_number):
             )
         )
 
-        can_request_return_exchange = (
-            timezone.now() <= deadline
+        deadline_valid = timezone.now() <= deadline
+
+    # Get all return/exchange requests for this order.
+    return_exchange_requests = list(
+        OrderReturnExchange.objects.filter(
+            order=order,
+            customer=request.user,
+        ).order_by("-created_at")
+    )
+
+    # Calculate eligibility separately for each order item.
+    for item in order.items.all():
+
+        item_requests = [
+            req
+            for req in return_exchange_requests
+            if req.order_item_id == item.id
+        ]
+
+        # Latest request for this particular product.
+        item.return_exchange_latest_request = (
+            item_requests[0] if item_requests else None
         )
 
+        # A Pending or Approved request blocks another request
+        # for this same order item.
+        has_active_request = any(
+            req.status in ("Pending", "Approved")
+            for req in item_requests
+        )
+
+        # Only Completed quantities count as already processed.
+        completed_quantity = sum(
+            req.requested_quantity
+            for req in item_requests
+            if req.status == "Completed"
+        )
+
+        item.return_exchange_remaining_quantity = max(
+            0,
+            item.quantity - completed_quantity,
+        )
+
+        item.can_request_return_exchange = (
+            deadline_valid
+            and item.return_exchange_remaining_quantity > 0
+            and not has_active_request
+        )
+
+    # Keep the existing context keys so unrelated template
+    # references do not break.
+    latest_return_exchange_request = (
+        return_exchange_requests[0]
+        if return_exchange_requests
+        else None
+    )
+
+    can_request_return_exchange = deadline_valid
+    
     context = {
         "order": order,
         "tracking_steps": tracking_steps,
@@ -3797,15 +3840,16 @@ def order_details_page(request, order_number):
 # =========================================================
 
 
+
 @require_POST
 def request_return_exchange(request, order_number):
 
     if not request.user.is_authenticated:
         return redirect("customer_login")
 
-    # Lock the order while validating and creating the request.
     with transaction.atomic():
 
+        # Verify ownership and lock the order during validation.
         order = get_object_or_404(
             Order.objects.select_for_update(),
             order_number=order_number,
@@ -3813,14 +3857,14 @@ def request_return_exchange(request, order_number):
             status="Delivered",
         )
 
-        # Validate delivery timestamp.
+        # Delivery timestamp is required.
         if order.delivered_at is None:
             return redirect(
                 "order_details",
                 order_number=order.order_number,
             )
 
-        # Validate configured request deadline.
+        # Check the configured return/exchange deadline.
         order_settings = OrderSettings.get_settings()
 
         deadline = (
@@ -3847,8 +3891,9 @@ def request_return_exchange(request, order_number):
                 order_number=order.order_number,
             )
 
+        # The selected item must belong to this order.
         order_item = get_object_or_404(
-            OrderItem,
+            OrderItem.objects.select_for_update(),
             id=order_item_id,
             order=order,
         )
@@ -3864,10 +3909,10 @@ def request_return_exchange(request, order_number):
 
         # Validate exchange size.
         new_size = request.POST.get("new_size", "").strip()
-
         valid_sizes = ("M", "L", "XL", "XXL")
 
         if request_type == "Exchange":
+
             if new_size not in valid_sizes:
                 return redirect(
                     "order_details",
@@ -3879,10 +3924,11 @@ def request_return_exchange(request, order_number):
                     "order_details",
                     order_number=order.order_number,
                 )
+
         else:
             new_size = None
 
-        # Validate reason.
+        # Validate reason against model choices.
         reason = request.POST.get("reason", "")
 
         valid_reasons = {
@@ -3896,7 +3942,7 @@ def request_return_exchange(request, order_number):
                 order_number=order.order_number,
             )
 
-        # Validate quantity strictly; do not silently change it.
+        # Quantity must be a valid positive integer.
         try:
             requested_quantity = int(
                 request.POST.get("requested_quantity", "")
@@ -3907,14 +3953,14 @@ def request_return_exchange(request, order_number):
                 order_number=order.order_number,
             )
 
-        if not 1 <= requested_quantity <= order_item.quantity:
+        if requested_quantity < 1:
             return redirect(
                 "order_details",
                 order_number=order.order_number,
             )
 
-        # Prevent another active request for the same order item.
-        existing_request = (
+        # Block another request while one is pending or approved.
+        has_active_request = (
             OrderReturnExchange.objects
             .filter(
                 order=order,
@@ -3924,7 +3970,35 @@ def request_return_exchange(request, order_number):
             .exists()
         )
 
-        if existing_request:
+        if has_active_request:
+            return redirect(
+                "order_details",
+                order_number=order.order_number,
+            )
+
+        # Count quantities already completed for this order item.
+        completed_quantity = (
+            OrderReturnExchange.objects
+            .filter(
+                order=order,
+                order_item=order_item,
+                status="Completed",
+            )
+            .aggregate(
+                total=Sum("requested_quantity")
+            )["total"]
+            or 0
+        )
+
+        remaining_quantity = (
+            order_item.quantity - completed_quantity
+        )
+
+        # Never allow a request beyond the remaining quantity.
+        if (
+            remaining_quantity < 1
+            or requested_quantity > remaining_quantity
+        ):
             return redirect(
                 "order_details",
                 order_number=order.order_number,
@@ -3947,6 +4021,7 @@ def request_return_exchange(request, order_number):
         "order_details",
         order_number=order.order_number,
     )
+
 # =========================================================
 # CANCEL ORDER
 # =========================================================

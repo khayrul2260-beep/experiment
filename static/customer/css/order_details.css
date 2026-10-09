@@ -405,7 +405,7 @@
 
     letter-spacing: 1px;
 
-    color: #666666;
+    color: #757474;
 }
 
 
@@ -1609,9 +1609,12 @@
 ========================================================= */
 
 .return-exchange-btn {
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    background: #ffffff;
+    padding: 10px;
+    border: 1px solid rgba(160, 160, 160, 0.295);
+    background: #a5a5a5ab;
     color: #050505;
+    width: 100%;
+    max-width: 200px;
 
     transition:
         background-color 0.7s ease,
@@ -1620,10 +1623,15 @@
         transform 0.3s ease;
 }
 
+
+.return-exchange-btn span {
+    color: black;
+}
+
 .return-exchange-btn:hover {
-    background: #4d8dff;
+    background: #810101;
     color: #ffffff;
-    border-color: #4d8dff;
+    border-color: #810101;
 }
 
 
@@ -2052,8 +2060,8 @@
     gap: 18px;
 
     width: 100%;
-
-    padding: 20px 22px;
+    max-width: 200px;
+    padding: 10px 11px;
 
     border: 1px solid rgba(255, 255, 255, 0.10);
     border-radius: 12px;

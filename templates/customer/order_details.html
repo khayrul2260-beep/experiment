@@ -313,6 +313,33 @@
                                     {{ item.quantity }}
                                 </span>
 
+                                {% if item.return_exchange_latest_request %}
+                                    <div class="return-exchange-status-card">
+                                        <span>
+                                            {{ item.return_exchange_latest_request.request_type }}
+                                            — {{ item.return_exchange_latest_request.status|upper }}
+                                        </span>
+                                    </div>
+                                {% endif %}
+
+                                {% if item.can_request_return_exchange %}
+                                    <button
+                                        type="button"
+                                        class="order-details-btn return-exchange-btn js-item-return-exchange"
+                                        data-item-id="{{ item.id }}"
+                                        data-remaining="{{ item.return_exchange_remaining_quantity }}"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#returnExchangeModal"
+                                    >
+                                        <span>RETURN / EXCHANGE</span>
+                                        <i class="bi bi-arrow-repeat"></i>
+                                    </button>
+
+                                    <small class="return-exchange-remaining">
+                                        Remaining quantity: {{ item.return_exchange_remaining_quantity }}
+                                    </small>
+                                {% endif %}
+
                             </div>
 
 
@@ -653,61 +680,7 @@
                         </button>
                     
                     {% endif %}
-{% if order.status == "Delivered" %}
 
-    {% if latest_return_exchange_request %}
-
-        <div class="return-exchange-status-card">
-
-            <div class="return-exchange-status-icon">
-                <i class="bi bi-arrow-repeat"></i>
-            </div>
-
-            <div class="return-exchange-status-content">
-
-                <span>
-                    RETURN / EXCHANGE REQUEST
-                </span>
-
-                <h3>
-                    {{ latest_return_exchange_request.request_type }}
-                    Request
-                </h3>
-
-                <p>
-                    Current status ·
-                    <strong>
-                        {{ latest_return_exchange_request.status|upper }}
-                    </strong>
-                </p>
-
-            </div>
-
-        </div>
-
-    {% endif %}
-
-
-    {% if can_request_return_exchange %}
-
-        <button
-            type="button"
-            class="order-details-btn return-exchange-btn"
-            data-bs-toggle="modal"
-            data-bs-target="#returnExchangeModal"
-        >
-            <span>
-                RETURN / EXCHANGE
-            </span>
-
-            <i class="bi bi-arrow-repeat"></i>
-
-        </button>
-
-    {% endif %}
-
-{% endif %} 
-                    
                     <a
                         href="{% url 'my_orders' %}"
                         class="order-details-btn secondary"
@@ -917,19 +890,54 @@
                             </option>
 
                             {% for item in order.items.all %}
-
-                                <option value="{{ item.id }}">
-                                    {{ item.product_name }}
-                                    — {{ item.size }}
-                                    — Qty {{ item.quantity }}
-                                </option>
-
+                                {% if item.can_request_return_exchange %}
+                                    <option
+                                        value="{{ item.id }}"
+                                        data-remaining="{{ item.return_exchange_remaining_quantity }}"
+                                    >
+                                        {{ item.product_name }}
+                                        — {{ item.size }}
+                                        — Remaining {{ item.return_exchange_remaining_quantity }}
+                                    </option>
+                                {% endif %}
                             {% endfor %}
 
                         </select>
 
                     </div>
+<!-- EXCHANGE SIZE DATA -->
 
+<div
+    id="exchangeSizeData"
+    style="display: none;"
+>
+
+    {% for item in order.items.all %}
+
+        <div
+            class="exchange-size-product"
+            data-item-id="{{ item.id }}"
+        >
+
+            {% if item.product %}
+
+                {% for size in item.product.sizes.all %}
+
+                    <span
+                        data-size="{{ size.size }}"
+                        data-stock="{{ size.stock }}"
+                        data-available="{% if size.is_available %}true{% else %}false{% endif %}"
+                    ></span>
+
+                {% endfor %}
+
+            {% endif %}
+
+        </div>
+
+    {% endfor %}
+
+</div>
 
                     <!-- REQUEST TYPE -->
                     <div class="nafi-return-field">
@@ -988,6 +996,7 @@
                             name="requested_quantity"
                             value="1"
                             min="1"
+                            max="1"
                             required
                         >
 
@@ -999,7 +1008,7 @@
                         class="nafi-return-field"
                         id="newSizeField"
                         style="display: none;"
-                    >
+                     >
 
                         <label for="newSize">
                             NEW SIZE
@@ -1028,7 +1037,6 @@
                             <option value="XXL">
                                 XXL
                             </option>
-                        
                         </select>
                     
                     </div>
@@ -1140,11 +1148,18 @@
 
 {% block extra_js %}
 <script>
-
 document.addEventListener("DOMContentLoaded", function () {
 
     const exchangeOptions = document.querySelectorAll(
         'input[name="request_type"]'
+    );
+
+    const itemReturnButtons = document.querySelectorAll(
+        ".js-item-return-exchange"
+    );
+
+    const orderItemSelect = document.getElementById(
+        "returnOrderItem"
     );
 
     const newSizeField = document.getElementById(
@@ -1155,35 +1170,280 @@ document.addEventListener("DOMContentLoaded", function () {
         "newSize"
     );
 
-    if (!exchangeOptions.length || !newSizeField) {
+    const quantityInput = document.getElementById(
+        "returnQuantity"
+    );
+
+    const exchangeSizeData = document.getElementById(
+        "exchangeSizeData"
+    );
+
+
+    if (
+        !exchangeOptions.length ||
+        !orderItemSelect ||
+        !newSizeField ||
+        !newSizeSelect ||
+        !quantityInput ||
+        !exchangeSizeData
+    ) {
         return;
     }
 
-    exchangeOptions.forEach(function (option) {
 
-        option.addEventListener("change", function () {
+    function updateReturnQuantityLimit() {
 
-            if (this.value === "Exchange") {
+        const selectedOption = orderItemSelect.selectedOptions[0];
 
-                newSizeField.style.display = "block";
+        const remaining = selectedOption
+            ? parseInt(selectedOption.dataset.remaining, 10) || 0
+            : 0;
 
-                newSizeSelect.required = true;
+        quantityInput.max = String(Math.max(remaining, 1));
 
-            } else {
+        let quantity = parseInt(quantityInput.value, 10) || 1;
 
-                newSizeField.style.display = "none";
+        if (quantity < 1) {
+            quantity = 1;
+        }
 
-                newSizeSelect.required = false;
-                newSizeSelect.value = "";
+        if (remaining > 0 && quantity > remaining) {
+            quantity = remaining;
+        }
 
+        quantityInput.value = String(quantity);
+    }
+
+
+    itemReturnButtons.forEach(function (button) {
+
+        button.addEventListener("click", function () {
+
+            orderItemSelect.value = this.dataset.itemId;
+            quantityInput.value = "1";
+
+            updateReturnQuantityLimit();
+
+            const exchangeSelected = document.querySelector(
+                'input[name="request_type"][value="Exchange"]:checked'
+            );
+
+            if (exchangeSelected) {
+                updateExchangeSizes();
             }
 
         });
 
     });
 
-});
 
+    function updateExchangeSizes() {
+
+        const selectedItemId =
+            orderItemSelect.value;
+
+        const requestedQuantity =
+            parseInt(
+                quantityInput.value,
+                10
+            ) || 1;
+
+
+        const sizeOptions =
+            newSizeSelect.querySelectorAll(
+                "option"
+            );
+
+
+        sizeOptions.forEach(function (option) {
+
+            if (!option.value) {
+                return;
+            }
+
+            option.disabled = true;
+
+            option.textContent =
+                option.value;
+
+        });
+
+
+        if (!selectedItemId) {
+            return;
+        }
+
+
+        const productData =
+            exchangeSizeData.querySelector(
+                '[data-item-id="' +
+                selectedItemId +
+                '"]'
+            );
+
+
+        if (!productData) {
+            return;
+        }
+
+
+        const availableSizes =
+            productData.querySelectorAll(
+                "[data-size]"
+            );
+
+
+        availableSizes.forEach(function (sizeData) {
+
+            const size =
+                sizeData.dataset.size;
+
+            const stock =
+                parseInt(
+                    sizeData.dataset.stock,
+                    10
+                ) || 0;
+
+            const available =
+                sizeData.dataset.available === "true";
+
+
+            const option =
+                newSizeSelect.querySelector(
+                    'option[value="' +
+                    size +
+                    '"]'
+                );
+
+
+            if (!option) {
+                return;
+            }
+
+
+            if (
+                available &&
+                stock >= requestedQuantity
+            ) {
+
+                option.disabled = false;
+
+                option.textContent =
+                    size;
+
+            } else {
+
+                option.disabled = true;
+
+                option.textContent =
+                    size + " — Unavailable";
+
+            }
+
+        });
+
+
+        if (
+            newSizeSelect.value &&
+            newSizeSelect.selectedOptions[0] &&
+            newSizeSelect.selectedOptions[0].disabled
+        ) {
+
+            newSizeSelect.value = "";
+
+        }
+
+    }
+
+
+    exchangeOptions.forEach(function (option) {
+
+        option.addEventListener(
+            "change",
+            function () {
+
+                if (this.value === "Exchange") {
+
+                    newSizeField.style.display =
+                        "block";
+
+                    newSizeSelect.required =
+                        true;
+
+                    updateExchangeSizes();
+
+                } else {
+
+                    newSizeField.style.display =
+                        "none";
+
+                    newSizeSelect.required =
+                        false;
+
+                    newSizeSelect.value = "";
+
+                }
+
+            }
+        );
+
+    });
+
+
+    orderItemSelect.addEventListener(
+        "change",
+        function () {
+
+            updateReturnQuantityLimit();
+
+            const exchangeSelected =
+                document.querySelector(
+                    'input[name="request_type"][value="Exchange"]:checked'
+                );
+
+            if (exchangeSelected) {
+                updateExchangeSizes();
+            }
+
+        }
+    );
+
+
+    quantityInput.addEventListener(
+        "input",
+        function () {
+
+            const selectedOption = orderItemSelect.selectedOptions[0];
+            const remaining = selectedOption
+                ? parseInt(selectedOption.dataset.remaining, 10) || 0
+                : 0;
+            let quantity = parseInt(quantityInput.value, 10) || 1;
+
+            if (quantity < 1) {
+                quantity = 1;
+            }
+
+            if (remaining > 0 && quantity > remaining) {
+                quantity = remaining;
+            }
+
+            quantityInput.value = String(quantity);
+
+            const exchangeSelected =
+                document.querySelector(
+                    'input[name="request_type"][value="Exchange"]:checked'
+                );
+
+            if (exchangeSelected) {
+                updateExchangeSizes();
+            }
+
+        }
+    );
+
+    updateReturnQuantityLimit();
+
+});
 </script>
 {% endblock %}
 
