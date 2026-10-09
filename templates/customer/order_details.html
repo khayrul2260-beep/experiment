@@ -653,55 +653,60 @@
                         </button>
                     
                     {% endif %}
-
 {% if order.status == "Delivered" %}
 
-    {% with return_request=order.return_exchange_requests.first %}
+    {% if latest_return_exchange_request %}
 
-        {% if return_request %}
+        <div class="return-exchange-status-card">
 
-            <div class="return-exchange-status-card">
+            <div class="return-exchange-status-icon">
+                <i class="bi bi-arrow-repeat"></i>
+            </div>
 
-                <div class="return-exchange-status-icon">
-                    <i class="bi bi-arrow-repeat"></i>
-                </div>
+            <div class="return-exchange-status-content">
 
-                <div class="return-exchange-status-content">
+                <span>
+                    RETURN / EXCHANGE REQUEST
+                </span>
 
-                    <span>RETURN / EXCHANGE REQUEST</span>
+                <h3>
+                    {{ latest_return_exchange_request.request_type }}
+                    Request
+                </h3>
 
-                    <h3>
-                        {{ return_request.request_type }}
-                        Request Submitted
-                    </h3>
-
-                    <p>
-                        Current status ·
-                        <strong>{{ return_request.status|upper }}</strong>
-                    </p>
-
-                </div>
+                <p>
+                    Current status ·
+                    <strong>
+                        {{ latest_return_exchange_request.status|upper }}
+                    </strong>
+                </p>
 
             </div>
 
-        {% else %}
+        </div>
 
-            <button
-                type="button"
-                class="order-details-btn return-exchange-btn"
-                data-bs-toggle="modal"
-                data-bs-target="#returnExchangeModal"
-            >
-                <span>RETURN / EXCHANGE</span>
-                <i class="bi bi-arrow-repeat"></i>
-            </button>
+    {% endif %}
 
-        {% endif %}
 
-    {% endwith %}
+    {% if can_request_return_exchange %}
 
-{% endif %}
-                    
+        <button
+            type="button"
+            class="order-details-btn return-exchange-btn"
+            data-bs-toggle="modal"
+            data-bs-target="#returnExchangeModal"
+        >
+            <span>
+                RETURN / EXCHANGE
+            </span>
+
+            <i class="bi bi-arrow-repeat"></i>
+
+        </button>
+
+    {% endif %}
+
+{% endif %} 
                     
                     <a
                         href="{% url 'my_orders' %}"

@@ -9,28 +9,6 @@
 
 
 /* =========================================================
-   PAGE HEADER
-   ========================================================= */
-
-.new-arrivals-page .new-arrivals-header {
-    position: relative;
-    min-height: 65px;
-    margin-bottom: 30px;
-}
-
-
-/* Keep the title perfectly centered */
-.new-arrivals-page .new_arrivals {
-    position: absolute;
-    left: 50%;
-    top: 0;
-    transform: translateX(-50%);
-    text-align: center;
-    width: max-content;
-}
-
-
-/* =========================================================
    RESPONSIVE HEADER
    ========================================================= */
 

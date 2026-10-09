@@ -6,7 +6,7 @@
 
     width: 100%;
 
-    padding: 70px 15px;
+    padding: 0px 15px 70px;
 
     background-color: var(--background-color);
 
@@ -775,7 +775,7 @@
 
     .nafi-new-arrivals {
 
-        padding: 30px 8px;
+        padding: 0px 8px 30px;
 
     }
 

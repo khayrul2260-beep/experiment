@@ -106,7 +106,7 @@
                 
                     <button
                         type="button"
-                        class="nav-link_ dropdown-trigger {% if request.resolver_match.url_name == 'category_products' %}active{% endif %}"
+                        class="nav-link_ dropdown-trigger {% if request.resolver_match.url_name == 'category_products' %}active{% endif %} or {% if request.resolver_match.url_name == 'all_products_page' %}active{% endif %}"
                         aria-expanded="false"
                     >
                 
@@ -118,7 +118,7 @@
                 
                 
                     <div class="nafi-dropdown">
-                        <a href="#" class="dropdown-item">
+                        <a href="/shop/" class="dropdown-item">
                             All Products
                         </a>                    
                         {% for category in navbar_categories %}

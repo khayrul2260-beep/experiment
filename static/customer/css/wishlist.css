@@ -16,45 +16,6 @@
 
 
 /* =========================================================
-   HEADER
-========================================================= */
-
-.wishlist-header {
-    margin-bottom: 20px;
-}
-
-.wishlist-eyebrow {
-    display: block;
-    margin-bottom: 14px;
-
-    color: #66666a;
-
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: 0.22em;
-}
-
-.wishlist-header h1 {
-    margin: 0;
-
-    color: #f5f5f3;
-    font-family: "Oswald", sans-serif;
-    font-size: clamp(32px, 4vw, 64px);
-    font-weight: 700;
-    letter-spacing: 2px;
-}
-
-.wishlist-header p {
-    margin: 14px 0 0;
-
-    color: #77777c;
-
-    font-size: 13px;
-    line-height: 1.7;
-}
-
-
-/* =========================================================
    GRID
 ========================================================= */
 

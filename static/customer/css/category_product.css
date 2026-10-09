@@ -5,7 +5,7 @@
 .nafi-category-page {
     width: 100%;
 
-    padding: 70px 30px;
+    padding: 0px 30px 70px;
 
     background-color: var(--background-color);
 }
@@ -407,7 +407,7 @@
 @media (max-width: 767px) {
 
     .nafi-category-page {
-        padding: 30px 8px;
+        padding: 0px 8px 30px;
     }
 
 

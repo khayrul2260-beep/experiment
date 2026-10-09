@@ -54,16 +54,18 @@
 
 {% block content %}
 
+<!-- =====================================================
+     HEADER - it's css in customer base.css
+====================================================== -->
+<div class="all-pages-header">
+    <span class="all-pages-eyebrow">
+        NAFI COLLECTION
+    </span>
+    <h1>
+        ALL PRODUCTS
+    </h1>
+</div>
 <section class="nafi-new-arrivals all-products-page">
-
-    <!-- Page Header -->
-    <div class="all-header">
-        <div class="all-products" style="position: absolute; left: 100px; font-family: 'Oswald', sans-serif; font-size: clamp(32px, 4vw, 64px); text-transform: uppercase;">
-            <h2>All Products</h2>
-            <p>Explore our complete collection.</p>
-        </div>
-    </div>
-
 
     {% if all_products %}
 

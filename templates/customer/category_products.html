@@ -12,51 +12,24 @@
 
 {% block content %}
 
+<!-- =====================================================
+     HEADER - it's css in customer base.css
+====================================================== -->
+<div class="all-pages-header">
+    <span class="all-pages-eyebrow">
+        NAFI COLLECTION
+    </span>
+    <h1>
+        {{ category.name }}
+    </h1>
+    {% if category.description %}
+        <p>
+            {{ category.description }}
+        </p>
+    {% endif %}
+</div>
+
 <section class="nafi-category-page">
-
-
-    <!-- =====================================================
-         CATEGORY HEADER
-    ====================================================== -->
-
-    <div class="category-page-header">
-
-        <div class="category-page-title">
-
-            <span>
-                NAFI COLLECTION
-            </span>
-
-            <h1>
-                {{ category.name }}
-            </h1>
-
-            {% if category.description %}
-
-                <p>
-                    {{ category.description }}
-                </p>
-
-            {% endif %}
-
-        </div>
-
-
-        <div class="category-product-count">
-
-            <span>
-                {{ products|length }}
-            </span>
-
-            <small>
-                PRODUCTS
-            </small>
-
-        </div>
-
-    </div>
-
-
 
     <!-- =====================================================
          CATEGORY PRODUCTS
