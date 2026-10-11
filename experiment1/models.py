@@ -673,6 +673,26 @@ class OrderReturnExchange(models.Model):
         blank=True,
         null=True
     )
+
+    # Exchange price snapshots
+    original_unit_price = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0
+    )
+
+    replacement_unit_price = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0
+    )
+
+    price_difference = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0
+    )
+
     reason = models.CharField(
         max_length=80,
         choices=REASON_CHOICES

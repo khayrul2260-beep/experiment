@@ -949,6 +949,69 @@ Order Details
 
                         {% endif %}
 
+
+{% if request.request_type == "Exchange" and request.status == "Completed" %}
+
+    {% if request.original_unit_price > 0 or request.replacement_unit_price > 0 %}
+
+        <div class="exchange-price-breakdown">
+
+            <div class="exchange-price-heading">
+                <i class="bi bi-receipt"></i>
+                <span>EXCHANGE PRICE BREAKDOWN</span>
+            </div>
+
+            <div class="exchange-price-row">
+                <span>Original Unit Price</span>
+                <strong>
+                    ৳{{ request.original_unit_price|floatformat:2 }}
+                </strong>
+            </div>
+
+            <div class="exchange-price-row">
+                <span>Replacement Unit Price</span>
+                <strong>
+                    ৳{{ request.replacement_unit_price|floatformat:2 }}
+                </strong>
+            </div>
+
+            <div class="exchange-price-row">
+                <span>Exchange Quantity</span>
+                <strong>
+                    {{ request.requested_quantity }}
+                </strong>
+            </div>
+
+            <div class="exchange-price-row exchange-price-total">
+                <span>
+                    {% if request.price_difference > 0 %}
+                        Additional Amount
+                    {% elif request.price_difference < 0 %}
+                        Price Reduction
+                    {% else %}
+                        Price Difference
+                    {% endif %}
+                </span>
+
+                <strong>
+                    ৳{{ request.price_difference|floatformat:2 }}
+                </strong>
+            </div>
+
+            <small class="exchange-price-note">
+                Price difference is calculated from the unit-price
+                difference multiplied by the exchange quantity.
+                It does not indicate that payment or refund has been completed.
+            </small>
+
+        </div>
+
+    {% endif %}
+
+{% endif %}
+
+
+
 <div class="return-exchange-actions">
 
     {% if request.status == "Pending" %}
@@ -985,22 +1048,52 @@ Order Details
         </form>
 
 
-    {% elif request.status == "Approved" %}
+{% elif request.status == "Approved" %}
 
-        <form
-            method="POST"
-            action="{% url 'complete_return_exchange' request.id %}"
-        >
-            {% csrf_token %}
+    <form
+        method="POST"
+        action="{% url 'complete_return_exchange' request.id %}"
+        class="return-completion-form"
+    >
+        {% csrf_token %}
 
-            <button
-                type="submit"
-                class="admin-action-btn complete"
+        <div class="return-item-condition">
+
+            <label for="returned-condition-{{ request.id }}">
+                Returned Product Condition
+            </label>
+
+            <select
+                name="returned_item_condition"
+                id="returned-condition-{{ request.id }}"
+                required
             >
-                <i class="bi bi-check2-circle"></i>
-                MARK COMPLETED
-            </button>
-        </form>
+                <option value="" selected disabled>
+                    Select product condition
+                </option>
+
+                <option value="sellable">
+                    Sellable — Add returned size to stock
+                </option>
+
+                <option value="not_sellable">
+                    Not sellable — Do not add returned size to stock
+                </option>
+            </select>
+
+        </div>
+
+        <button
+            type="submit"
+            class="admin-action-btn complete"
+        >
+            <i class="bi bi-check2-circle"></i>
+            MARK COMPLETED
+        </button>
+
+    </form>
+
+
 
 
     {% elif request.status == "Rejected" %}

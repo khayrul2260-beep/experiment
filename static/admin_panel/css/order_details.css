@@ -2271,3 +2271,272 @@
     }
 
 }
+
+
+
+
+/* ==========================================
+   NAFI — EXCHANGE PRICE BREAKDOWN
+========================================== */
+
+.exchange-price-breakdown {
+    width: 100%;
+    box-sizing: border-box;
+    margin: 20px 0;
+    padding: 20px;
+    background: #141414;
+    border: 1px solid rgba(77, 141, 255, 0.22);
+    border-radius: 12px;
+    color: #f5f5f5;
+}
+
+/* Heading */
+
+.exchange-price-heading {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 16px;
+    padding: 0 0 14px;
+    border-bottom: 1px solid #292929;
+    color: #4d8dff;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    line-height: 1.5;
+}
+
+.exchange-price-heading i {
+    flex-shrink: 0;
+    font-size: 17px;
+}
+
+/* Price rows */
+
+.exchange-price-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 12px 0;
+    border-bottom: 1px solid #252525;
+}
+
+.exchange-price-row span {
+    min-width: 0;
+    color: #a7a7a7;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.6;
+}
+
+.exchange-price-row strong {
+    flex-shrink: 0;
+    color: #f5f5f5;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.6;
+    text-align: right;
+    overflow-wrap: anywhere;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Price difference row */
+
+.exchange-price-row.exchange-price-total {
+    margin-top: 12px;
+    padding: 15px;
+    background: rgba(77, 141, 255, 0.08);
+    border: 1px solid rgba(77, 141, 255, 0.2);
+    border-radius: 8px;
+}
+
+.exchange-price-total span {
+    color: #d5e4ff;
+    font-weight: 600;
+}
+
+.exchange-price-total strong {
+    color: #78aaff;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+/* Explanation note */
+
+.exchange-price-note {
+    display: block;
+    margin-top: 14px;
+    color: #858585;
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 1.8;
+}
+
+/* Mobile responsive */
+
+@media (max-width: 576px) {
+    .exchange-price-breakdown {
+        margin: 16px 0;
+        padding: 15px;
+        border-radius: 10px;
+    }
+
+    .exchange-price-heading {
+        gap: 8px;
+        margin-bottom: 12px;
+        padding-bottom: 12px;
+        font-size: 11px;
+        letter-spacing: 0.7px;
+    }
+
+    .exchange-price-row {
+        gap: 10px;
+        padding: 11px 0;
+    }
+
+    .exchange-price-row span {
+        font-size: 12px;
+    }
+
+    .exchange-price-row strong {
+        font-size: 12px;
+    }
+
+    .exchange-price-row.exchange-price-total {
+        padding: 12px 10px;
+    }
+
+    .exchange-price-total strong {
+        font-size: 14px;
+    }
+
+    .exchange-price-note {
+        font-size: 10px;
+        line-height: 1.7;
+    }
+}
+
+
+
+/* ==========================================
+   NAFI — RETURNED PRODUCT CONDITION SELECT
+========================================== */
+
+.return-completion-form {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+    width: 100%;
+}
+
+.return-item-condition {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    width: 100%;
+}
+
+.return-item-condition label {
+    color: #e5e7eb;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.6;
+    letter-spacing: 0.2px;
+}
+
+.return-item-condition select {
+    display: block;
+    width: 100%;
+    min-height: 48px;
+    padding: 12px 42px 12px 14px;
+
+    appearance: none;
+    -webkit-appearance: none;
+
+    background-color: #15171c;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%234d8dff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 16px;
+
+    border: 1px solid #343943;
+    border-radius: 8px;
+    outline: none;
+
+    color: #f3f4f6;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.6;
+
+    cursor: pointer;
+    transition:
+        border-color 0.2s ease,
+        background-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+/* Placeholder option */
+
+.return-item-condition select:invalid {
+    color: #858b98;
+}
+
+/* Dropdown options */
+
+.return-item-condition select option {
+    background-color: #15171c;
+    color: #f3f4f6;
+    padding: 12px;
+}
+
+.return-item-condition select option:disabled {
+    color: #858b98;
+}
+
+/* Hover */
+
+.return-item-condition select:hover {
+    border-color: #4b5565;
+    background-color: #191c22;
+}
+
+/* Focus */
+
+.return-item-condition select:focus {
+    border-color: #4d8dff;
+    box-shadow: 0 0 0 3px rgba(77, 141, 255, 0.12);
+}
+
+/* Completion button spacing */
+
+.return-completion-form .admin-action-btn.complete {
+    align-self: flex-start;
+    margin-top: 2px;
+}
+
+/* Mobile */
+
+@media (max-width: 576px) {
+    .return-completion-form {
+        gap: 14px;
+    }
+
+    .return-item-condition label {
+        font-size: 11px;
+    }
+
+    .return-item-condition select {
+        min-height: 46px;
+        padding: 11px 38px 11px 12px;
+        font-size: 11px;
+    }
+
+    .return-completion-form .admin-action-btn.complete {
+        align-self: stretch;
+        justify-content: center;
+    }
+}
+
