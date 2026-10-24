@@ -74,3 +74,32 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+
+# =========================
+# NAFI Django Project
+# =========================
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Local databases and backups
+*.sqlite3
+*.sqlite3-journal
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Editor settings
+.vscode/
+
+# Local Python files
+.pytest_cache/
+.mypy_cache/

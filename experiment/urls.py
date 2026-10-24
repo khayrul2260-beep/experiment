@@ -19,10 +19,12 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('experiment1.urls')),
     path('admin_dashboard/', include('admin_dashboard.urls')),
+    path('auth/', include('social_django.urls', namespace='social')),
     path('account/', include('account.urls')),
 ]
 

@@ -48,13 +48,14 @@ INSTALLED_APPS = [
 
     'cloudinary_storage',
     'cloudinary',
-    
+
     'experiment1',
     'admin_dashboard',
+
     'account',
-
+    # Social Authentication
+    'social_django',
 ]
-
 
 AUTH_USER_MODEL = "account.User"
 
@@ -161,9 +162,45 @@ STORAGES = {
 
 AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
+    "social_core.backends.google.GoogleOAuth2",
 ]
+
+# Google OAuth Configuration
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = config("GOOGLE_OAUTH2_KEY")
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = config("GOOGLE_OAUTH2_SECRET")
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
+    "email",
+    "profile",
+]
+
+# Social Authentication Pipeline
+SOCIAL_AUTH_PIPELINE = (
+    "social_core.pipeline.social_auth.social_details",
+    "social_core.pipeline.social_auth.social_uid",
+    "social_core.pipeline.social_auth.auth_allowed",
+    "social_core.pipeline.social_auth.social_user",
+
+    # Match an existing NAFI account using verified Google email.
+    "account.social_pipeline.associate_verified_google_email",
+
+    "social_core.pipeline.user.get_username",
+    "social_core.pipeline.user.create_user",
+    "social_core.pipeline.social_auth.associate_user",
+    "social_core.pipeline.social_auth.load_extra_data",
+    "social_core.pipeline.user.user_details",
+
+    # Preserve guest cart merging.
+    "account.social_pipeline.merge_google_guest_cart",
+)
+
 CSRF_TRUSTED_ORIGINS = [
     "https://nafi-libas.vercel.app",
 ]
 
+LOGIN_URL = "/account/login/"
+LOGIN_REDIRECT_URL = "/account/profile/"
+
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = "/account/profile/"
+SOCIAL_AUTH_LOGIN_ERROR_URL = "/account/login/"
 

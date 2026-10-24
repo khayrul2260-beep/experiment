@@ -1,20 +1,14 @@
+
 {% extends "customer/master/base.html" %}
 {% load static %}
-
 
 {% block title %}
     Create Account | NAFI
 {% endblock %}
 
-
 {% block extra_css %}
-
-<link rel="stylesheet"
-      href="{% static 'account/css/register.css' %}">
-
+<link rel="stylesheet" href="{% static 'account/css/register.css' %}">
 {% endblock %}
-
-
 
 {% block content %}
 
@@ -30,29 +24,19 @@
             Join NAFI and start shopping
         </p>
 
-
-        <form method="POST"
-              class="register-form">
+        <form method="POST" class="register-form">
 
             {% csrf_token %}
 
-
             {% if form.non_field_errors %}
-
                 {% for error in form.non_field_errors %}
-
                     <p class="register-error">
                         {{ error }}
                     </p>
-
                 {% endfor %}
-
             {% endif %}
 
-
-
             <!-- Full Name -->
-
             <div class="form-group">
 
                 <label for="{{ form.full_name.id_for_label }}">
@@ -62,39 +46,14 @@
                 {{ form.full_name }}
 
                 {% for error in form.full_name.errors %}
-
                     <p class="register-error">
                         {{ error }}
                     </p>
-
                 {% endfor %}
 
             </div>
-
-                    
-            <!-- Phone Number -->
-                    
-            <div class="form-group">
-            
-                <label for="{{ form.username.id_for_label }}">
-                    Phone Number
-                </label>
-            
-                {{ form.username }}
-            
-                {% for error in form.username.errors %}
-            
-                    <p class="register-error">
-                        {{ error }}
-                    </p>
-                
-                {% endfor %}
-                
-            </div>
-
 
             <!-- Email -->
-
             <div class="form-group">
 
                 <label for="{{ form.email.id_for_label }}">
@@ -104,91 +63,115 @@
                 {{ form.email }}
 
                 {% for error in form.email.errors %}
-
                     <p class="register-error">
                         {{ error }}
                     </p>
-
                 {% endfor %}
 
             </div>
 
+            <!-- Phone Number -->
+            <div class="form-group">
 
+                <label for="{{ form.phone.id_for_label }}">
+                    Phone Number (Optional)
+                </label>
 
+                {{ form.phone }}
 
+                {% for error in form.phone.errors %}
+                    <p class="register-error">
+                        {{ error }}
+                    </p>
+                {% endfor %}
+
+            </div>
 
             <!-- Password -->
-
             <div class="form-group password-field">
-            
+
                 <label for="{{ form.password.id_for_label }}">
                     Password
                 </label>
-            
+
                 <div class="password-input-wrapper">
-                
+
                     {{ form.password }}
-                
+
                     <button
                         type="button"
                         class="toggle-password"
                         data-target="{{ form.password.id_for_label }}"
                         aria-label="Show password"
+                        aria-pressed="false"
                     >
                         👁
                     </button>
-                
+
                 </div>
-            
+
                 {% for error in form.password.errors %}
-                    <p class="field-error">{{ error }}</p>
+                    <p class="field-error">
+                        {{ error }}
+                    </p>
                 {% endfor %}
-            
+
             </div>
 
-
-
             <!-- Confirm Password -->
+            <div class="form-group password-field">
 
- <div class="form-group password-field">
+                <label for="{{ form.confirm_password.id_for_label }}">
+                    Confirm Password
+                </label>
 
-    <label for="{{ form.confirm_password.id_for_label }}">
-        Confirm Password
-    </label>
+                <div class="password-input-wrapper">
 
-    <div class="password-input-wrapper">
+                    {{ form.confirm_password }}
 
-        {{ form.confirm_password }}
+                    <button
+                        type="button"
+                        class="toggle-password"
+                        data-target="{{ form.confirm_password.id_for_label }}"
+                        aria-label="Show password"
+                        aria-pressed="false"
+                    >
+                        👁
+                    </button>
 
-        <button
-            type="button"
-            class="toggle-password"
-            data-target="{{ form.confirm_password.id_for_label }}"
-            aria-label="Show password"
-        >
-            👁
-        </button>
+                </div>
 
-    </div>
+                {% for error in form.confirm_password.errors %}
+                    <p class="field-error">
+                        {{ error }}
+                    </p>
+                {% endfor %}
 
-    {% for error in form.confirm_password.errors %}
-        <p class="field-error">{{ error }}</p>
-    {% endfor %}
+            </div>
 
-</div>
-
-
-
-            <button type="submit"
-                    class="register-button">
-
+            <!-- Submit -->
+            <button type="submit" class="register-button">
                 Create Account
-
             </button>
 
         </form>
 
+        <!-- Google Registration -->
+        <div class="register-google">
 
+            <p class="register-divider">
+                OR
+            </p>
+
+            <form method="POST" action="{% url 'social:begin' 'google-oauth2' %}">
+                {% csrf_token %}
+
+                <button type="submit" class="register-google-button">
+                    Continue with Google
+                </button>
+            </form>
+
+        </div>
 
         <div class="register-login">
 
@@ -206,11 +189,9 @@
 
 {% endblock %}
 
-
-
 {% block extra_js %}
-<script>
 
+<script>
 document.querySelectorAll(".toggle-password").forEach(button => {
 
     button.addEventListener("click", function () {
@@ -218,31 +199,29 @@ document.querySelectorAll(".toggle-password").forEach(button => {
         const targetId = this.dataset.target;
         const passwordInput = document.getElementById(targetId);
 
-        if (passwordInput.type === "password") {
-
-            passwordInput.type = "text";
-
-            this.textContent = "🙈";
-            this.setAttribute(
-                "aria-label",
-                "Hide password"
-            );
-
-        } else {
-
-            passwordInput.type = "password";
-
-            this.textContent = "👁";
-            this.setAttribute(
-                "aria-label",
-                "Show password"
-            );
+        if (!passwordInput) {
+            return;
         }
+
+        const isPassword = passwordInput.type === "password";
+
+        passwordInput.type = isPassword ? "text" : "password";
+
+        this.textContent = isPassword ? "🙈" : "👁";
+
+        this.setAttribute(
+            "aria-label",
+            isPassword ? "Hide password" : "Show password"
+        );
+
+        this.setAttribute(
+            "aria-pressed",
+            isPassword ? "true" : "false"
+        );
 
     });
 
 });
-
 </script>
-{% endblock  %}
-    
+
+{% endblock %}

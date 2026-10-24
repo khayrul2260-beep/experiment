@@ -4,6 +4,7 @@ from django.contrib.auth.forms import PasswordChangeForm
 
 
 User = get_user_model()
+
 class CustomerRegistrationForm(forms.ModelForm):
 
     full_name = forms.CharField(
@@ -11,15 +12,25 @@ class CustomerRegistrationForm(forms.ModelForm):
         required=True
     )
 
-    username = forms.CharField(
+    email = forms.EmailField(
+        required=True,
+        widget=forms.EmailInput(
+            attrs={
+                "autocomplete": "email",
+                "placeholder": "Enter your email",
+            }
+        )
+    )
+
+    phone = forms.CharField(
         label="Phone Number",
         max_length=11,
-        required=True,
+        required=False,
         widget=forms.TextInput(
             attrs={
                 "autocomplete": "tel",
                 "inputmode": "numeric",
-                "placeholder": "01XXXXXXXXX",
+                "placeholder": "01XXXXXXXXX (Optional)",
             }
         )
     )
@@ -48,71 +59,100 @@ class CustomerRegistrationForm(forms.ModelForm):
 
     class Meta:
         model = User
-
         fields = [
             "full_name",
             "email",
-            "username",
+            "phone",
             "password",
             "confirm_password",
         ]
 
-    def clean_username(self):
-    
-        username = self.cleaned_data["username"].strip()
-    
-        # Only numbers
-        if not username.isdigit():
+    def clean_email(self):
+
+        email = self.cleaned_data["email"].strip().lower()
+
+        if User.objects.filter(
+            email__iexact=email
+        ).exists():
+            raise forms.ValidationError(
+                "An account with this email already exists."
+            )
+
+        return email
+
+    def clean_phone(self):
+
+        phone = self.cleaned_data.get("phone", "").strip()
+
+        # Phone is optional
+        if not phone:
+            return ""
+
+        if not phone.isdigit():
             raise forms.ValidationError(
                 "Invalid phone number. Phone number must contain only numbers."
             )
-    
-        # Exactly 11 digits
-        if len(username) != 11:
+
+        if len(phone) != 11:
             raise forms.ValidationError(
                 "Invalid phone number. Phone number must be exactly 11 digits."
             )
-    
-        # Must start with 01
-        if not username.startswith("01"):
+
+        if not phone.startswith("01"):
             raise forms.ValidationError(
                 "Invalid phone number. Phone number must start with 01."
             )
-    
-        # Unique phone number
-        if User.objects.filter(username=username).exists():
-            raise forms.ValidationError(
-                "An account with this phone number already exists."
+
+        # No uniqueness check:
+        # the same phone number may be used by multiple accounts.
+        return phone
+
+    def clean(self):
+
+        cleaned_data = super().clean()
+
+        password = cleaned_data.get("password")
+        confirm_password = cleaned_data.get("confirm_password")
+
+        if (
+            password
+            and confirm_password
+            and password != confirm_password
+        ):
+            self.add_error(
+                "confirm_password",
+                "Passwords do not match."
             )
-    
-        return username
+
+        return cleaned_data
 
 class CustomerLoginForm(forms.Form):
 
-    username = forms.CharField(
-        label="Phone Number",
-        max_length=11,
+    email = forms.EmailField(
+        label="Email Address",
         required=True,
-        widget=forms.TextInput(
+        widget=forms.EmailInput(
             attrs={
                 "class": "form-control",
-                "placeholder": "Enter your phone number",
-                "autocomplete": "username",
-                "inputmode": "numeric",
+                "placeholder": "Enter your email address",
+                "autocomplete": "email",
             }
         )
     )
 
     password = forms.CharField(
+        required=True,
         widget=forms.PasswordInput(
             attrs={
                 "class": "form-control",
                 "placeholder": "Enter your password",
                 "autocomplete": "current-password",
             }
-        ),
-        required=True
+        )
     )
+
+    def clean_email(self):
+        return self.cleaned_data["email"].strip().lower()
 
 
 class CustomerProfileForm(forms.ModelForm):

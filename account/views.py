@@ -10,7 +10,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import update_session_auth_hash
 from experiment1.models import Cart, CartItem
 from admin_dashboard.models import *
-
+import uuid
+from django.db import IntegrityError, transaction
 
 
 def merge_guest_cart_into_user_cart(request, user):
@@ -119,11 +120,10 @@ def merge_guest_cart_into_user_cart(request, user):
 
 
 
-
-
 User = get_user_model()
 
 def customer_register(request):
+
     if request.method == "POST":
 
         form = CustomerRegistrationForm(request.POST)
@@ -132,25 +132,45 @@ def customer_register(request):
 
             user = form.save(commit=False)
 
-            # Full name
-            user.first_name = form.cleaned_data["full_name"]
+            full_name = form.cleaned_data["full_name"].strip()
+            name_parts = full_name.split(maxsplit=1)
+
+            user.first_name = name_parts[0]
+            user.last_name = (
+                name_parts[1] if len(name_parts) > 1 else ""
+            )
+
+            # Generate a unique internal username.
+            # Phone number is no longer used as username.
+            user.username = f"nafi_{uuid.uuid4().hex}"
+
+            user.email = form.cleaned_data["email"]
+            user.phone = form.cleaned_data.get("phone", "")
 
             # Secure password hashing
             user.set_password(
                 form.cleaned_data["password"]
             )
 
-            user.save()
+            try:
+                with transaction.atomic():
+                    user.save()
 
-            messages.success(
-                request,
-                "Account created successfully."
-            )
+            except IntegrityError:
+                form.add_error(
+                    "email",
+                    "An account with this email already exists."
+                )
 
-            return redirect("customer_login")
+            else:
+                messages.success(
+                    request,
+                    "Account created successfully."
+                )
+
+                return redirect("customer_login")
 
     else:
-
         form = CustomerRegistrationForm()
 
     return render(
@@ -161,6 +181,7 @@ def customer_register(request):
         }
     )
 
+
 def customer_login(request):
 
     if request.method == "POST":
@@ -169,29 +190,40 @@ def customer_login(request):
 
         if form.is_valid():
 
-            username = form.cleaned_data["username"]
+            email = form.cleaned_data["email"]
             password = form.cleaned_data["password"]
 
-            user = authenticate(
-                request,
-                username=username,
-                password=password
-            )
+            # Find the customer using their email address.
+            user_account = User.objects.filter(
+                email__iexact=email
+            ).first()
 
-            if user is not None:
-            
+            user = None
+
+            if user_account is not None:
+
+                # Authenticate through Django's existing backend.
+                user = authenticate(
+                    request,
+                    username=user_account.username,
+                    password=password
+                )
+
+            if user is not None and user.is_active:
+
                 login(request, user)
-            
+
+                # Preserve existing guest cart merge behavior.
                 merge_guest_cart_into_user_cart(
                     request,
                     user
                 )
-            
+
                 return redirect("customer_profile")
 
             messages.error(
                 request,
-                "Invalid phone number or password."
+                "Invalid email address or password."
             )
 
     else:
@@ -205,6 +237,7 @@ def customer_login(request):
             "form": form
         }
     )
+
 
 @login_required(login_url="login")
 def customer_logout(request):
