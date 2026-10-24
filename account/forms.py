@@ -155,21 +155,24 @@ class CustomerLoginForm(forms.Form):
         return self.cleaned_data["email"].strip().lower()
 
 
+
 class CustomerProfileForm(forms.ModelForm):
 
     full_name = forms.CharField(
+        label="Full Name",
         max_length=150,
         required=True
     )
 
-    username = forms.CharField(
+    phone = forms.CharField(
         label="Phone Number",
         max_length=11,
-        required=True,
+        required=False,
         widget=forms.TextInput(
             attrs={
                 "autocomplete": "tel",
                 "inputmode": "numeric",
+                "placeholder": "01XXXXXXXXX (Optional)",
             }
         )
     )
@@ -179,75 +182,58 @@ class CustomerProfileForm(forms.ModelForm):
         fields = [
             "full_name",
             "email",
-            "username",
-            "profile_image",
+            "phone",
         ]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        # Existing first_name + last_name
         self.fields["full_name"].initial = (
             f"{self.instance.first_name} "
             f"{self.instance.last_name}"
         ).strip()
 
-    def clean_username(self):
+    def clean_phone(self):
+        phone = self.cleaned_data.get("phone", "").strip()
 
-        username = self.cleaned_data["username"].strip()
+        if not phone:
+            return ""
 
-        # Only numbers
-        if not username.isdigit():
+        if (
+            not phone.isdigit()
+            or len(phone) != 11
+            or not phone.startswith("01")
+        ):
             raise forms.ValidationError(
-                "Invalid phone number. Phone number must contain only numbers."
+                "Enter a valid 11-digit Bangladeshi phone number."
             )
 
-        # Exactly 11 digits
-        if len(username) != 11:
-            raise forms.ValidationError(
-                "Invalid phone number. Phone number must be exactly 11 digits."
-            )
+        return phone
 
-        # Must start with 01
-        if not username.startswith("01"):
-            raise forms.ValidationError(
-                "Invalid phone number. Phone number must start with 01."
-            )
+    def clean_email(self):
+        email = self.cleaned_data["email"].strip().lower()
 
-        # Check duplicate username
         if User.objects.filter(
-            username=username
+            email__iexact=email
         ).exclude(
             pk=self.instance.pk
         ).exists():
-
             raise forms.ValidationError(
-                "This phone number is already in use."
+                "An account with this email already exists."
             )
-
-        return username
-
-    def clean_email(self):
-
-        email = self.cleaned_data["email"].strip().lower()
 
         return email
 
     def save(self, commit=True):
-
         user = super().save(commit=False)
 
         full_name = self.cleaned_data["full_name"].strip()
-
-        # Full name → first_name + last_name
         name_parts = full_name.split(maxsplit=1)
 
         user.first_name = name_parts[0]
-
-        if len(name_parts) > 1:
-            user.last_name = name_parts[1]
-        else:
-            user.last_name = ""
+        user.last_name = (
+            name_parts[1] if len(name_parts) > 1 else ""
+        )
 
         if commit:
             user.save()

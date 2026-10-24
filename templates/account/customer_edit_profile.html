@@ -1,289 +1,169 @@
+
 {% extends "customer/master/base.html" %}
 {% load static %}
 
-
-{% block title %}
-    Edit Profile | NAFI
-{% endblock %}
-
+{% block title %}Edit Profile | NAFI{% endblock %}
 
 {% block extra_css %}
-
 <link rel="stylesheet"
       href="{% static 'account/css/customer_edit_profile.css' %}">
-
 {% endblock %}
 
-
 {% block content %}
-
-<div class="edit-profile-page">
+<!-- PAGE HEADER -->
+<div class="all-pages-header">
+    <a href="{% url 'customer_profile' %}"
+       class="back-to-account">
+        <i class="bi bi-arrow-left"></i>
+        BACK TO ACCOUNT
+    </a>
+    <span class="all-pages-eyebrow">
+        NAFI / ACCOUNT SETTINGS
+    </span>
+    <h1>
+        Edit Profile
+    </h1>
+    <p>
+        Keep your personal information up to date.
+    </p>
+</div>
+<main class="edit-profile-page">
 
     <div class="edit-profile-container">
 
 
-        <!-- =========================================
-             PAGE HEADER
-        ========================================== -->
+        <!-- PROFILE FORM -->
+        <section class="edit-profile-content">
 
-        <div class="edit-profile-header">
+            <div class="edit-profile-intro">
 
-            <span class="page-eyebrow">
-                MY ACCOUNT
-            </span>
+                <span class="section-number">01 / PERSONAL DETAILS</span>
 
-            <h1>
-                Edit Profile
-            </h1>
+                <h2>Your Information</h2>
 
-            <p>
-                Update your personal information and profile photo.
-            </p>
-
-        </div>
-
-
-
-        <!-- =========================================
-             MAIN CARD
-        ========================================== -->
-
-        <section class="edit-profile-card">
-
-
-            <!-- =========================================
-                 PROFILE IMAGE
-            ========================================== -->
-
-            <div class="profile-image-section">
-
-                <div class="current-profile-image">
-
-                    {% if user.profile_image %}
-
-                        <img
-                            src="{{ user.profile_image.url }}"
-                            alt="{{ user.get_full_name }}"
-                        >
-
-                    {% else %}
-
-                        <div class="profile-placeholder">
-
-                            {{ user.first_name|first|upper }}
-
-                        </div>
-
-                    {% endif %}
-
-                </div>
-
-
-                <div class="profile-image-info">
-
-                    <h2>
-                        Profile Photo
-                    </h2>
-
-                    <p>
-                        Choose a clear photo for your NAFI account.
-                    </p>
-
-                </div>
+                <p>
+                    Update your details below. Your account information
+                    helps us provide a seamless shopping experience.
+                </p>
 
             </div>
 
+            <div class="edit-profile-form-wrapper">
 
+                <form method="POST" class="edit-profile-form">
 
-            <!-- =========================================
-                 FORM
-            ========================================== -->
+                    {% csrf_token %}
 
-            <form
-                method="POST"
-                enctype="multipart/form-data"
-                class="edit-profile-form"
-            >
-
-                {% csrf_token %}
-
-
-                <!-- General Errors -->
-
-                {% if form.non_field_errors %}
-
+                    {% if form.non_field_errors %}
                     <div class="form-error-box">
-
                         {% for error in form.non_field_errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
 
-                            <p>
-                                {{ error }}
-                            </p>
+                    <!-- FULL NAME -->
+                    <div class="form-group">
 
+                        <label for="{{ form.full_name.id_for_label }}">
+                            FULL NAME
+                            <span class="required-mark">*</span>
+                        </label>
+
+                        {{ form.full_name }}
+
+                        {% for error in form.full_name.errors %}
+                            <p class="field-error">{{ error }}</p>
                         {% endfor %}
 
                     </div>
 
-                {% endif %}
+                    <!-- EMAIL -->
+                    <div class="form-group">
 
+                        <label for="{{ form.email.id_for_label }}">
+                            EMAIL ADDRESS
+                            <span class="required-mark">*</span>
+                        </label>
 
+                        {{ form.email }}
 
-                <!-- =================================
-                     FULL NAME
-                ================================== -->
+                        {% for error in form.email.errors %}
+                            <p class="field-error">{{ error }}</p>
+                        {% endfor %}
 
-                <div class="form-group">
+                    </div>
 
-                    <label for="{{ form.full_name.id_for_label }}">
-                        Full Name
-                    </label>
+                    <!-- PHONE -->
+                    <div class="form-group">
 
-                    {{ form.full_name }}
+                        <label for="{{ form.phone.id_for_label }}">
+                            PHONE NUMBER
+                            <span class="optional-mark">OPTIONAL</span>
+                        </label>
 
-                    {% for error in form.full_name.errors %}
+                        {{ form.phone }}
 
-                        <p class="field-error">
-                            {{ error }}
-                        </p>
+                        {% for error in form.phone.errors %}
+                            <p class="field-error">{{ error }}</p>
+                        {% endfor %}
 
-                    {% endfor %}
+                        <small class="input-help">
+                            Enter an 11-digit Bangladeshi phone number.
+                        </small>
 
-                </div>
+                    </div>
 
+                    <!-- FORM ACTIONS -->
+                    <div class="edit-profile-actions">
 
+                        <a href="{% url 'customer_profile' %}"
+                           class="cancel-profile-btn">
+                            CANCEL
+                        </a>
 
-                <!-- =================================
-                     PHONE
-                ================================== -->
-<div class="form-group">
+                        <button type="submit"
+                                class="save-profile-btn">
+                            SAVE CHANGES
+                            <i class="bi bi-arrow-right"></i>
+                        </button>
 
-    <label for="{{ form.username.id_for_label }}">
-        Phone Number
-    </label>
+                    </div>
 
-    {{ form.username }}
+                </form>
 
-    {% for error in form.username.errors %}
-
-        <p class="field-error">
-            {{ error }}
-        </p>
-
-    {% endfor %}
-
-</div>
-
-
-                <!-- =================================
-                     EMAIL
-                ================================== -->
-
-                <div class="form-group">
-
-                    <label for="{{ form.email.id_for_label }}">
-                        Email Address
-                    </label>
-
-                    {{ form.email }}
-
-                    {% for error in form.email.errors %}
-
-                        <p class="field-error">
-                            {{ error }}
-                        </p>
-
-                    {% endfor %}
-
-                </div>
-
-
-
-                <!-- =================================
-                     PROFILE IMAGE
-                ================================== -->
-
-                <div class="form-group">
-
-                    <label for="{{ form.profile_image.id_for_label }}">
-                        Change Profile Photo
-                    </label>
-
-                    {{ form.profile_image }}
-
-                    {% for error in form.profile_image.errors %}
-
-                        <p class="field-error">
-                            {{ error }}
-                        </p>
-
-                    {% endfor %}
-
-                    <p class="input-help">
-                        JPG, JPEG or PNG. Choose a clear profile photo.
-                    </p>
-
-                </div>
-
-
-
-                <!-- =================================
-                     ACTIONS
-                ================================== -->
-
-                <div class="edit-profile-actions">
-
-                    <a
-                        href="{% url 'customer_profile' %}"
-                        class="cancel-profile-btn"
-                    >
-                        Cancel
-                    </a>
-
-
-                    <button
-                        type="submit"
-                        class="save-profile-btn"
-                    >
-                        Save Changes
-                    </button>
-
-                </div>
-
-            </form>
+            </div>
 
         </section>
 
+        <!-- SECURITY -->
+        <aside class="profile-security-note">
 
+            <div class="security-note-content">
 
-        <!-- =========================================
-             SECURITY NOTE
-        ========================================== -->
+                <span class="security-note-icon">
+                    <i class="bi bi-shield-lock"></i>
+                </span>
 
-        <div class="profile-security-note">
+                <div>
+                    <h3>Account Security</h3>
+                    <p>
+                        Password management is handled separately
+                        to help protect your account.
+                    </p>
+                </div>
 
-            <span class="security-note-icon">
-                🔒
-            </span>
+            </div>
 
-            <p>
+            <a href="{% url 'customer_change_password' %}">
+                MANAGE SECURITY
+                <i class="bi bi-arrow-up-right"></i>
+            </a>
 
-                Your password cannot be changed here.
-
-                Use
-
-                <a href="{% url 'customer_change_password' %}">
-                    Change Password
-                </a>
-
-                to update your account password.
-
-            </p>
-
-        </div>
-
+        </aside>
 
     </div>
 
-</div>
+</main>
 
 {% endblock %}
