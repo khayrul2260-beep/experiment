@@ -20,6 +20,19 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 
+
+def owner_only_admin_permission(request):
+    user = request.user
+
+    return (
+        user.is_authenticated
+        and user.is_active
+        and user.is_staff
+        and user.is_superuser
+    )
+
+admin.site.has_permission = owner_only_admin_permission
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('experiment1.urls')),
@@ -27,7 +40,6 @@ urlpatterns = [
     path('auth/', include('social_django.urls', namespace='social')),
     path('account/', include('account.urls')),
 ]
-
 
 
 if settings.DEBUG:

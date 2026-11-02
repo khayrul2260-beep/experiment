@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-
+from django.core.exceptions import ValidationError
+from .validators import validate_product_image
 from .models import (
     ContactPage,
     ContactService,
@@ -269,6 +270,22 @@ def contact_management(request):
         mobile_image = request.FILES.get(
             "mobile_image"
         )
+        # =================================================
+        # IMAGE SECURITY VALIDATION
+        # =================================================
+
+        try:
+            for image_file in (desktop_image, mobile_image):
+                if image_file:
+                    validate_product_image(image_file)
+
+        except ValidationError as error:
+            messages.error(
+                request,
+                error.messages[0]
+            )
+
+            return redirect("contact_management")
 
         if desktop_image:
             contact_page.desktop_image = desktop_image

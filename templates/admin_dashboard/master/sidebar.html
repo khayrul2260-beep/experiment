@@ -116,11 +116,13 @@
       </li>
     </ul>
     <div class="sidebar-footer">
-      <a href="{% url 'logout_page' %}">
-        <i class="bi bi-box-arrow-right"></i>
-
-        <span>Logout</span>
-      </a>
+      <form method="POST" action="{% url 'logout_page' %}" style="margin: 0;">
+        {% csrf_token %}
+        <button type="submit" class="logout-btn">
+          <i class="bi bi-box-arrow-right"></i>
+          <span>Logout</span>
+        </button>
+      </form>
     </div>
   </nav>
 </div>

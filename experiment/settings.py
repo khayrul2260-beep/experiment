@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
-from decouple import config
+from decouple import config, Csv
 import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -30,13 +30,16 @@ CLOUDINARY_STORAGE = {
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-a))(&56-#%7qa$v0x=1qtv&y5evr#b6rq1x475*&q21%^!8@a='
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+SECRET_KEY = config("SECRET_KEY")
 
-ALLOWED_HOSTS = ["*"]
+DEBUG = config("DEBUG", default=False, cast=bool)
 
+ALLOWED_HOSTS = config(
+    "ALLOWED_HOSTS",
+    default="localhost,127.0.0.1",
+    cast=Csv(),
+)
 # Application definition
 
 INSTALLED_APPS = [
@@ -211,3 +214,13 @@ LOGIN_REDIRECT_URL = "/account/profile/"
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = "/account/profile/"
 SOCIAL_AUTH_LOGIN_ERROR_URL = "/account/login/"
 
+
+# ==========================================
+# PRODUCTION SECURITY
+# ==========================================
+
+if not DEBUG:
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    X_FRAME_OPTIONS = "DENY"

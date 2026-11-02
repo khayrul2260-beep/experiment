@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
+from django.core.exceptions import ValidationError
 from .models import *
 from .forms import CategoryForm
 from django.db import transaction
@@ -15,8 +16,7 @@ from django.contrib.auth import get_user_model
 from django.db.models.functions import TruncMonth, TruncDay, TruncHour
 from django.views.decorators.http import require_POST
 from experiment1.coupon_utils import validate_coupon_data
-
-
+from .validators import validate_product_image
 
 
 def dashboard_page(request):
@@ -233,6 +233,32 @@ def add_product_page(request):
                 "add_product_page"
             )
 
+
+        # ==========================================
+        # PRODUCT IMAGE SECURITY VALIDATION
+        # ==========================================
+
+        try:
+
+            images_to_validate = [
+                main_image,
+                secondary_image,
+                *gallery_images
+            ]
+
+            for image_file in images_to_validate:
+                validate_product_image(image_file)
+
+        except ValidationError as error:
+
+            messages.error(
+                request,
+                error.messages[0]
+            )
+
+            return redirect(
+                "add_product_page"
+            )
         # ==========================================
         # SIZE-WISE STOCK
         # ==========================================
@@ -635,6 +661,35 @@ def edit_product_page(request, id):
                 "gallery_replace_files"
             )
 
+        # ======================================================
+        # PRODUCT IMAGE SECURITY VALIDATION
+        # ======================================================
+
+        try:
+
+            images_to_validate = [
+                main_image,
+                secondary_image_upload,
+                *gallery_images_upload,
+                *gallery_replace_files,
+            ]
+
+            for image_file in images_to_validate:
+
+                if image_file:
+                    validate_product_image(image_file)
+
+        except ValidationError as error:
+
+            messages.error(
+                request,
+                error.messages[0]
+            )
+
+            return redirect(
+                "edit_product_page",
+                id=product.id
+            )
 
         # ======================================================
         # GALLERY REORDER
@@ -1420,9 +1475,8 @@ def edit_product_page(request, id):
         context
     )
 
-
+@require_POST
 def delete_product_page(request, id):
-
 
     product = get_object_or_404(ProductsModel, id=id)
 
@@ -1438,7 +1492,6 @@ def delete_product_page(request, id):
     messages.success(request, "Product deleted successfully.")
 
     return redirect("products_page")
-
 
 def categories_page(request):
 
@@ -1501,8 +1554,6 @@ def categories_page(request):
         'admin_dashboard/categories.html',
         context
     )
-
-
 
 def add_category(request):
 
@@ -1568,8 +1619,8 @@ def edit_category(request, id):
     )
 
 
+@require_POST
 def delete_category(request, id):
-
 
     category = get_object_or_404(Category, id=id)
 
@@ -1869,6 +1920,7 @@ def order_details_page(request, order_number):
         context
     )
 
+@require_POST
 def update_order_status(request, order_number):
 
     if request.method != "POST":
@@ -1958,7 +2010,7 @@ def update_order_status(request, order_number):
         order_number=order.order_number
     )
     
-
+@require_POST
 def update_payment_status(request, order_number):
 
     if request.method != "POST":
@@ -2493,8 +2545,6 @@ def complete_return_exchange(request, request_id):
         "admin_order_details",
         order_number=order_number,
     )
-
-
 
 
 def inventory_page(request):
@@ -3174,10 +3224,10 @@ def admin_users_page(request):
 def hidden_sidebar_page(request):
     return render(request, 'admin_dashboard/master/hidden_sidebar.html')
 
+@require_POST
 def logout_page(request):
     logout(request)
     return redirect("home_page")
-
 
 # =========================================================
 # ABOUT PAGE MANAGEMENT
@@ -3228,7 +3278,23 @@ def update_about_page(request):
         AboutPage,
         id=request.POST.get("about_id")
     )
+    # -----------------------------------------------------
+    # IMAGE SECURITY VALIDATION
+    # -----------------------------------------------------
 
+    try:
+        for image_file in (
+            request.FILES.get("hero_image"),
+            request.FILES.get("who_image"),
+            request.FILES.get("aesthetic_image"),
+            request.FILES.get("final_image"),
+        ):
+            if image_file:
+                validate_product_image(image_file)
+
+    except ValidationError as error:
+        messages.error(request, error.messages[0])
+        return redirect("about_management")
     # -----------------------------------------------------
     # HERO
     # -----------------------------------------------------
@@ -3649,6 +3715,14 @@ def update_about_quality(request, quality_id):
 def add_about_journey(request):
 
     if request.method == "POST":
+        image_file = request.FILES.get("image")
+
+        if image_file:
+            try:
+                validate_product_image(image_file)
+            except ValidationError as error:
+                messages.error(request, error.messages[0])
+                return redirect("about_management")
 
         about = get_object_or_404(
             AboutPage,
@@ -3755,9 +3829,16 @@ def update_about_journey(request, journey_id):
         # IMAGE
         # -------------------------------------------------
 
-        if request.FILES.get("image"):
+        image_file = request.FILES.get("image")
 
-            journey.image = request.FILES["image"]
+        if image_file:
+            try:
+                validate_product_image(image_file)
+            except ValidationError as error:
+                messages.error(request, error.messages[0])
+                return redirect("about_management")
+
+            journey.image = image_file
 
         # -------------------------------------------------
         # SAVE
@@ -3818,7 +3899,18 @@ def update_home_page(request):
         home_page = HomePage.objects.create()
 
     if request.method == "POST":
+        # IMAGE SECURITY VALIDATION
 
+        second_hero_image = request.FILES.get(
+            "second_hero_image"
+        )
+
+        if second_hero_image:
+            try:
+                validate_product_image(second_hero_image)
+            except ValidationError as error:
+                messages.error(request, error.messages[0])
+                return redirect("home_management")
         # ==========================================
         # HERO CONTENT
         # ==========================================
@@ -3956,6 +4048,13 @@ def update_second_hero(request):
         )
 
         if second_hero_image:
+            try:
+                validate_product_image(second_hero_image)
+            except ValidationError as error:
+                messages.error(request, error.messages[0])
+                return redirect("home_management")
+
+        if second_hero_image:
             home_page.second_hero_image = second_hero_image
 
         home_page.save()
@@ -4015,6 +4114,9 @@ def add_home_slide(request):
         # ==========================================
 
         try:
+            for image_file in (desktop_image, mobile_image):
+                if image_file:
+                    validate_product_image(image_file)
 
             slide = HomeHeroSlide(
                 home_page=home_page,
@@ -4043,8 +4145,6 @@ def add_home_slide(request):
             )
 
     return redirect("home_management")
-
-
 
 def update_home_slide(request, slide_id):
     """
@@ -4130,8 +4230,6 @@ def update_home_slide(request, slide_id):
 
     return redirect("home_management")
 
-
-
 def delete_home_slide(request, slide_id):
     """
     Delete an existing homepage hero slide.
@@ -4152,7 +4250,6 @@ def delete_home_slide(request, slide_id):
         )
 
     return redirect("home_management")
-
 
 def delivery_settings_page(request):
 

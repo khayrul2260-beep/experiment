@@ -1,6 +1,7 @@
 from django import forms
 from .models import Category
 from .models import *
+from .validators import validate_product_image
 
 class ProductForm(forms.ModelForm):
 
@@ -50,6 +51,13 @@ class CategoryForm(forms.ModelForm):
         }
 
 
+    def clean_image(self):
+        image = self.files.get(self.add_prefix("image"))
+
+        if image:
+            validate_product_image(image)
+
+        return self.cleaned_data.get("image")
 
 
 
