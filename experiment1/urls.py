@@ -8,6 +8,7 @@ urlpatterns = [
     path('category/<slug:slug>/', category_products_page, name='category_products'),
     path("contact/", contact_page, name="contact_page"),
 
+    path("buy-now/<int:product_id>/", buy_now_checkout, name="buy_now_checkout"),
     path("cart/", cart_page, name="cart_page"),
     path("cart/add/<int:product_id>/", add_to_cart, name="add_to_cart"),
     path("cart/guest/update/<str:item_key>/", guest_update_cart, name="guest_update_cart"),
@@ -19,7 +20,6 @@ urlpatterns = [
     path("cart/add-another-size/<int:item_id>/", add_another_size, name="add_another_size"),
     path("cart/remove/<int:item_id>/", remove_from_cart, name="remove_from_cart"),
     path("cart/clear/", clear_cart, name="clear_cart"),
-
     path("checkout/", checkout_page, name="checkout_page"),
     path("checkout/clear-coupon/", clear_coupon, name="clear_coupon"),
     path("checkout/apply-coupon/", apply_coupon, name="apply_coupon"),

@@ -799,44 +799,74 @@ addToCartBtn.addEventListener(
     /* =====================================================
        BUY NOW
     ====================================================== */
+    /* =====================================================
+       BUY NOW — DIRECT CHECKOUT
+    ====================================================== */
 
     const buyNowBtn =
-        document.getElementById(
-            "buyNowBtn"
-        );
-
+        document.getElementById("buyNowBtn");
 
     buyNowBtn.addEventListener(
         "click",
         function () {
 
-
             if (!selectedSize) {
-
-                sizeError.style.display =
-                    "block";
-
+                sizeError.style.display = "block";
                 return;
-
             }
 
+            const selectedSizeButton =
+                document.querySelector(".size-btn.selected");
 
-            console.log({
+            if (!selectedSizeButton) {
+                return;
+            }
 
-                product:
-                    "{{ product.id }}",
+            const sizeId =
+                selectedSizeButton.dataset.sizeId;
 
-                size:
-                    selectedSize,
+            if (!sizeId) {
+                return;
+            }
 
-                quantity:
-                    quantity
+            const form =
+                document.createElement("form");
 
-            });
+            form.method = "POST";
 
+            form.action =
+                "{% url 'buy_now_checkout' product.id %}";
+
+            const csrfToken =
+                document.createElement("input");
+
+            csrfToken.type = "hidden";
+            csrfToken.name = "csrfmiddlewaretoken";
+            csrfToken.value = "{{ csrf_token }}";
+
+            const sizeInput =
+                document.createElement("input");
+
+            sizeInput.type = "hidden";
+            sizeInput.name = "size_id";
+            sizeInput.value = sizeId;
+
+            const quantityInput =
+                document.createElement("input");
+
+            quantityInput.type = "hidden";
+            quantityInput.name = "quantity";
+            quantityInput.value = quantity;
+
+            form.appendChild(csrfToken);
+            form.appendChild(sizeInput);
+            form.appendChild(quantityInput);
+
+            document.body.appendChild(form);
+
+            form.submit();
         }
     );
-
 
 });
 
