@@ -241,40 +241,34 @@
 }
 
 
-.sidebar-footer a{
-
+.sidebar-footer .logout-btn {
     display: flex;
-
     align-items: center;
-
     gap: 15px;
 
+    width: 100%;
     padding: 14px 18px;
 
+    border: none;
     border-radius: 12px;
+    background: transparent;
 
     color: var(--danger);
+    font: inherit;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
 
     transition: var(--transition);
-
-    font-weight: 600;
-
 }
 
-
-.sidebar-footer a i{
-
+.sidebar-footer .logout-btn i {
     font-size: 20px;
-
 }
 
-
-.sidebar-footer a:hover{
-
-    background: rgba(239,68,68,.15);
-
+.sidebar-footer .logout-btn:hover {
+    background: rgba(239, 68, 68, .15);
 }
-
 
 /* ===============================
    SCROLLBAR

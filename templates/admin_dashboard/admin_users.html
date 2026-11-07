@@ -1,15 +1,444 @@
+
 {% extends 'admin_dashboard/master/base.html' %}
-{% load static %} 
-{% block title %} 
-Users 
-{% endblock %} 
+{% load static %}
+
+{% block title %}Admin Users | NAFI{% endblock %}
+
 {% block css %}
-{% endblock %} {% block page_title %}Users {% endblock %}
+<link rel="stylesheet" href="{% static 'admin_panel/css/admin_users.css' %}">
+{% endblock %}
+
+{% block page_title %}Admin Users{% endblock %}
 
 {% block content %}
-    
-<h1>Users page</h1>
 
+<div class="admin-users-page">
+
+    <!-- Header -->
+    <section class="au-header">
+        <div class="au-heading">
+            <span class="au-eyebrow">NAFI / MANAGEMENT</span>
+            <h1>Admin Users</h1>
+            <p>Manage your team, roles and administrative access.</p>
+        </div>
+
+        <a href="#" class="au-add-btn">
+            <i class="fas fa-plus"></i>
+            <span>Add New Admin</span>
+        </a>
+    </section>
+
+
+    <!-- Statistics -->
+    <section class="au-stats">
+
+        <article class="au-stat-card">
+            <div class="au-stat-top">
+                <span>Total Admins</span>
+                <div class="au-stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+            </div>
+            <h2>{{ total_admins }}</h2>
+            <p>Registered team members</p>
+        </article>
+
+        <article class="au-stat-card">
+            <div class="au-stat-top">
+                <span>Active Admins</span>
+                <div class="au-stat-icon">
+                    <i class="fas fa-user-check"></i>
+                </div>
+            </div>
+            <h2>{{ active_admins }}</h2>
+            <p>Currently active accounts</p>
+        </article>
+
+        <article class="au-stat-card">
+            <div class="au-stat-top">
+                <span>Managers</span>
+                <div class="au-stat-icon">
+                    <i class="fas fa-user-shield"></i>
+                </div>
+            </div>
+            <h2>{{ manager_count }}</h2>
+            <p>Management access</p>
+        </article>
+
+        <article class="au-stat-card">
+            <div class="au-stat-top">
+                <span>Support Team</span>
+                <div class="au-stat-icon">
+                    <i class="fas fa-headset"></i>
+                </div>
+            </div>
+            <h2>{{ support_count }}</h2>
+            <p>Customer support access</p>
+        </article>
+
+    </section>
+
+    <!-- CUSTOMER PROMOTION SECTION -->
+    <section class="au-customer-section">
+
+        <div class="au-section-header">
+            <div>
+                <h2>Customer Management</h2>
+                <p>Find existing customers and add them to your team.</p>
+            </div>
+        </div>
+
+        <form method="GET" class="au-customer-search">
+            <input
+                type="text"
+                name="customer_search"
+                placeholder="Search by name, email, phone..."
+                value="{{ customer_search }}"
+            >
+
+            <button type="submit">Search Customers</button>
+        </form>
+
+        {% if customer_search %}
+
+            <div class="au-customer-results">
+
+                {% for customer in customer_results %}
+
+                    <div class="au-customer-result">
+
+                        <div class="au-customer-info">
+                            <strong>
+                                {{ customer.get_full_name|default:customer.username }}
+                            </strong>
+
+                            <span>{{ customer.email|default:"No email" }}</span>
+                            <span>{{ customer.phone|default:customer.username }}</span>
+                        </div>
+
+                        <form
+                            method="POST"
+                            action="{% url 'promote_customer_to_staff' customer.id %}"
+                        >
+                            {% csrf_token %}
+
+                            <select name="role" required>
+                                <option value="">Select Role</option>
+                                <option value="Manager">Manager</option>
+                                <option value="Support">Support</option>
+                                <option value="Warehouse">Warehouse</option>
+                            </select>
+
+                            <button type="submit">Promote</button>
+                        </form>
+
+                    </div>
+
+                {% empty %}
+
+                    <p>No matching customers found.</p>
+
+                {% endfor %}
+
+            </div>
+
+        {% endif %}
+
+    </section>
+
+    <!-- Team Management -->
+    <section class="au-panel">
+
+        <div class="au-panel-header">
+            <div>
+                <h2>Administration Team</h2>
+                <p>Manage team members and their access permissions.</p>
+            </div>
+
+            <span class="au-team-count">
+                {{ total_admins }} MEMBERS
+            </span>
+        </div>
+
+
+        <!-- Search and Filters -->
+        <form method="GET" class="au-toolbar">
+
+            <div class="au-search">
+                <i class="fas fa-search"></i>
+                <input
+                    type="search"
+                    name="search"
+                    value="{{ search_query }}"
+                    placeholder="Search name, email or phone..."
+                    aria-label="Search admin users"
+                >
+            </div>
+
+            <div class="au-filters">
+
+                <select name="role"
+                        aria-label="Filter by role"
+                        onchange="this.form.submit()">
+
+                    <option value="">All Roles</option>
+
+                    <option value="owner"
+                        {% if role_filter == "owner" %}selected{% endif %}>
+                        Owner
+                    </option>
+
+                    <option value="manager"
+                        {% if role_filter == "manager" %}selected{% endif %}>
+                        Manager
+                    </option>
+
+                    <option value="support"
+                        {% if role_filter == "support" %}selected{% endif %}>
+                        Support
+                    </option>
+
+                    <option value="warehouse"
+                        {% if role_filter == "warehouse" %}selected{% endif %}>
+                        Warehouse
+                    </option>
+
+                    <option value="unassigned"
+                        {% if role_filter == "unassigned" %}selected{% endif %}>
+                        Unassigned
+                    </option>
+
+                </select>
+
+                <select name="status"
+                        aria-label="Filter by status"
+                        onchange="this.form.submit()">
+
+                    <option value="">All Status</option>
+
+                    <option value="active"
+                        {% if status_filter == "active" %}selected{% endif %}>
+                        Active
+                    </option>
+
+                    <option value="inactive"
+                        {% if status_filter == "inactive" %}selected{% endif %}>
+                        Inactive
+                    </option>
+
+                </select>
+
+                <button type="submit" hidden></button>
+
+            </div>
+
+        </form>
+
+
+        <!-- Team Table -->
+        <div class="au-table-wrapper">
+
+            <table class="au-table">
+
+                <thead>
+                    <tr>
+                        <th>TEAM MEMBER</th>
+                        <th>PHONE</th>
+                        <th>ROLE</th>
+                        <th>STATUS</th>
+                        <th>JOINED DATE</th>
+                        <th>ACTIONS</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for item in admin_users %}
+                    {% with user=item.user %}
+
+                    <tr>
+
+                        <!-- Member -->
+                        <td>
+                            <div class="au-member">
+
+                                <div class="au-avatar">
+                                    {% if user.profile_image %}
+                                        <img src="{{ user.profile_image.url }}"
+                                             alt="{{ user.username }}">
+                                    {% else %}
+                                        {{ user.username|first|upper }}
+                                    {% endif %}
+                                </div>
+
+                                <div class="au-member-info">
+                                    <strong>
+                                        {% if user.get_full_name %}
+                                            {{ user.get_full_name }}
+                                        {% else %}
+                                            {{ user.username }}
+                                        {% endif %}
+                                    </strong>
+
+                                    <span>
+                                        {{ user.email|default:"No email available" }}
+                                    </span>
+                                </div>
+
+                            </div>
+                        </td>
+
+
+                        <!-- Phone -->
+                        <td class="au-phone">
+                            {{ user.phone|default:"—" }}
+                        </td>
+
+
+                        <!-- Role -->
+                        <td>
+                            {% if item.role == "Owner" %}
+                                <span class="au-role au-owner">Owner</span>
+                            {% elif item.role == "Manager" %}
+                                <span class="au-role au-manager">Manager</span>
+                            {% elif item.role == "Support" %}
+                                <span class="au-role au-support">Support</span>
+                            {% elif item.role == "Warehouse" %}
+                                <span class="au-role au-warehouse">Warehouse</span>
+                            {% else %}
+                                <span class="au-role au-unassigned">Unassigned</span>
+                            {% endif %}
+                        </td>
+
+
+                        <!-- Status -->
+                        <td>
+                            {% if user.is_active %}
+                                <span class="au-status au-active">
+                                    <span></span> Active
+                                </span>
+                            {% else %}
+                                <span class="au-status au-inactive">
+                                    <span></span> Inactive
+                                </span>
+                            {% endif %}
+                        </td>
+
+
+                        <!-- Joined -->
+                        <td class="au-date">
+                            {{ user.date_joined|date:"d M Y" }}
+                        </td>
+
+
+                        <td>
+                            <div class="au-actions">
+                            
+                                {% if not user.is_superuser %}
+                            
+                                    <form method="POST"
+                                          action="{% url 'change_staff_role' user.id %}">
+                                        {% csrf_token %}
+                            
+                                        <select name="role" required>
+                                            <option value="">Change Role</option>
+                                            <option value="Manager">Manager</option>
+                                            <option value="Support">Support</option>
+                                            <option value="Warehouse">Warehouse</option>
+                                        </select>
+                                    
+                                        <button type="submit"
+                                                class="au-action-btn"
+                                                title="Update Role">
+                                            <i class="fas fa-check"></i>
+                                        </button>
+                                    </form>
+                                
+                                    <form method="POST"
+                                          action="{% url 'revoke_staff_access' user.id %}"
+                                          onsubmit="return confirm('Are you sure you want to revoke this staff access?');">
+                                        {% csrf_token %}
+                                
+                                        <button type="submit"
+                                                class="au-action-btn"
+                                                title="Revoke Staff Access">
+                                            <i class="fas fa-user-minus"></i>
+                                        </button>
+                                    </form>
+                                
+                                {% else %}
+                                
+                                    <span class="au-owner">Protected</span>
+                                
+                                {% endif %}
+                                
+                            </div>
+                        </td>
+
+                    </tr>
+
+                    {% endwith %}
+                    {% empty %}
+
+                    <tr>
+                        <td colspan="6">
+                            <div class="au-empty">
+                                <div class="au-empty-icon">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <h3>No Admin Found</h3>
+                                <p>No accounts match your search or filters.</p>
+                            </div>
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- Pagination -->
+        {% if page_obj.has_other_pages %}
+
+        <div class="au-pagination">
+
+            <span class="au-pagination-info">
+                Showing {{ page_obj.start_index }}–{{ page_obj.end_index }}
+                of {{ page_obj.paginator.count }} admins
+            </span>
+
+            <div class="au-pagination-links">
+
+                {% if page_obj.has_previous %}
+                    <a href="?search={{ search_query|urlencode }}&role={{ role_filter|urlencode }}&status={{ status_filter|urlencode }}&page={{ page_obj.previous_page_number }}"
+                       aria-label="Previous page">
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                {% endif %}
+
+                <span class="au-current-page">
+                    {{ page_obj.number }}
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a href="?search={{ search_query|urlencode }}&role={{ role_filter|urlencode }}&status={{ status_filter|urlencode }}&page={{ page_obj.next_page_number }}"
+                       aria-label="Next page">
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                {% endif %}
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+    </section>
+
+</div>
 
 {% endblock %}
-    

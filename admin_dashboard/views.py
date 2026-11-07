@@ -17,7 +17,10 @@ from django.db.models.functions import TruncMonth, TruncDay, TruncHour
 from django.views.decorators.http import require_POST
 from experiment1.coupon_utils import validate_coupon_data
 from .validators import validate_product_image
-
+from django.core.paginator import Paginator
+import secrets
+import hashlib
+from django.contrib.auth.models import Group
 
 def dashboard_page(request):
 
@@ -3215,11 +3218,209 @@ def settings_page(request):
 
     return render(request, 'admin_dashboard/settings.html', { "page_title": "Settings" })
 
+@require_POST
+def create_admin_invitation(request):
+
+    email = request.POST.get("email", "").strip().lower()
+    role = request.POST.get("role", "").strip()
+
+    allowed_roles = {
+        "Manager",
+        "Support",
+        "Warehouse",
+    }
+
+    # Validate email
+    try:
+        from django.core.validators import validate_email
+        validate_email(email)
+    except ValidationError:
+        messages.error(request, "Please enter a valid email address.")
+        return redirect("admin_users_page")
+
+    # Validate role
+    if role not in allowed_roles:
+        messages.error(request, "Invalid admin role selected.")
+        return redirect("admin_users_page")
+
+    # Check existing pending invitation
+    existing_invitation = AdminInvitation.objects.filter(
+        email__iexact=email,
+        accepted_at__isnull=True,
+        revoked_at__isnull=True,
+        expires_at__gt=timezone.now(),
+    ).exists()
+
+    if existing_invitation:
+        messages.warning(
+            request,
+            "A pending invitation already exists for this email."
+        )
+        return redirect("admin_users_page")
+
+    # Generate secure invitation token
+    raw_token = secrets.token_urlsafe(32)
+    token_hash = hashlib.sha256(
+        raw_token.encode("utf-8")
+    ).hexdigest()
+
+    # Create invitation
+    AdminInvitation.objects.create(
+        email=email,
+        role=role,
+        token_hash=token_hash,
+        invited_by=request.user,
+        expires_at=timezone.now() + timedelta(hours=48),
+    )
+
+    messages.success(
+        request,
+        "Invitation created successfully."
+    )
+
+    return redirect("admin_users_page")
+
 def admin_users_page(request):
 
-    return render(request, 'admin_dashboard/admin_users.html', { "page_title": "Admin Users" })
+    User = get_user_model()
 
+    # Get all staff accounts
+    users = (
+        User.objects
+        .filter(is_staff=True)
+        .prefetch_related("groups")
+        .order_by("-date_joined")
+    )
 
+    # Search
+    search_query = request.GET.get("search", "").strip()
+
+    if search_query:
+        users = users.filter(
+            Q(username__icontains=search_query) |
+            Q(first_name__icontains=search_query) |
+            Q(last_name__icontains=search_query) |
+            Q(email__icontains=search_query) |
+            Q(phone__icontains=search_query)
+        )
+
+    # Status filter
+    status_filter = request.GET.get("status", "")
+
+    if status_filter == "active":
+        users = users.filter(is_active=True)
+
+    elif status_filter == "inactive":
+        users = users.filter(is_active=False)
+
+    # Role filtering
+    role_filter = request.GET.get("role", "")
+
+    admin_list = []
+
+    for user in users:
+
+        if user.is_superuser:
+            role = "Owner"
+
+        elif user.groups.filter(name="Manager").exists():
+            role = "Manager"
+
+        elif user.groups.filter(name="Support").exists():
+            role = "Support"
+
+        elif user.groups.filter(name="Warehouse").exists():
+            role = "Warehouse"
+
+        else:
+            role = "Unassigned"
+
+        if role_filter and role.lower() != role_filter.lower():
+            continue
+
+        admin_list.append({
+            "user": user,
+            "role": role,
+        })
+
+    # Statistics across all staff accounts
+    all_admins = (
+        User.objects
+        .filter(is_staff=True)
+        .prefetch_related("groups")
+    )
+
+    total_admins = all_admins.count()
+    active_admins = all_admins.filter(is_active=True).count()
+
+    manager_count = 0
+    support_count = 0
+
+    for user in all_admins:
+
+        if user.is_superuser:
+            continue
+
+        if user.groups.filter(name="Manager").exists():
+            manager_count += 1
+
+        elif user.groups.filter(name="Support").exists():
+            support_count += 1
+
+    # ==========================================
+    # CUSTOMER SEARCH FOR STAFF PROMOTION
+    # ==========================================
+
+    customer_search = request.GET.get("customer_search", "").strip()
+
+    customer_results = []
+
+    if customer_search:
+
+        customer_results = (
+            User.objects
+            .filter(
+                is_staff=False,
+                is_superuser=False
+            )
+            .filter(
+                Q(username__icontains=customer_search) |
+                Q(first_name__icontains=customer_search) |
+                Q(last_name__icontains=customer_search) |
+                Q(email__icontains=customer_search) |
+                Q(phone__icontains=customer_search)
+            )
+            .order_by("-date_joined")[:10]
+        )
+    # Pagination
+    paginator = Paginator(admin_list, 10)
+
+    page_number = request.GET.get("page", 1)
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        "page_title": "Admin Users",
+
+        "admin_users": page_obj,
+        "page_obj": page_obj,
+
+        "total_admins": total_admins,
+        "active_admins": active_admins,
+        "manager_count": manager_count,
+        "support_count": support_count,
+
+        "customer_search": customer_search,
+        "customer_results": customer_results,
+        "search_query": search_query,
+        "status_filter": status_filter,
+        "role_filter": role_filter,
+    }
+
+    return render(
+        request,
+        "admin_dashboard/admin_users.html",
+        context
+    )
 
 def hidden_sidebar_page(request):
     return render(request, 'admin_dashboard/master/hidden_sidebar.html')
@@ -4339,5 +4540,117 @@ def delivery_settings_page(request):
         context
     )
 
+@require_POST
+def promote_customer_to_staff(request, user_id):
 
+    User = get_user_model()
+    role = request.POST.get("role", "").strip()
 
+    allowed_roles = {"Manager", "Support", "Warehouse"}
+
+    if role not in allowed_roles:
+        messages.error(request, "Invalid staff role.")
+        return redirect("admin_users_page")
+
+    customer = get_object_or_404(
+        User,
+        pk=user_id,
+        is_staff=False,
+        is_superuser=False
+    )
+
+    if customer.pk == request.user.pk:
+        messages.error(request, "You cannot promote your own account.")
+        return redirect("admin_users_page")
+
+    with transaction.atomic():
+
+        group, _ = Group.objects.get_or_create(name=role)
+
+        customer.groups.add(group)
+        customer.is_staff = True
+        customer.save(update_fields=["is_staff"])
+
+    messages.success(
+        request,
+        f"{customer.username} has been promoted to {role}."
+    )
+
+    return redirect("admin_users_page")
+
+@require_POST
+def change_staff_role(request, user_id):
+
+    User = get_user_model()
+    role = request.POST.get("role", "").strip()
+
+    allowed_roles = {"Manager", "Support", "Warehouse"}
+
+    if role not in allowed_roles:
+        messages.error(request, "Invalid staff role.")
+        return redirect("admin_users_page")
+
+    staff_user = get_object_or_404(
+        User,
+        pk=user_id,
+        is_staff=True,
+        is_superuser=False
+    )
+
+    if staff_user.pk == request.user.pk:
+        messages.error(request, "You cannot change your own role.")
+        return redirect("admin_users_page")
+
+    with transaction.atomic():
+
+        group, _ = Group.objects.get_or_create(name=role)
+
+        old_roles = Group.objects.filter(
+            name__in=allowed_roles
+        )
+
+        staff_user.groups.remove(*old_roles)
+        staff_user.groups.add(group)
+
+    messages.success(
+        request,
+        f"{staff_user.username}'s role changed to {role}."
+    )
+
+    return redirect("admin_users_page")
+
+@require_POST
+def revoke_staff_access(request, user_id):
+
+    User = get_user_model()
+
+    staff_user = get_object_or_404(
+        User,
+        pk=user_id,
+        is_staff=True,
+        is_superuser=False
+    )
+
+    if staff_user.pk == request.user.pk:
+        messages.error(request, "You cannot revoke your own access.")
+        return redirect("admin_users_page")
+
+    allowed_roles = {"Manager", "Support", "Warehouse"}
+
+    with transaction.atomic():
+
+        old_roles = Group.objects.filter(
+            name__in=allowed_roles
+        )
+
+        staff_user.groups.remove(*old_roles)
+
+        staff_user.is_staff = False
+        staff_user.save(update_fields=["is_staff"])
+
+    messages.success(
+        request,
+        f"{staff_user.username}'s staff access has been revoked."
+    )
+
+    return redirect("admin_users_page")

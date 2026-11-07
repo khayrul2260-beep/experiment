@@ -2,6 +2,7 @@
 from functools import wraps
 from django.urls import path
 from django.http import Http404
+from django.shortcuts import redirect
 from .permissions import (
     get_admin_role,
     can_update_payment_status,
@@ -22,9 +23,16 @@ def admin_access_required(view_func):
     @wraps(view_func)
     def protected_view(request, *args, **kwargs):
         user = request.user
-
         if get_admin_role(user) is None:
             raise Http404("Page not found.")
+
+        if (
+            request.session.get("admin_verified") is not True
+            or request.session.get("admin_verified_user_id") != user.pk
+            or request.session.get("admin_verified_auth_hash")
+            != user.get_session_auth_hash()
+        ):
+            return redirect("admin_password_verify")
 
         return view_func(request, *args, **kwargs)
 
@@ -33,8 +41,10 @@ def admin_access_required(view_func):
 def owner_access_required(view_func):
     @wraps(view_func)
     def protected_view(request, *args, **kwargs):
+
         user = request.user
 
+        # Owner authorization
         if (
             not user.is_authenticated
             or not user.is_active
@@ -42,6 +52,38 @@ def owner_access_required(view_func):
             or not user.is_superuser
         ):
             raise Http404("Page not found.")
+
+        # Password verification
+        if (
+            request.session.get("admin_verified") is not True
+            or request.session.get("admin_verified_user_id") != user.pk
+            or request.session.get("admin_verified_auth_hash")
+            != user.get_session_auth_hash()
+        ):
+            return redirect("admin_password_verify")
+
+        return view_func(request, *args, **kwargs)
+
+    return protected_view
+
+def admin_session_verification_required(view_func):
+    @wraps(view_func)
+    def protected_view(request, *args, **kwargs):
+
+        user = request.user
+
+        # Only authorized Admin users
+        if get_admin_role(user) is None:
+            raise Http404("Page not found.")
+
+        # Verify current session
+        if (
+            request.session.get("admin_verified") is not True
+            or request.session.get("admin_verified_user_id") != user.pk
+            or request.session.get("admin_verified_auth_hash")
+            != user.get_session_auth_hash()
+        ):
+            return redirect("admin_password_verify")
 
         return view_func(request, *args, **kwargs)
 
@@ -237,7 +279,11 @@ urlpatterns = [
     path("settings/contact/social/<int:social_id>/update/",update_contact_social_link,name="update_contact_social_link"),
     path("settings/contact/social/<int:social_id>/delete/",delete_contact_social_link,name="delete_contact_social_link"),
 
+    path("admin_users/invitation/create/", create_admin_invitation, name="create_admin_invitation"),
     path('admin_users/', admin_users_page, name='admin_users_page'),
+    path("admin_users/<int:user_id>/promote/", promote_customer_to_staff, name="promote_customer_to_staff"),
+    path("admin_users/<int:user_id>/role/", change_staff_role, name="change_staff_role"),
+    path("admin_users/<int:user_id>/revoke/", revoke_staff_access, name="revoke_staff_access"),
     path('logout/', logout_page, name='logout_page'),
     path('hidden_sidebar/', hidden_sidebar_page, name='hidden_sidebar_page'),
     path("product/add/", add_product_page, name="add_product_page"),
@@ -321,9 +367,14 @@ STORE_CONTENT_ACTIONS = {
     "delete_contact_social_link",
 }
 
-
 for pattern in urlpatterns:
-    if pattern.name == "admin_users_page":
+    if pattern.name in {
+        "admin_users_page",
+        "create_admin_invitation",
+        "promote_customer_to_staff",
+        "change_staff_role",
+        "revoke_staff_access",
+    }:
         pattern.callback = owner_access_required(pattern.callback)
 
     elif pattern.name == "update_payment_status":
@@ -364,3 +415,9 @@ for pattern in urlpatterns:
 
     else:
         pattern.callback = admin_access_required(pattern.callback)
+
+# Enforce password verification on every admin URL
+for pattern in urlpatterns:
+    pattern.callback = admin_session_verification_required(
+        pattern.callback
+    )

@@ -4,7 +4,8 @@ import string
 from django.apps import apps
 from datetime import datetime
 from django.utils.text import slugify
-
+from django.conf import settings
+from django.utils import timezone
 
 # Create your models here.
 
@@ -1082,7 +1083,81 @@ class ContactMessage(models.Model):
     def __str__(self):
         return f"{self.name} — {self.subject or 'No Subject'}"
 
+# =========================================================
+# NAFI ADMIN INVITATION
+# =========================================================
 
+class AdminInvitation(models.Model):
 
+    ROLE_CHOICES = [
+        ("Manager", "Manager"),
+        ("Support", "Support"),
+        ("Warehouse", "Warehouse"),
+    ]
 
+    email = models.EmailField(
+        db_index=True
+    )
 
+    role = models.CharField(
+        max_length=20,
+        choices=ROLE_CHOICES
+    )
+
+    token_hash = models.CharField(
+        max_length=64,
+        unique=True
+    )
+
+    invited_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name="sent_admin_invitations"
+    )
+
+    accepted_user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="accepted_admin_invitations"
+    )
+
+    expires_at = models.DateTimeField()
+
+    accepted_at = models.DateTimeField(
+        null=True,
+        blank=True
+    )
+
+    revoked_at = models.DateTimeField(
+        null=True,
+        blank=True
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    class Meta:
+        ordering = ["-created_at"]
+        verbose_name = "Admin Invitation"
+        verbose_name_plural = "Admin Invitations"
+
+    @property
+    def status(self):
+
+        if self.revoked_at:
+            return "Revoked"
+
+        if self.accepted_at:
+            return "Accepted"
+
+        if self.expires_at <= timezone.now():
+            return "Expired"
+
+        return "Pending"
+
+    def __str__(self):
+        return f"{self.email} - {self.role}"

@@ -1,0 +1,240 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Secure Verification | NAFI</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background:
+                radial-gradient(
+                    circle at 50% 35%,
+                    rgba(37, 99, 235, 0.13),
+                    transparent 38%
+                ),
+                #080b12;
+            color: #f8fafc;
+            font-family: Arial, sans-serif;
+        }
+
+        .verify-wrapper {
+            width: 100%;
+            max-width: 430px;
+            text-align: center;
+        }
+
+        .brand {
+            margin-bottom: 32px;
+        }
+
+        .brand-name {
+            font-size: 29px;
+            font-weight: 800;
+            letter-spacing: 5px;
+            color: #ffffff;
+        }
+
+        .brand-subtitle {
+            margin-top: 8px;
+            font-size: 10px;
+            letter-spacing: 3px;
+            color: #64748b;
+        }
+
+        .verify-card {
+            padding: 42px 30px;
+            background: rgba(17, 24, 39, 0.88);
+            border: 1px solid rgba(148, 163, 184, 0.13);
+            border-radius: 20px;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4);
+        }
+
+        .security-icon {
+            width: 76px;
+            height: 76px;
+            margin: 0 auto 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 22px;
+            background: rgba(37, 99, 235, 0.12);
+            border: 1px solid rgba(59, 130, 246, 0.25);
+            color: #60a5fa;
+            font-size: 34px;
+        }
+
+        .verify-card h1 {
+            font-size: 23px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .description {
+            max-width: 310px;
+            margin: 0 auto;
+            color: #94a3b8;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .loading-area {
+            margin: 32px 0 25px;
+        }
+
+        .spinner {
+            width: 34px;
+            height: 34px;
+            margin: 0 auto 15px;
+            border: 3px solid rgba(96, 165, 250, 0.15);
+            border-top-color: #3b82f6;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading-text {
+            color: #60a5fa;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+
+        .secure-note {
+            padding-top: 20px;
+            border-top: 1px solid rgba(148, 163, 184, 0.12);
+            color: #64748b;
+            font-size: 11px;
+            line-height: 1.7;
+        }
+
+        .secure-note span {
+            color: #94a3b8;
+        }
+
+        .fallback {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .continue-btn {
+            margin-top: 10px;
+            padding: 12px 22px;
+            width: 100%;
+            border: none;
+            border-radius: 9px;
+            background: #2563eb;
+            color: white;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .continue-btn:hover {
+            background: #1d4ed8;
+        }
+
+        .footer {
+            margin-top: 25px;
+            color: #475569;
+            font-size: 11px;
+            letter-spacing: 0.4px;
+        }
+
+        @media (max-width: 480px) {
+            .verify-card {
+                padding: 36px 22px;
+            }
+
+            .verify-card h1 {
+                font-size: 21px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="verify-wrapper">
+
+        <header class="brand">
+            <div class="brand-name">NAFI</div>
+            <div class="brand-subtitle">LIBASUT-TAQWA</div>
+        </header>
+
+        <section class="verify-card">
+
+            <div class="security-icon">
+                &#128274;
+            </div>
+
+            <h1>Secure Verification</h1>
+
+            <p class="description">
+                Please wait while we securely verify your
+                Google account to authorize access to the
+                NAFI Administration Panel.
+            </p>
+
+            <div class="loading-area">
+                <div class="spinner"></div>
+                <p class="loading-text">
+                    Connecting securely to Google...
+                </p>
+            </div>
+
+            <div class="secure-note">
+                <span>SECURE CONNECTION</span><br>
+                Your Google password is never shared with NAFI.
+            </div>
+
+            <form id="google-verify-form"
+                  method="POST"
+                  action="{{ social_begin_url }}">
+                {% csrf_token %}
+
+                <button type="submit" class="continue-btn">
+                    Continue to Google
+                </button>
+            </form>
+
+        </section>
+
+        <footer class="footer">
+            &copy; 2026 NAFI. All Rights Reserved.
+        </footer>
+
+    </main>
+
+    <script>
+        window.addEventListener("load", function () {
+            setTimeout(function () {
+                document.getElementById(
+                    "google-verify-form"
+                ).requestSubmit();
+            }, 900);
+        });
+    </script>
+
+</body>
+</html>

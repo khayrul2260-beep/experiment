@@ -188,6 +188,7 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
 SOCIAL_AUTH_PIPELINE = (
     "social_core.pipeline.social_auth.social_details",
     "social_core.pipeline.social_auth.social_uid",
+    "account.social_pipeline.verify_admin_google_identity",
     "social_core.pipeline.social_auth.auth_allowed",
     "social_core.pipeline.social_auth.social_user",
 
@@ -202,6 +203,7 @@ SOCIAL_AUTH_PIPELINE = (
 
     # Preserve guest cart merging.
     "account.social_pipeline.merge_google_guest_cart",
+    "account.social_pipeline.complete_admin_google_verification",
 )
 
 CSRF_TRUSTED_ORIGINS = [

@@ -247,15 +247,112 @@ def customer_logout(request):
     return redirect("home_page")
 
 
-
 @login_required(login_url="login")
 def customer_profile(request):
 
+    from admin_dashboard.permissions import get_admin_role
+
+    is_admin = get_admin_role(request.user) is not None
+
     return render(
         request,
-        "account/customer_profile.html"
+        "account/customer_profile.html",
+        {
+            "is_admin": is_admin,
+        }
     )
 
+@login_required(login_url="login")
+def admin_password_verify(request):
+
+    from django.contrib.auth.hashers import check_password
+    from admin_dashboard.permissions import get_admin_role
+    from django.http import Http404
+    # Verify current admin authorization
+    if get_admin_role(request.user) is None:
+        raise Http404("Page not found.")
+
+    # Already verified Admin: skip password verification
+    if (
+        request.session.get("admin_verified") is True
+        and request.session.get("admin_verified_user_id") == request.user.pk
+        and request.session.get("admin_verified_auth_hash")
+        == request.user.get_session_auth_hash()
+    ):
+        return redirect("dashboard_page")
+
+    if request.method == "POST":
+
+        password = request.POST.get("password", "")
+
+        if check_password(password, request.user.password):
+        
+            request.session["admin_verified"] = True
+
+            request.session["admin_verified_user_id"] = (
+                request.user.pk
+            )
+
+            request.session["admin_verified_auth_hash"] = (
+                request.user.get_session_auth_hash()
+            )
+
+            messages.success(
+                request,
+                "Admin access verified successfully."
+            )
+
+            return redirect("dashboard_page")
+
+        messages.error(
+            request,
+            "Incorrect password. Please try again."
+        )
+
+    return render(
+        request,
+        "account/admin_password_verify.html"
+    )
+
+@login_required(login_url="login")
+def admin_google_verify_begin(request):
+    from django.contrib import messages
+    from django.shortcuts import redirect
+    from django.urls import reverse
+    from social_django.models import UserSocialAuth
+    from admin_dashboard.permissions import get_admin_role
+
+    if not request.user.is_active or get_admin_role(request.user) is None:
+        from django.http import Http404
+        raise Http404("Page not found.")
+
+    # Only an already-linked Google identity is accepted.
+    linked_google = UserSocialAuth.objects.filter(
+        user=request.user,
+        provider="google-oauth2",
+    ).exists()
+
+    if not linked_google:
+        messages.error(
+            request,
+            "No Google account is linked to your NAFI account. "
+            "Please use your account password."
+        )
+        return redirect("admin_password_verify")
+
+    request.session["nafi_admin_google_verify_user_id"] = request.user.pk
+    request.session["next"] = reverse("dashboard_page")
+
+    return render(
+        request,
+        "account/admin_google_verify_start.html",
+        {
+            "social_begin_url": reverse(
+                "social:begin",
+                kwargs={"backend": "google-oauth2"}
+            )
+        }
+    )
 
 @login_required
 def customer_edit_profile(request):
@@ -302,12 +399,22 @@ def customer_change_password(request):
         )
 
         if form.is_valid():
-
+        
             user = form.save()
 
             update_session_auth_hash(
                 request,
                 user
+            )
+
+            # Invalidate previous Admin verification
+            request.session.pop("admin_verified", None)
+            request.session.pop("admin_verified_user_id", None)
+            request.session.pop("admin_verified_auth_hash", None)
+
+            messages.success(
+                request,
+                "Password changed successfully."
             )
 
             return redirect("customer_profile")
