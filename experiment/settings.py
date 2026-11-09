@@ -90,6 +90,7 @@ TEMPLATES = [
                 "experiment1.context_processors.navbar_cart_count",
                 "experiment1.context_processors.navbar_wishlist_count",
                 "experiment1.context_processors.wishlist_product_ids",
+                "admin_dashboard.context_processors.admin_permissions",
             ],
         },
     },

@@ -286,7 +286,7 @@ def admin_password_verify(request):
         password = request.POST.get("password", "")
 
         if check_password(password, request.user.password):
-        
+
             request.session["admin_verified"] = True
 
             request.session["admin_verified_user_id"] = (
@@ -399,7 +399,6 @@ def customer_change_password(request):
         )
 
         if form.is_valid():
-        
             user = form.save()
 
             update_session_auth_hash(

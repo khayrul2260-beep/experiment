@@ -333,48 +333,37 @@
 
                         <td>
                             <div class="au-actions">
-                            
                                 {% if not user.is_superuser %}
-                            
                                     <form method="POST"
                                           action="{% url 'change_staff_role' user.id %}">
                                         {% csrf_token %}
-                            
                                         <select name="role" required>
                                             <option value="">Change Role</option>
                                             <option value="Manager">Manager</option>
                                             <option value="Support">Support</option>
                                             <option value="Warehouse">Warehouse</option>
                                         </select>
-                                    
                                         <button type="submit"
                                                 class="au-action-btn"
                                                 title="Update Role">
                                             <i class="fas fa-check"></i>
                                         </button>
                                     </form>
-                                
                                     <form method="POST"
                                           action="{% url 'revoke_staff_access' user.id %}"
                                           onsubmit="return confirm('Are you sure you want to revoke this staff access?');">
                                         {% csrf_token %}
-                                
                                         <button type="submit"
                                                 class="au-action-btn"
                                                 title="Revoke Staff Access">
                                             <i class="fas fa-user-minus"></i>
                                         </button>
                                     </form>
-                                
                                 {% else %}
-                                
                                     <span class="au-owner">Protected</span>
-                                
                                 {% endif %}
-                                
                             </div>
                         </td>
-
                     </tr>
 
                     {% endwith %}

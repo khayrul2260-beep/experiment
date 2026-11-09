@@ -1,128 +1,183 @@
+
 {% load static %}
 
 <div class="sidemenu">
+  <!-- Sidebar Collapse Button -->
+  <button type="button"
+          class="sidebar-collapse-btn"
+          id="sidebarCollapseBtn"
+          aria-label="Collapse sidebar"
+          title="Collapse sidebar">
+      <i class="bi bi-layout-sidebar-inset"></i>
+  </button>
   <nav class="sidebar-menu">
     <ul>
-      <li class="menu-title">MAIN</li>
-
-      <li
-        class="{% if request.resolver_match.url_name == 'dashboard_page' %}active{% endif %}"
-      >
+      {% if admin_permissions.dashboard %}
+      <li class="{% if request.resolver_match.url_name == 'dashboard_page' %}active{% endif %}">
         <a href="{% url 'dashboard_page' %}">
           <i class="bi bi-grid-fill"></i>
           <span>Dashboard</span>
         </a>
       </li>
+      {% endif %}
 
-      <li
-        class="{% if request.resolver_match.url_name == 'products_page' or request.resolver_match.url_name == 'add_product_page' or request.resolver_match.url_name == 'edit_product_page' %}active{% endif %}"
-      >
+      {% if admin_permissions.products %}
+      <li class="{% if request.resolver_match.url_name in 'products_page add_product_page edit_product_page delete_product_page' %}active{% endif %}">
         <a href="{% url 'products_page' %}">
           <i class="bi bi-box-seam"></i>
           <span>Products</span>
         </a>
       </li>
 
-      <li
-        class="{% if request.resolver_match.url_name == 'categories_page' or request.resolver_match.url_name == 'add_category' or request.resolver_match.url_name == 'edit_category' %}active{% endif %}"
-      >
+      <li class="{% if request.resolver_match.url_name in 'categories_page add_category edit_category delete_category' %}active{% endif %}">
         <a href="{% url 'categories_page' %}">
           <i class="bi bi-box-seam"></i>
           <span>Categories</span>
         </a>
       </li>
+      {% endif %}
 
-      <li
-        class="{% if request.resolver_match.url_name == 'orders_page' %}active{% endif %}"
-      >
+      {% if admin_permissions.orders %}
+      <li class="{% if request.resolver_match.url_name in 'orders_page admin_order_details update_order_status update_payment_status approve_return_exchange reject_return_exchange complete_return_exchange' %}active{% endif %}">
         <a href="{% url 'orders_page' %}">
           <i class="bi bi-bag-check"></i>
-
           <span>Orders</span>
         </a>
       </li>
+      {% endif %}
 
-      <li
-        class="{% if request.resolver_match.url_name == 'customers_page' %}active{% endif %}"
-      >
+      {% if admin_permissions.customers %}
+      <li class="{% if request.resolver_match.url_name in 'customers_page customer_details' %}active{% endif %}">
         <a href="{% url 'customers_page' %}">
           <i class="bi bi-people"></i>
-
           <span>Customers</span>
         </a>
       </li>
+      {% endif %}
 
-      <li
-        class="{% if request.resolver_match.url_name == 'inventory_page' %}active{% endif %}"
-      >
+      {% if admin_permissions.inventory %}
+      <li class="{% if request.resolver_match.url_name in 'inventory_page update_inventory_stock' %}active{% endif %}">
         <a href="{% url 'inventory_page' %}">
           <i class="bi bi-boxes"></i>
-
           <span>Inventory</span>
         </a>
       </li>
+      {% endif %}
 
-      <li
-        class="{% if request.resolver_match.url_name == 'coupons_page' %}active{% endif %}"
-      >
+      {% if admin_permissions.coupons %}
+      <li class="{% if request.resolver_match.url_name in 'coupons_page create_coupon update_coupon toggle_coupon delete_coupon' %}active{% endif %}">
         <a href="{% url 'coupons_page' %}">
           <i class="bi bi-ticket-perforated"></i>
-
           <span>Coupons</span>
         </a>
       </li>
+      {% endif %}
 
-      <li
-        class="{% if request.resolver_match.url_name == 'reviews_page' %}active{% endif %}"
-      >
+      {% if admin_permissions.reviews %}
+      <li class="{% if request.resolver_match.url_name == 'reviews_page' %}active{% endif %}">
         <a href="{% url 'reviews_page' %}">
           <i class="bi bi-star"></i>
-
           <span>Reviews</span>
         </a>
       </li>
+      {% endif %}
 
-      <li
-        class="{% if request.resolver_match.url_name == 'reports_page' %}active{% endif %}"
-      >
+      {% if admin_permissions.reports %}
+      <li class="{% if request.resolver_match.url_name == 'reports_page' %}active{% endif %}">
         <a href="{% url 'reports_page' %}">
           <i class="bi bi-bar-chart"></i>
-
           <span>Reports</span>
         </a>
       </li>
+      {% endif %}
 
+      {% if admin_permissions.store_content %}
+      <li class="menu-title">Store Content</li>
 
-      <li class="menu-title">SYSTEM</li>
-
-      <li
-        class="{% if request.resolver_match.url_name == 'settings_page' or request.resolver_match.url_name == 'about_management' or request.resolver_match.url_name == 'home_management' %}active{% endif %}"
-      >
-        <a href="{% url 'settings_page' %}">
-          <i class="bi bi-gear"></i>
-
-          <span>Settings</span>
+      <li class="{% if request.resolver_match.url_name in 'home_management update_home_page update_home_visibility update_second_hero add_home_slide update_home_slide delete_home_slide' %}active{% endif %}">
+        <a href="{% url 'home_management' %}">
+          <i class="bi bi-house"></i>
+          <span>Home Page</span>
         </a>
       </li>
 
-      <li
-        class="{% if request.resolver_match.url_name == 'admin_users_page' %}active{% endif %}"
-      >
+      <li class="{% if request.resolver_match.url_name in 'about_management update_about_page add_about_value delete_about_value add_about_quality delete_about_quality add_about_journey delete_about_journey update_about_value update_about_quality update_about_journey' %}active{% endif %}">
+        <a href="{% url 'about_management' %}">
+          <i class="bi bi-info-circle"></i>
+          <span>About Page</span>
+        </a>
+      </li>
+
+      <li class="{% if request.resolver_match.url_name in 'contact_management add_contact_service update_contact_service delete_contact_service add_contact_faq update_contact_faq delete_contact_faq add_contact_social_link update_contact_social_link delete_contact_social_link' %}active{% endif %}">
+        <a href="{% url 'contact_management' %}">
+          <i class="bi bi-telephone"></i>
+          <span>Contact Page</span>
+        </a>
+      </li>
+
+      <li class="{% if request.resolver_match.url_name == 'delivery_settings_page' %}active{% endif %}">
+        <a href="{% url 'delivery_settings_page' %}">
+          <i class="bi bi-truck"></i>
+          <span>Delivery Settings</span>
+        </a>
+      </li>
+      {% endif %}
+
+      {% if admin_permissions.settings or admin_permissions.admin_users %}
+      <li class="menu-title">System</li>
+      {% endif %}
+
+      {% if admin_permissions.settings %}
+      <li class="{% if request.resolver_match.url_name == 'settings_page' %}active{% endif %}">
+        <a href="{% url 'settings_page' %}">
+          <i class="bi bi-gear"></i>
+          <span>General Settings</span>
+        </a>
+      </li>
+      {% endif %}
+
+      {% if admin_permissions.admin_users %}
+      <li class="{% if request.resolver_match.url_name in 'admin_users_page create_admin_invitation promote_customer_to_staff change_staff_role revoke_staff_access' %}active{% endif %}">
         <a href="{% url 'admin_users_page' %}">
           <i class="bi bi-person-gear"></i>
-
           <span>Admin Users</span>
         </a>
       </li>
+      {% endif %}
     </ul>
-    <div class="sidebar-footer">
-      <form method="POST" action="{% url 'logout_page' %}" style="margin: 0;">
-        {% csrf_token %}
-        <button type="submit" class="logout-btn">
-          <i class="bi bi-box-arrow-right"></i>
-          <span>Logout</span>
-        </button>
-      </form>
-    </div>
+
+    {% if admin_permissions.logout %}
+      <div class="sidebar-footer">
+
+          <!-- User Profile -->
+          <a href="/account/profile/" class="sidebar-profile">
+              <div class="sidebar-profile-image">
+                  {% if request.user.profile_image %}
+                      <img src="{{ request.user.profile_image.url }}" alt="Profile">
+                  {% else %}
+                      <i class="bi bi-person-fill"></i>
+                  {% endif %}
+              </div>
+              <div class="sidebar-profile-info">
+                  <span class="sidebar-profile-name">
+                      {{ request.user.get_full_name|default:request.user.username }}
+                  </span>
+                  <span class="sidebar-profile-role">
+                      {{ admin_role }}
+                  </span>
+              </div>
+          </a>
+        
+          <!-- Logout -->
+          <form method="POST" action="{% url 'logout_page' %}" style="margin: 0;">
+              {% csrf_token %}
+              <button type="submit" class="logout-btn">
+                  <i class="bi bi-box-arrow-right"></i>
+                  <span>Logout</span>
+              </button>
+          </form>
+        
+      </div>
+    {% endif %}
   </nav>
 </div>
