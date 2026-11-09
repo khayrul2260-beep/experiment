@@ -1,3 +1,6 @@
+:root {
+    --smoll-text: #9b9b9b;
+}
 /* =========================================================
    NAFI ABOUT PAGE
    PREMIUM BRAND PROFILE
@@ -16,7 +19,7 @@
 }
 
 .about-container {
-    width: min(1400px, 92%);
+    width: min(2000px, 96%);
     margin: 0 auto;
 }
 
@@ -28,12 +31,11 @@
 .about-section-number {
     display: block;
     margin-bottom: 25px;
-
+    text-align: center;
     font-size: 11px;
     font-weight: 700;
     letter-spacing: 3px;
     text-transform: uppercase;
-
     color: #8d9baa;
 }
 
@@ -44,7 +46,9 @@
 
 .about-hero {
     position: relative;
-    height: 100vh;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    max-height: fit-content;
     display: flex;
     align-items: center;
 
@@ -66,7 +70,7 @@
        Image itself can extend toward the left.
     */
     width: 100%;
-
+    aspect-ratio: 16 / 9;
     overflow: hidden;
 
     z-index: 0;
@@ -83,8 +87,7 @@
        Right edge stays fixed.
        Extra width goes toward LEFT.
     */
-    width: auto;
-    height: 100%;
+    width: 100%;
 
     max-width: none;
 
@@ -130,7 +133,6 @@
 
 .about-hero-content {
     position: relative;
-
     z-index: 2;
 }
 
@@ -138,10 +140,11 @@
     display: inline-block;
 
     margin-bottom: 24px;
+    margin-left: 10px;
 
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 700;
-    letter-spacing: 5px;
+    letter-spacing: 15px;
     text-transform: uppercase;
 }
 
@@ -193,11 +196,12 @@
 .about-two-column {
     display: grid;
 
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 6fr 5fr;
 
-    gap: 100px;
+    gap: 30px;
 
     align-items: center;
+
 }
 
 .about-text h2,
@@ -212,9 +216,10 @@
 .about-text p {
     margin: 0;
 
-    color: #b8b8b8;
+    color: var(--smoll-text);
 
     font-size: 16px;
+    font-weight: 400;
     line-height: 1.9;
 }
 
@@ -267,7 +272,7 @@
 }
 
 .about-large-text {
-    color: #bdbdbd;
+    color: var(--smoll-text);
 
     font-size: 19px;
     line-height: 2;
@@ -324,6 +329,9 @@
     background: #080808;
 }
 
+.about-aesthetic-image {
+    max-width: 420px;
+}
 
 /* =========================================================
    VALUES
@@ -832,6 +840,13 @@
         transform .8s cubic-bezier(.22, 1, .36, 1);
 }
 
+.nafi-about-page p {
+    color: var(--smoll-text);
+
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.9;
+}
 
 /* =========================================================
    TEXT STAGGER
@@ -1040,15 +1055,37 @@
 ========================================================= */
 
 @media (max-width: 991px) {
+    .about-hero h1 {
+        font-size: clamp(35px, 7vw, 80px);
+    }
+    .about-hero p {
+        font-size: 14px;
+
+        line-height: 1.7;
+    }
 
     .about-section {
         padding: 100px 0;
     }
 
     .about-two-column {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr auto;
+    }
 
-        gap: 60px;
+    .about-image {
+        z-index: 1;
+        width: 40vw;
+        height: auto;
+    }
+
+    .about-image img {
+        z-index: 1;
+        position: absolute;
+    }
+    .about-text p {
+        font-size: 14px;
+
+        line-height: 1.8;
     }
 
     .about-values-grid {
@@ -1059,28 +1096,10 @@
         grid-template-columns: 1fr 1fr;
     }
 
+    .about-large-text {
+        font-size: 14px;
 
-    /* -----------------------------------------------------
-       HERO TABLET
-    ----------------------------------------------------- */
-
-    .about-hero {
-        min-height: 75vh;
-
-        overflow: hidden;
-    }
-
-    .about-hero-image {
-        overflow: hidden;
-    }
-
-    .about-hero-image img {
-
-        right: 0;
-
-        height: 100%;
-        width: auto;
-
+        line-height: 1.8;
     }
 }
 
@@ -1119,14 +1138,11 @@
         padding: 80px 0;
     }
 
-    .about-hero {
-        min-height: 78vh;
 
-        overflow: hidden;
-    }
 
     .about-hero h1 {
-        letter-spacing: -2px;
+        font-size: clamp(30px, 7vw, 70px);
+        letter-spacing: -1px;
     }
 
     .about-hero p {
@@ -1201,29 +1217,35 @@
     }
 }
 
+@media (max-width: 500px) {
+    .about-two-column {
+        grid-template-columns: 1fr;
+    }
+
+    .about-image {
+        width: 90%;
+        max-width: 300px;
+        justify-self: center;
+        height: auto;
+    }
+}
 
 /* =========================================================
    SMALL MOBILE
 ========================================================= */
 
 @media (max-width: 380px) {
-
-    .about-hero {
-        min-height: 78vh;
+    .about-eyebrow {
+        margin-bottom: 8px;
+        font-size: 11px;
     }
-
-    .about-hero-image img {
-
-        /*
-           Keep image anchored to right.
-           Allow extra image width toward left.
-        */
-        right: -100px;
-
-        height: 100%;
-        width: auto;
-
-        max-width: none;
+    .about-hero h1 {
+        font-size: clamp(28px, 6vw, 65px);
+    }
+    .about-hero p {
+        font-size: 11px;
+        margin-top: 20px;
+        line-height: 1.5;
     }
 
     .about-final-image img {

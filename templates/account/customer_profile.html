@@ -21,6 +21,13 @@
         Manage your account, orders and favourites.
     </p>
     <div class="profile-header-action">
+        {% if is_admin %}
+        <a href="{% url 'admin_password_verify' %}"
+           class="edit-profile-btn admin-panel-btn">
+            <i class="bi bi-speedometer2"></i>
+            Admin Panel
+        </a>
+        {% endif %}
         <a href="{% url 'customer_edit_profile' %}"
            class="edit-profile-btn">
             <i class="bi bi-pencil-square"></i>

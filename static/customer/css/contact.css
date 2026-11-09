@@ -44,13 +44,12 @@
 .contact-section-container {
 
     width: min(
-        1280px,
+        2000px,
         calc(100% - 100px)
     );
 
     margin: 0 auto;
 }
-
 
 /* =========================================================
    COMMON EYEBROW
@@ -159,14 +158,7 @@
         maximum = 1500px
     */
 
-    height: clamp(
-        700px,
-        calc(100vh - 75px),
-        1500px
-    );
-
-    min-height: 700px;
-    max-height: 1500px;
+    height: fit-content;
 
     background: transparent;
 }
@@ -183,7 +175,7 @@
         minmax(0, 1fr);
 
     width: 100%;
-    height: 100%;
+    height: fit-content;
 }
 
 
@@ -206,20 +198,7 @@
         clamp(55px, 6vw, 100px)
         clamp(45px, 7vw, 120px);
 
-    background:
-
-        radial-gradient(
-            circle at 10% 35%,
-            rgba(95, 150, 255, .045),
-            transparent 30%
-        ),
-
-        linear-gradient(
-            135deg,
-            #050505 0%,
-            #070809 55%,
-            #08090b 100%
-        );
+    background: black;
 }
 
 
@@ -647,28 +626,20 @@
     pointer-events: none;
 
     background:
-
         linear-gradient(
             90deg,
-
-            #08090b 0%,
-
-            #08090bf9 5%,
-
-            #08090be1 11%,
-
-            #08090bc4 18%,
-
-            #08090ba3 25%,
-
-            transparent 43%
+            #000000 0%,
+            #000000 5%,
+            rgba(0, 0, 0, 0.95) 15%,
+            rgba(0, 0, 0, 0.85) 25%,
+            rgba(0, 0, 0, 0.65) 35%,
+            rgba(0, 0, 0, 0.35) 48%,
+            rgba(0, 0, 0, 0.12) 60%,
+            transparent 75%
         ),
-
         linear-gradient(
             0deg,
-
-            #08090b2b,
-
+            rgba(0, 0, 0, 0.17),
             transparent 34%
         );
 }
@@ -720,14 +691,10 @@
     position: relative;
 
     padding:
-        140px 0;
+        40px 0;
 
-    background:
-        #080808;
+    background: black;
 
-    border-top:
-        1px solid
-        var(--contact-border-soft);
 }
 
 
@@ -1625,59 +1592,6 @@ span:last-child {
     }
 
 
-    .contact-main-content {
-
-        grid-template-columns: 1fr;
-
-        height: auto;
-    }
-
-
-    .contact-main-image {
-
-        order: -1;
-
-        height: 600px;
-    }
-
-
-    .contact-main-form {
-
-        min-height: 700px;
-
-        padding:
-            90px 60px;
-    }
-
-
-    .contact-main-image::after {
-
-        background:
-
-            linear-gradient(
-                0deg,
-
-                #050505 0%,
-
-                rgba(
-                    5,
-                    5,
-                    5,
-                    .90
-                ) 8%,
-
-                rgba(
-                    5,
-                    5,
-                    5,
-                    .40
-                ) 20%,
-
-                transparent 42%
-            );
-    }
-
-
     /* INFO */
 
     .contact-info-grid {
@@ -1742,21 +1656,33 @@ span:last-child {
     }
 
 
+
     .contact-main-content {
 
-        grid-template-columns: 1fr;
+        position: relative;
+        display: block;
 
         height: auto;
     }
 
 
     .contact-main-image {
-
-        order: -1;
-
-        height: 500px;
+        display: block;
+        width: 100%;
+        z-index: 1;
     }
 
+
+    .contact-main-form {
+        position: absolute;
+        width: 100%;
+        background: rgba(0, 0, 0, 0.747);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        
+        z-index: 2;
+        color: white;
+    }
 
     .contact-main-image::after {
 
@@ -1793,13 +1719,6 @@ span:last-child {
     }
 
 
-    .contact-main-form {
-
-        min-height: 0;
-
-        padding:
-            70px 25px;
-    }
 
 
     .contact-main-heading {

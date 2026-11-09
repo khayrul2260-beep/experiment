@@ -1224,72 +1224,10 @@ and
 
 .mobile-all-products-section {
     width: 100%;
-    padding: 55px 0 35px;
+    padding: 150px 0 35px;
     background: transparent;
     overflow: hidden;
 }
-
-
-/* =====================================================
-   HEADER
-===================================================== */
-
-.mobile-all-products-header {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 20px;
-    padding: 0 20px 25px;
-}
-
-.mobile-all-products-eyebrow {
-    display: block;
-    margin-bottom: 7px;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 2px;
-    color: #4d8dff;
-}
-
-.mobile-all-products-header h2 {
-    margin: 0;
-    font-family: "Manrope", sans-serif;
-    font-size: clamp(25px, 6vw, 38px);
-    font-weight: 800;
-    line-height: 1.05;
-    color: #ffffff;
-}
-
-.mobile-all-products-header p {
-    margin: 8px 0 0;
-    font-family: "Manrope", sans-serif;
-    font-size: 12px;
-    line-height: 1.5;
-    color: rgba(255, 255, 255, 0.55);
-}
-
-.mobile-all-products-view-all {
-    flex-shrink: 0;
-    display: inline-flex;
-    align-items: center;
-    gap: 15px;
-    padding-bottom: 4px;
-    font-family: "Manrope", sans-serif;
-    font-size: 11px;
-    font-weight: 700;
-    color: #ffffff;
-    text-decoration: none;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.35);
-    transition:
-        color 0.25s ease,
-        border-color 0.25s ease;
-}
-
-.mobile-all-products-view-all:hover {
-    color: #4d8dff;
-    border-color: #4d8dff;
-}
-
 
 /* =====================================================
    SLIDER
@@ -1756,11 +1694,6 @@ and
 
     .mobile-all-products-section {
         padding-top: 45px;
-    }
-
-    .mobile-all-products-header {
-        padding-left: 16px;
-        padding-right: 16px;
     }
 
     .mobile-all-products-grid {
